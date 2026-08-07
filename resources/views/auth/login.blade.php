@@ -28,49 +28,82 @@
                 ========================== -->
                 <div class="col-lg-5 d-flex justify-content-center justify-content-lg-start">
                     <div class="login-card">
-                        
+
                         <div class="login-header">
                             <h2>Selamat Datang Kembali!</h2>
                             <p>Silahkan login untuk melanjutkan ke akun Anda</p>
                         </div>
 
-                        <form>
-                            <!-- ID -->
+                        {{-- Session status (contoh: setelah reset password berhasil) --}}
+                        @if (session('status'))
+                            <div class="alert alert-success">
+                                {{ session('status') }}
+                            </div>
+                        @endif
+
+                        <form method="POST" action="{{ route('login') }}">
+                            @csrf
+
+                            <!-- ID / Email -->
                             <div class="mb-4">
-                                <label class="form-label">ID Karyawan</label>
+                                <label for="email" class="form-label">Email</label>
                                 <div class="input-group custom-input">
                                     <span class="input-group-text">
                                         <i class="bi bi-person"></i>
                                     </span>
-                                    <input type="text" class="form-control" placeholder="Masukkan ID Karyawan">
+                                    <input
+                                        id="email"
+                                        type="text"
+                                        name="email"
+                                        class="form-control @error('email') is-invalid @enderror"
+                                        placeholder="Masukkan email"
+                                        value="{{ old('email') }}"
+                                        required
+                                        autofocus
+                                    >
                                 </div>
+                                @error('email')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <!-- PASSWORD -->
                             <div class="mb-3">
-                                <label class="form-label">Kata Sandi</label>
+                                <label for="password" class="form-label">Kata Sandi</label>
                                 <div class="input-group custom-input">
                                     <span class="input-group-text">
                                         <i class="bi bi-lock"></i>
                                     </span>
-                                    <input id="password" type="password" class="form-control" placeholder="••••••••••••">
+                                    <input
+                                        id="password"
+                                        type="password"
+                                        name="password"
+                                        class="form-control @error('password') is-invalid @enderror"
+                                        placeholder="Masukkan kata sandi"
+                                        required
+                                    >
                                     <span class="input-group-text password-toggle">
                                         <i id="eye" class="bi bi-eye-fill" onclick="togglePassword()"></i>
                                     </span>
                                 </div>
+                                @error('password')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <!-- Remember -->
                             <div class="d-flex justify-content-between align-items-center mb-4">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="remember" checked>
+                                    <input class="form-check-input" type="checkbox" name="remember" id="remember">
                                     <label class="form-check-label" for="remember">Ingat Saya</label>
                                 </div>
-                                <a href="#" class="forgot-link">Lupa kata sandi?</a>
+                                @if (Route::has('password.request'))
+                                    <a href="{{ route('password.request') }}" class="forgot-link">Lupa kata sandi?</a>
+                                @endif
                             </div>
 
                             <!-- Button -->
-                            <button class="btn btn-login w-100" type="button">Masuk</button>
+                            <button class="btn btn-login w-100" type="submit">Masuk</button>
 
                             <!-- Divider -->
                             <div class="divider">
@@ -78,9 +111,11 @@
                             </div>
 
                             <!-- Register -->
-                            <div class="register">
-                                Belum mempunyai akun? <a href="#">Daftar Sekarang</a>
-                            </div>
+                            @if (Route::has('register'))
+                                <div class="register">
+                                    Belum mempunyai akun? <a href="{{ route('register') }}">Daftar Sekarang</a>
+                                </div>
+                            @endif
                         </form>
 
                     </div>
@@ -91,15 +126,15 @@
                 ========================== -->
                 <div class="col-lg-7 d-none d-lg-flex align-items-center">
                     <div class="hero-wrapper">
-                        
+
                         <span class="hero-badge">Solusi Digital PLN Icon Plus</span>
-                        
+
                         <h1>
                             Energi Bersih <br>
                             Untuk Indonesia <br>
                             yang Lebih Baik
                         </h1>
-                        
+
                         <p>
                             Bersama PLN Icon Plus kami menghadirkan layanan
                             digital yang andal, inovatif, dan berkelanjutan
