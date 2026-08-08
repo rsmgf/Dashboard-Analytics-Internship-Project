@@ -14,18 +14,13 @@
 
     <div class="login-page" style="background-image:url('{{ asset('images/BackgroundPageLogin.png') }}');">
 
-        <!-- Overlay -->
         <div class="overlay"></div>
 
-        <!-- Logo -->
         <img src="{{ asset('images/logo-iconplus.png') }}" alt="PLN Icon Plus" class="logo">
 
         <div class="container-fluid h-100 main-content">
             <div class="row h-100 align-items-center">
 
-                <!-- =========================
-                        LOGIN CARD
-                ========================== -->
                 <div class="col-lg-5 d-flex justify-content-center justify-content-lg-start">
                     <div class="login-card">
 
@@ -67,7 +62,6 @@
                                 @enderror
                             </div>
 
-                            <!-- PASSWORD -->
                             <div class="mb-3">
                                 <label for="password" class="form-label">Kata Sandi</label>
                                 <div class="input-group custom-input">
@@ -91,7 +85,6 @@
                                 @enderror
                             </div>
 
-                            <!-- Remember -->
                             <div class="d-flex justify-content-between align-items-center mb-4">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="remember" id="remember">
@@ -105,7 +98,6 @@
                             <!-- Button -->
                             <button class="btn btn-login w-100" type="submit">Masuk</button>
 
-                            <!-- Divider -->
                             <div class="divider">
                                 <span>atau</span>
                             </div>
@@ -121,9 +113,6 @@
                     </div>
                 </div>
 
-                <!-- =========================
-                      HERO SECTION
-                ========================== -->
                 <div class="col-lg-7 d-none d-lg-flex align-items-center">
                     <div class="hero-wrapper">
 
@@ -142,7 +131,7 @@
                         </p>
 
                         <div class="pln-features-container">
-                            <!-- Andal -->
+                        
                             <div class="pln-feature-item">
                                 <div class="pln-feature-icon-card">
                                     <i class="bi bi-patch-check-fill"></i>
@@ -150,7 +139,6 @@
                                 <span class="pln-feature-label-pill">Andal</span>
                             </div>
 
-                            <!-- Berkelanjutan -->
                             <div class="pln-feature-item">
                                 <div class="pln-feature-icon-card">
                                     <i class="bi bi-globe2"></i>
@@ -158,7 +146,6 @@
                                 <span class="pln-feature-label-pill">Berkelanjutan</span>
                             </div>
 
-                            <!-- Inovatif -->
                             <div class="pln-feature-item">
                                 <div class="pln-feature-icon-card">
                                     <i class="bi bi-lightbulb-fill"></i>
