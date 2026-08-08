@@ -16,7 +16,7 @@ class RectifierController extends Controller
     {
         // Pastikan POP-nya ada, lalu ambil semua rectifiers yang berelasi
         $pop = Pop::findOrFail($pop_id);
-        
+
         $rectifiers = Rectifier::where('pop_id', $pop_id)
             ->with(['modules', 'outputs']) // Langsung tarik data anak-anaknya juga
             ->get();
@@ -31,7 +31,7 @@ class RectifierController extends Controller
     public function store(StoreRectifierRequest $request, $pop_id) // Ubah di sini
     {
         $pop = Pop::findOrFail($pop_id);
-        
+
         $validated = $request->validated();
 
         // Mulai Transaksi Database
@@ -76,7 +76,6 @@ class RectifierController extends Controller
                 'message' => 'Data Rectifier berhasil disimpan secara utuh!',
                 'data'    => $rectifier->load(['modules', 'outputs']) // Load ulang untuk melihat hasil akhir
             ], 201);
-
         } catch (\Exception $e) {
             // Jika ada yang error di tengah jalan, batalkan semuanya!
             DB::rollBack();
@@ -106,7 +105,7 @@ class RectifierController extends Controller
         $pop = Pop::findOrFail($pop_id);
         $rectifier = Rectifier::where('pop_id', $pop_id)->findOrFail($id);
 
-        $validated = $request->validated(); 
+        $validated = $request->validated();
 
         DB::beginTransaction();
         try {
@@ -124,7 +123,7 @@ class RectifierController extends Controller
             if ($request->has('modules')) {
                 // Ambil semua ID modul dari request yang dikirim user
                 $requestedModuleIds = collect($request->modules)->pluck('id')->filter()->toArray();
-                
+
                 // Hapus modul di database yang ID-nya tidak ada di request (artinya dihapus oleh user)
                 $rectifier->modules()->whereNotIn('id', $requestedModuleIds)->delete();
 
@@ -178,7 +177,6 @@ class RectifierController extends Controller
                 'message' => 'Data Rectifier berhasil diperbarui!',
                 'data'    => $rectifier->load(['modules', 'outputs'])
             ], 200);
-
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -192,7 +190,7 @@ class RectifierController extends Controller
     public function destroy($pop_id, $id)
     {
         $rectifier = Rectifier::where('pop_id', $pop_id)->findOrFail($id);
-        
+
         // Cukup panggil delete(), modul dan output akan ikut hancur berkat onDelete('cascade')
         $rectifier->delete();
 
