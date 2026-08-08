@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RmaController;
 use App\Http\Controllers\PopController;
@@ -12,6 +14,24 @@ Route::get('/', function () {
 Route::get('/', function () {
     return view('auth.login');
 });
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';
+
+Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->group(function () {
+    Route::get('/users', [UserManagementController::class, 'index'])->name('admin.users.index');
+    Route::patch('/users/{user}/role', [UserManagementController::class, 'updateRole'])->name('admin.users.updateRole');
+});
+
 Route::get('/reset1', function () {
     return view('auth.reset1');
 });
