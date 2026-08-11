@@ -44,6 +44,15 @@ Route::get('/reset3', function () {
     return view('auth.reset3');
 });
 
+Route::get('/rma', function () {
+    return view('rma');
+})->name('rma');
+
+Route::get('/rma/upload', function () {
+    return view('rma-2');
+})->name('mra.upload');
+
+
 
 // 1. Menampilkan daftar semua POP
 Route::get('/pops', [PopController::class, 'index']);      // Lihat semua POP
