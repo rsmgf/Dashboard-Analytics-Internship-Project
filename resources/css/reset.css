@@ -168,6 +168,8 @@ html, body {
     font-weight: 600;
     font-size: 15px;
     transition: .35s;
+    padding-top: 12px;
+    padding-bottom: 12px;
 }
 
 .btn-login:hover {

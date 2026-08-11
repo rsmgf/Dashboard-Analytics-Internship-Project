@@ -38,7 +38,7 @@ body {
 
 .logo {
     position: absolute;
-    top: 35px;
+    top: 15px;
     right: 45px;
     width: auto;
     height: 58px;
@@ -79,7 +79,7 @@ body {
 
 .register-form {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    flex-direction: column;
     column-gap: 16px;
     row-gap: 0;
     width: 100%;
