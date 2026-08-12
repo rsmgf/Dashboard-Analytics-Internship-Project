@@ -48,10 +48,11 @@ Route::get('/rma', function () {
     return view('rma');
 })->name('rma');
 
-Route::get('/rma/upload', function () {
-    return view('rma-2');
-})->name('mra.upload');
+// Rute untuk menangani saat tombol "Simpan" diklik
+Route::post('/rma', [RmaController::class, 'store'])->name('rma.store');
 
+// Rute untuk mencetak PDF
+Route::get('/rma/{id}/pdf', [RmaController::class, 'generatePdf'])->name('rma.pdf');
 
 
 // 1. Menampilkan daftar semua POP
