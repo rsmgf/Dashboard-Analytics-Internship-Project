@@ -25,8 +25,7 @@ class RmaController extends Controller
             'description'       => 'nullable|string',
             'kerusakan'         => 'nullable|array', // Boleh kosong jika tidak rusak
             'alasan'            => 'nullable|string',
-            'serial_number'     => 'required|array',
-            'serial_number.*'   => 'required|string',
+            'serial_number'     => 'required|string',
             'foto_material'     => 'required|array',
             'foto_material.*'   => 'required|image|mimes:jpeg,png,jpg|max:2048', 
         ]);
@@ -45,7 +44,7 @@ class RmaController extends Controller
             'lokasi_asal'       => $validatedData['lokasi_asal'],
             'merk'              => $validatedData['merk'],
             'type'              => $validatedData['type'],
-            'material_number'   => $validatedData['material_number'],
+            'material_number'   => $validatedData['material_number'] ?? null,
             'description'       => $validatedData['description'],
             'kerusakan'         => $validatedData['kerusakan'] ?? null,  // ?? null untuk jaga-jaga jika kosong
             'alasan'            => $validatedData['alasan'] ?? null,
@@ -56,12 +55,12 @@ class RmaController extends Controller
             $path = $file->store('material_images', 'public');
             
             $rma->materials()->create([
-                'serial_number' => $validatedData['serial_number'][$index],
+                'serial_number' => $validatedData['serial_number'],
                 'foto_path'     => $path,
             ]);
         }
 
-        return response()->json(['message' => 'Data RMA & Multi-Foto berhasil disimpan.'], 201);
+        return redirect()->route('rma.pdf', $rma->id);
     }
 
     public function generatePdf($id)

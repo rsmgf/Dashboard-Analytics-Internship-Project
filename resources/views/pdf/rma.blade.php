@@ -103,7 +103,7 @@
         .ttd-area {
             width: 100%;
             text-align: center;
-            margin-top: 20px;
+            margin-top: 60px;
             page-break-inside: avoid;
         }
 
@@ -268,28 +268,42 @@
 
     <!-- TTD AREA -->
     <!-- Menggunakan CSS page-break-inside: avoid agar tidak terpotong setengah halaman -->
-    <table class="ttd-area">
+    <table class="ttd-area" style="width: 100%; margin-top: 60px;">
+        
+        <!-- BARIS 1: JUDUL JABATAN -->
         <tr>
-            <td style="width: 50%;">
-                <p>Engineer Sign,</p>
-
-                <!-- Menampilkan Gambar TTD Pemohon -->
-                <div style="height: 60px; margin-top: 10px; margin-bottom: 5px;">
-                    <img src="{{ public_path('storage/' . $data->ttd_pemohon) }}"
-                        style="max-height: 60px; max-width: 150px;">
-                </div>
-
-                <p style="text-decoration: underline; font-weight: bold;">{{ $data->nama_pemohon }}</p>
+            <td style="width: 50%; vertical-align: top;">
+                <p style="margin: 0;">Engineer Sign,</p>
             </td>
-            <td style="width: 50%;">
-                <p>Manager on Duty/Local Manager/Supervisor Sign,</p>
-
-                <!-- Untuk TTD Basah Atasan -->
-                <div class="ttd-space"></div>
-
-                <p style="text-decoration: underline; font-weight: bold;">{{ $data->nama_manager }}</p>
+            <td style="width: 50%; vertical-align: top;">
+                <p style="margin: 0;">Manager on Duty/Local Manager/Supervisor Sign,</p>
             </td>
         </tr>
+
+        <!-- BARIS 2: RUANG TANDA TANGAN (Gambar & Kosong) -->
+        <tr>
+            <td style="width: 50%; vertical-align: bottom; height: 100px;">
+                <div style="margin-top: 5px;">
+                    <img src="{{ public_path('storage/' . $data->ttd_pemohon) }}"
+                        style="max-height: 90px; max-width: 250px; object-fit: contain; display: block; margin: 0 auto;">
+                </div>
+            </td>
+            
+            <td style="width: 50%; vertical-align: bottom; height: 100px;">
+            </td>
+        </tr>
+
+        <!-- BARIS 3: NAMA -->
+        <tr>
+            <td style="width: 50%; vertical-align: bottom;">
+                <p style="margin: 0; margin-top: 5px; text-decoration: underline; font-weight: bold;">{{ $data->nama_pemohon }}</p>
+            </td>
+            
+            <td style="width: 50%; vertical-align: bottom;">
+                <p style="margin: 0; margin-top: 5px; text-decoration: underline; font-weight: bold;">{{ $data->nama_manager }}</p>
+            </td>
+        </tr>
+        
     </table>
 
     <!-- HALAMAN 2: FOTO -->
