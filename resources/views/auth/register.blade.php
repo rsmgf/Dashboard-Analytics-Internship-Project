@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,10 +8,12 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
     @vite('resources/css/register.css')
 </head>
+
 <body>
     <div class="register-page" style="background-image:url('{{ asset('images/BackgroundPageLogin.png') }}');">
         <div class="overlay"></div>
@@ -19,7 +22,7 @@
         <div class="main-content">
             <div class="container-fluid h-100">
                 <div class="row h-100 align-items-center">
-                    
+
                     <div class="col-lg-7 d-none d-lg-flex align-items-center">
                         <div class="hero-wrapper">
                             <div class="hero-badge">
@@ -31,9 +34,10 @@
                                 Lebih Baik
                             </h1>
                             <p>
-                                Menghadirkan solusi digital yang inovatif, terintegrasi, dan terpercaya untuk mendukung transformasi digital Indonesia.
+                                Menghadirkan solusi digital yang inovatif, terintegrasi, dan terpercaya untuk mendukung
+                                transformasi digital Indonesia.
                             </p>
-                            
+
                             <div class="pln-features-container">
                                 <div class="pln-feature-item">
                                     <div class="pln-feature-icon-card">
@@ -64,30 +68,18 @@
                                 <p>Silakan lengkapi data untuk membuat akun baru.</p>
                             </div>
 
-                            <form method="POST" action="{{ route('register') }}" class="register-form">
+                            <form method="POST" action="{{ route('register') }}"
+                                class="register-form register-form-stacked">
                                 @csrf
 
                                 <div class="form-group">
                                     <label class="form-label">Nama Lengkap</label>
                                     <div class="custom-input @error('name') input-error @enderror">
                                         <i class="input-icon bi bi-person"></i>
-                                        <input type="text" name="name" class="form-control" placeholder="Masukkan nama lengkap" value="{{ old('name') }}">
+                                        <input type="text" name="name" class="form-control"
+                                            placeholder="Masukkan nama lengkap" value="{{ old('name') }}">
                                     </div>
                                     @error('name')
-                                        <div class="error-message">
-                                            <i class="bi bi-exclamation-circle"></i>
-                                            <span>{{ $message }}</span>
-                                        </div>
-                                    @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="form-label">ID Karyawan</label>
-                                    <div class="custom-input @error('employee_id') input-error @enderror">
-                                        <i class="input-icon bi bi-person-vcard"></i>
-                                        <input type="text" name="employee_id" class="form-control" placeholder="Masukkan ID karyawan" value="{{ old('employee_id') }}">
-                                    </div>
-                                    @error('employee_id')
                                         <div class="error-message">
                                             <i class="bi bi-exclamation-circle"></i>
                                             <span>{{ $message }}</span>
@@ -99,33 +91,10 @@
                                     <label class="form-label">Email</label>
                                     <div class="custom-input @error('email') input-error @enderror">
                                         <i class="input-icon bi bi-envelope"></i>
-                                        <input type="email" name="email" class="form-control" placeholder="Masukkan email" value="{{ old('email') }}">
+                                        <input type="email" name="email" class="form-control"
+                                            placeholder="Masukkan email" value="{{ old('email') }}">
                                     </div>
                                     @error('email')
-                                        <div class="error-message">
-                                            <i class="bi bi-exclamation-circle"></i>
-                                            <span>{{ $message }}</span>
-                                        </div>
-                                    @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="form-label">Role</label>
-                                    <div class="custom-input select-wrapper @error('role') input-error @enderror">
-                                        <i class="input-icon bi bi-shield-lock"></i>
-                                        <select name="role" class="form-control">
-                                            <option value="" disabled {{ old('role') ? '' : 'selected' }}>
-                                                Pilih role
-                                            </option>
-                                            @foreach($roles as $role)
-                                                <option value="{{ $role->name }}" {{ old('role') == $role->name ? 'selected' : '' }}>
-                                                    {{ ucfirst($role->name) }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        <i class="bi bi-chevron-down select-icon"></i>
-                                    </div>
-                                    @error('role')
                                         <div class="error-message">
                                             <i class="bi bi-exclamation-circle"></i>
                                             <span>{{ $message }}</span>
@@ -137,8 +106,10 @@
                                     <label class="form-label">Password</label>
                                     <div class="custom-input password-input @error('password') input-error @enderror">
                                         <i class="input-icon bi bi-lock"></i>
-                                        <input type="password" id="password" name="password" class="form-control" placeholder="Masukkan password">
-                                        <button type="button" class="password-toggle" onclick="togglePassword('password', this)" aria-label="Tampilkan password">
+                                        <input type="password" id="password" name="password" class="form-control"
+                                            placeholder="Masukkan password">
+                                        <button type="button" class="password-toggle"
+                                            onclick="togglePassword('password', this)" aria-label="Tampilkan password">
                                             <i class="bi bi-eye"></i>
                                         </button>
                                     </div>
@@ -152,14 +123,49 @@
 
                                 <div class="form-group">
                                     <label class="form-label">Konfirmasi Password</label>
-                                    <div class="custom-input password-input">
+                                    <div
+                                        class="custom-input password-input @error('password_confirmation') input-error @enderror">
                                         <i class="input-icon bi bi-lock"></i>
-                                        <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" placeholder="Ulangi password">
-                                        <button type="button" class="password-toggle" onclick="togglePassword('password_confirmation', this)" aria-label="Tampilkan password">
+                                        <input type="password" id="password_confirmation" name="password_confirmation"
+                                            class="form-control" placeholder="Ulangi password">
+                                        <button type="button" class="password-toggle"
+                                            onclick="togglePassword('password_confirmation', this)"
+                                            aria-label="Tampilkan password">
                                             <i class="bi bi-eye"></i>
                                         </button>
                                     </div>
+                                    @error('password_confirmation')
+                                        <div class="error-message">
+                                            <i class="bi bi-exclamation-circle"></i>
+                                            <span>{{ $message }}</span>
+                                        </div>
+                                    @enderror
                                 </div>
+
+                                {{-- <div class="form-group">
+                                    <label class="form-label">Role</label>
+                                    <div class="custom-input select-wrapper @error('role') input-error @enderror">
+                                        <i class="input-icon bi bi-shield-lock"></i>
+                                        <select name="role" class="form-control">
+                                            <option value="" disabled {{ old('role') ? '' : 'selected' }}>
+                                                Pilih role
+                                            </option>
+                                            @foreach ($roles as $role)
+                                                <option value="{{ $role->name }}"
+                                                    {{ old('role') == $role->name ? 'selected' : '' }}>
+                                                    {{ ucfirst($role->name) }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <i class="bi bi-chevron-down select-icon"></i>
+                                    </div>
+                                    @error('role')
+                                        <div class="error-message">
+                                            <i class="bi bi-exclamation-circle"></i>
+                                            <span>{{ $message }}</span>
+                                        </div>
+                                    @enderror
+                                </div> --}}
 
                                 <div class="form-group full-width">
                                     <button type="submit" class="btn-register">
@@ -193,4 +199,5 @@
         }
     </script>
 </body>
+
 </html>
