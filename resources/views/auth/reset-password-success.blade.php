@@ -29,8 +29,8 @@
                         </p>
                     </div>
 
-                    <a href="/login" class="btn btn-login w-100">
-                        <i class="bi bi-box-arrow-in-right me-2"></i>
+                    <a href="{{ route('login') }}" class="btn btn-login w-100 d-flex align-items-center justify-content-center gap-2">
+                        <i class="bi bi-box-arrow-in-right"></i>
                         Kembali ke Login
                     </a>
                 </div>
