@@ -54,6 +54,10 @@ Route::post('/rma', [RmaController::class, 'store'])->name('rma.store');
 // Rute untuk mencetak PDF
 Route::get('/rma/{id}/pdf', [RmaController::class, 'generatePdf'])->name('rma.pdf');
 
+Route::get('/pop', function () {
+    return view('list-pop');
+})->name('pop');
+
 
 // 1. Menampilkan daftar semua POP
 Route::get('/pops', [PopController::class, 'index']);      // Lihat semua POP
