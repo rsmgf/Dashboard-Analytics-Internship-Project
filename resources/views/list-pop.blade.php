@@ -1,97 +1,101 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>List POP - PLN Icon Plus</title>
 
-    <!-- BOOTSTRAP ICONS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    
-    <!-- GOOGLE FONT - POPPINS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     @vite(['resources/css/sidebar.css'])
     @vite(['resources/css/pop.css'])
-
 </head>
-
 <body>
-
-    <div class="app-container">
-
-        <!-- SIDEBAR -->
+  <!-- SIDEBAR -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-logo">
                 <img src="{{ asset('images/logo-iconplus.png') }}" alt="PLN Icon Plus">
             </div>
 
-            <div class="sidebar-section">
-                <div class="section-title">Dashboard</div>
-                <a href="#" class="sidebar-menu">
-                    <i class="bi bi-grid-fill"></i>
-                    <span>Dashboard</span>
-                </a>
-            </div>
+        <!-- =================================================
+            DASHBOARD
+        ================================================== -->
+        <div class="sidebar-section">
+            <div class="section-title">Dashboard</div>
+            <a href="/dashboard" class="sidebar-menu {{ request()->is('dashboard') ? 'active' : '' }}">
+                <i class="bi bi-grid-fill"></i>
+                <span>Dashboard</span>
+            </a>
+        </div>
 
-            <div class="sidebar-section">
-                <div class="section-title">General</div>
-                <a href="/pops" class="sidebar-menu active"> <!-- Active di POP -->
-                    <i class="bi bi-shield-fill"></i>
-                    <span>POP</span>
-                </a>
-                <a href="/rma" class="sidebar-menu">
-                    <i class="bi bi-file-earmark-text-fill"></i>
-                    <span>Form RMA</span>
-                </a>
-            </div>
+        <!-- =================================================
+            GENERAL
+        ================================================== -->
+        <div class="sidebar-section">
+            <div class="section-title">General</div>
+            
+            <!-- Menu POP akan aktif jika URL mengandung /pops -->
+            <a href="/pops" class="sidebar-menu {{ request()->is('pops*') ? 'active' : '' }}">
+                <i class="bi bi-shield-fill"></i>
+                <span>POP</span>
+            </a>
+            
+            <!-- Menu Form RMA akan aktif jika URL mengandung /rma -->
+            <a href="/rma" class="sidebar-menu {{ request()->is('rma*') ? 'active' : '' }}">
+                <i class="bi bi-file-earmark-text-fill"></i>
+                <span>Form RMA</span>
+            </a>
+        </div>
 
-            <div class="sidebar-section">
-                <div class="section-title">Akun</div>
-                <a href="#" class="sidebar-menu">
-                    <i class="bi bi-box-arrow-right"></i>
-                    <span>Log Out</span>
-                </a>
-            </div>
+    <!-- =================================================
+        KONFIGURASI AKUN
+    ================================================== -->
+    <div class="sidebar-section">
+        <!-- Toggle akun tetap bisa diatur terbuka otomatis jika sedang di halaman users/roles -->
+        <div class="sidebar-menu sidebar-dropdown {{ request()->is('users*') || request()->is('roles*') ? 'active' : '' }}" id="accountConfigToggle">
+            <i class="bi bi-gear-fill"></i>
+            <span>Konfigurasi Akun</span>
+            <i class="bi bi-chevron-{{ request()->is('users*') || request()->is('roles*') ? 'up' : 'down' }} dropdown-arrow" id="accountConfigArrow"></i>
+        </div>
+        
+        <div class="sidebar-submenu {{ request()->is('users*') || request()->is('roles*') ? 'show' : '' }}" id="accountConfigMenu">
+            <a href="/users" class="sidebar-submenu-item {{ request()->is('users*') ? 'active' : '' }}">
+                <i class="bi bi-people-fill"></i>
+                <span>Manajemen User</span>
+            </a>
+            <a href="/roles" class="sidebar-submenu-item {{ request()->is('roles*') ? 'active' : '' }}">
+                <i class="bi bi-shield-lock-fill"></i>
+                <span>Manajemen Role</span>
+            </a>
+        </div>
+        
+        <a href="#" class="sidebar-menu">
+            <i class="bi bi-box-arrow-right"></i>
+            <span>Log Out</span>
+        </a>
+    </div>
         </aside>
 
-        <!-- MAIN CONTENT -->
         <main class="main-content">
-
-            <!-- TOPBAR (Disesuaikan dengan rma agar memiliki fungsi toggle) -->
-            <header class="topbar" style="display: flex; justify-content: flex-start; align-items: center; gap: 12px; width: 100%; padding-right: 20px;">
-                <!-- Tombol Toggle Sidebar (Kiri) -->
+            <header class="topbar">
                 <button type="button" class="sidebar-toggle" id="sidebarToggle" title="Buka / Tutup Sidebar">
                     <i class="bi bi-list"></i>
                 </button>
 
-                <!-- Info Profil User (Kanan) -->
-                <!-- margin-left: auto; berfungsi untuk mendorong elemen ini mentok ke kanan -->
-                <div class="user-profile" style="margin-left: auto; display: flex; align-items: center; gap: 12px; cursor: pointer;">
-                    
-                    <!-- Nama User -->
-                    <span style="font-weight: 600; font-size: 14px; color: #333;">
-                        {{ Auth::check() ? Auth::user()->name : 'Nama User' }}
-                    </span>
-
-                    <!-- Foto/Ikon Profil -->
-                    <!-- Gunakan tag <img> jika ada foto, atau pakai ikon Bootstrap jika belum ada -->
-                    <div style="width: 38px; height: 38px; background-color: #007bff; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <div class="user-profile">
+                    <span>{{ Auth::check() ? Auth::user()->name : 'Super Admin' }}</span>
+                    <div style="width: 38px; height: 38px; background-color: #087cf5; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                         <i class="bi bi-person-fill" style="font-size: 20px;"></i>
                     </div>
-                    
                 </div>
             </header>
 
-            <!-- CONTENT LAYOUT -->
             <div class="pop-content">
-
-               <!-- PAGE TITLE -->
-                <div class="pop-header" style="display: flex; justify-content: space-between; align-items: center;">
-                    
-                    <!-- Bagian Kiri: Icon dan Judul -->
-                    <div class="pop-title-wrapper" style="display: flex; align-items: center; gap: 15px;">
+                <div class="pop-header">
+                    <div class="pop-title-wrapper">
                         <div class="pop-title-icon">
                             <i class="bi bi-geo-alt-fill"></i>
                         </div>
@@ -101,8 +105,6 @@
                         </div>
                     </div>
 
-                    <!-- Bagian Kanan: Tombol Tambah (Hanya untuk Super Admin) -->
-                    <!-- Asumsi variabel role disimpan di auth()->user()->role -->
                     @if(auth()->check() && auth()->user()->role === 'super_admin')
                     <div class="pop-action">
                         <a href="/pops/create" class="btn-tambah-pop">
@@ -110,17 +112,12 @@
                         </a>
                     </div>
                     @endif
-
                 </div>
 
-                <!-- SEARCH & FILTER -->
                 <div class="filter-section">
-                    <!-- SEARCH -->
                     <div class="search-wrapper">
                         <input type="text" id="searchPOP" class="search-input" placeholder="Cari data...">
                     </div>
-
-                    <!-- FILTER -->
                     <div class="filter-wrapper">
                         <label class="filter-label">Filter harus dipilih <span>*</span></label>
                         <select id="mainFilter" class="filter-control">
@@ -132,7 +129,6 @@
                     </div>
                 </div>
 
-                <!-- TABLE -->
                 <div class="table-card">
                     <table class="pop-table">
                         <thead>
@@ -148,56 +144,117 @@
                             </tr>
                         </thead>
                         <tbody id="popTableBody">
-                            <script>
-                                for(let i = 1; i <= 14; i++) {
-                                    document.write(`
-                                    <tr>
-                                        <td>${i}.</td>
-                                        <td>Jambi</td>
-                                        <td>Tanjung Jabung Barat</td>
-                                        <td>POP_1MBN10004</td>
-                                        <td>KASANG PUDAK KUMPEH ULU 1/<br>PAYO SELINCAH GI SHELTER 2 OLT</td>
-                                        <td>Shelter Permanent</td>
-                                        <td>POP-SB</td>
-                                        <td>
-                                            <button type="button" class="btn-detail" onclick="lihatPOP('POP_1MBN10004')">Lihat</button>
-                                        </td>
-                                    </tr>
-                                    `);
-                                }
-                            </script>
+                            @for($i = 1; $i <= 14; $i++)
+                            <tr>
+                                <td>{{ $i }}.</td>
+                                <td>Jambi</td>
+                                <td>Tanjung Jabung Barat</td>
+                                <td>POP_1MBN10004</td>
+                                <td>
+                                    KASANG PUDAK KUMPEH ULU 1<br>
+                                    PAYO SELINCAH GI SHELTER 2 OLT
+                                </td>
+                                <td>Shelter Permanent</td>
+                                <td>POP-SB</td>
+                                <td>
+                                    <button type="button" class="btn-detail" onclick="lihatPOP('POP_1MBN10004')">Lihat</button>
+                                </td>
+                            </tr>
+                            @endfor
                         </tbody>
                     </table>
                 </div>
-
             </div>
         </main>
     </div>
 
-    <!-- JAVASCRIPT -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // FUNGSI TOGGLE SIDEBAR (Identik dengan RMA)
+        document.addEventListener('DOMContentLoaded', function () {
             const sidebarToggle = document.getElementById('sidebarToggle');
-            const sidebarIcon = sidebarToggle.querySelector('i');
-            
+            const sidebarIcon = sidebarToggle ? sidebarToggle.querySelector('i') : null;
+
             if (sidebarToggle) {
-                sidebarToggle.addEventListener('click', function() {
+                sidebarToggle.addEventListener('click', function () {
                     document.body.classList.toggle('sidebar-collapsed');
-                    if (document.body.classList.contains('sidebar-collapsed')) {
-                        sidebarIcon.classList.replace('bi-list', 'bi-chevron-right');
-                    } else {
-                        sidebarIcon.classList.replace('bi-chevron-right', 'bi-list');
+                    
+                    const isCollapsed = document.body.classList.contains('sidebar-collapsed');
+
+                    if (sidebarIcon) {
+                        if (isCollapsed) {
+                            sidebarIcon.classList.remove('bi-list');
+                            sidebarIcon.classList.add('bi-chevron-right');
+                        } else {
+                            sidebarIcon.classList.remove('bi-chevron-right');
+                            sidebarIcon.classList.add('bi-list');
+                        }
                     }
+
+                    if (isCollapsed) {
+                        const accountMenu = document.getElementById('accountConfigMenu');
+                        const accountToggle = document.getElementById('accountConfigToggle');
+                        const accountArrow = document.getElementById('accountConfigArrow');
+
+                        if (accountMenu) {
+                            accountMenu.classList.remove('show');
+                        }
+
+                        if (accountToggle) {
+                            accountToggle.classList.remove('active');
+                        }
+
+                        if (accountArrow) {
+                            accountArrow.classList.remove('bi-chevron-up');
+                            accountArrow.classList.add('bi-chevron-down');
+                        }
+                    }
+                });
+            }
+
+            const accountConfigToggle = document.getElementById('accountConfigToggle');
+            const accountConfigMenu = document.getElementById('accountConfigMenu');
+            const accountConfigArrow = document.getElementById('accountConfigArrow');
+
+            if (accountConfigToggle && accountConfigMenu) {
+                accountConfigToggle.addEventListener('click', function () {
+                    const isOpen = accountConfigMenu.classList.toggle('show');
+                    
+                    accountConfigToggle.classList.toggle('active', isOpen);
+
+                    if (accountConfigArrow) {
+                        if (isOpen) {
+                            accountConfigArrow.classList.remove('bi-chevron-down');
+                            accountConfigArrow.classList.add('bi-chevron-up');
+                        } else {
+                            accountConfigArrow.classList.remove('bi-chevron-up');
+                            accountConfigArrow.classList.add('bi-chevron-down');
+                        }
+                    }
+                });
+            }
+
+            const searchInput = document.getElementById('searchPOP');
+            const tableBody = document.getElementById('popTableBody');
+
+            if (searchInput && tableBody) {
+                searchInput.addEventListener('keyup', function () {
+                    const keyword = this.value.toLowerCase();
+                    const rows = tableBody.querySelectorAll('tr');
+
+                    rows.forEach(function (row) {
+                        const text = row.textContent.toLowerCase();
+                        if (text.includes(keyword)) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
                 });
             }
         });
 
-        // FUNGSI DETAIL POP
         function lihatPOP(idPOP) {
             alert('Detail POP\n\nID POP : ' + idPOP);
         }
     </script>
-
 </body>
 </html>
