@@ -398,7 +398,7 @@
                         <div class="rectifier-card-footer">
 
                             <a
-                                href="#"
+                                href="{{ url('/rectifier-detail')}}"
                                 class="detail-button"
                             >
 

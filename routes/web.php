@@ -77,3 +77,7 @@ Route::delete('/pops/{pop}/rectifiers/{id}', [RectifierController::class, 'destr
 Route::get('/rectifier-card', function () {
     return view('rectifier-card');
 })->name('rectifier.card');
+
+Route::get('/rectifier-detail', function () {
+    return view('rectifier-detail');
+})->name('rectifier.detail');
