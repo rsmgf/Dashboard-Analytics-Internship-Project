@@ -1,11 +1,11 @@
 <?php
 
 use App\Http\Controllers\Admin\UserManagementController;
-use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\RmaController;
 use App\Http\Controllers\PopController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RectifierController;
+use App\Http\Controllers\RmaController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,8 +32,45 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->group(function
     Route::patch('/users/{user}/role', [UserManagementController::class, 'updateRole'])->name('admin.users.updateRole');
 });
 
-Route::get('/reset1', function () {
-    return view('auth.reset1');
+Route::middleware('auth')->group(function () {
+
+    // --- FORM RMA ---
+    Route::get('/rma', function () {
+        return view('rma');
+    })->name('rma');
+    Route::post('/rma', [RmaController::class, 'store'])->name('rma.store');
+    Route::get('/rma/{id}/pdf', [RmaController::class, 'generatePdf'])->name('rma.pdf');
+
+    // --- POP: VIEW (Semua Role: Karyawan, Teknisi, Super Admin) ---
+    Route::get('/pops', [PopController::class, 'index'])->name('pops.index');
+    Route::get('/pops/{id}', [PopController::class, 'show'])->name('pops.show');
+
+    // --- POP: EDIT (Teknisi & Super Admin) ---
+    Route::middleware('role:super_admin|teknisi')->group(function () {
+        Route::get('/pops/{id}/edit', [PopController::class, 'edit'])->name('pops.edit');
+        Route::put('/pops/{id}', [PopController::class, 'update'])->name('pops.update');
+    });
+
+    // --- POP: CREATE & DELETE (Hanya Super Admin) ---
+    Route::middleware('role:super_admin')->group(function () {
+        Route::get('/pops/create', [PopController::class, 'create'])->name('pops.create');
+        Route::post('/pops', [PopController::class, 'store'])->name('pops.store');
+        Route::delete('/pops/{id}', [PopController::class, 'destroy'])->name('pops.destroy');
+    });
+
+    // --- RECTIFIERS ---
+    Route::get('/pops/{pop}/rectifiers', [RectifierController::class, 'index']);      
+    Route::get('/pops/{pop}/rectifiers/{id}', [RectifierController::class, 'show']);  
+    
+    Route::middleware('role:super_admin,teknisi')->group(function () {
+        Route::put('/pops/{pop}/rectifiers/{id}', [RectifierController::class, 'update']);
+    });
+    
+    Route::middleware('role:super_admin')->group(function () {
+        Route::post('/pops/{pop}/rectifiers', [RectifierController::class, 'store']);     
+        Route::delete('/pops/{pop}/rectifiers/{id}', [RectifierController::class, 'destroy']); 
+    });
+
 });
 
 Route::get('/reset2', function () {

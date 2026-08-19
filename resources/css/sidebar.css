@@ -327,21 +327,18 @@ body.sidebar-collapsed .sidebar-menu span {
     display: none;
 }
 
-body.sidebar-collapsed .sidebar-menu > i:first-child {
-    width: 28px;
-    min-width: 28px;
-    margin: 0;
-    font-size: 22px;
+/* OVERLAY — backdrop gelap di belakang sidebar saat mobile */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 999; /* di bawah sidebar (1000), di atas konten */
+    cursor: pointer;
+    transition: opacity 0.3s ease;
 }
 
-body.sidebar-collapsed .dropdown-arrow {
-    display: none !important;
-}
-
-body.sidebar-collapsed .sidebar-submenu {
-    display: none !important;
-}
-
+/* RESPONSIVE — TABLET */
 @media (max-width: 1024px) {
     :root {
         --sidebar-width: 250px;
@@ -364,63 +361,33 @@ body.sidebar-collapsed .sidebar-submenu {
     }
 }
 
+/* RESPONSIVE — MOBILE */
 @media (max-width: 768px) {
+    /* Sidebar selalu tersembunyi secara default di mobile */
     .sidebar {
-        width: var(--sidebar-width);
-        transform: translateX(0);
-        transition: transform 0.3s ease;
-    }
-
-    body.sidebar-collapsed .sidebar {
-        width: var(--sidebar-width);
         transform: translateX(-100%);
+        width: var(--sidebar-width) !important;
     }
 
-    .main-content,
-    body.sidebar-collapsed .main-content {
-        width: 100%;
-        margin-left: 0;
+    /* Sidebar muncul hanya saat body punya class sidebar-open */
+    body.sidebar-open .sidebar {
+        transform: translateX(0);
     }
 
-    .topbar {
-        height: 65px;
-        min-height: 65px;
-        padding: 0 16px !important;
+    /* Overlay tampil saat sidebar terbuka */
+    body.sidebar-open .sidebar-overlay {
+        display: block;
     }
 
-    .pop-content {
-        padding: 20px !important;
+    /* Konten selalu penuh lebar di mobile */
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
     }
 
-    .user-profile span {
-        display: none;
-    }
-}
-
-@media (max-width: 480px) {
-    .sidebar {
-        width: 250px;
-    }
-
-    .sidebar-menu {
-        font-size: 14px;
-        padding: 12px 15px;
-    }
-
-    .section-title {
-        padding-left: 24px;
-    }
-
-    .sidebar-submenu {
-        width: calc(100% - 40px);
-        margin-left: 28px;
-    }
-
-    .sidebar-submenu-item {
-        font-size: 12px;
-    }
-
-    .pop-content {
-        padding: 16px !important;
+    /* Pastikan collapsed state tidak mengganggu logika mobile */
+    body.sidebar-collapsed .sidebar {
+        transform: translateX(-100%);
+        width: var(--sidebar-width) !important;
     }
 }

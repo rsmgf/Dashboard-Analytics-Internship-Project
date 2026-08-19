@@ -58,98 +58,14 @@
 
     <div class="app-container">
 
-        <!-- SIDEBAR -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-logo">
-                <img src="{{ asset('images/logo-iconplus.png') }}" alt="PLN Icon Plus">
-            </div>
-
-        <!-- =================================================
-            DASHBOARD
-        ================================================== -->
-        <div class="sidebar-section">
-            <div class="section-title">Dashboard</div>
-            <a href="/dashboard" class="sidebar-menu {{ request()->is('dashboard') ? 'active' : '' }}">
-                <i class="bi bi-grid-fill"></i>
-                <span>Dashboard</span>
-            </a>
-        </div>
-
-        <!-- =================================================
-            GENERAL
-        ================================================== -->
-        <div class="sidebar-section">
-            <div class="section-title">General</div>
-            
-            <!-- Menu POP akan aktif jika URL mengandung /pops -->
-            <a href="/pops" class="sidebar-menu {{ request()->is('pops*') ? 'active' : '' }}">
-                <i class="bi bi-shield-fill"></i>
-                <span>POP</span>
-            </a>
-            
-            <!-- Menu Form RMA akan aktif jika URL mengandung /rma -->
-            <a href="/rma" class="sidebar-menu {{ request()->is('rma*') ? 'active' : '' }}">
-                <i class="bi bi-file-earmark-text-fill"></i>
-                <span>Form RMA</span>
-            </a>
-        </div>
-
-    <!-- =================================================
-        KONFIGURASI AKUN
-    ================================================== -->
-    <div class="sidebar-section">
-        <!-- Toggle akun tetap bisa diatur terbuka otomatis jika sedang di halaman users/roles -->
-        <div class="sidebar-menu sidebar-dropdown {{ request()->is('users*') || request()->is('roles*') ? 'active' : '' }}" id="accountConfigToggle">
-            <i class="bi bi-gear-fill"></i>
-            <span>Konfigurasi Akun</span>
-            <i class="bi bi-chevron-{{ request()->is('users*') || request()->is('roles*') ? 'up' : 'down' }} dropdown-arrow" id="accountConfigArrow"></i>
-        </div>
-        
-        <div class="sidebar-submenu {{ request()->is('users*') || request()->is('roles*') ? 'show' : '' }}" id="accountConfigMenu">
-            <a href="/users" class="sidebar-submenu-item {{ request()->is('users*') ? 'active' : '' }}">
-                <i class="bi bi-people-fill"></i>
-                <span>Manajemen User</span>
-            </a>
-            <a href="/roles" class="sidebar-submenu-item {{ request()->is('roles*') ? 'active' : '' }}">
-                <i class="bi bi-shield-lock-fill"></i>
-                <span>Manajemen Role</span>
-            </a>
-        </div>
-        
-        <a href="#" class="sidebar-menu">
-            <i class="bi bi-box-arrow-right"></i>
-            <span>Log Out</span>
-        </a>
-        </div>
-        </aside>
+        <!-- SIDEBAR COMPONENT -->
+        <x-sidebar active="rma" />
 
         <!-- MAIN CONTENT -->
         <main class="main-content">
 
-            <!-- TOPBAR -->
-            <header class="topbar">
-                <!-- Tombol Toggle Sidebar (Kiri) -->
-                <button type="button" class="sidebar-toggle" id="sidebarToggle" title="Buka / Tutup Sidebar">
-                    <i class="bi bi-list"></i>
-                </button>
-
-                <!-- Info Profil User (Kanan) -->
-                <!-- margin-left: auto; berfungsi untuk mendorong elemen ini mentok ke kanan -->
-                <div class="user-profile" style="margin-left: auto; display: flex; align-items: center; gap: 12px; cursor: pointer;">
-                    
-                    <!-- Nama User -->
-                    <span style="font-weight: 600; font-size: 14px; color: #333;">
-                        {{ Auth::check() ? Auth::user()->name : 'Nama User' }}
-                    </span>
-
-                    <!-- Foto/Ikon Profil -->
-                    <!-- Gunakan tag <img> jika ada foto, atau pakai ikon Bootstrap jika belum ada -->
-                    <div style="width: 38px; height: 38px; background-color: #007bff; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                        <i class="bi bi-person-fill" style="font-size: 20px;"></i>
-                    </div>
-                    
-                </div>
-            </header>
+            <!-- TOPBAR COMPONENT -->
+            <x-topbar />
 
             <!-- CONTENT LAYOUT -->
             <div class="rma-layout">
@@ -511,20 +427,7 @@
                 sfpContainer.appendChild(sfpBlock);
             });
 
-            // 5. SIDEBAR & ALERT
-            const sidebarToggle = document.getElementById('sidebarToggle');
-            const sidebarIcon = sidebarToggle.querySelector('i');
-            if (sidebarToggle) {
-                sidebarToggle.addEventListener('click', function() {
-                    document.body.classList.toggle('sidebar-collapsed');
-                    if (document.body.classList.contains('sidebar-collapsed')) {
-                        sidebarIcon.classList.replace('bi-list', 'bi-chevron-right');
-                    } else {
-                        sidebarIcon.classList.replace('bi-chevron-right', 'bi-list');
-                    }
-                });
-            }
-
+            // 5. ALERT CLOSE
             document.querySelectorAll('.alert-close').forEach(function(button) {
                 button.addEventListener('click', function() {
                     const alert = button.closest('.alert-box');
