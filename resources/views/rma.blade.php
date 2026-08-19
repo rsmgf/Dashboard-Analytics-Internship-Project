@@ -58,34 +58,14 @@
 
     <div class="app-container">
 
-        @include('layouts.sidebar')
+        <!-- SIDEBAR COMPONENT -->
+        <x-sidebar active="rma" />
 
         <!-- MAIN CONTENT -->
         <main class="main-content">
 
-            <!-- TOPBAR -->
-                          <!-- Tombol Toggle Sidebar (Kiri) -->
-                <button type="button" class="sidebar-toggle" id="sidebarToggle" title="Buka / Tutup Sidebar">
-                    <i class="bi bi-list"></i>
-                </button>
-
-                <!-- Info Profil User (Kanan) -->
-                <!-- margin-left: auto; berfungsi untuk mendorong elemen ini mentok ke kanan -->
-                <div class="user-profile" style="margin-left: auto; display: flex; align-items: center; gap: 12px; cursor: pointer;">
-                    
-                    <!-- Nama User -->
-                    <span style="font-weight: 600; font-size: 14px; color: #333;">
-                        {{ Auth::check() ? Auth::user()->name : 'Nama User' }}
-                    </span>
-
-                    <!-- Foto/Ikon Profil -->
-                    <!-- Gunakan tag <img> jika ada foto, atau pakai ikon Bootstrap jika belum ada -->
-                    <div style="width: 38px; height: 38px; background-color: #007bff; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                        <i class="bi bi-person-fill" style="font-size: 20px;"></i>
-                    </div>
-                    
-                </div>
-            </header>
+            <!-- TOPBAR COMPONENT -->
+            <x-topbar />
 
             <!-- CONTENT LAYOUT -->
             <div class="rma-layout">
@@ -496,20 +476,7 @@
                 sfpContainer.appendChild(sfpBlock);
             });
 
-            // 5. SIDEBAR & ALERT
-            const sidebarToggle = document.getElementById('sidebarToggle');
-            const sidebarIcon = sidebarToggle.querySelector('i');
-            if (sidebarToggle) {
-                sidebarToggle.addEventListener('click', function() {
-                    document.body.classList.toggle('sidebar-collapsed');
-                    if (document.body.classList.contains('sidebar-collapsed')) {
-                        sidebarIcon.classList.replace('bi-list', 'bi-chevron-right');
-                    } else {
-                        sidebarIcon.classList.replace('bi-chevron-right', 'bi-list');
-                    }
-                });
-            }
-
+            // 5. ALERT CLOSE
             document.querySelectorAll('.alert-close').forEach(function(button) {
                 button.addEventListener('click', function() {
                     const alert = button.closest('.alert-box');

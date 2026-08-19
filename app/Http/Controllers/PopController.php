@@ -9,29 +9,27 @@ use App\Http\Requests\UpdatePopRequest;
 class PopController extends Controller
 {
     // 1. Menampilkan semua daftar POP (dengan Search & Pagination)
-    public function index(Request $request)
+public function index(Request $request)
     {
         // Mulai merangkai query
         $query = Pop::query();
 
         // Jika ada parameter 'search' di URL (misal: /pops?search=Bungo)
+        // Jika ada parameter 'search' di URL
         if ($request->has('search')) {
             $search = $request->input('search');
             
             $query->where('nama_pop', 'like', "%{$search}%")
-                  ->orWhere('kode_pop', 'like', "%{$search}%")
-                  ->orWhere('kota_kabupaten', 'like', "%{$search}%")
-                  ->orWhere('lokasi', 'like', "%{$search}%");
+                    ->orWhere('kode_pop', 'like', "%{$search}%")
+                    ->orWhere('kota_kabupaten', 'like', "%{$search}%")
+                    ->orWhere('jenis_bangunan', 'like', "%{$search}%"); 
         }
 
         // Ambil data dengan Pagination (misal: 10 data per halaman)
-        // append() berfungsi agar parameter pencarian tidak hilang saat pindah halaman
         $pops = $query->paginate(10)->appends($request->query());
 
-        return response()->json([
-            'message' => 'Berhasil mengambil daftar POP',
-            'data'    => $pops
-        ], 200);
+        // KEMBALIKAN KE VIEW, BUKAN JSON
+        return view('list-pop', compact('pops'));
     }
 
     // 2. Menyimpan data POP baru

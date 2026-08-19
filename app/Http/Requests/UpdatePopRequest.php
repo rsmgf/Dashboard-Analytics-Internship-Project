@@ -23,7 +23,6 @@ class UpdatePopRequest extends FormRequest
             'kota_kabupaten' => 'required|string',
             'tipe_pop'       => 'nullable|string',
             'jenis_bangunan' => 'nullable|string',
-            'lokasi'         => 'nullable|string',
         ];
     }
 }
