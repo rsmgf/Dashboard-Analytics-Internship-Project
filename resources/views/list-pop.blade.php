@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>List POP - PLN Icon Plus</title>
 
-    <!-- BOOTSTRAP ICONS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    
-    <!-- GOOGLE FONT - POPPINS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     @vite(['resources/css/sidebar.css', 'resources/css/pop.css'])
@@ -21,7 +19,6 @@
         .hidden { display: none !important; }
     </style>
 </head>
-
 <body>
 
     <div class="app-container">
@@ -29,13 +26,11 @@
         <!-- SIDEBAR COMPONENT -->
         <x-sidebar active="pop" />
 
-        <!-- MAIN CONTENT -->
         <main class="main-content">
 
             <!-- TOPBAR COMPONENT -->
             <x-topbar />
 
-            <!-- CONTENT LAYOUT -->
             <div class="pop-content">
 
                 <!-- PAGE TITLE -->
@@ -62,13 +57,11 @@
                     @endauth
                 </div>
 
-                <!-- SEARCH & FILTER -->
                 <div class="filter-section">
                     <div class="search-wrapper">
                         <!-- Jika ke depannya ingin search berfungsi, bungkus input ini dengan <form method="GET" action="/pops"> -->
                         <input type="text" id="searchPOP" name="search" class="search-input" placeholder="Cari data..." value="{{ request('search') }}">
                     </div>
-
                     <div class="filter-wrapper">
                         <label class="filter-label">Filter harus dipilih <span>*</span></label>
                         <select id="mainFilter" class="filter-control">
@@ -80,7 +73,6 @@
                     </div>
                 </div>
 
-                <!-- TABLE -->
                 <div class="table-card">
                     <table class="pop-table">
                         <thead>
@@ -96,6 +88,25 @@
                             </tr>
                         </thead>
                         <tbody id="popTableBody">
+<<<<<<< HEAD
+                            @for($i = 1; $i <= 14; $i++)
+                            <tr>
+                                <td>{{ $i }}.</td>
+                                <td>Jambi</td>
+                                <td>Tanjung Jabung Barat</td>
+                                <td>POP_1MBN10004</td>
+                                <td>
+                                    KASANG PUDAK KUMPEH ULU 1<br>
+                                    PAYO SELINCAH GI SHELTER 2 OLT
+                                </td>
+                                <td>Shelter Permanent</td>
+                                <td>POP-SB</td>
+                                <td>
+                                    <button type="button" class="btn-detail" onclick="lihatPOP('POP_1MBN10004')">Lihat</button>
+                                </td>
+                            </tr>
+                            @endfor
+=======
                             @forelse($pops as $index => $pop)
                             <tr>
                                 <td>{{ $pops->firstItem() + $index }}.</td>
@@ -134,6 +145,7 @@
                                 <td colspan="8" style="text-align: center; padding: 20px; color: #64748b;">Belum ada data POP.</td>
                             </tr>
                             @endforelse
+>>>>>>> 0dd85777157429ea593723e2939a41ab5010977f
                         </tbody>
                     </table>
                     
@@ -153,6 +165,92 @@
         </main>
     </div>
 
+<<<<<<< HEAD
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebarIcon = sidebarToggle ? sidebarToggle.querySelector('i') : null;
+
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function () {
+                    document.body.classList.toggle('sidebar-collapsed');
+                    
+                    const isCollapsed = document.body.classList.contains('sidebar-collapsed');
+
+                    if (sidebarIcon) {
+                        if (isCollapsed) {
+                            sidebarIcon.classList.remove('bi-list');
+                            sidebarIcon.classList.add('bi-chevron-right');
+                        } else {
+                            sidebarIcon.classList.remove('bi-chevron-right');
+                            sidebarIcon.classList.add('bi-list');
+                        }
+                    }
+
+                    if (isCollapsed) {
+                        const accountMenu = document.getElementById('accountConfigMenu');
+                        const accountToggle = document.getElementById('accountConfigToggle');
+                        const accountArrow = document.getElementById('accountConfigArrow');
+
+                        if (accountMenu) {
+                            accountMenu.classList.remove('show');
+                        }
+
+                        if (accountToggle) {
+                            accountToggle.classList.remove('active');
+                        }
+
+                        if (accountArrow) {
+                            accountArrow.classList.remove('bi-chevron-up');
+                            accountArrow.classList.add('bi-chevron-down');
+                        }
+                    }
+                });
+            }
+
+            const accountConfigToggle = document.getElementById('accountConfigToggle');
+            const accountConfigMenu = document.getElementById('accountConfigMenu');
+            const accountConfigArrow = document.getElementById('accountConfigArrow');
+
+            if (accountConfigToggle && accountConfigMenu) {
+                accountConfigToggle.addEventListener('click', function () {
+                    const isOpen = accountConfigMenu.classList.toggle('show');
+                    
+                    accountConfigToggle.classList.toggle('active', isOpen);
+
+                    if (accountConfigArrow) {
+                        if (isOpen) {
+                            accountConfigArrow.classList.remove('bi-chevron-down');
+                            accountConfigArrow.classList.add('bi-chevron-up');
+                        } else {
+                            accountConfigArrow.classList.remove('bi-chevron-up');
+                            accountConfigArrow.classList.add('bi-chevron-down');
+                        }
+                    }
+                });
+            }
+
+            const searchInput = document.getElementById('searchPOP');
+            const tableBody = document.getElementById('popTableBody');
+
+            if (searchInput && tableBody) {
+                searchInput.addEventListener('keyup', function () {
+                    const keyword = this.value.toLowerCase();
+                    const rows = tableBody.querySelectorAll('tr');
+
+                    rows.forEach(function (row) {
+                        const text = row.textContent.toLowerCase();
+                        if (text.includes(keyword)) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                });
+            }
+        });
+
+=======
     {{-- Hidden form untuk submit DELETE — action diisi oleh SweetAlert2 --}}
     <form id="deleteForm" method="POST" style="display:none;">
         @csrf
@@ -162,6 +260,7 @@
     <!-- JAVASCRIPT -->
     <script>
         // FUNGSI DETAIL POP DINAMIS BERDASARKAN FILTER
+>>>>>>> 0dd85777157429ea593723e2939a41ab5010977f
         function lihatPOP(idPOP) {
             const filterValue = document.getElementById('mainFilter').value;
             let targetUrl = '';
@@ -218,6 +317,8 @@
             });
         }
     </script>
+<<<<<<< HEAD
+=======
 
     <style>
         /* Kustomisasi SweetAlert2 agar sesuai font & tema web */
@@ -228,5 +329,6 @@
         .swal-btn-cancel     { font-family: 'Poppins', sans-serif !important; font-weight: 600 !important; border-radius: 8px !important; padding: 10px 20px !important; }
     </style>
 
+>>>>>>> 0dd85777157429ea593723e2939a41ab5010977f
 </body>
 </html>
