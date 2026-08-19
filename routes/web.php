@@ -72,3 +72,8 @@ Route::get('/pops/{pop}/rectifiers/{id}', [RectifierController::class, 'show']);
 // ... rute rectifier sebelumnya ...
 Route::put('/pops/{pop}/rectifiers/{id}', [RectifierController::class, 'update']); // Update data
 Route::delete('/pops/{pop}/rectifiers/{id}', [RectifierController::class, 'destroy']); // Hapus data
+
+
+Route::get('/rectifier-card', function () {
+    return view('rectifier-card');
+})->name('rectifier.card');
