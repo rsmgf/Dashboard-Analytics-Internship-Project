@@ -1,11 +1,11 @@
 <?php
 
 use App\Http\Controllers\Admin\UserManagementController;
-use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\RmaController;
 use App\Http\Controllers\PopController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RectifierController;
+use App\Http\Controllers\RmaController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
