@@ -1,0 +1,433 @@
+/* =====================================================
+   RESET & BASE
+===================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #fff;
+    color: #222;
+    font-size: 13px; /* Base font disesuaikan agar tidak kekecilan */
+}
+
+/* =====================================================
+   MAIN PAGE
+===================================================== */
+.role-page {
+    padding: 15px 20px 25px;
+    min-height: calc(100vh - 46px);
+    background: #fff;
+}
+
+/* =====================================================
+   TITLE
+===================================================== */
+.role-title {
+    margin-bottom: 15px;
+}
+
+.role-title h1 {
+    font-size: 24px; 
+    font-weight: 600;
+    color: #222;
+}
+
+/* =====================================================
+   ALERT
+===================================================== */
+.role-alert {
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    padding: 12px 15px; 
+    margin-bottom: 20px;
+    background: #f6f6ff;
+    border: 1px solid #777fff;
+    border-radius: 6px;
+    color: #555;
+    font-size: 13px; 
+}
+
+/* =====================================================
+   SEARCH
+===================================================== */
+.search-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.search-box {
+    width: 300px; 
+    height: 38px; 
+    position: relative;
+}
+
+.search-box input {
+    width: 100%;
+    height: 100%;
+    padding: 5px 35px 5px 15px;
+    border: 1px solid #d1d1d1;
+    border-radius: 6px;
+    outline: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px; 
+    color: #444;
+}
+
+.search-box input::placeholder {
+    color: #999;
+}
+
+.search-box input:focus {
+    border-color: #777;
+}
+
+.search-box i {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #777;
+    font-size: 14px; 
+}
+
+/* =====================================================
+   TABLE
+===================================================== */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.role-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #c8c8c8;
+}
+
+/* HEADER */
+.role-table thead th {
+    height: 45px; 
+    padding: 10px 15px;
+    background: #dceaf4;
+    border: 1px solid #c6cdd2;
+    font-size: 14px; 
+    font-weight: 600;
+    text-align: left;
+    color: #111;
+}
+
+/* BODY */
+.role-table tbody td {
+    height: 50px; 
+    padding: 10px 15px;
+    border: 1px solid #d1d1d1;
+    font-size: 13px; 
+    color: #333;
+    vertical-align: middle;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.role-table tbody tr:hover {
+    background: #fafafa;
+}
+
+/* COLUMN WIDTH */
+.role-table th:nth-child(1) { width: 6%; }
+.role-table th:nth-child(2) { width: 20%; }
+.role-table th:nth-child(3) { width: 25%; }
+.role-table th:nth-child(4) { width: 20%; }
+.role-table th:nth-child(5) { width: 14%; }
+.role-table th:nth-child(6) { width: 15%; }
+
+/* =====================================================
+   ACTION
+===================================================== */
+.action {
+    text-align: center;
+}
+
+.btn-set-role {
+    border: none;
+    padding: 8px 16px; 
+    background: #0073bd;
+    color: #fff;
+    border-radius: 5px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px; 
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-set-role:hover {
+    background: #005f9d;
+}
+
+/* =====================================================
+   STATUS
+===================================================== */
+.status {
+    text-align: center;
+}
+
+.btn-status {
+    min-width: 110px; 
+    height: 32px; 
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: #fff;
+    border-radius: 5px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px; 
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-status i {
+    font-size: 14px; 
+}
+
+/* AKTIF */
+.btn-status.active {
+    border: 1px solid #49b87c;
+    color: #24a05b;
+}
+
+.btn-status.active:hover {
+    background: #effbf5;
+}
+
+/* NON AKTIF */
+.btn-status.inactive {
+    border: 1px solid #ff5555;
+    color: #f23b3b;
+}
+
+.btn-status.inactive:hover {
+    background: #fff2f2;
+}
+
+/* =====================================================
+   PAGINATION
+===================================================== */
+.pagination-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px; 
+    padding: 0 9px;
+    font-size: 13px; 
+    color: #555;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.pagination button {
+    min-width: 32px; 
+    height: 32px;
+    padding: 0 10px;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px; 
+    color: #444;
+    cursor: pointer;
+}
+
+.pagination button:hover {
+    color: #0073bd;
+    background: #f0f8ff;
+}
+
+.pagination .page.active {
+    background: #0073bd;
+    color: #fff;
+}
+
+.pagination span {
+    color: #777;
+    font-size: 13px;
+}
+
+/* =====================================================
+   MODAL OVERLAY
+===================================================== */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 9999;
+}
+
+.modal-overlay.show {
+    display: flex;
+}
+
+/* =====================================================
+   MODAL (EDIT USER)
+===================================================== */
+.role-modal {
+    width: 450px; 
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+/* =====================================================
+   MODAL HEADER
+===================================================== */
+.modal-header {
+    height: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    background: #fff;
+}
+
+.modal-header h2 {
+    font-size: 18px; 
+    font-weight: 700;
+    color: #003b73;
+}
+
+.modal-close {
+    width: 25px;
+    height: 25px;
+    border: none;
+    background: transparent;
+    color: #555;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.modal-close:hover {
+    color: #000;
+}
+
+/* =====================================================
+   MODAL BODY
+===================================================== */
+.modal-body {
+    padding: 0 24px 10px; 
+}
+
+.form-group {
+    margin-bottom: 20px; 
+}
+
+.modal-body label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 13px; 
+    font-weight: 500;
+    color: #444;
+}
+
+.form-control {
+    width: 100%;
+    height: 42px; 
+    padding: 8px 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    outline: none;
+    background: #fff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px; 
+    color: #333;
+}
+
+.form-control::placeholder {
+    color: #aaa;
+}
+
+.form-control:focus {
+    border-color: #1a73e8;
+}
+
+/* =====================================================
+   MODAL FOOTER
+===================================================== */
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 24px 24px;
+    background: #fff; 
+}
+
+/* SIMPAN */
+.btn-save {
+    border: 1px solid #1a73e8;
+    background: #1a73e8;
+    color: #fff;
+    border-radius: 5px;
+    padding: 10px 20px; 
+    height: auto;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-save:hover {
+    background: #1557b0;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+@media (max-width: 900px) {
+    .role-page {
+        padding: 15px;
+    }
+
+    .role-table {
+        min-width: 700px;
+    }
+}
+
+@media (max-width: 600px) {
+    .search-container {
+        justify-content: flex-start;
+    }
+
+    .search-box {
+        width: 100%;
+    }
+
+    .pagination-wrapper {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        margin-top: 30px;
+    }
+    
+    .role-modal {
+        width: 90%; 
+    }
+}

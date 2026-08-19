@@ -26,7 +26,7 @@
 
 <div class="app-container">
 
-    <!-- =====================================================
+   <!-- =====================================================
          SIDEBAR
     ====================================================== -->
     <aside class="sidebar" id="sidebar">
@@ -44,36 +44,28 @@
             </a>
         </div>
 
-        <!-- GENERAL -->
+        <!-- GENERAL & MANAJEMEN USER -->
         <div class="sidebar-section">
             <div class="section-title">General</div>
+            
             <a href="#" class="sidebar-menu">
                 <i class="bi bi-shield-fill"></i>
                 <span>POP</span>
             </a>
+            
             <a href="#" class="sidebar-menu active">
                 <i class="bi bi-file-earmark-text-fill"></i>
                 <span>Form RMA</span>
             </a>
+            
+            <a href="#" class="sidebar-menu">
+                <i class="bi bi-people-fill"></i>
+                <span>Manajemen User</span>
+            </a>
         </div>
 
-        <!-- KONFIGURASI AKUN -->
-        <div class="sidebar-section">
-            <div class="sidebar-menu sidebar-dropdown" id="accountConfigToggle">
-                <i class="bi bi-gear-fill"></i>
-                <span>Konfigurasi Akun</span>
-                <i class="bi bi-chevron-down dropdown-arrow" id="accountConfigArrow"></i>
-            </div>
-            <div class="sidebar-submenu" id="accountConfigMenu">
-                <a href="#" class="sidebar-submenu-item">
-                    <i class="bi bi-people-fill"></i>
-                    <span>Manajemen User</span>
-                </a>
-                <a href="#" class="sidebar-submenu-item">
-                    <i class="bi bi-shield-lock-fill"></i>
-                    <span>Manajemen Role</span>
-                </a>
-            </div>
+        <!-- LOGOUT -->
+        <div class="sidebar-section" style="margin-top: 20px;">
             <a href="#" class="sidebar-menu">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Log Out</span>

@@ -99,6 +99,10 @@ Route::get('/pop', function () {
     return view('list-pop');
 })->name('pop');
 
+Route::get('/manajemen-role', function () {
+    return view('manajemen-role');
+})->name('manajemen.role');
+
 Route::get('/pops/create', function () {
     return view('pop-create');
 })->name('pops.create');

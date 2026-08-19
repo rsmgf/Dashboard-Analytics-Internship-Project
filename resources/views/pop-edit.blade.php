@@ -36,55 +36,53 @@
 
 <body>
 
-<aside class="sidebar" id="sidebar">
-    <div class="sidebar-logo">
-        <img src="{{ asset('images/logo-iconplus.png') }}" alt="PLN Icon Plus">
-    </div>
 
-    <div class="sidebar-section">
-        <div class="section-title">Dashboard</div>
-        <a href="/dashboard" class="sidebar-menu {{ request()->is('dashboard') ? 'active' : '' }}">
-            <i class="bi bi-grid-fill"></i>
-            <span>Dashboard</span>
-        </a>
-    </div>
-
-    <div class="sidebar-section">
-        <div class="section-title">General</div>
-        <a href="/pops" class="sidebar-menu {{ request()->is('pops*') ? 'active' : '' }}">
-            <i class="bi bi-shield-fill"></i>
-            <span>POP</span>
-        </a>
-        <a href="/rma" class="sidebar-menu {{ request()->is('rma*') ? 'active' : '' }}">
-            <i class="bi bi-file-earmark-text-fill"></i>
-            <span>Form RMA</span>
-        </a>
-    </div>
-
-    <div class="sidebar-section">
-        <div class="sidebar-menu sidebar-dropdown" id="accountConfigToggle">
-            <i class="bi bi-gear-fill"></i>
-            <span>Konfigurasi Akun</span>
-            <i class="bi bi-chevron-down dropdown-arrow" id="accountConfigArrow"></i>
+   <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+    <aside class="sidebar" id="sidebar">
+        <!-- LOGO -->
+        <div class="sidebar-logo">
+            <img src="{{ asset('images/logo-iconplus.png') }}" alt="PLN Icon Plus">
         </div>
 
-        <div class="sidebar-submenu" id="accountConfigMenu">
-            <a href="/users" class="sidebar-submenu-item">
+        <!-- DASHBOARD -->
+        <div class="sidebar-section">
+            <div class="section-title">Dashboard</div>
+            <a href="#" class="sidebar-menu">
+                <i class="bi bi-grid-fill"></i>
+                <span>Dashboard</span>
+            </a>
+        </div>
+
+        <!-- GENERAL & MANAJEMEN USER -->
+        <div class="sidebar-section">
+            <div class="section-title">General</div>
+            
+            <a href="#" class="sidebar-menu active">
+                <i class="bi bi-shield-fill"></i>
+                <span>POP</span>
+            </a>
+            
+            <a href="#" class="sidebar-menu">
+                <i class="bi bi-file-earmark-text-fill"></i>
+                <span>Form RMA</span>
+            </a>
+            
+            <a href="#" class="sidebar-menu">
                 <i class="bi bi-people-fill"></i>
                 <span>Manajemen User</span>
             </a>
-            <a href="/roles" class="sidebar-submenu-item">
-                <i class="bi bi-shield-lock-fill"></i>
-                <span>Manajemen Role</span>
-            </a>
         </div>
 
-        <a href="#" class="sidebar-menu">
-            <i class="bi bi-box-arrow-right"></i>
-            <span>Log Out</span>
-        </a>
-    </div>
-</aside>
+        <!-- LOGOUT -->
+        <div class="sidebar-section" style="margin-top: 20px;">
+            <a href="#" class="sidebar-menu">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Log Out</span>
+            </a>
+        </div>
+    </aside>
 
 <main class="main-content">
     <header class="topbar">
