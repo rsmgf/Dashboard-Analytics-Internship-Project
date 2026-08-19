@@ -15,8 +15,7 @@ class Pop extends Model
         'provinsi', 
         'kota_kabupaten', 
         'tipe_pop', 
-        'jenis_bangunan', 
-        'lokasi'
+        'jenis_bangunan',
     ];
 
     public function rectifiers()

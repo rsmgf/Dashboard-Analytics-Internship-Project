@@ -197,7 +197,18 @@ body.sidebar-collapsed .sidebar-menu span {
     display: none;
 }
 
-/* RESPONSIVE */
+/* OVERLAY — backdrop gelap di belakang sidebar saat mobile */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 999; /* di bawah sidebar (1000), di atas konten */
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+/* RESPONSIVE — TABLET */
 @media (max-width: 1024px) {
     body:not(.sidebar-collapsed) .sidebar {
         width: 250px;
@@ -208,17 +219,33 @@ body.sidebar-collapsed .sidebar-menu span {
     }
 }
 
+/* RESPONSIVE — MOBILE */
 @media (max-width: 768px) {
-    body:not(.sidebar-collapsed) .sidebar {
-        transform: translateX(0);
-    }
-    
-    body.sidebar-collapsed .sidebar {
+    /* Sidebar selalu tersembunyi secara default di mobile */
+    .sidebar {
         transform: translateX(-100%);
+        width: var(--sidebar-width) !important;
     }
 
+    /* Sidebar muncul hanya saat body punya class sidebar-open */
+    body.sidebar-open .sidebar {
+        transform: translateX(0);
+    }
+
+    /* Overlay tampil saat sidebar terbuka */
+    body.sidebar-open .sidebar-overlay {
+        display: block;
+    }
+
+    /* Konten selalu penuh lebar di mobile */
     .main-content {
         margin-left: 0 !important;
         width: 100% !important;
+    }
+
+    /* Pastikan collapsed state tidak mengganggu logika mobile */
+    body.sidebar-collapsed .sidebar {
+        transform: translateX(-100%);
+        width: var(--sidebar-width) !important;
     }
 }
