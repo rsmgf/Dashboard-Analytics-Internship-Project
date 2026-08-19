@@ -97,10 +97,27 @@
         <main class="main-content">
 
             <!-- TOPBAR -->
-            <header class="topbar" style="justify-content: flex-start; gap: 12px;">
+                          <!-- Tombol Toggle Sidebar (Kiri) -->
                 <button type="button" class="sidebar-toggle" id="sidebarToggle" title="Buka / Tutup Sidebar">
                     <i class="bi bi-list"></i>
                 </button>
+
+                <!-- Info Profil User (Kanan) -->
+                <!-- margin-left: auto; berfungsi untuk mendorong elemen ini mentok ke kanan -->
+                <div class="user-profile" style="margin-left: auto; display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                    
+                    <!-- Nama User -->
+                    <span style="font-weight: 600; font-size: 14px; color: #333;">
+                        {{ Auth::check() ? Auth::user()->name : 'Nama User' }}
+                    </span>
+
+                    <!-- Foto/Ikon Profil -->
+                    <!-- Gunakan tag <img> jika ada foto, atau pakai ikon Bootstrap jika belum ada -->
+                    <div style="width: 38px; height: 38px; background-color: #007bff; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-person-fill" style="font-size: 20px;"></i>
+                    </div>
+                    
+                </div>
             </header>
 
             <!-- CONTENT LAYOUT -->
