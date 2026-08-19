@@ -55,7 +55,8 @@ Route::post('/rma', [RmaController::class, 'store'])->name('rma.store');
 Route::get('/rma/{id}/pdf', [RmaController::class, 'generatePdf'])->name('rma.pdf');
 
 Route::get('/rma-awal', function () {
-    return view('rma-awal');});
+    return view('rma-awal');
+})->name('rma.index');
 
 Route::get('/pop', function () {
     return view('list-pop');

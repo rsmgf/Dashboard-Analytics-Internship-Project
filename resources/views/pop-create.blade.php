@@ -118,7 +118,7 @@
         <div class="add-pop-content">
 
             <!-- FORM CARD -->
-            <div class="add-pop-card">
+            < class="add-pop-card">
 
                 <!-- INFO -->
                 <div class="add-pop-alert">
@@ -127,6 +127,11 @@
                 </div>
 
                 <!-- HEADER -->
+                <div>
+                    <h1> Form RMA </h1>
+                    <p> Return Material Authorization </p>
+                </div>
+
                 <div class="add-pop-title">
                     <h1>Add Point of Presence</h1>
                     <p>Tambah POP</p>
