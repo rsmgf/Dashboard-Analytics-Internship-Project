@@ -58,40 +58,7 @@
 
     <div class="app-container">
 
-        <!-- SIDEBAR -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-logo">
-                <img src="{{ asset('images/logo-iconplus.png') }}" alt="PLN Icon Plus">
-            </div>
-
-            <div class="sidebar-section">
-                <div class="section-title">Dashboard</div>
-                <a href="#" class="sidebar-menu">
-                    <i class="bi bi-grid-fill"></i>
-                    <span>Dashboard</span>
-                </a>
-            </div>
-
-            <div class="sidebar-section">
-                <div class="section-title">General</div>
-                <a href="/pops" class="sidebar-menu">
-                    <i class="bi bi-shield-fill"></i>
-                    <span>POP</span>
-                </a>
-                <a href="/rma" class="sidebar-menu active">
-                    <i class="bi bi-file-earmark-text-fill"></i>
-                    <span>Form RMA</span>
-                </a>
-            </div>
-
-            <div class="sidebar-section">
-                <div class="section-title">Akun</div>
-                <a href="#" class="sidebar-menu">
-                    <i class="bi bi-box-arrow-right"></i>
-                    <span>Log Out</span>
-                </a>
-            </div>
-        </aside>
+        @include('layouts.sidebar')
 
         <!-- MAIN CONTENT -->
         <main class="main-content">
