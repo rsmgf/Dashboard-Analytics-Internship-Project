@@ -58,6 +58,14 @@ Route::get('/pop', function () {
     return view('list-pop');
 })->name('pop');
 
+Route::get('/pops/create', function () {
+    return view('pop-create');
+})->name('pops.create');
+
+// Edit POP - Frontend
+Route::get('/pops/{id}/edit', function ($id) {
+    return view('pop-edit', compact('id'));
+})->name('pops.edit');
 
 // 1. Menampilkan daftar semua POP
 Route::get('/pops', [PopController::class, 'index']);      // Lihat semua POP
