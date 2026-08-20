@@ -1,40 +1,48 @@
-@props(['active' => ''])
-
 <aside class="sidebar" id="sidebar">
+
+    {{-- LOGO --}}
     <div class="sidebar-logo">
         <img src="{{ asset('images/logo-iconplus.png') }}" alt="PLN Icon Plus">
     </div>
 
+    {{-- MENU UTAMA --}}
     <div class="sidebar-section">
-        <div class="section-title">Dashboard</div>
-        <a href="{{ route('dashboard') }}" class="sidebar-menu {{ $active === 'dashboard' ? 'active' : '' }}">
-            <i class="bi bi-grid-fill"></i>
-            <span>Dashboard</span>
-        </a>
+        <p class="section-title">Menu</p>
+
+        @foreach ($menus ?? [] as $menu)
+            <a href="{{ $menu->route ? route($menu->route) : '#' }}"
+                class="sidebar-menu {{ $menu->route && request()->routeIs($menu->route) ? 'active' : '' }}">
+                <i class="{{ $menu->icon }}"></i>
+                <span>{{ $menu->name }}</span>
+            </a>
+
+            @if ($menu->children->isNotEmpty())
+                @foreach ($menu->children as $child)
+                    <a href="{{ route($child->route) }}"
+                        class="sidebar-menu {{ request()->routeIs($child->route) ? 'active' : '' }}"
+                        style="padding-left: 48px;">
+                        <i class="{{ $child->icon ?? 'bi bi-dot' }}"></i>
+                        <span>{{ $child->name }}</span>
+                    </a>
+                @endforeach
+            @endif
+        @endforeach
     </div>
 
-    <div class="sidebar-section">
-        <div class="section-title">General</div>
-        <a href="{{ route('pops.index') }}" class="sidebar-menu {{ $active === 'pop' ? 'active' : '' }}">
-            <i class="bi bi-shield-fill"></i>
-            <span>POP</span>
-        </a>
-        <a href="{{ route('rma') }}" class="sidebar-menu {{ $active === 'rma' ? 'active' : '' }}">
-            <i class="bi bi-file-earmark-text-fill"></i>
-            <span>Form RMA</span>
-        </a>
-    </div>
+    {{-- AKUN / LOGOUT --}}
+    @auth
+        <div class="sidebar-section">
+            <p class="section-title">Akun</p>
 
-    <div class="sidebar-section">
-        <div class="section-title">Akun</div>
-        <form method="POST" action="{{ route('logout') }}" style="margin: 4px 16px;">
-            @csrf
-            <button type="submit" class="sidebar-menu" style="width: 100%; margin: 0; background: none; border: none; text-align: left; cursor: pointer;">
-                <i class="bi bi-box-arrow-right"></i>
-                <span>Log Out</span>
-            </button>
-        </form>
-    </div>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="sidebar-menu"
+                    style="width: 100%; border: none; background: none; cursor: pointer; text-align: left;">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Logout</span>
+                </button>
+            </form>
+        </div>
+    @endauth
+
 </aside>
-
-<div id="sidebarOverlay" class="sidebar-overlay"></div>
