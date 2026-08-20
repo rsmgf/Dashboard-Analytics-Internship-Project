@@ -22,4 +22,9 @@ class Menu extends Model
     {
         return $this->belongsTo(Menu::class, 'parent_id');
     }
+
+    public function permissions()
+    {
+        return $this->hasMany(\Spatie\Permission\Models\Permission::class);
+    }
 }

@@ -32,7 +32,6 @@
     {{-- AKUN / LOGOUT --}}
     @auth
         <div class="sidebar-section">
-            <p class="section-title">Akun</p>
 
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
