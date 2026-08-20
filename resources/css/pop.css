@@ -410,4 +410,25 @@
                 padding: 0 8px;
                 font-size: 0.8rem;
             }
+             .profile-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #087cf5;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .profile-avatar i {
+            font-size: 20px;
+        }
+
+        .swal-popup-custom   { font-family: 'Poppins', sans-serif; border-radius: 16px !important; }
+        .swal-title-custom   { font-size: 1.15rem !important; font-weight: 700 !important; color: #111827 !important; }
+        .swal-html-custom    { font-size: 0.875rem !important; color: #6b7280 !important; line-height: 1.6 !important; }
+        .swal-btn-confirm    { font-family: 'Poppins', sans-serif !important; font-weight: 600 !important; border-radius: 8px !important; padding: 10px 20px !important; background-color: #087cf5 !important; color: #fff !important;}
+        .swal-btn-cancel     { font-family: 'Poppins', sans-serif !important; font-weight: 600 !important; border-radius: 8px !important; padding: 10px 20px !important; background-color: #ef4444 !important; color: #fff !important;}
         }

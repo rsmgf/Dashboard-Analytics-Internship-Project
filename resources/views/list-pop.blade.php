@@ -17,6 +17,13 @@
     <style>
         svg.w-5.h-5 { width: 16px; height: 16px; }
         .hidden { display: none !important; }
+
+        /* Kustomisasi SweetAlert2 agar sesuai font & tema web */
+        .swal-popup-custom   { font-family: 'Poppins', sans-serif; border-radius: 16px !important; }
+        .swal-title-custom   { font-size: 1.15rem !important; font-weight: 700 !important; color: #111827 !important; }
+        .swal-html-custom    { font-size: 0.875rem !important; color: #6b7280 !important; line-height: 1.6 !important; }
+        .swal-btn-confirm,
+        .swal-btn-cancel     { font-family: 'Poppins', sans-serif !important; font-weight: 600 !important; border-radius: 8px !important; padding: 10px 20px !important; }
     </style>
 </head>
 <body>
@@ -59,7 +66,6 @@
 
                 <div class="filter-section">
                     <div class="search-wrapper">
-                        <!-- Jika ke depannya ingin search berfungsi, bungkus input ini dengan <form method="GET" action="/pops"> -->
                         <input type="text" id="searchPOP" name="search" class="search-input" placeholder="Cari data..." value="{{ request('search') }}">
                     </div>
                     <div class="filter-wrapper">
@@ -114,7 +120,9 @@
                                             {{-- Tombol Hapus: hanya super_admin --}}
                                             @if(auth()->user()->hasRole('super_admin'))
                                             <button type="button" class="btn-hapus" title="Hapus POP"
-                                                onclick="openDeleteModal('{{ route('pops.destroy', $pop->id) }}', '{{ $pop->nama_pop }}')"><i class="bi bi-trash3-fill"></i></button>
+                                                onclick="openDeleteModal('{{ route('pops.destroy', $pop->id) }}', '{{ $pop->nama_pop }}')">
+                                                <i class="bi bi-trash3-fill"></i>
+                                            </button>
                                             @endif
                                         @endauth
 
@@ -134,9 +142,7 @@
                         <div>
                             Menampilkan {{ $pops->firstItem() ?? 0 }} - {{ $pops->lastItem() ?? 0 }} dari {{ $pops->total() }} data
                         </div>
-                        
                         <div>
-                            <!-- Panggil paginasi dengan format Bootstrap-4 agar tag HTML-nya sesuai dengan CSS kita -->
                             {{ $pops->links('pagination::bootstrap-4') }}
                         </div>
                     </div>
@@ -144,17 +150,22 @@
             </div>
         </main>
     </div>
+    
+    {{-- Hidden form untuk submit DELETE — action diisi oleh SweetAlert2 --}}
+    <form id="deleteForm" method="POST" style="display:none;">
+        @csrf
+        @method('DELETE')
+    </form>
 
-<<<<<<< HEAD
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Logika Sidebar
             const sidebarToggle = document.getElementById('sidebarToggle');
             const sidebarIcon = sidebarToggle ? sidebarToggle.querySelector('i') : null;
 
             if (sidebarToggle) {
                 sidebarToggle.addEventListener('click', function () {
                     document.body.classList.toggle('sidebar-collapsed');
-                    
                     const isCollapsed = document.body.classList.contains('sidebar-collapsed');
 
                     if (sidebarIcon) {
@@ -172,14 +183,8 @@
                         const accountToggle = document.getElementById('accountConfigToggle');
                         const accountArrow = document.getElementById('accountConfigArrow');
 
-                        if (accountMenu) {
-                            accountMenu.classList.remove('show');
-                        }
-
-                        if (accountToggle) {
-                            accountToggle.classList.remove('active');
-                        }
-
+                        if (accountMenu) accountMenu.classList.remove('show');
+                        if (accountToggle) accountToggle.classList.remove('active');
                         if (accountArrow) {
                             accountArrow.classList.remove('bi-chevron-up');
                             accountArrow.classList.add('bi-chevron-down');
@@ -188,6 +193,7 @@
                 });
             }
 
+            // Logika Dropdown Akun
             const accountConfigToggle = document.getElementById('accountConfigToggle');
             const accountConfigMenu = document.getElementById('accountConfigMenu');
             const accountConfigArrow = document.getElementById('accountConfigArrow');
@@ -195,7 +201,6 @@
             if (accountConfigToggle && accountConfigMenu) {
                 accountConfigToggle.addEventListener('click', function () {
                     const isOpen = accountConfigMenu.classList.toggle('show');
-                    
                     accountConfigToggle.classList.toggle('active', isOpen);
 
                     if (accountConfigArrow) {
@@ -210,6 +215,7 @@
                 });
             }
 
+            // Logika Pencarian Tabel Client Side
             const searchInput = document.getElementById('searchPOP');
             const tableBody = document.getElementById('popTableBody');
 
@@ -230,17 +236,7 @@
             }
         });
 
-=======
-    {{-- Hidden form untuk submit DELETE — action diisi oleh SweetAlert2 --}}
-    <form id="deleteForm" method="POST" style="display:none;">
-        @csrf
-        @method('DELETE')
-    </form>
-
-    <!-- JAVASCRIPT -->
-    <script>
         // FUNGSI DETAIL POP DINAMIS BERDASARKAN FILTER
->>>>>>> 0dd85777157429ea593723e2939a41ab5010977f
         function lihatPOP(idPOP) {
             const filterValue = document.getElementById('mainFilter').value;
             let targetUrl = '';
@@ -266,7 +262,7 @@
             window.location.href = targetUrl;
         }
 
-        // ── KONFIRMASI HAPUS — SweetAlert2 ──
+        // KONFIRMASI HAPUS — SweetAlert2
         function openDeleteModal(url, namaPOP) {
             Swal.fire({
                 title: 'Hapus Data POP?',
@@ -297,18 +293,5 @@
             });
         }
     </script>
-<<<<<<< HEAD
-=======
-
-    <style>
-        /* Kustomisasi SweetAlert2 agar sesuai font & tema web */
-        .swal-popup-custom   { font-family: 'Poppins', sans-serif; border-radius: 16px !important; }
-        .swal-title-custom   { font-size: 1.15rem !important; font-weight: 700 !important; color: #111827 !important; }
-        .swal-html-custom    { font-size: 0.875rem !important; color: #6b7280 !important; line-height: 1.6 !important; }
-        .swal-btn-confirm,
-        .swal-btn-cancel     { font-family: 'Poppins', sans-serif !important; font-weight: 600 !important; border-radius: 8px !important; padding: 10px 20px !important; }
-    </style>
-
->>>>>>> 0dd85777157429ea593723e2939a41ab5010977f
 </body>
 </html>
