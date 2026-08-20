@@ -21,7 +21,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        View::composer('layouts.sidebar', function ($view) {
+        View::composer('components.sidebar', function ($view) {
         if (auth()->check()) {
             $roleIds = auth()->user()->roles->pluck('id');
 

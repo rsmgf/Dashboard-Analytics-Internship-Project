@@ -31,7 +31,7 @@
     <div class="app-container">
 
         <!-- SIDEBAR COMPONENT -->
-        <x-sidebar active="pop" />
+        <x-sidebar />
 
         <main class="main-content">
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\MenuManagementController;
 use App\Http\Controllers\PopController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RectifierController;
@@ -30,6 +31,11 @@ require __DIR__.'/auth.php';
 Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->group(function () {
     Route::get('/users', [UserManagementController::class, 'index'])->name('admin.users.index');
     Route::patch('/users/{user}/role', [UserManagementController::class, 'updateRole'])->name('admin.users.updateRole');
+
+    Route::get('/menus', [MenuManagementController::class, 'index'])->name('admin.menus.index');
+    Route::post('/menus', [MenuManagementController::class, 'store'])->name('admin.menus.store');
+    Route::patch('/menus/{menu}/roles', [MenuManagementController::class, 'updateRoles'])->name('admin.menus.updateRoles');
+    Route::delete('/menus/{menu}', [MenuManagementController::class, 'destroy'])->name('admin.menus.destroy');
 });
 
 Route::middleware('auth')->group(function () {
@@ -95,33 +101,3 @@ Route::get('/rma-awal', function () {
     return view('rma-awal');
 })->name('rma.index');
 
-Route::get('/pop', function () {
-    return view('list-pop');
-})->name('pop');
-
-Route::get('/manajemen-role', function () {
-    return view('manajemen-role');
-})->name('manajemen.role');
-
-Route::get('/pops/create', function () {
-    return view('pop-create');
-})->name('pops.create');
-
-// Edit POP - Frontend
-Route::get('/pops/{id}/edit', function ($id) {
-    return view('pop-edit', compact('id'));
-})->name('pops.edit');
-
-// 1. Menampilkan daftar semua POP
-Route::get('/pops', [PopController::class, 'index']);      // Lihat semua POP
-Route::post('/pops', [PopController::class, 'store']);     // Tambah POP baru
-Route::get('/pops/{id}', [PopController::class, 'show']);  // Lihat detail 1 POP
-Route::put('/pops/{id}', [PopController::class, 'update']); // Update POP
-Route::delete('/pops/{id}', [PopController::class, 'destroy']); // Hapus POP
-
-Route::get('/pops/{pop}/rectifiers', [RectifierController::class, 'index']);      // Lihat semua perangkat di 1 POP
-Route::post('/pops/{pop}/rectifiers', [RectifierController::class, 'store']);     // Tambah perangkat baru di 1 POP
-Route::get('/pops/{pop}/rectifiers/{id}', [RectifierController::class, 'show']);  // Lihat detail 1 perangkat
-// ... rute rectifier sebelumnya ...
-Route::put('/pops/{pop}/rectifiers/{id}', [RectifierController::class, 'update']); // Update data
-Route::delete('/pops/{pop}/rectifiers/{id}', [RectifierController::class, 'destroy']); // Hapus data

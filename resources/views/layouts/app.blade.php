@@ -14,10 +14,10 @@
 
 <body>
 
-    @include('layouts.sidebar')
+    @include('components.sidebar')
 
     <main class="main-content">
-        @include('layouts.navigation')
+        @include('components.topbar')
 
         @isset($header)
             <header class="bg-white shadow" style="padding: 1.5rem 2rem;">

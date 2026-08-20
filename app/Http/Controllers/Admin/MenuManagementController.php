@@ -40,4 +40,10 @@ class MenuManagementController extends Controller
 
         return back()->with('success', "Akses menu {$menu->name} berhasil diperbarui");
     }
+
+    public function destroy(Menu $menu)
+    {
+        $menu->delete(); // otomatis hapus submenu juga karena onDelete('cascade') di migration
+        return back()->with('success', "Menu {$menu->name} berhasil dihapus");
+    }
 }
