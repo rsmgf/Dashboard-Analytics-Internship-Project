@@ -1,433 +1,598 @@
 /* =====================================================
    RESET & BASE
 ===================================================== */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+
+*,
+*::before,
+*::after{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-body {
-    font-family: 'Poppins', sans-serif;
-    background: #fff;
-    color: #222;
-    font-size: 13px; /* Base font disesuaikan agar tidak kekecilan */
+body{
+    font-family:'Poppins',sans-serif;
+    background:#F4F7FB;
+    color:#1E293B;
+    font-size:14px;
 }
 
 /* =====================================================
-   MAIN PAGE
+   PAGE
 ===================================================== */
-.role-page {
-    padding: 15px 20px 25px;
-    min-height: calc(100vh - 46px);
-    background: #fff;
+
+.role-page{
+    padding:24px;
+    min-height:calc(100vh - 70px);
+    background:#F4F7FB;
 }
 
 /* =====================================================
    TITLE
 ===================================================== */
-.role-title {
-    margin-bottom: 15px;
+
+.role-title{
+    margin-bottom:18px;
 }
 
-.role-title h1 {
-    font-size: 24px; 
-    font-weight: 600;
-    color: #222;
+.role-title h1{
+    font-size:26px;
+    font-weight:700;
+    color:#003B73;
+    letter-spacing:.3px;
 }
 
 /* =====================================================
    ALERT
 ===================================================== */
-.role-alert {
-    width: 100%;
-    height: auto;
-    display: flex;
-    align-items: center;
-    padding: 12px 15px; 
-    margin-bottom: 20px;
-    background: #f6f6ff;
-    border: 1px solid #777fff;
-    border-radius: 6px;
-    color: #555;
-    font-size: 13px; 
+
+.role-alert{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:14px 18px;
+    margin-bottom:22px;
+    background:#EEF7FF;
+    border-left:5px solid #0A84FF;
+    border-radius:10px;
+    color:#0B5CAD;
+    font-size:13px;
+    font-weight:500;
+    box-shadow:0 4px 10px rgba(9,84,173,.08);
+}
+
+.role-alert::before{
+    content:"✓";
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    background:#0A84FF;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12px;
 }
 
 /* =====================================================
    SEARCH
 ===================================================== */
-.search-container {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 20px;
+
+.search-container{
+    display:flex;
+    justify-content:flex-end;
+    margin-bottom:22px;
 }
 
-.search-box {
-    width: 300px; 
-    height: 38px; 
-    position: relative;
+.search-box{
+    width:330px;
+    position:relative;
 }
 
-.search-box input {
-    width: 100%;
-    height: 100%;
-    padding: 5px 35px 5px 15px;
-    border: 1px solid #d1d1d1;
-    border-radius: 6px;
-    outline: none;
-    font-family: 'Poppins', sans-serif;
-    font-size: 13px; 
-    color: #444;
+.search-box input{
+    width:100%;
+    height:42px;
+    padding:0 42px 0 16px;
+    border:1px solid #D6E4F0;
+    border-radius:10px;
+    background:#fff;
+    font-family:'Poppins',sans-serif;
+    font-size:13px;
+    transition:.25s ease;
 }
 
-.search-box input::placeholder {
-    color: #999;
+.search-box input:focus{
+    outline:none;
+    border-color:#007BFF;
+    box-shadow:0 0 0 4px rgba(0,123,255,.12);
 }
 
-.search-box input:focus {
-    border-color: #777;
+.search-box input::placeholder{
+    color:#94A3B8;
 }
 
-.search-box i {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #777;
-    font-size: 14px; 
+.search-box i{
+    position:absolute;
+    right:15px;
+    top:50%;
+    transform:translateY(-50%);
+    color:#64748B;
+    font-size:16px;
+}
+
+/* =====================================================
+   TABLE CONTAINER
+===================================================== */
+
+.table-container{
+    background:#fff;
+    border-radius:16px;
+    overflow-x:auto;
+    box-shadow:0 10px 30px rgba(15,23,42,.08);
+    border:1px solid #E2E8F0;
 }
 
 /* =====================================================
    TABLE
 ===================================================== */
-.table-container {
-    width: 100%;
-    overflow-x: auto;
+
+.role-table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:980px;
 }
 
-.role-table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-    border: 1px solid #c8c8c8;
+.role-table thead th{
+    background:#EAF4FC;
+    color:#003B73;
+    font-size:13px;
+    font-weight:600;
+    padding:16px;
+    text-align:left;
+    border-bottom:1px solid #D6E4F0;
 }
 
-/* HEADER */
-.role-table thead th {
-    height: 45px; 
-    padding: 10px 15px;
-    background: #dceaf4;
-    border: 1px solid #c6cdd2;
-    font-size: 14px; 
-    font-weight: 600;
-    text-align: left;
-    color: #111;
+.role-table tbody td{
+    padding:16px;
+    font-size:13px;
+    color:#475569;
+    border-bottom:1px solid #EEF2F7;
+    vertical-align:middle;
 }
 
-/* BODY */
-.role-table tbody td {
-    height: 50px; 
-    padding: 10px 15px;
-    border: 1px solid #d1d1d1;
-    font-size: 13px; 
-    color: #333;
-    vertical-align: middle;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.role-table tbody tr{
+    transition:.25s ease;
 }
 
-.role-table tbody tr:hover {
-    background: #fafafa;
+.role-table tbody tr:hover{
+    background:#F8FBFF;
 }
-
-/* COLUMN WIDTH */
-.role-table th:nth-child(1) { width: 6%; }
-.role-table th:nth-child(2) { width: 20%; }
-.role-table th:nth-child(3) { width: 25%; }
-.role-table th:nth-child(4) { width: 20%; }
-.role-table th:nth-child(5) { width: 14%; }
-.role-table th:nth-child(6) { width: 15%; }
 
 /* =====================================================
-   ACTION
+   COLUMN WIDTH
+===================================================== */
+
+
+.role-table th:nth-child(6),
+.role-table th:nth-child(7) {
+    text-align: center;
+}
+.role-table th:nth-child(6),
+.role-table th:nth-child(7) {
+    text-align: center;
+}
+
+/* =====================================================
+   ROLE BADGE
+===================================================== */
+
+.current-role{
+    display:table-cell;
+    padding:16px;
+    background:transparent;
+    color:#475569;
+    font-size:13px;
+    font-weight:500;
+    border-radius:0;
+}
+
+.current-role:empty::before{
+    content:"-";
+    color:#94A3B8;
+}
+
+/* =====================================================
+   BUTTON SET ROLE
 ===================================================== */
 .action {
-    text-align: center;
+    text-align: center !important;
+    vertical-align: middle !important;
 }
 
 .btn-set-role {
-    border: none;
-    padding: 8px 16px; 
-    background: #0073bd;
-    color: #fff;
-    border-radius: 5px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 12px; 
-    font-weight: 500;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.btn-set-role:hover {
-    background: #005f9d;
-}
-
-/* =====================================================
-   STATUS
-===================================================== */
-.status {
-    text-align: center;
-}
-
-.btn-status {
-    min-width: 110px; 
-    height: 32px; 
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    padding: 4px 10px;
-    background: #fff;
-    border-radius: 5px;
+    margin: 0 auto;
+
+    min-width: 95px;
+    height: 34px;
+
+    padding: 0 14px;
+
+    background: linear-gradient(135deg, #0086FF, #005BD4);
+    color: #fff;
+
+    border: none;
+    border-radius: 8px;
+
     font-family: 'Poppins', sans-serif;
-    font-size: 12px; 
-    font-weight: 500;
+    font-size: 12px;
+    font-weight: 600;
+
     cursor: pointer;
-    transition: 0.2s;
+    transition: .25s ease;
 }
 
-.btn-status i {
-    font-size: 14px; 
+.btn-set-role:hover {
+    background: linear-gradient(135deg, #0078E8, #0052C2);
+    transform: translateY(-1px);
 }
 
-/* AKTIF */
-.btn-status.active {
-    border: 1px solid #49b87c;
-    color: #24a05b;
+/* =====================================================
+   STATUS BUTTON
+===================================================== */
+
+.status{
+    text-align:center;
 }
 
-.btn-status.active:hover {
-    background: #effbf5;
+.btn-status{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    min-width:118px;
+    height:34px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.25s ease;
+    background:#fff;
 }
 
-/* NON AKTIF */
-.btn-status.inactive {
-    border: 1px solid #ff5555;
-    color: #f23b3b;
+.btn-status i{
+    font-size:14px;
 }
 
-.btn-status.inactive:hover {
-    background: #fff2f2;
+/* Aktif */
+
+.btn-status.active{
+    border:1px solid #22C55E;
+    color:#16A34A;
+    background:#F0FDF4;
+}
+
+.btn-status.active:hover{
+    background:#DCFCE7;
+}
+
+/* Nonaktif */
+
+.btn-status.inactive{
+    border:1px solid #EF4444;
+    color:#DC2626;
+    background:#FEF2F2;
+}
+
+.btn-status.inactive:hover{
+    background:#FEE2E2;
 }
 
 /* =====================================================
    PAGINATION
 ===================================================== */
-.pagination-wrapper {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 30px; 
-    padding: 0 9px;
-    font-size: 13px; 
-    color: #555;
+
+.pagination-wrapper{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:22px;
+    padding:0 5px;
+    color:#64748B;
+    font-size:13px;
 }
 
-.pagination {
-    display: flex;
-    align-items: center;
-    gap: 5px;
+.pagination{
+    display:flex;
+    align-items:center;
+    gap:8px;
 }
 
-.pagination button {
-    min-width: 32px; 
-    height: 32px;
-    padding: 0 10px;
-    border: none;
-    border-radius: 4px;
-    background: transparent;
-    font-family: 'Poppins', sans-serif;
-    font-size: 13px; 
-    color: #444;
-    cursor: pointer;
+.pagination button{
+    min-width:36px;
+    height:36px;
+    border:none;
+    border-radius:8px;
+    background:#fff;
+    color:#475569;
+    font-size:13px;
+    cursor:pointer;
+    transition:.2s;
+    border:1px solid #E2E8F0;
 }
 
-.pagination button:hover {
-    color: #0073bd;
-    background: #f0f8ff;
+.pagination button:hover{
+    border-color:#007BFF;
+    color:#007BFF;
 }
 
-.pagination .page.active {
-    background: #0073bd;
-    color: #fff;
+.pagination .page.active{
+    background:#007BFF;
+    color:#fff;
+    border-color:#007BFF;
+    box-shadow:0 5px 15px rgba(0,123,255,.25);
 }
 
-.pagination span {
-    color: #777;
-    font-size: 13px;
+.pagination span{
+    color:#94A3B8;
 }
 
 /* =====================================================
    MODAL OVERLAY
 ===================================================== */
+
 .modal-overlay {
     position: fixed;
     inset: 0;
+    background: rgba(15,23,42,.45);
     display: none;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.35);
-    z-index: 9999;
+    padding: 20px;
+    z-index: 1050; /* <-- Ubah angka 9999 menjadi 1050 */
+    backdrop-filter: blur(3px);
 }
 
-.modal-overlay.show {
-    display: flex;
+.modal-overlay.show{
+    display:flex;
 }
 
 /* =====================================================
-   MODAL (EDIT USER)
+   MODAL
 ===================================================== */
-.role-modal {
-    width: 450px; 
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
-    overflow: hidden;
+
+.role-modal{
+    width:460px;
+    background:#fff;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 25px 60px rgba(0,0,0,.18);
+    animation:fadeModal .25s ease;
+}
+
+@keyframes fadeModal{
+    from{
+        opacity:0;
+        transform:translateY(20px) scale(.98);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+    }
 }
 
 /* =====================================================
    MODAL HEADER
 ===================================================== */
-.modal-header {
-    height: auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 24px;
-    background: #fff;
+
+.modal-header{
+    padding:22px 24px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid #EDF2F7;
 }
 
-.modal-header h2 {
-    font-size: 18px; 
-    font-weight: 700;
-    color: #003b73;
+.modal-header h2{
+    font-size:19px;
+    font-weight:700;
+    color:#003B73;
 }
 
-.modal-close {
-    width: 25px;
-    height: 25px;
-    border: none;
-    background: transparent;
-    color: #555;
-    font-size: 18px;
-    cursor: pointer;
+.modal-close{
+    width:34px;
+    height:34px;
+    border:none;
+    border-radius:50%;
+    background:#F1F5F9;
+    color:#64748B;
+    cursor:pointer;
+    transition:.2s;
 }
 
-.modal-close:hover {
-    color: #000;
+.modal-close:hover{
+    background:#E2E8F0;
+    color:#0F172A;
 }
 
 /* =====================================================
    MODAL BODY
 ===================================================== */
-.modal-body {
-    padding: 0 24px 10px; 
+
+.modal-body{
+    padding:22px 24px 10px;
 }
 
-.form-group {
-    margin-bottom: 20px; 
+.form-group{
+    margin-bottom:18px;
 }
 
-.modal-body label {
-    display: block;
-    margin-bottom: 8px;
-    font-size: 13px; 
-    font-weight: 500;
-    color: #444;
+.modal-body label{
+    display:block;
+    margin-bottom:8px;
+    font-size:13px;
+    font-weight:600;
+    color:#334155;
 }
 
-.form-control {
-    width: 100%;
-    height: 42px; 
-    padding: 8px 14px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    outline: none;
-    background: #fff;
-    font-family: 'Poppins', sans-serif;
-    font-size: 13px; 
-    color: #333;
+.form-control{
+    width:100%;
+    height:44px;
+    padding:0 14px;
+    border:1px solid #D5DFEA;
+    border-radius:10px;
+    font-family:'Poppins',sans-serif;
+    font-size:13px;
+    background:#fff;
+    transition:.25s ease;
 }
 
-.form-control::placeholder {
-    color: #aaa;
+.form-control:focus{
+    outline:none;
+    border-color:#007BFF;
+    box-shadow:0 0 0 4px rgba(0,123,255,.12);
 }
 
-.form-control:focus {
-    border-color: #1a73e8;
+.form-control::placeholder{
+    color:#A0AEC0;
 }
 
 /* =====================================================
    MODAL FOOTER
 ===================================================== */
-.modal-footer {
-    display: flex;
-    justify-content: flex-end;
-    padding: 10px 24px 24px;
-    background: #fff; 
+
+.modal-footer{
+    padding:20px 24px 24px;
+    display:flex;
+    justify-content:flex-end;
 }
 
-/* SIMPAN */
-.btn-save {
-    border: 1px solid #1a73e8;
-    background: #1a73e8;
-    color: #fff;
-    border-radius: 5px;
-    padding: 10px 20px; 
-    height: auto;
-    font-family: 'Poppins', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: 0.2s;
+.btn-save{
+    background:linear-gradient(135deg,#0086FF,#005BD4);
+    color:#fff;
+    border:none;
+    border-radius:10px;
+    padding:11px 22px;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.25s ease;
+    box-shadow:0 10px 20px rgba(0,91,212,.18);
 }
 
-.btn-save:hover {
-    background: #1557b0;
+.btn-save:hover{
+    transform:translateY(-2px);
+    box-shadow:0 14px 24px rgba(0,91,212,.28);
+}
+
+/* =====================================================
+   SWEET ALERT PLN ICON PLUS
+===================================================== */
+
+.swal2-popup{
+    font-family:'Poppins',sans-serif;
+    border-radius:18px !important;
+    padding:1.8rem;
+}
+
+.swal2-title{
+    color:#003B73;
+    font-size:22px;
+    font-weight:700;
+}
+
+.swal2-html-container{
+    font-size:14px;
+    color:#475569;
+    line-height:1.6;
+}
+
+.swal2-confirm{
+    background:#0066DC !important;
+    border-radius:10px !important;
+    padding:10px 24px !important;
+    font-weight:600;
+}
+
+.swal2-cancel{
+    background:#E2E8F0 !important;
+    color:#334155 !important;
+    border-radius:10px !important;
+    padding:10px 24px !important;
+    font-weight:600;
+}
+.swal2-container {
+    z-index: 10000 !important;
 }
 
 /* =====================================================
    RESPONSIVE
 ===================================================== */
-@media (max-width: 900px) {
-    .role-page {
-        padding: 15px;
+
+@media(max-width:900px){
+
+    .role-page{
+        padding:18px;
     }
 
-    .role-table {
-        min-width: 700px;
+    .search-container{
+        justify-content:flex-start;
+    }
+
+    .search-box{
+        width:100%;
+    }
+
+    .pagination-wrapper{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:14px;
     }
 }
 
-@media (max-width: 600px) {
-    .search-container {
-        justify-content: flex-start;
+@media(max-width:600px){
+
+    .role-title h1{
+        font-size:22px;
     }
 
-    .search-box {
-        width: 100%;
+    .role-modal{
+        width:100%;
+        border-radius:16px;
     }
 
-    .pagination-wrapper {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-        margin-top: 30px;
+    .modal-body,
+    .modal-header,
+    .modal-footer{
+        padding-left:18px;
+        padding-right:18px;
     }
-    
-    .role-modal {
-        width: 90%; 
-    }
+
+    /* =====================================================
+   SIDEBAR DROPDOWN & SUBMENU
+===================================================== */
+.sidebar-submenu {
+    display: none; /* Sembunyikan submenu secara default */
+    flex-direction: column;
+    padding-left: 20px; /* Indentasi agar terlihat seperti anakan menu */
+    margin-top: 5px;
+}
+
+/* Class 'show' akan ditambahkan oleh JavaScript saat diklik */
+.sidebar-submenu.show {
+    display: flex; 
+}
+
+/* Animasi putar ikon panah (chevron) */
+.dropdown-arrow {
+    transition: transform 0.3s ease;
+    margin-left: auto; /* Mendorong panah ke ujung kanan */
+}
+
+/* Jika parent diklik, panah berputar 180 derajat */
+.sidebar-dropdown.open .dropdown-arrow {
+    transform: rotate(180deg);
+}
 }

@@ -66,12 +66,12 @@
             </div>
             <div class="sidebar-submenu" id="accountConfigMenu">
                 <a href="#" class="sidebar-submenu-item">
-                    <i class="bi bi-people-fill"></i>
-                    <span>Manajemen User</span>
+                    <i class="bi bi-shield-lock-fill"></i>
+                    <span>Manajemen Menu</span>
                 </a>
                 <a href="#" class="sidebar-submenu-item">
-                    <i class="bi bi-shield-lock-fill"></i>
-                    <span>Manajemen Role</span>
+                    <i class=" bi bi-people-fill"></i>
+                    <span>Manajemen User</span>
                 </a>
             </div>
             <a href="#" class="sidebar-menu">
