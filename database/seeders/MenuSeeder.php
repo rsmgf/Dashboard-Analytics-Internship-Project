@@ -17,22 +17,29 @@ class MenuSeeder extends Seeder
         $dashboard = Menu::create([
             'name' => 'Dashboard',
             'route' => 'dashboard',
-            'icon' => 'bi bi-house',
+            'icon' => 'bi bi-grid-fill',
             'order' => 1,
         ]);
 
         $pop = Menu::create([
             'name' => 'POP',
-            'route' => 'pop', // sesuaikan dengan nama route asli kamu
-            'icon' => 'bi bi-box-seam',
+            'route' => 'pops.index', // sesuaikan dengan nama route asli kamu
+            'icon' => 'bi bi-geo-alt-fill',
             'order' => 2,
         ]);
 
         $rma = Menu::create([
             'name' => 'RMA',
             'route' => 'rma', // sesuaikan dengan nama route asli kamu
-            'icon' => 'bi bi-arrow-return-left',
+            'icon' => 'bi bi-file-earmark-text-fill',
             'order' => 3,
+        ]);
+
+        $accountConfig = Menu::create([
+            'name' => 'Konfigurasi Akun',
+            'route' => null, // parent tidak punya route sendiri, cuma dropdown toggle
+            'icon' => 'bi bi-gear-fill',
+            'order' => 4,
         ]);
 
         $usermanagement = Menu::create([
@@ -40,6 +47,14 @@ class MenuSeeder extends Seeder
             'route' => 'admin.users.index', // sesuaikan dengan nama route asli kamu
             'icon' => 'bi bi-people',
             'order' => 4,
+        ]);
+
+        $menuManagement = Menu::create([
+            'name' => 'Manajemen Menu',
+            'route' => 'admin.menus.index',
+            'icon' => 'bi bi-list-ul',
+            'order' => 2,
+            'parent_id' => $accountConfig->id,
         ]);
 
 
@@ -53,5 +68,7 @@ class MenuSeeder extends Seeder
         $pop->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id]);   // semua role
         $rma->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id]);   // semua role
         $usermanagement->roles()->sync([$superAdmin->id]);   // hanya admin
+        $accountConfig->roles()->sync([$superAdmin->id]);
+        $menuManagement->roles()->sync([$superAdmin->id]); // hanya admin
     }
 }

@@ -24,7 +24,7 @@
     <div class="app-container">
 
         <!-- SIDEBAR COMPONENT -->
-        <x-sidebar active="pop" />
+        <x-sidebar />
 
         <main class="main-content">
 
@@ -88,25 +88,6 @@
                             </tr>
                         </thead>
                         <tbody id="popTableBody">
-<<<<<<< HEAD
-                            @for($i = 1; $i <= 14; $i++)
-                            <tr>
-                                <td>{{ $i }}.</td>
-                                <td>Jambi</td>
-                                <td>Tanjung Jabung Barat</td>
-                                <td>POP_1MBN10004</td>
-                                <td>
-                                    KASANG PUDAK KUMPEH ULU 1<br>
-                                    PAYO SELINCAH GI SHELTER 2 OLT
-                                </td>
-                                <td>Shelter Permanent</td>
-                                <td>POP-SB</td>
-                                <td>
-                                    <button type="button" class="btn-detail" onclick="lihatPOP('POP_1MBN10004')">Lihat</button>
-                                </td>
-                            </tr>
-                            @endfor
-=======
                             @forelse($pops as $index => $pop)
                             <tr>
                                 <td>{{ $pops->firstItem() + $index }}.</td>
@@ -145,7 +126,6 @@
                                 <td colspan="8" style="text-align: center; padding: 20px; color: #64748b;">Belum ada data POP.</td>
                             </tr>
                             @endforelse
->>>>>>> 0dd85777157429ea593723e2939a41ab5010977f
                         </tbody>
                     </table>
                     

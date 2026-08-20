@@ -21,7 +21,6 @@
 
     <div class="app-container">
 
-        <!-- SIDEBAR COMPONENT -->
         <x-sidebar />
 
         <main class="main-content">
@@ -31,6 +30,26 @@
 
         <!-- MAIN CONTENT -->
         <main class="main-content">
+
+            <!-- TOPBAR -->
+            <header class="topbar"
+                style="display: flex; justify-content: flex-start; align-items: center; gap: 12px; width: 100%; padding-right: 20px;">
+                <button type="button" class="sidebar-toggle" id="sidebarToggle" title="Buka / Tutup Sidebar">
+                    <i class="bi bi-list"></i>
+                </button>
+
+                <div class="user-profile"
+                    style="margin-left: auto; display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                    <span style="font-weight: 600; font-size: 14px; color: #333;">
+                        {{ Auth::check() ? Auth::user()->name : 'Nama User' }}
+                    </span>
+
+                    <div
+                        style="width: 38px; height: 38px; background-color: #007bff; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-person-fill" style="font-size: 20px;"></i>
+                    </div>
+                </div>
+            </header>
 
             <!-- CONTENT LAYOUT -->
             <div class="users-content" style="padding: 24px;">
