@@ -249,15 +249,13 @@
 
                                 <!-- FORM ACTIONS -->
                                 <div class="form-actions" style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px; gap: 15px;">
-
                                     <button type="button" class="btn-preview" id="prevButton" style="background: #e2e8f0; color: #475569; border: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;">
                                         <i class="bi bi-arrow-left"></i> Kembali
                                     </button>
 
-                                    <div style="display: flex; gap: 10px;">
-                                        <button type="submit" class="btn-simpan" style="background: #0ea5e9; color: white; border: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; cursor: pointer;">Simpan Data</button>
-                                    </div>
-
+                                    <button type="submit" class="btn-submit" style="background: #0284c7; color: white; border: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 14px;">
+                                        <i class="bi bi-floppy"></i> Simpan RMA
+                                    </button>
                                 </div>
 
                             </div>
@@ -316,13 +314,11 @@
         </main>
     </div>
 
-    <!-- SWEETALERT2 UNTUK POPUP ERROR VALIDASI -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     @if ($errors->any())
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                // Jika ada error, tampilkan popup yang berisi daftar error
                 let errorList = `{!! implode('<br>', $errors->all()) !!}`;
                 Swal.fire({
                     icon: 'error',
@@ -331,7 +327,6 @@
                     confirmButtonColor: '#ef4444'
                 });
 
-                // Otomatis arahkan user kembali ke halaman tempat error terjadi (Step 2 jika terkait file)
                 if (errorList.toLowerCase().includes('foto') || errorList.toLowerCase().includes('tanda tangan')) {
                     document.getElementById('step-1').style.display = 'none';
                     document.getElementById('step-2').style.display = 'block';
@@ -343,7 +338,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
-            // 1. LOGIKA STATUS KERUSAKAN (Hidden Input)
+            // 1. LOGIKA STATUS KERUSAKAN
             const damageCheckboxes = document.querySelectorAll('input[name="kerusakan[]"]');
             const isMaterialRusakInput = document.getElementById('is_material_rusak');
 
@@ -354,7 +349,7 @@
                 });
             });
 
-            // 2. NAVIGASI MULTI-STEP
+            // 2. NAVIGASI STEP
             const step1 = document.getElementById('step-1');
             const step2 = document.getElementById('step-2');
             const nextButton = document.getElementById('nextButton');
@@ -363,22 +358,16 @@
             nextButton.addEventListener('click', function() {
                 step1.style.display = 'none';
                 step2.style.display = 'block';
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             });
 
             prevButton.addEventListener('click', function() {
                 step2.style.display = 'none';
                 step1.style.display = 'block';
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             });
 
-            // 3. LOGIKA DROPZONE UTAMA (Menampilkan Nama File)
+            // 3. LOGIKA DROPZONE
             const fileInput = document.getElementById('fileInput');
             const dropzoneText = document.getElementById('dropzoneText');
 
@@ -392,7 +381,7 @@
                 }
             });
 
-            // 4. LOGIKA TAMBAH SFP (Desain Dirapikan & SN Dihapus)
+            // 4. TAMBAH SFP
             const tambahSfpBtn = document.getElementById('tambahSfp');
             const sfpContainer = document.getElementById('sfp-container');
 
@@ -400,26 +389,20 @@
                 const sfpBlock = document.createElement('div');
                 sfpBlock.className = 'sfp-item'; 
 
-                // Menggunakan class upload-dropzone agar desainnya persis dengan Material Utama
                 sfpBlock.innerHTML = `
                     <div class="form-group" style="margin-bottom: 0;">
-                        
-                        <!-- Header SFP: Label dan Tombol Hapus sejajar -->
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                             <label style="margin-bottom: 0; font-size: 16px;">Foto Material Tambahan (SFP) <span>*</span></label>
                             <button type="button" class="btn-hapus" onclick="this.closest('.sfp-item').remove()">Hapus <i class="bi bi-trash3-fill"></i></button>
                         </div>
                         
-                        <!-- Area Dropzone -->
                         <div class="upload-dropzone">
                             <i class="bi bi-cloud-arrow-up dropzone-icon"></i>
                             <div class="dropzone-text">Masukkan file disini</div>
                             
-                            <!-- Input file hidden -->
                             <input type="file" name="foto_material[]" accept="image/*" required style="display: none;" 
                                 onchange="this.previousElementSibling.innerText = this.files.length ? this.files[0].name : 'Masukkan file disini'; this.previousElementSibling.style.color = this.files.length ? '#10b981' : '#64748b';">
                             
-                            <!-- Tombol Browse memicu input file di atasnya -->
                             <button type="button" class="btn-browse" onclick="this.previousElementSibling.click()">Browse</button>
                         </div>
                     </div>

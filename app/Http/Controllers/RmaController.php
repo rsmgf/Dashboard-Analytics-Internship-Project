@@ -2,41 +2,56 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreRmaRequest;
 use App\Models\Rma;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 
 class RmaController extends Controller
 {
-    public function store(Request $request)
+    public function index(Request $request)
     {
-        $validatedData = $request->validate([
-            'nama_pemohon'      => 'required|string',
-            'nama_manager'      => 'required|string', 
-            'is_material_rusak' => 'required|boolean', // (0 atau 1)
-            'ttd_pemohon'       => 'required|image|mimes:jpeg,png,jpg|max:2048', 
-            'so_po'             => 'required|string',
-            'valuation_type'    => 'required|in:ex-project,dismantle,rusak-L,rusak-TL',
-            'tanggal'           => 'required|date',
-            'lokasi_asal'       => 'required|string',
-            'merk'              => 'required|string',
-            'type'              => 'required|string',
-            'material_number'   => 'nullable|string',
-            'description'       => 'nullable|string',
-            'kerusakan'         => 'nullable|array', // Boleh kosong jika tidak rusak
-            'alasan'            => 'nullable|string',
-            'serial_number'     => 'required|string',
-            'foto_material'     => 'required|array',
-            'foto_material.*'   => 'required|image|mimes:jpeg,png,jpg|max:2048', 
-        ]);
+        $search = $request->query('search');
+        $sort = $request->query('sort', 'id');
+        $direction = strtolower($request->query('direction')) === 'desc' ? 'desc' : 'asc';
 
+        $query = Rma::with('materials')
+            ->when($search, function ($q, $search) {
+                $q->where(function ($sub) use ($search) {
+                    $sub->where('so_po', 'like', "%{$search}%")
+                        ->orWhere('lokasi_asal', 'like', "%{$search}%");
+                });
+            });
+
+        // Jika sort tanggal dipilih, urutkan berdasarkan kolom tanggal DAN jam pembuatan (created_at)
+        if ($sort === 'tanggal') {
+            $query->orderBy('tanggal', $direction)->orderBy('created_at', $direction);
+        } else {
+            $query->orderBy('id', $direction);
+        }
+
+        $rmas = $query->paginate(8)->withQueryString();
+
+        return view('rma.rma', compact('rmas', 'sort', 'direction'));
+    }
+
+    public function create()
+    {
+        return view('rma.rma-create');
+    }
+
+    public function store(StoreRmaRequest $request)
+    {
+        $validatedData = $request->validated();
+
+        // 1. Simpan tanda tangan
         $ttdPath = $request->file('ttd_pemohon')->store('signatures', 'public');
 
-        // 1. Simpan data utama ke tabel rmas
+        // 2. Simpan data utama
         $rma = Rma::create([
             'nama_pemohon'      => $validatedData['nama_pemohon'],
-            'nama_manager'      => $validatedData['nama_manager'],       
-            'is_material_rusak' => $validatedData['is_material_rusak'],  
+            'nama_manager'      => $validatedData['nama_manager'],
+            'is_material_rusak' => $validatedData['is_material_rusak'],
             'ttd_pemohon'       => $ttdPath,
             'so_po'             => $validatedData['so_po'],
             'valuation_type'    => $validatedData['valuation_type'],
@@ -45,33 +60,39 @@ class RmaController extends Controller
             'merk'              => $validatedData['merk'],
             'type'              => $validatedData['type'],
             'material_number'   => $validatedData['material_number'] ?? null,
-            'description'       => $validatedData['description'],
-            'kerusakan'         => $validatedData['kerusakan'] ?? null,  // ?? null untuk jaga-jaga jika kosong
+            'description'       => $validatedData['description'] ?? null,
+            'kerusakan'         => $validatedData['kerusakan'] ?? null,
             'alasan'            => $validatedData['alasan'] ?? null,
         ]);
 
-        // 2. Looping array foto dan serial number untuk disimpan ke rma_materials
-        foreach ($request->file('foto_material') as $index => $file) {
+        // 3. Simpan foto material
+        foreach ($request->file('foto_material') as $file) {
             $path = $file->store('material_images', 'public');
-            
+
             $rma->materials()->create([
                 'serial_number' => $validatedData['serial_number'],
                 'foto_path'     => $path,
             ]);
         }
 
-        return redirect()->route('rma.pdf', $rma->id);
+        // Ambil data lengkap & tampilkan PDF langsung di tab baru
+        $data = Rma::with('materials')->findOrFail($rma->id);
+        $pdf = Pdf::loadView('pdf.rma', compact('data'));
+
+        return $pdf->stream('RMA_' . $data->id . '.pdf');
     }
 
     public function generatePdf($id)
     {
-        // 1. Ambil data RMA beserta relasi foto-fotonya (materials)
         $data = Rma::with('materials')->findOrFail($id);
-
-        // 2. Load file blade PDF yang sudah kita buat tadi
         $pdf = Pdf::loadView('pdf.rma', compact('data'));
+        return $pdf->stream('RMA_' . $data->id . '.pdf');
+    }
 
-        // 3. Tampilkan PDF langsung di browser
-        return $pdf->stream('RMA_' . $data->serial_number . '.pdf');
+    public function downloadPdf($id)
+    {
+        $data = Rma::with('materials')->findOrFail($id);
+        $pdf = Pdf::loadView('pdf.rma', compact('data'));
+        return $pdf->download('RMA_' . $data->id . '.pdf');
     }
 }

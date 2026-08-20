@@ -8,18 +8,17 @@ use App\Http\Controllers\RectifierController;
 use App\Http\Controllers\RmaController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
+// --- GUEST / AUTH REDIRECT ---
 Route::get('/', function () {
     return view('auth.login');
 });
 
+// --- DASHBOARD ---
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+// --- PROFILE ---
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -28,6 +27,7 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
+// --- SUPER ADMIN: USER & MENU MANAGEMENT ---
 Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->group(function () {
     Route::get('/users', [UserManagementController::class, 'index'])->name('admin.users.index');
     Route::patch('/users/{user}/role', [UserManagementController::class, 'updateRole'])->name('admin.users.updateRole');
@@ -38,13 +38,15 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->group(function
     Route::delete('/menus/{menu}', [MenuManagementController::class, 'destroy'])->name('admin.menus.destroy');
 });
 
+// --- AUTHENTICATED ROUTES ---
 Route::middleware('auth')->group(function () {
 
-    // --- FORM RMA ---
-    Route::get('/rma', function () {
-        return view('rma');
-    })->name('rma');
-    Route::post('/rma', [RmaController::class, 'store'])->name('rma.store');
+    // --- FORM & RIWAYAT RMA ---
+    Route::get('/rma', [RmaController::class, 'index'])->name('rma');          // Menampilkan Riwayat RMA (Halaman Utama)
+    Route::get('/rma/create', [RmaController::class, 'create'])->name('rma.create');   // Menampilkan Form Pengisian RMA
+    Route::post('/rma', [RmaController::class, 'store'])->name('rma.store');          // Menyimpan Data Form RMA
+    // Preview & Download PDF
+    Route::get('/rma/{id}/download', [RmaController::class, 'downloadPdf'])->name('rma.download');
     Route::get('/rma/{id}/pdf', [RmaController::class, 'generatePdf'])->name('rma.pdf');
 
     // --- POP: VIEW (Semua Role: Karyawan, Teknisi, Super Admin) ---
@@ -65,39 +67,18 @@ Route::middleware('auth')->group(function () {
     });
 
     // --- RECTIFIERS ---
-    Route::get('/pops/{pop}/rectifiers', [RectifierController::class, 'index']);      
-    Route::get('/pops/{pop}/rectifiers/{id}', [RectifierController::class, 'show']);  
+    Route::get('/pops/{pop}/rectifiers', [RectifierController::class, 'index'])->name('rectifiers.index');
+    Route::get('/pops/{pop}/rectifiers/{id}', [RectifierController::class, 'show'])->name('rectifiers.show');
     
-    Route::middleware('role:super_admin,teknisi')->group(function () {
-        Route::put('/pops/{pop}/rectifiers/{id}', [RectifierController::class, 'update']);
+    // Rectifier Edit (Teknisi & Super Admin)
+    Route::middleware('role:super_admin|teknisi')->group(function () {
+        Route::put('/pops/{pop}/rectifiers/{id}', [RectifierController::class, 'update'])->name('rectifiers.update');
     });
     
+    // Rectifier Create & Delete (Hanya Super Admin)
     Route::middleware('role:super_admin')->group(function () {
-        Route::post('/pops/{pop}/rectifiers', [RectifierController::class, 'store']);     
-        Route::delete('/pops/{pop}/rectifiers/{id}', [RectifierController::class, 'destroy']); 
+        Route::post('/pops/{pop}/rectifiers', [RectifierController::class, 'store'])->name('rectifiers.store');
+        Route::delete('/pops/{pop}/rectifiers/{id}', [RectifierController::class, 'destroy'])->name('rectifiers.destroy');
     });
 
 });
-
-Route::get('/reset2', function () {
-    return view('auth.reset2');
-});
-
-Route::get('/reset3', function () {
-    return view('auth.reset3');
-});
-
-Route::get('/rma', function () {
-    return view('rma');
-})->name('rma');
-
-// Rute untuk menangani saat tombol "Simpan" diklik
-Route::post('/rma', [RmaController::class, 'store'])->name('rma.store');
-
-// Rute untuk mencetak PDF
-Route::get('/rma/{id}/pdf', [RmaController::class, 'generatePdf'])->name('rma.pdf');
-
-Route::get('/rma-awal', function () {
-    return view('rma-awal');
-})->name('rma.index');
-

@@ -29,7 +29,7 @@ public function index(Request $request)
         $pops = $query->paginate(10)->appends($request->query());
 
         // KEMBALIKAN KE VIEW, BUKAN JSON
-        return view('list-pop', compact('pops'));
+        return view('pop.list-pop', compact('pops'));
     }
 
     // 2. Menyimpan data POP baru
