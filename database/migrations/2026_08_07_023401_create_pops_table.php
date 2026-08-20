@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('kota_kabupaten'); // Contoh: Kota Jambi
             $table->string('tipe_pop')->nullable(); // Contoh: POP-A, POP-B, POP-SB
             $table->string('jenis_bangunan')->nullable(); // Contoh: Shelter, ODC, Mini POP
-            $table->text('lokasi')->nullable(); //contoh Muara bungo
             $table->timestamps();
         });
     }

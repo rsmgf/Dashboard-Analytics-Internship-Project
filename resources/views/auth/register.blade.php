@@ -103,6 +103,21 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label class="form-label">No. Handphone</label>
+                                    <div class="custom-input @error('no_hp') input-error @enderror">
+                                        <i class="input-icon bi bi-telephone"></i>
+                                        <input type="text" name="no_hp" class="form-control"
+                                            placeholder="Masukkan nomor handphone" value="{{ old('no_hp') }}">
+                                    </div>
+                                    @error('no_hp')
+                                        <div class="error-message">
+                                            <i class="bi bi-exclamation-circle"></i>
+                                            <span>{{ $message }}</span>
+                                        </div>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group">
                                     <label class="form-label">Password</label>
                                     <div class="custom-input password-input @error('password') input-error @enderror">
                                         <i class="input-icon bi bi-lock"></i>
@@ -142,31 +157,6 @@
                                     @enderror
                                 </div>
 
-                                {{-- <div class="form-group">
-                                    <label class="form-label">Role</label>
-                                    <div class="custom-input select-wrapper @error('role') input-error @enderror">
-                                        <i class="input-icon bi bi-shield-lock"></i>
-                                        <select name="role" class="form-control">
-                                            <option value="" disabled {{ old('role') ? '' : 'selected' }}>
-                                                Pilih role
-                                            </option>
-                                            @foreach ($roles as $role)
-                                                <option value="{{ $role->name }}"
-                                                    {{ old('role') == $role->name ? 'selected' : '' }}>
-                                                    {{ ucfirst($role->name) }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        <i class="bi bi-chevron-down select-icon"></i>
-                                    </div>
-                                    @error('role')
-                                        <div class="error-message">
-                                            <i class="bi bi-exclamation-circle"></i>
-                                            <span>{{ $message }}</span>
-                                        </div>
-                                    @enderror
-                                </div> --}}
-
                                 <div class="form-group full-width">
                                     <button type="submit" class="btn-register">
                                         Daftar
@@ -184,7 +174,11 @@
         </div>
     </div>
 
+    <!-- Script SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
+        // Fitur lihat/sembunyikan password
         function togglePassword(inputId, button) {
             const input = document.getElementById(inputId);
             const icon = button.querySelector('i');
@@ -197,6 +191,24 @@
                 icon.classList.replace('bi-eye-slash', 'bi-eye');
             }
         }
+
+        // Fitur Pop-up Notifikasi Berhasil Register
+        document.addEventListener('DOMContentLoaded', function () {
+            @if(session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Registrasi Berhasil!',
+                    text: '{{ session('success') }}',
+                    confirmButtonText: 'Mengerti',
+                    confirmButtonColor: '#008588', 
+                    allowOutsideClick: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "{{ route('login') }}";
+                    }
+                });
+            @endif
+        });
     </script>
 </body>
 

@@ -18,6 +18,10 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
         $this->call([
             PopSeeder::class,
+            RoleSeeder::class,
+            SuperAdminSeeder::class,
+            MenuSeeder::class,
+            PermissionSeeder::class,
         ]);
 
         User::factory()->create([

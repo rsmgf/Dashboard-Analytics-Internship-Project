@@ -1,0 +1,515 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #f8fafc;
+    color: #1e293b;
+}
+
+.main-content {
+    min-height: 100vh;
+}
+
+/* =====================================================
+   TOPBAR
+===================================================== */
+.topbar {
+    height: 70px;
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+/* =====================================================
+   SIDEBAR TOGGLE
+===================================================== */
+.sidebar-toggle {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 6px;
+    background: #f1f5f9;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    transition: 0.2s ease;
+}
+
+.sidebar-toggle:hover {
+    background: #e2e8f0;
+    color: #334155;
+}
+
+/* =====================================================
+   USER PROFILE
+===================================================== */
+.user-profile {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.user-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.user-email {
+    font-size: 10px;
+    color: #94a3b8;
+}
+
+.user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    font-size: 18px;
+}
+
+/* =====================================================
+   PAGE
+===================================================== */
+.rma-page {
+    padding: 28px 32px 50px;
+    width: 100%;
+}
+
+/* =====================================================
+   PAGE HEADER & BUTTON
+===================================================== */
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    gap: 20px;
+}
+
+.page-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.title-icon {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 9px;
+    background: #eaf4ff;
+    color: #0072ce;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 21px;
+}
+
+.page-title h1 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.page-title p {
+    margin: 3px 0 0;
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+.btn-tambah {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 18px;
+    border: none;
+    border-radius: 7px;
+    background: #0072ce;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.btn-tambah:hover {
+    background: #005baa;
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+.btn-tambah i {
+    font-size: 15px;
+}
+
+/* =====================================================
+   ALERT INFO
+===================================================== */
+.alert-info-custom {
+    display: flex;
+    align-items: center;
+    background-color: #f4f6ff;
+    color: #333;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid #cdd5fb;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.alert-info-custom i {
+    color: #5c6bc0;
+    font-size: 18px;
+    margin-right: 12px;
+}
+
+/* =====================================================
+   TABLE CARD & HEADER RIWAYAT
+===================================================== */
+.table-card {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.history-header {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #eef2f7;
+}
+
+.history-header h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #334155;
+}
+
+.table-controls {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 15px;
+}
+
+.search-wrapper,
+.filter-wrapper {
+    position: relative;
+}
+
+.search-wrapper {
+    width: 65%;
+}
+
+.filter-wrapper {
+    width: 25%;
+}
+
+.search-wrapper input,
+.filter-wrapper input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    color: #374151;
+    transition: border-color 0.2s ease;
+}
+
+.search-wrapper input:focus,
+.filter-wrapper input:focus {
+    border-color: #2581ff;
+}
+
+.search-wrapper i,
+.filter-wrapper i {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+}
+
+/* =====================================================
+   RMA TABLE
+===================================================== */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+}
+
+.rma-table {
+    width: 100%;
+    min-width: 950px;
+    border-collapse: collapse;
+    font-size: 13px;
+    background: #ffffff;
+}
+
+.rma-table th {
+    background-color: #e6f0ff;
+    padding: 13px 16px;
+    text-align: left;
+    font-weight: 600;
+    color: #111;
+    border-bottom: 1px solid #d1d5db;
+    white-space: nowrap;
+}
+
+.rma-table td {
+    padding: 13px 16px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+    color: #475569;
+}
+
+.rma-table td.text-center,
+.rma-table th.text-center {
+    text-align: center;
+}
+
+.rma-table tbody tr {
+    transition: background 0.15s ease;
+}
+
+.rma-table tbody tr:hover {
+    background: #f8fbff;
+}
+
+.rma-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.text-sub {
+    color: #6b7280;
+    font-size: 11px;
+    display: block;
+    margin-top: 2px;
+}
+
+/* =====================================================
+   BUTTONS ACTION PADA TABEL
+===================================================== */
+.btn-lihat {
+    background-color: #2581ff;
+    color: white;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-right: 8px;
+    transition: background 0.2s;
+}
+
+.btn-lihat:hover {
+    background-color: #1d4ed8;
+}
+
+.btn-cetak {
+    background-color: white;
+    color: #111;
+    border: 1px solid #d1d5db;
+    padding: 6px 16px;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s;
+}
+
+.btn-cetak:hover {
+    background-color: #f3f4f6;
+}
+
+/* =====================================================
+   PAGINATION
+===================================================== */
+.pagination-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.pagination-controls {
+    display: flex;
+    gap: 4px;
+}
+
+.pagination-controls button {
+    border: 1px solid #d1d5db;
+    background: white;
+    color: #374151;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.pagination-controls button:hover {
+    background: #f3f4f6;
+}
+
+.pagination-controls button.active {
+    background: #1d4ed8;
+    color: white;
+    border-color: #1d4ed8;
+}
+
+/* =====================================================
+   SIDEBAR COLLAPSED (DIPERBAIKI)
+===================================================== */
+body.sidebar-collapsed .sidebar {
+    width: 70px;
+}
+
+body.sidebar-collapsed .main-content {
+    margin-left: 70px;
+}
+
+/* Menghapus .sidebar-logo img dari display none */
+body.sidebar-collapsed .sidebar-section span,
+body.sidebar-collapsed .section-title {
+    display: none;
+}
+
+/* Style agar logo mengecil dan berada di tengah saat ditutup */
+body.sidebar-collapsed .sidebar-logo {
+    padding: 15px 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+body.sidebar-collapsed .sidebar-logo img {
+    width: 40px;
+    height: auto;
+    object-fit: contain;
+}
+
+/* =====================================================
+   RESPONSIVE - TABLET
+===================================================== */
+@media (max-width: 1000px) {
+    .rma-page {
+        padding: 24px;
+    }
+    .table-card {
+        padding: 18px;
+    }
+}
+
+/* =====================================================
+   RESPONSIVE - MOBILE
+===================================================== */
+@media (max-width: 700px) {
+    .topbar {
+        padding: 0 16px;
+    }
+
+    .user-info {
+        display: none;
+    }
+
+    .rma-page {
+        padding: 20px 16px 40px;
+    }
+
+    .page-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .page-title {
+        width: 100%;
+    }
+
+    .page-title h1 {
+        font-size: 20px;
+    }
+
+    .page-title p {
+        font-size: 11px;
+    }
+
+    .btn-tambah {
+        width: 100%;
+        padding: 11px 16px;
+    }
+
+    .table-controls {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .search-wrapper,
+    .filter-wrapper {
+        width: 100%;
+    }
+
+    .pagination-footer {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+}
+
+/* =====================================================
+   RESPONSIVE - SMALL MOBILE
+===================================================== */
+@media (max-width: 450px) {
+    .title-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+
+    .page-title h1 {
+        font-size: 18px;
+    }
+
+    .btn-tambah {
+        font-size: 12px;
+    }
+}

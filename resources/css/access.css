@@ -1,0 +1,262 @@
+.access-content {
+    padding: 30px;
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.access-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #f1f5f9;
+    padding-bottom: 12px;
+}
+
+.access-title-icon {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #0d5c9e, #2563eb);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-size: 1.3rem;
+    box-shadow: 0 4px 10px rgba(13, 92, 158, 0.2);
+}
+
+.access-header h1 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 2px 0;
+}
+
+.access-header p {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Role badge di halaman index */
+.role-badge-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 8px;
+    background: #eff6ff;
+    color: #2563eb;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.btn-atur-akses {
+    background-color: #1E8AE2;
+    color: #fff;
+    border: 1px solid #1E8AE2;
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-atur-akses:hover {
+    background-color: #166bb5;
+    border-color: #166bb5;
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+/* --- Halaman Edit --- */
+.access-toolbar {
+    display: flex;
+    gap: 20px;
+    align-items: flex-end;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.access-toolbar .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.access-toolbar .field.grow {
+    flex: 1;
+}
+
+.access-toolbar label {
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.access-select,
+.access-input {
+    padding: 10px 16px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+    background-color: #f8fafc;
+    color: #334155;
+    transition: all 0.3s ease;
+}
+
+.access-select:focus,
+.access-input:focus {
+    background-color: #fff;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.btn-terapkan {
+    background-color: #64748b;
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-terapkan:hover {
+    background-color: #475569;
+}
+
+.access-group-row td {
+    background-color: #f8fafc;
+    font-weight: 700;
+    color: #1e293b;
+    padding: 10px 16px;
+    font-size: 0.85rem;
+}
+
+.access-menu-row td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: middle;
+}
+
+.access-menu-row .menu-name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+    color: #334155;
+}
+
+.access-menu-row.is-child .menu-name {
+    padding-left: 24px;
+    color: #475569;
+    font-weight: 400;
+}
+
+.access-actions {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+.access-action-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: #475569;
+    font-weight: 500;
+}
+
+/* Toggle switch ala Bootstrap/Tailwind */
+.tgl {
+    position: relative;
+    display: inline-block;
+    width: 38px;
+    height: 22px;
+    flex-shrink: 0;
+}
+
+.tgl input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.tgl .slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background-color: #cbd5e1;
+    border-radius: 999px;
+    transition: 0.2s;
+}
+
+.tgl .slider::before {
+    content: "";
+    position: absolute;
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    border-radius: 50%;
+    transition: 0.2s;
+}
+
+.tgl input:checked+.slider {
+    background-color: #3b82f6;
+}
+
+.tgl input:checked+.slider::before {
+    transform: translateX(16px);
+}
+
+.tgl input:disabled+.slider {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.select-all-check {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.btn-simpan-akses {
+    background-color: #1E8AE2;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-simpan-akses:hover {
+    background-color: #166bb5;
+}

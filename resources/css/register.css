@@ -38,8 +38,8 @@ body {
 
 .logo {
     position: absolute;
-    top: 15px;
-    right: 45px;
+    top: 25px;
+    left: 70px;
     width: auto;
     height: 58px;
     z-index: 5;
@@ -51,7 +51,7 @@ body {
     background: rgba(255, 255, 255, .96);
     backdrop-filter: blur(10px);
     border-radius: 24px;
-    padding: 32px 30px 25px;
+    padding: 35px 30px;
     margin-left: auto;
     margin-right: 5vw;
     box-shadow: 0 15px 35px rgba(0, 0, 0, .15);
@@ -441,12 +441,12 @@ body {
     }
     .logo {
         top: 20px;
-        right: 20px;
+        left: 20px;
         height: 45px;
     }
     .register-card {
         width: 100%;
-        max-width: 520px;
+        max-width: 420px;
         margin: auto;
         padding: 35px;
     }

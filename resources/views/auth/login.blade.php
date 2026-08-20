@@ -62,6 +62,7 @@
                                 @enderror
                             </div>
 
+                            <!-- Password -->
                             <div class="mb-3">
                                 <label for="password" class="form-label">Kata Sandi</label>
                                 <div class="input-group custom-input">
@@ -131,7 +132,6 @@
                         </p>
 
                         <div class="pln-features-container">
-                        
                             <div class="pln-feature-item">
                                 <div class="pln-feature-icon-card">
                                     <i class="bi bi-patch-check-fill"></i>
@@ -161,6 +161,9 @@
         </div>
     </div>
 
+    <!-- Tambahkan CDN SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
         function togglePassword() {
             const input = document.getElementById("password");
@@ -176,6 +179,34 @@
                 eye.classList.add("bi-eye-fill");
             }
         }
+
+        // Script untuk menangkap session dari Controller
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            // Pop-up jika akun belum diverifikasi
+            @if(session('unverified'))
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Menunggu Verifikasi',
+                    text: '{{ session('unverified') }}',
+                    confirmButtonText: 'Mengerti',
+                    confirmButtonColor: '#008588', // Warna hijau khas PLN Icon Plus
+                    allowOutsideClick: false
+                });
+            @endif
+
+            // Opsional: Pop-up jika email/password salah
+            @if(session('error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Masuk',
+                    text: '{{ session('error') }}',
+                    confirmButtonText: 'Tutup',
+                    confirmButtonColor: '#dc3545',
+                });
+            @endif
+            
+        });
     </script>
 
 </body>

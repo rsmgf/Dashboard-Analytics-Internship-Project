@@ -14,7 +14,7 @@
             display: flex;
             align-items: center;
             gap: 16px;
-            margin-bottom: 15px; 
+             margin-bottom: 15px; 
             border-bottom: 2px solid #f1f5f9;
             padding-bottom: 12px; 
         }
@@ -159,9 +159,9 @@
 
         /* Button Detail */
         .btn-detail {
-            background-color: #eff6ff; /* Background biru sangat muda */
-            color: #2563eb; /* Teks biru tua */
-            border: 1px solid #bfdbfe;
+            background-color: #1E8AE2;
+            color: #ffffff;
+            border: 1px solid #1E8AE2;
             padding: 6px 16px;
             border-radius: 6px;
             font-size: 0.8rem;
@@ -171,20 +171,76 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            text-decoration: none;
         }
 
-        /* Efek Hover Button */
         .btn-detail:hover {
-            background-color: #2563eb;
-            color: white;
-            border-color: #2563eb;
-            transform: translateY(-1px); /* Tombol sedikit naik */
-            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+            background-color: #166bb5;
+            border-color: #166bb5;
+            color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(30, 138, 226, 0.3);
         }
 
-        .btn-detail:active {
-            transform: translateY(0);
+        .btn-detail:active { transform: translateY(0); }
+
+        /* Button Edit — Kuning solid, icon-only square */
+        .btn-edit {
+            background-color: #EAB308;
+            color: #ffffff;
+            border: 1px solid #EAB308;
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            flex-shrink: 0;
         }
+
+        .btn-edit:hover {
+            background-color: #CA8A04;
+            border-color: #CA8A04;
+            color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(234, 179, 8, 0.35);
+        }
+
+        .btn-edit:active { transform: translateY(0); }
+
+        /* Button Hapus — Merah solid, icon-only square */
+        .btn-hapus {
+            background-color: #DC2626;
+            color: #ffffff;
+            border: 1px solid #DC2626;
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .btn-hapus:hover {
+            background-color: #991B1B;
+            border-color: #991B1B;
+            color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.35);
+        }
+
+        .btn-hapus:active { transform: translateY(0); }
+
 
         .btn-tambah-pop {
         background-color: #007bff; /* Ubah warna sesuai tema PLN (misal teal/biru) */
@@ -205,4 +261,174 @@
         .btn-tambah-pop:hover {
             background-color: #0056b3;
             color: #ffffff;
+        }
+
+        .pop-table {
+            margin-bottom: 0; /* Menghapus jarak kosong di bawah tabel */
+        }
+
+        .pop-table tbody tr:last-child td {
+            border-bottom: 1px solid #e2e8f0;; 
+        }
+
+        /* 2. KOTAK PAGINASI UTAMA */
+        .pagination-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px;
+            background-color: #ffffff;
+            font-size: 0.85rem;
+            color: #64748b;
+            font-weight: 500;
+            margin-top: 0;
+            row-gap: 12px;
+        }
+
+        .pagination-container > div,
+        .pagination-container nav {
+            margin: 0 !important;
+            padding: 0 !important;
+            display: flex;
+            align-items: center;
+            line-height: 1.2;
+        }
+
+        .pagination {
+            display: flex;
+            flex-wrap: wrap;
+            list-style: none;
+            padding: 0;
+            margin: 0 !important;
+            gap: 6px;
+            align-items: center;
+        }
+
+        /* 3. TOMBOL ANGKA STANDAR */
+        .page-item .page-link,
+        .page-item span.page-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 34px;
+            height: 34px;
+            padding: 0 10px;
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            color: #3b82f6;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            line-height: 1;
+            box-sizing: border-box;
+        }
+
+        .page-item .page-link:hover {
+            background-color: #f8fafc;
+            border-color: #cbd5e1;
+            color: #2563eb;
+        }
+
+        /* Tombol Aktif */
+        .page-item.active .page-link,
+        .page-item.active span.page-link {
+            background-color: #4ea8de;
+            border-color: #4ea8de;
+            color: #ffffff;
+        }
+
+        /* Tombol Disabled */
+        .page-item.disabled span.page-link {
+            color: #94a3b8;
+            background-color: #f8fafc;
+            border-color: #e2e8f0;
+            cursor: not-allowed;
+        }
+
+        /* 4. PANAH < DAN > AGAR PAS DI TENGAH */
+        .page-item:first-child .page-link,
+        .page-item:last-child .page-link,
+        .page-item:first-child span.page-link,
+        .page-item:last-child span.page-link {
+            font-size: 1.25rem;
+            font-family: Arial, sans-serif;
+            font-weight: normal;
+            padding: 0;
+        }
+
+        /* Titik-titik elipsis (...) */
+        .page-item.disabled[aria-disabled="true"] span.page-link:not(:first-child):not(:last-child) {
+            background-color: transparent;
+            border: none;
+            color: #64748b;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+
+        .pagination svg {
+            display: none;
+        }
+
+        /* 5. RESPONSIVE: TABLET */
+        @media (max-width: 900px) {
+            .pagination-container {
+                padding: 12px;
+            }
+        }
+
+        /* 6. RESPONSIVE: MOBILE (HP) */
+        @media (max-width: 640px) {
+            .pagination-container {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 10px;
+                padding: 14px 10px;
+            }
+
+            .pagination-container > div {
+                justify-content: center;
+                width: 100%;
+                font-size: 0.8rem;
+            }
+
+            .pagination-container nav {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .pagination {
+                justify-content: center;
+            }
+
+            .page-item .page-link,
+            .page-item span.page-link {
+                min-width: 30px;
+                height: 30px;
+                padding: 0 8px;
+                font-size: 0.8rem;
+            }
+             .profile-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #087cf5;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .profile-avatar i {
+            font-size: 20px;
+        }
+
+        .swal-popup-custom   { font-family: 'Poppins', sans-serif; border-radius: 16px !important; }
+        .swal-title-custom   { font-size: 1.15rem !important; font-weight: 700 !important; color: #111827 !important; }
+        .swal-html-custom    { font-size: 0.875rem !important; color: #6b7280 !important; line-height: 1.6 !important; }
+        .swal-btn-confirm    { font-family: 'Poppins', sans-serif !important; font-weight: 600 !important; border-radius: 8px !important; padding: 10px 20px !important; background-color: #087cf5 !important; color: #fff !important;}
+        .swal-btn-cancel     { font-family: 'Poppins', sans-serif !important; font-weight: 600 !important; border-radius: 8px !important; padding: 10px 20px !important; background-color: #ef4444 !important; color: #fff !important;}
         }
