@@ -87,4 +87,11 @@ Route::middleware('auth')->group(function () {
         Route::delete('/pops/{pop}/rectifiers/{id}', [RectifierController::class, 'destroy'])->name('rectifiers.destroy');
     });
 
+    Route::get('/rectifier-card', function () {
+    return view('rectifier-card');
+    })->name('rectifier.card');
+
+    Route::get('/rectifier-detail', function () {
+        return view('rectifier-detail');
+    })->name('rectifier.detail');
 });
