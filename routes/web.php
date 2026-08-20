@@ -87,34 +87,4 @@ Route::middleware('auth')->group(function () {
         Route::delete('/pops/{pop}/rectifiers/{id}', [RectifierController::class, 'destroy'])->name('rectifiers.destroy');
     });
 
-<<<<<<< HEAD
-Route::get('/pop', function () {
-    return view('list-pop');
-})->name('pop');
-
-
-// 1. Menampilkan daftar semua POP
-Route::get('/pops', [PopController::class, 'index']);      // Lihat semua POP
-Route::post('/pops', [PopController::class, 'store']);     // Tambah POP baru
-Route::get('/pops/{id}', [PopController::class, 'show']);  // Lihat detail 1 POP
-Route::put('/pops/{id}', [PopController::class, 'update']); // Update POP
-Route::delete('/pops/{id}', [PopController::class, 'destroy']); // Hapus POP
-
-Route::get('/pops/{pop}/rectifiers', [RectifierController::class, 'index']);      // Lihat semua perangkat di 1 POP
-Route::post('/pops/{pop}/rectifiers', [RectifierController::class, 'store']);     // Tambah perangkat baru di 1 POP
-Route::get('/pops/{pop}/rectifiers/{id}', [RectifierController::class, 'show']);  // Lihat detail 1 perangkat
-// ... rute rectifier sebelumnya ...
-Route::put('/pops/{pop}/rectifiers/{id}', [RectifierController::class, 'update']); // Update data
-Route::delete('/pops/{pop}/rectifiers/{id}', [RectifierController::class, 'destroy']); // Hapus data
-
-
-Route::get('/rectifier-card', function () {
-    return view('rectifier-card');
-})->name('rectifier.card');
-
-Route::get('/rectifier-detail', function () {
-    return view('rectifier-detail');
-})->name('rectifier.detail');
-=======
 });
->>>>>>> main
