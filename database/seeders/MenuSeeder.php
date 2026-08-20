@@ -46,14 +46,15 @@ class MenuSeeder extends Seeder
             'name' => 'Manajemen User',
             'route' => 'admin.users.index', // sesuaikan dengan nama route asli kamu
             'icon' => 'bi bi-people',
-            'order' => 4,
+            'order' => 5,
+            'parent_id' => $accountConfig->id,
         ]);
 
-        $menuManagement = Menu::create([
-            'name' => 'Manajemen Menu',
-            'route' => 'admin.menus.index',
-            'icon' => 'bi bi-list-ul',
-            'order' => 2,
+        $AccessManagement = Menu::create([
+            'name' => 'Manajemen Akses Role',
+            'route' => 'admin.access.index',
+            'icon' => 'bi bi-shield-fill',
+            'order' => 6,
             'parent_id' => $accountConfig->id,
         ]);
 
@@ -69,6 +70,6 @@ class MenuSeeder extends Seeder
         $rma->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id]);   // semua role
         $usermanagement->roles()->sync([$superAdmin->id]);   // hanya admin
         $accountConfig->roles()->sync([$superAdmin->id]);
-        $menuManagement->roles()->sync([$superAdmin->id]); // hanya admin
+        $AccessManagement->roles()->sync([$superAdmin->id]); // hanya admin
     }
 }

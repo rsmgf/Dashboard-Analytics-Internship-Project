@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('menu_id')->constrained()->onDelete('cascade');
             $table->foreignId('role_id')->constrained()->onDelete('cascade');
             $table->timestamps();
+
+            $table->unique(['menu_id', 'role_id']);
         });
     }
 
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('menu_roles');
     }
 };

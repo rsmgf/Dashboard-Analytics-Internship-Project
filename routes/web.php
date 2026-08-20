@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AccessManagementController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\MenuManagementController;
 use App\Http\Controllers\PopController;
@@ -36,6 +37,11 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->group(function
     Route::post('/menus', [MenuManagementController::class, 'store'])->name('admin.menus.store');
     Route::patch('/menus/{menu}/roles', [MenuManagementController::class, 'updateRoles'])->name('admin.menus.updateRoles');
     Route::delete('/menus/{menu}', [MenuManagementController::class, 'destroy'])->name('admin.menus.destroy');
+
+    Route::get('/access', [AccessManagementController::class, 'index'])->name('admin.access.index');
+    Route::get('/access/{role}/edit', [AccessManagementController::class, 'edit'])->name('admin.access.edit');
+    Route::get('/access/{role}/permissions', [AccessManagementController::class, 'getRolePermissions'])->name('admin.access.getPermissions');
+    Route::patch('/access/{role}', [AccessManagementController::class, 'update'])->name('admin.access.update');
 });
 
 Route::middleware('auth')->group(function () {

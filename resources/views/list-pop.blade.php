@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,10 +16,17 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 
     <style>
-        svg.w-5.h-5 { width: 16px; height: 16px; }
-        .hidden { display: none !important; }
+        svg.w-5.h-5 {
+            width: 16px;
+            height: 16px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
+
 <body>
 
     <div class="app-container">
@@ -45,22 +53,18 @@
                         </div>
                     </div>
 
-                    <!-- Tombol Tambah (Hanya untuk Super Admin) -->
-                    @auth
-                        @if(auth()->user()->hasRole('super_admin'))
-                        <div class="pop-action">
-                            <a href="{{ route('pops.create') }}" class="btn-tambah-pop">
-                                <i class="bi bi-plus-lg"></i> Tambah POP
-                            </a>
-                        </div>
-                        @endif
-                    @endauth
+                    @can('pops.index.create')
+                        <a href="{{ route('pops.create') }}" class="btn-tambah-pop">
+                            <i class="bi bi-plus-lg"></i> Tambah POP
+                        </a>
+                    @endcan
                 </div>
 
                 <div class="filter-section">
                     <div class="search-wrapper">
                         <!-- Jika ke depannya ingin search berfungsi, bungkus input ini dengan <form method="GET" action="/pops"> -->
-                        <input type="text" id="searchPOP" name="search" class="search-input" placeholder="Cari data..." value="{{ request('search') }}">
+                        <input type="text" id="searchPOP" name="search" class="search-input"
+                            placeholder="Cari data..." value="{{ request('search') }}">
                     </div>
                     <div class="filter-wrapper">
                         <label class="filter-label">Filter harus dipilih <span>*</span></label>
@@ -89,52 +93,52 @@
                         </thead>
                         <tbody id="popTableBody">
                             @forelse($pops as $index => $pop)
-                            <tr>
-                                <td>{{ $pops->firstItem() + $index }}.</td>
-                                <td>{{ $pop->provinsi ?? 'Jambi' }}</td>
-                                <td>{{ $pop->kota_kabupaten }}</td>
-                                <td>{{ $pop->kode_pop }}</td>
-                                <td>{{ $pop->nama_pop }}</td>
-                                <td>{{ $pop->jenis_bangunan }}</td>
-                                <td>{{ $pop->tipe_pop ?? 'POP-SB' }}</td>
-                                <td style="text-align: center;">
-                                    <div style="display: flex; gap: 6px; justify-content: center; align-items: center;">
-                                        
-                                        <!-- Tombol Lihat — semua role bisa lihat detail -->
-                                        <button type="button" class="btn-detail" onclick="lihatPOP('{{ $pop->id }}')">Lihat</button>
+                                <tr>
+                                    <td>{{ $pops->firstItem() + $index }}.</td>
+                                    <td>{{ $pop->provinsi ?? 'Jambi' }}</td>
+                                    <td>{{ $pop->kota_kabupaten }}</td>
+                                    <td>{{ $pop->kode_pop }}</td>
+                                    <td>{{ $pop->nama_pop }}</td>
+                                    <td>{{ $pop->jenis_bangunan }}</td>
+                                    <td>{{ $pop->tipe_pop ?? 'POP-SB' }}</td>
+                                    <td style="text-align: center;">
+                                        <div
+                                            style="display: flex; gap: 6px; justify-content: center; align-items: center;">
 
-                                        @auth
-                                            {{-- Tombol Edit: teknisi & super_admin --}}
-                                            @if(auth()->user()->hasAnyRole(['teknisi', 'super_admin']))
-                                            <a href="{{ route('pops.edit', $pop->id) }}" class="btn-edit" title="Edit POP">
-                                                <i class="bi bi-pencil-fill"></i>
-                                            </a>
-                                            @endif
+                                            <!-- Tombol Lihat — semua role bisa lihat detail -->
+                                            <button type="button" class="btn-detail"
+                                                onclick="lihatPOP('{{ $pop->id }}')">Lihat</button>
 
-                                            {{-- Tombol Hapus: hanya super_admin --}}
-                                            @if(auth()->user()->hasRole('super_admin'))
-                                            <button type="button" class="btn-hapus" title="Hapus POP"
-                                                onclick="openDeleteModal('{{ route('pops.destroy', $pop->id) }}', '{{ $pop->nama_pop }}')"><i class="bi bi-trash3-fill"></i></button>
-                                            @endif
-                                        @endauth
+                                            @can('pops.index.update')
+                                                <a href="{{ route('pops.edit', $pop->id) }}" class="btn-edit"><i
+                                                        class="bi bi-pencil-fill"></i></a>
+                                            @endcan
 
-                                    </div>
-                                </td>
-                            </tr>
+                                            @can('pops.index.delete')
+                                                <button type="button" title="Hapus POP"
+                                                        onclick="openDeleteModal('{{ route('pops.destroy', $pop->id) }}', '{{ $pop->nama_pop }}')" class="btn-hapus"><i
+                                                        class="bi bi-trash3-fill"></i></button>
+                                            @endcan
+
+                                        </div>
+                                    </td>
+                                </tr>
                             @empty
-                            <tr>
-                                <td colspan="8" style="text-align: center; padding: 20px; color: #64748b;">Belum ada data POP.</td>
-                            </tr>
+                                <tr>
+                                    <td colspan="8" style="text-align: center; padding: 20px; color: #64748b;">Belum
+                                        ada data POP.</td>
+                                </tr>
                             @endforelse
                         </tbody>
                     </table>
-                    
+
                     <!-- WRAPPER PAGINATION -->
                     <div class="pagination-container">
                         <div>
-                            Menampilkan {{ $pops->firstItem() ?? 0 }} - {{ $pops->lastItem() ?? 0 }} dari {{ $pops->total() }} data
+                            Menampilkan {{ $pops->firstItem() ?? 0 }} - {{ $pops->lastItem() ?? 0 }} dari
+                            {{ $pops->total() }} data
                         </div>
-                        
+
                         <div>
                             <!-- Panggil paginasi dengan format Bootstrap-4 agar tag HTML-nya sesuai dengan CSS kita -->
                             {{ $pops->links('pagination::bootstrap-4') }}
@@ -145,16 +149,15 @@
         </main>
     </div>
 
-<<<<<<< HEAD
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
+    <<<<<<< HEAD <script>
+        document.addEventListener('DOMContentLoaded', function() {
             const sidebarToggle = document.getElementById('sidebarToggle');
             const sidebarIcon = sidebarToggle ? sidebarToggle.querySelector('i') : null;
 
             if (sidebarToggle) {
-                sidebarToggle.addEventListener('click', function () {
+                sidebarToggle.addEventListener('click', function() {
                     document.body.classList.toggle('sidebar-collapsed');
-                    
+
                     const isCollapsed = document.body.classList.contains('sidebar-collapsed');
 
                     if (sidebarIcon) {
@@ -193,9 +196,9 @@
             const accountConfigArrow = document.getElementById('accountConfigArrow');
 
             if (accountConfigToggle && accountConfigMenu) {
-                accountConfigToggle.addEventListener('click', function () {
+                accountConfigToggle.addEventListener('click', function() {
                     const isOpen = accountConfigMenu.classList.toggle('show');
-                    
+
                     accountConfigToggle.classList.toggle('active', isOpen);
 
                     if (accountConfigArrow) {
@@ -214,11 +217,11 @@
             const tableBody = document.getElementById('popTableBody');
 
             if (searchInput && tableBody) {
-                searchInput.addEventListener('keyup', function () {
+                searchInput.addEventListener('keyup', function() {
                     const keyword = this.value.toLowerCase();
                     const rows = tableBody.querySelectorAll('tr');
 
-                    rows.forEach(function (row) {
+                    rows.forEach(function(row) {
                         const text = row.textContent.toLowerCase();
                         if (text.includes(keyword)) {
                             row.style.display = '';
@@ -230,17 +233,29 @@
             }
         });
 
-=======
-    {{-- Hidden form untuk submit DELETE — action diisi oleh SweetAlert2 --}}
-    <form id="deleteForm" method="POST" style="display:none;">
-        @csrf
+        ===
+        ===
+        =
+        {{-- Hidden form untuk submit DELETE — action diisi oleh SweetAlert2 --}}
+            <
+            form id = "deleteForm"
+        method = "POST"
+        style = "display:none;" >
+            @csrf
         @method('DELETE')
-    </form>
+            <
+            /form>
 
-    <!-- JAVASCRIPT -->
-    <script>
-        // FUNGSI DETAIL POP DINAMIS BERDASARKAN FILTER
->>>>>>> 0dd85777157429ea593723e2939a41ab5010977f
+            <
+            !--JAVASCRIPT-- >
+            <
+            script >
+            // FUNGSI DETAIL POP DINAMIS BERDASARKAN FILTER
+            >>>
+            >>>
+            >
+            0 dd85777157429ea593723e2939a41ab5010977f
+
         function lihatPOP(idPOP) {
             const filterValue = document.getElementById('mainFilter').value;
             let targetUrl = '';
@@ -250,16 +265,16 @@
                     targetUrl = `/pops/${idPOP}/rectifiers`;
                     break;
                 case 'AC':
-                    targetUrl = `/pops/${idPOP}/ac`; 
+                    targetUrl = `/pops/${idPOP}/ac`;
                     break;
                 case 'Battery':
-                    targetUrl = `/pops/${idPOP}/battery`; 
+                    targetUrl = `/pops/${idPOP}/battery`;
                     break;
                 case 'kWh':
-                    targetUrl = `/pops/${idPOP}/kwh`; 
+                    targetUrl = `/pops/${idPOP}/kwh`;
                     break;
                 default:
-                    targetUrl = `/pops/${idPOP}/rectifiers`; 
+                    targetUrl = `/pops/${idPOP}/rectifiers`;
                     break;
             }
 
@@ -283,11 +298,11 @@
                 reverseButtons: true,
                 focusCancel: true,
                 customClass: {
-                    popup:          'swal-popup-custom',
-                    title:          'swal-title-custom',
-                    htmlContainer:  'swal-html-custom',
-                    confirmButton:  'swal-btn-confirm',
-                    cancelButton:   'swal-btn-cancel',
+                    popup: 'swal-popup-custom',
+                    title: 'swal-title-custom',
+                    htmlContainer: 'swal-html-custom',
+                    confirmButton: 'swal-btn-confirm',
+                    cancelButton: 'swal-btn-cancel',
                 },
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -297,18 +312,17 @@
             });
         }
     </script>
-<<<<<<< HEAD
-=======
-
-    <style>
+    <<<<<<< HEAD=======<style>
         /* Kustomisasi SweetAlert2 agar sesuai font & tema web */
-        .swal-popup-custom   { font-family: 'Poppins', sans-serif; border-radius: 16px !important; }
-        .swal-title-custom   { font-size: 1.15rem !important; font-weight: 700 !important; color: #111827 !important; }
-        .swal-html-custom    { font-size: 0.875rem !important; color: #6b7280 !important; line-height: 1.6 !important; }
+        .swal-popup-custom { font-family: 'Poppins', sans-serif; border-radius: 16px !important; }
+        .swal-title-custom { font-size: 1.15rem !important; font-weight: 700 !important; color: #111827 !important; }
+        .swal-html-custom { font-size: 0.875rem !important; color: #6b7280 !important; line-height: 1.6 !important; }
         .swal-btn-confirm,
-        .swal-btn-cancel     { font-family: 'Poppins', sans-serif !important; font-weight: 600 !important; border-radius: 8px !important; padding: 10px 20px !important; }
-    </style>
+        .swal-btn-cancel { font-family: 'Poppins', sans-serif !important; font-weight: 600 !important; border-radius:
+        8px !important; padding: 10px 20px !important; }
+        </style>
 
->>>>>>> 0dd85777157429ea593723e2939a41ab5010977f
+        >>>>>>> 0dd85777157429ea593723e2939a41ab5010977f
 </body>
+
 </html>
