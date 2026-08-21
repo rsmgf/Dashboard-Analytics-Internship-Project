@@ -1,0 +1,453 @@
+/* ============================
+   RECTIFIER FORM CSS
+   ============================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+    font-family: 'Poppins', sans-serif;
+    background: #f8fafc;
+    color: #1e293b;
+}
+
+/* ---- Layout ---- */
+.app-container {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+    min-width: 0;
+    min-height: 100vh;
+    background: #f8fafc;
+}
+
+/* ---- Content Wrapper ---- */
+.rform-content {
+    padding: 24px;
+    max-width: 1100px;
+}
+
+/* ---- Back Button ---- */
+.rform-back {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    color: #64748b;
+    font-size: 14px;
+    text-decoration: none;
+    margin-bottom: 20px;
+    transition: background 0.2s;
+}
+.rform-back:hover { background: #e2e8f0; color: #1e293b; }
+
+/* ---- Section Cards ---- */
+.rform-section {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.rform-section-header {
+    padding: 14px 20px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #1688e8;
+    border-bottom: 1px solid #e2e8f0;
+    background: #fff;
+}
+.rform-section-sub {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: #94a3b8;
+    margin-left: 6px;
+}
+
+.rform-section-body {
+    padding: 20px;
+}
+
+/* ---- Row layouts ---- */
+.rform-row {
+    display: grid;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+.rform-row-4  { grid-template-columns: repeat(4, 1fr); }
+.rform-row-2  { grid-template-columns: 1fr 1fr; }
+.rform-row-1  { grid-template-columns: 1fr; }
+
+/* ---- Field Group ---- */
+.rform-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.rform-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+.rform-required { color: #dc2626; }
+
+.rform-input,
+.rform-select {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    font-size: 0.875rem;
+    font-family: 'Poppins', sans-serif;
+    color: #1e293b;
+    background: #fff;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.rform-input:focus, .rform-select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+}
+.rform-input[readonly],
+.rform-input[disabled] {
+    background: #f1f5f9;
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+.rform-input.is-invalid {
+    border-color: #dc2626;
+}
+
+.rform-error {
+    font-size: 0.72rem;
+    color: #dc2626;
+    margin-top: 2px;
+}
+
+/* ---- Photo Upload ---- */
+.rform-photo-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+.rform-drop-zone {
+    border: 2px dashed #93c5fd;
+    border-radius: 12px;
+    background: #f8fafc;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 220px;
+}
+.rform-drop-zone:hover { 
+    background: #eff6ff; 
+    border-color: #3b82f6;
+}
+.rform-drop-icon {
+    font-size: 2.5rem;
+    color: #60a5fa;
+    margin-bottom: 12px;
+    transition: transform 0.3s;
+}
+.rform-drop-zone:hover .rform-drop-icon {
+    transform: translateY(-5px);
+}
+.rform-drop-text {
+    font-size: 0.95rem;
+    color: #1e293b;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+.rform-drop-hint {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin-top: 12px;
+}
+.rform-browse-btn {
+    display: inline-block;
+    padding: 8px 24px;
+    background: #3b82f6;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    transition: background 0.2s, transform 0.2s;
+    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
+}
+.rform-browse-btn:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+}
+
+.rform-photo-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-top: 16px;
+    width: 100%;
+}
+.rform-preview-label {
+    font-size: 0.85rem;
+    color: #475569;
+    font-weight: 600;
+}
+.rform-preview-box {
+    width: 100%;
+    max-width: 400px;
+    height: 250px;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #f1f5f9;
+    overflow: hidden;
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.04);
+}
+.rform-preview-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #e2e8f0;
+}
+.rform-preview-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: #94a3b8;
+    font-size: 0.8rem;
+}
+.rform-preview-empty i { font-size: 2rem; }
+
+/* ---- Module Columns ---- */
+.rform-module-columns {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.rform-module-col {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 160px;
+    flex: 1 1 160px;
+    max-width: 200px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    padding: 12px;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.rform-module-col:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border-color: #cbd5e1;
+}
+
+.rform-module-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #1e293b;
+    text-align: center;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed #e2e8f0;
+    margin-bottom: 4px;
+}
+
+.rform-module-remove {
+    background: #fee2e2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 6px;
+    text-align: center;
+    margin-top: 4px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+.rform-module-remove:hover {
+    background: #f87171;
+    color: #fff;
+    border-color: #f87171;
+}
+
+.btn-tambah-modul {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: #f0fdf4;
+    border: 1.5px dashed #22c55e;
+    color: #16a34a;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: auto;
+}
+.btn-tambah-modul:hover {
+    background: #22c55e;
+    color: #fff;
+    border-style: solid;
+}
+
+/* ---- Output MCB Tables ---- */
+.rform-output-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.rform-output-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
+
+.rform-output-table th {
+    background: #f8fafc;
+    padding: 8px 10px;
+    text-align: left;
+    font-weight: 600;
+    color: #374151;
+    border-bottom: 1px solid #e2e8f0;
+    white-space: nowrap;
+}
+
+.rform-output-table td {
+    padding: 5px 6px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+}
+
+.rform-output-table .mcb-label {
+    font-weight: 600;
+    color: #475569;
+    white-space: nowrap;
+    font-size: 0.78rem;
+}
+
+.rform-output-table input {
+    width: 100%;
+    padding: 5px 8px;
+    border: 1px solid #cbd5e1;
+    border-radius: 5px;
+    font-size: 0.78rem;
+    font-family: 'Poppins', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+}
+.rform-output-table input:focus {
+    border-color: #3b82f6;
+}
+.rform-output-table .peruntukan-cell {
+    font-size: 0.78rem;
+    color: #374151;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* ---- Bottom Buttons ---- */
+.rform-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 8px;
+    padding: 20px 0;
+}
+
+.rform-btn-reset {
+    padding: 10px 28px;
+    background: #fff;
+    border: 1.5px solid #cbd5e1;
+    color: #374151;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.rform-btn-reset:hover { background: #f8fafc; }
+
+.rform-btn-simpan {
+    padding: 10px 28px;
+    background: #1688e8;
+    border: none;
+    color: #fff;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.rform-btn-simpan:hover { background: #0d6ec7; }
+
+/* ---- Flash message ---- */
+.rform-flash {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 16px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    margin-bottom: 16px;
+}
+.rform-flash.success {
+    background: #dcfce7;
+    border: 1px solid #86efac;
+    color: #166534;
+}
+.rform-flash.error {
+    background: #fee2e2;
+    border: 1px solid #fca5a5;
+    color: #B91C1C;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+    .rform-row-4  { grid-template-columns: 1fr 1fr; }
+    .rform-row-2  { grid-template-columns: 1fr; }
+    .rform-photo-grid { grid-template-columns: 1fr; }
+    .rform-output-grid { grid-template-columns: 1fr; }
+}

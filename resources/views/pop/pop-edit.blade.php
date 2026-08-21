@@ -10,225 +10,190 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    @vite([
-        'resources/css/sidebar.css',
-        'resources/css/add-pop.css'
-    ])
+    @vite(['resources/css/sidebar.css', 'resources/css/add-pop.css'])
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+    <style>
+        /* Kustomisasi SweetAlert2 */
+        .swal-popup-custom  { font-family: 'Poppins', sans-serif; border-radius: 16px !important; }
+        .swal-title-custom  { font-size: 1.1rem !important; font-weight: 700 !important; color: #111827 !important; }
+        .swal-html-custom   { font-size: 0.875rem !important; color: #6b7280 !important; }
+        .swal-btn-confirm,
+        .swal-btn-cancel    { font-family: 'Poppins', sans-serif !important; font-weight: 600 !important; border-radius: 8px !important; }
+
+        /* Error message di bawah input */
+        .add-pop-error { display: block; color: #DC2626; font-size: 0.78rem; margin-top: 4px; }
+        .add-pop-input.is-invalid,
+        .add-pop-select.is-invalid { border-color: #DC2626 !important; }
+    </style>
 </head>
 
 <body>
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-logo">
-            <img src="{{ asset('images/logo-iconplus.png') }}" alt="PLN Icon Plus">
-        </div>
+    <div class="app-container">
 
-        <div class="sidebar-section">
-            <div class="section-title">Dashboard</div>
-            <a href="#" class="sidebar-menu">
-                <i class="bi bi-grid-fill"></i>
-                <span>Dashboard</span>
-            </a>
-        </div>
+        {{-- SIDEBAR COMPONENT --}}
+        <x-sidebar />
+        <div id="sidebarOverlay" class="sidebar-overlay"></div>
 
-        <div class="sidebar-section">
-            <div class="section-title">General</div>
-            <a href="#" class="sidebar-menu active">
-                <i class="bi bi-shield-fill"></i>
-                <span>POP</span>
-            </a>
-            <a href="#" class="sidebar-menu">
-                <i class="bi bi-file-earmark-text-fill"></i>
-                <span>Form RMA</span>
-            </a>
-        </div>
+        <main class="main-content">
 
-        <div class="sidebar-section">
-            <div class="sidebar-menu sidebar-dropdown" id="accountConfigToggle">
-                <i class="bi bi-gear-fill"></i>
-                <span>Konfigurasi Akun</span>
-                <i class="bi bi-chevron-down dropdown-arrow" id="accountConfigArrow"></i>
-            </div>
-            <div class="sidebar-submenu" id="accountConfigMenu">
-                <a href="#" class="sidebar-submenu-item">
-                    <i class="bi bi-shield-lock-fill"></i>
-                    <span>Manajemen Menu</span>
-                </a>
-                <a href="#" class="sidebar-submenu-item">
-                    <i class="bi bi-people-fill"></i>
-                    <span>Manajemen User</span>
-                </a>
-            </div>
-            <a href="#" class="sidebar-menu">
-                <i class="bi bi-box-arrow-right"></i>
-                <span>Log Out</span>
-            </a>
-        </div>
-    </aside>
+            {{-- TOPBAR COMPONENT --}}
+            <x-topbar />
 
-    <main class="main-content">
-        <header class="topbar">
-            <button type="button" class="sidebar-toggle" id="sidebarToggle" title="Buka / Tutup Sidebar">
-                <i class="bi bi-list"></i>
-            </button>
+            <div class="add-pop-content">
+                <div class="add-pop-card">
 
-            <div class="user-profile">
-                <span>Super Admin</span>
-                <div class="profile-avatar">
-                    <i class="bi bi-person-fill"></i>
-                </div>
-            </div>
-        </header>
-
-        <div class="add-pop-content">
-            <div class="add-pop-card">
-                <div class="add-pop-alert">
-                    <i class="bi bi-info-circle-fill"></i>
-                    <span>Perbarui informasi data POP pada form di bawah ini.</span>
-                </div>
-
-                <div class="add-pop-title">
-                    <h1>Edit Point of Presence</h1>
-                    <p>Ubah Data POP</p>
-                </div>
-
-                <form id="editPopForm">
-                    <input type="hidden" id="pop_id" value="{{ $id }}">
-
-                    <div class="add-pop-group">
-                        <label for="provinsi">Provinsi <span class="add-pop-required">*</span></label>
-                        <input type="text" id="provinsi" name="provinsi" class="add-pop-input" value="Jambi" required>
+                    <div class="add-pop-alert">
+                        <i class="bi bi-info-circle-fill"></i>
+                        <span>Perbarui informasi data POP pada form di bawah ini.</span>
                     </div>
 
-                    <div class="add-pop-group">
-                        <label for="kota">Kota/Kabupaten <span class="add-pop-required">*</span></label>
-                        <input type="text" id="kota" name="kota" class="add-pop-input" value="Kota Jambi" required>
+                    <div class="add-pop-title">
+                        <h1>Edit Point of Presence</h1>
+                        <p>Ubah Data POP â€” {{ $pop->nama_pop }}</p>
                     </div>
 
-                    <div class="add-pop-group">
-                        <label for="id_pop">ID POP <span class="add-pop-required">*</span></label>
-                        <input type="text" id="id_pop" name="id_pop" class="add-pop-input" value="POP-{{ $id }}" required>
-                    </div>
-
-                    <div class="add-pop-group">
-                        <label for="nama_pop">Nama POP <span class="add-pop-required">*</span></label>
-                        <input type="text" id="nama_pop" name="nama_pop" class="add-pop-input" value="POP Jambi Kota" required>
-                    </div>
-
-                    <div class="add-pop-group">
-                        <label for="building">Building <span class="add-pop-required">*</span></label>
-                        <div class="add-pop-select-wrapper">
-                            <select id="building" name="building" class="add-pop-select" required>
-                                <option value="" disabled>Pilih Building</option>
-                                <option value="Shelter Permanent" selected>Shelter Permanent</option>
-                                <option value="Shelter Temporary">Shelter Temporary</option>
-                                <option value="Building">Building</option>
-                                <option value="Outdoor">Outdoor</option>
-                            </select>
-                            <i class="bi bi-chevron-down add-pop-select-arrow"></i>
+                    {{-- Flash error dari validasi Laravel --}}
+                    @if($errors->any())
+                        <div style="background:#fee2e2; border:1px solid #fca5a5; border-radius:8px; padding:12px 16px; margin-bottom:20px; font-size:0.85rem; color:#B91C1C;">
+                            <strong><i class="bi bi-exclamation-triangle-fill"></i> Periksa kembali data berikut:</strong>
+                            <ul style="margin:6px 0 0 16px; padding:0;">
+                                @foreach($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
                         </div>
-                    </div>
+                    @endif
 
-                    <div class="add-pop-group">
-                        <label for="type_pop">Type POP <span class="add-pop-required">*</span></label>
-                        <div class="add-pop-select-wrapper">
-                            <select id="type_pop" name="type_pop" class="add-pop-select" required>
-                                <option value="" disabled>Pilih Type POP</option>
-                                <option value="POP-SB" selected>POP-SB</option>
-                                <option value="POP-DC">POP-DC</option>
-                                <option value="POP-ODC">POP-ODC</option>
-                                <option value="POP-FO">POP-FO</option>
-                            </select>
-                            <i class="bi bi-chevron-down add-pop-select-arrow"></i>
+                    <form id="editPopForm" method="POST" action="{{ route('pops.update', $pop->id) }}">
+                        @csrf
+                        @method('PUT')
+
+                        <div class="add-pop-group">
+                            <label for="provinsi">Provinsi <span class="add-pop-required">*</span></label>
+                            <input type="text" id="provinsi" name="provinsi"
+                                class="add-pop-input {{ $errors->has('provinsi') ? 'is-invalid' : '' }}"
+                                value="{{ old('provinsi', $pop->provinsi) }}"
+                                placeholder="Contoh: Jambi" required>
+                            @error('provinsi')
+                                <span class="add-pop-error">{{ $message }}</span>
+                            @enderror
                         </div>
-                    </div>
 
-                    <div class="add-pop-actions">
-                        <a href="/pops" class="add-pop-btn-cancel">Batal</a>
-                        <button type="submit" class="add-pop-btn-save">
-                            <i class="bi bi-check-lg"></i> Simpan Perubahan
-                        </button>
-                    </div>
-                </form>
+                        <div class="add-pop-group">
+                            <label for="kota_kabupaten">Kota/Kabupaten <span class="add-pop-required">*</span></label>
+                            <input type="text" id="kota_kabupaten" name="kota_kabupaten"
+                                class="add-pop-input {{ $errors->has('kota_kabupaten') ? 'is-invalid' : '' }}"
+                                value="{{ old('kota_kabupaten', $pop->kota_kabupaten) }}"
+                                placeholder="Contoh: Kota Jambi" required>
+                            @error('kota_kabupaten')
+                                <span class="add-pop-error">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="add-pop-group">
+                            <label for="kode_pop">ID POP <span class="add-pop-required">*</span></label>
+                            <input type="text" id="kode_pop" name="kode_pop"
+                                class="add-pop-input {{ $errors->has('kode_pop') ? 'is-invalid' : '' }}"
+                                value="{{ old('kode_pop', $pop->kode_pop) }}"
+                                placeholder="Contoh: POP-JMB-001" required>
+                            @error('kode_pop')
+                                <span class="add-pop-error">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="add-pop-group">
+                            <label for="nama_pop">Nama POP <span class="add-pop-required">*</span></label>
+                            <input type="text" id="nama_pop" name="nama_pop"
+                                class="add-pop-input {{ $errors->has('nama_pop') ? 'is-invalid' : '' }}"
+                                value="{{ old('nama_pop', $pop->nama_pop) }}"
+                                placeholder="Contoh: POP Jambi Kota" required>
+                            @error('nama_pop')
+                                <span class="add-pop-error">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="add-pop-group">
+                            <label for="jenis_bangunan">Building</label>
+                            <div class="add-pop-select-wrapper">
+                                <select id="jenis_bangunan" name="jenis_bangunan"
+                                    class="add-pop-select {{ $errors->has('jenis_bangunan') ? 'is-invalid' : '' }}">
+                                    <option value="" disabled>Pilih Building</option>
+                                    @foreach(['Shelter Permanent', 'Shelter Temporary', 'Building', 'Outdoor'] as $opt)
+                                        <option value="{{ $opt }}"
+                                            {{ old('jenis_bangunan', $pop->jenis_bangunan) == $opt ? 'selected' : '' }}>
+                                            {{ $opt }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <i class="bi bi-chevron-down add-pop-select-arrow"></i>
+                            </div>
+                            @error('jenis_bangunan')
+                                <span class="add-pop-error">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="add-pop-group">
+                            <label for="tipe_pop">Type POP</label>
+                            <div class="add-pop-select-wrapper">
+                                <select id="tipe_pop" name="tipe_pop"
+                                    class="add-pop-select {{ $errors->has('tipe_pop') ? 'is-invalid' : '' }}">
+                                    <option value="" disabled>Pilih Type POP</option>
+                                    @foreach(['POP-SB', 'POP-DC', 'POP-ODC', 'POP-FO'] as $opt)
+                                        <option value="{{ $opt }}"
+                                            {{ old('tipe_pop', $pop->tipe_pop) == $opt ? 'selected' : '' }}>
+                                            {{ $opt }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <i class="bi bi-chevron-down add-pop-select-arrow"></i>
+                            </div>
+                            @error('tipe_pop')
+                                <span class="add-pop-error">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="add-pop-actions">
+                            <a href="{{ route('pops.index') }}" class="add-pop-btn-cancel">Batal</a>
+                            <button type="submit" class="add-pop-btn-save">
+                                <i class="bi bi-check-lg"></i> Simpan Perubahan
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
             </div>
-        </div>
-    </main>
+        </main>
+    </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const sidebarToggle = document.getElementById('sidebarToggle');
-            const sidebarIcon = sidebarToggle?.querySelector('i');
+        // Konfirmasi SweetAlert2 sebelum form disubmit
+        document.getElementById('editPopForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const form = this;
 
-            sidebarToggle?.addEventListener('click', function () {
-                document.body.classList.toggle('sidebar-collapsed');
-                
-                const collapsed = document.body.classList.contains('sidebar-collapsed');
-
-                if (collapsed) {
-                    sidebarIcon?.classList.replace('bi-list', 'bi-chevron-right');
-                    
-                    document.getElementById('accountConfigMenu')?.classList.remove('show');
-                    document.getElementById('accountConfigToggle')?.classList.remove('active');
-                    document.getElementById('accountConfigArrow')?.classList.replace('bi-chevron-up', 'bi-chevron-down');
-                } else {
-                    sidebarIcon?.classList.replace('bi-chevron-right', 'bi-list');
+            Swal.fire({
+                title: 'Simpan Perubahan?',
+                text: 'Pastikan semua data sudah benar sebelum disimpan.',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#1688e8',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: '<i class="bi bi-check-lg"></i> Ya, Simpan',
+                cancelButtonText: 'Batal',
+                reverseButtons: true,
+                customClass: {
+                    popup: 'swal-popup-custom',
+                    title: 'swal-title-custom',
+                    htmlContainer: 'swal-html-custom',
+                    confirmButton: 'swal-btn-confirm',
+                    cancelButton: 'swal-btn-cancel',
+                },
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit(); // submit form yang sesungguhnya
                 }
-            });
-
-            const accountToggle = document.getElementById('accountConfigToggle');
-            const accountMenu = document.getElementById('accountConfigMenu');
-            const accountArrow = document.getElementById('accountConfigArrow');
-
-            accountToggle?.addEventListener('click', function () {
-                const open = accountMenu.classList.toggle('show');
-                accountToggle.classList.toggle('active', open);
-
-                if (open) {
-                    accountArrow.classList.replace('bi-chevron-down', 'bi-chevron-up');
-                } else {
-                    accountArrow.classList.replace('bi-chevron-up', 'bi-chevron-down');
-                }
-            });
-
-            const form = document.getElementById('editPopForm');
-
-            form?.addEventListener('submit', function (event) {
-                event.preventDefault();
-
-                Swal.fire({
-                    title: 'Simpan Perubahan?',
-                    text: "Pastikan data POP sudah sesuai sebelum disimpan.",
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonText: '<i class="bi bi-check-lg"></i> Ya, Simpan',
-                    cancelButtonText: 'Batal',
-                    reverseButtons: true,
-                    customClass: {
-                        popup: 'swal-popup-custom',
-                        title: 'swal-title-custom',
-                        htmlContainer: 'swal-html-custom',
-                        confirmButton: 'swal-btn-confirm',
-                        cancelButton: 'swal-btn-cancel'
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        Swal.fire({
-                            title: 'Berhasil!',
-                            text: 'Data POP berhasil diperbarui.',
-                            icon: 'success',
-                            timer: 2000,
-                            showConfirmButton: false,
-                            customClass: {
-                                popup: 'swal-popup-custom',
-                                title: 'swal-title-custom',
-                                htmlContainer: 'swal-html-custom'
-                            }
-                        }).then(() => {
-                            window.location.href = '/pops'; 
-                        });
-                    }
-                });
             });
         });
     </script>
