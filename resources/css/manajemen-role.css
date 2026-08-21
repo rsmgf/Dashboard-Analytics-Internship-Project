@@ -168,6 +168,29 @@ body{
     background:#F8FBFF;
 }
 
+.reg-date {
+    font-size: 0.85rem;
+    color: #1e293b;
+}
+
+.reg-time {
+    font-size: 0.72rem;
+    color: #94a3b8;
+    margin-top: 2px;
+}
+
+.form-control[readonly] {
+    background-color: #f1f5f9;
+    color: #64748b;
+    cursor: not-allowed;
+    border-color: #e2e8f0;
+}
+
+.form-control[readonly]:focus {
+    box-shadow: none;
+    border-color: #e2e8f0;
+}
+
 /* =====================================================
    COLUMN WIDTH
 ===================================================== */
