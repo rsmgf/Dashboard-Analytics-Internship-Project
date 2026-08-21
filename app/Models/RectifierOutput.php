@@ -9,7 +9,7 @@ class RectifierOutput extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['rectifier_id', 'merk_mcb', 'kapasitas_mcb', 'peruntukan'];
+    protected $fillable = ['rectifier_id', 'nama_mcb', 'merk_mcb', 'kapasitas_mcb', 'peruntukan'];
 
     public function rectifier()
     {

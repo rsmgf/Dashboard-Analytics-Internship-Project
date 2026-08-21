@@ -19,6 +19,7 @@ class SuperAdminSeeder extends Seeder
         [
             'name' => 'Manajer Unit ICONPLUS KP Jambi - Sandria Abhiseka',
             'password' => Hash::make('iconplusjaya'),
+            'is_active' => true,
         ]
     );
     $admin->assignRole('super_admin');

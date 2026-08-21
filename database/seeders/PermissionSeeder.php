@@ -30,6 +30,18 @@ class PermissionSeeder extends Seeder
             }
         }
 
+        // Tambahan permission untuk halaman non-menu (seperti rectifier di dalam POP)
+        $extraRoutes = ['rectifiers.index'];
+        foreach ($extraRoutes as $route) {
+            foreach ($actions as $action) {
+                Permission::create([
+                    'name' => "{$route}.{$action}",
+                    'guard_name' => 'web',
+                    'menu_id' => null, // null karena bukan menu utama di sidebar
+                ]);
+            }
+        }
+
         $superAdmin = Role::where('name', 'super_admin')->first();
         $superAdmin->syncPermissions(Permission::all());
     }

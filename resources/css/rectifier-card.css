@@ -110,19 +110,59 @@ body {
     background: #ffffff;
 }
 
-.last-updated {
-    height: 45px;
+/* Page Header */
+.rectifier-page-header {
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: space-between;
+    padding: 14px 0;
     border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 4px;
+}
+
+.rectifier-page-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.rectifier-pop-name {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.rectifier-pop-sub {
+    display: block;
     font-size: 0.75rem;
     color: #64748b;
 }
 
+.btn-tambah-rectifier {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: #1688e8;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    white-space: nowrap;
+}
+
+.btn-tambah-rectifier:hover {
+    background: #0d6ec7;
+}
+
 .back-button {
-    width: 24px;
-    height: 24px;
+    width: 30px;
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -130,7 +170,7 @@ body {
     border-radius: 50%;
     background: #f1f5f9;
     color: #64748b;
-    font-size: 11px;
+    font-size: 13px;
     text-decoration: none;
     transition: all 0.2s ease;
 }
@@ -138,6 +178,7 @@ body {
 .back-button:hover {
     background: #e2e8f0;
     color: #334155;
+
 }
 
 /* Rectifier Grid & Card */

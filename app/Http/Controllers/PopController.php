@@ -9,45 +9,39 @@ use App\Http\Requests\UpdatePopRequest;
 class PopController extends Controller
 {
     // 1. Menampilkan semua daftar POP (dengan Search & Pagination)
-public function index(Request $request)
+    public function index(Request $request)
     {
-        // Mulai merangkai query
         $query = Pop::query();
 
-        // Jika ada parameter 'search' di URL (misal: /pops?search=Bungo)
-        // Jika ada parameter 'search' di URL
         if ($request->has('search')) {
             $search = $request->input('search');
-            
             $query->where('nama_pop', 'like', "%{$search}%")
                     ->orWhere('kode_pop', 'like', "%{$search}%")
                     ->orWhere('kota_kabupaten', 'like', "%{$search}%")
-                    ->orWhere('jenis_bangunan', 'like', "%{$search}%"); 
+                    ->orWhere('jenis_bangunan', 'like', "%{$search}%");
         }
 
-        // Ambil data dengan Pagination (misal: 10 data per halaman)
         $pops = $query->paginate(10)->appends($request->query());
 
-        // KEMBALIKAN KE VIEW, BUKAN JSON
         return view('pop.list-pop', compact('pops'));
     }
 
-    // 2. Menyimpan data POP baru
-    public function store(StorePopRequest $request) // Ubah di sini
+    // 2. Tampilkan form Tambah POP
+    public function create()
     {
-        // Validasi otomatis dijalankan sebelum kode ini dieksekusi.
-        // Cukup ambil data yang sudah tervalidasi:
-        $validated = $request->validated();
-
-        $pop = Pop::create($validated);
-
-        return response()->json([
-            'message' => 'Data POP berhasil disimpan!',
-            'data'    => $pop
-        ], 201);
+        return view('pop.pop-create');
     }
 
-    // 3. Menampilkan detail satu POP (beserta relasinya nanti jika diperlukan)
+    // 3. Simpan data POP baru
+    public function store(StorePopRequest $request)
+    {
+        Pop::create($request->validated());
+
+        return redirect()->route('pops.index')
+            ->with('success', 'Data POP berhasil ditambahkan!');
+    }
+
+    // 4. Menampilkan detail satu POP (digunakan oleh Rectifier dsb.)
     public function show($id)
     {
         $pop = Pop::findOrFail($id);
@@ -58,29 +52,30 @@ public function index(Request $request)
         ], 200);
     }
 
-    // 4. Edit data POP
+    // 5. Tampilkan form Edit POP (load data dari DB)
+    public function edit($id)
+    {
+        $pop = Pop::findOrFail($id);
+        return view('pop.pop-edit', compact('pop'));
+    }
+
+    // 6. Simpan perubahan POP
     public function update(UpdatePopRequest $request, $id)
     {
         $pop = Pop::findOrFail($id);
-        
-        $validated = $request->validated();
-        
-        $pop->update($validated);
+        $pop->update($request->validated());
 
-        return response()->json([
-            'message' => 'Data POP berhasil diperbarui!',
-            'data'    => $pop
-        ], 200);
+        return redirect()->route('pops.index')
+            ->with('success', 'Data POP berhasil diperbarui!');
     }
 
-    // 5. Menghapus data POP
+    // 7. Hapus POP
     public function destroy($id)
     {
         $pop = Pop::findOrFail($id);
         $pop->delete();
 
-        return response()->json([
-            'message' => 'Data POP berhasil dihapus!'
-        ], 200);
+        return redirect()->route('pops.index')
+            ->with('success', 'Data POP berhasil dihapus!');
     }
 }
