@@ -1,7 +1,3 @@
-/* =========================================================
-   GLOBAL
-========================================================= */
-
 * {
     box-sizing: border-box;
 }
@@ -20,11 +16,6 @@ body {
     color: #1e293b;
 }
 
-
-/* =========================================================
-   APP CONTAINER
-========================================================= */
-
 .app-container {
     display: flex;
     width: 100%;
@@ -39,20 +30,12 @@ body {
     background: #ffffff;
 }
 
-
-/* =========================================================
-   TOPBAR
-========================================================= */
-
 .topbar {
     height: 60px;
     width: 100%;
-
     display: flex;
     align-items: center;
-
     padding: 0 20px;
-
     background: #ffffff;
     border-bottom: 1px solid #dddddd;
 }
@@ -60,25 +43,17 @@ body {
 .sidebar-toggle {
     width: 30px;
     height: 30px;
-
     padding: 0;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     border: none;
     border-radius: 6px;
-
     background: #eeeeee;
     color: #777777;
-
     cursor: pointer;
-
     font-size: 15px;
-
     flex-shrink: 0;
-
     transition: all 0.2s ease;
 }
 
@@ -89,10 +64,8 @@ body {
 
 .user-profile {
     margin-left: auto;
-
     display: flex;
     align-items: center;
-
     gap: 10px;
 }
 
@@ -100,7 +73,6 @@ body {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-
     line-height: 1.2;
 }
 
@@ -112,7 +84,6 @@ body {
 
 .user-email {
     margin-top: 2px;
-
     font-size: 0.65rem;
     color: #94a3b8;
 }
@@ -120,70 +91,44 @@ body {
 .user-avatar {
     width: 32px;
     height: 32px;
-
     border-radius: 50%;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     background: #f1f5f9;
     color: #64748b;
-
     font-size: 15px;
 }
-
-
-/* =========================================================
-   DETAIL CONTENT
-========================================================= */
 
 .rectifier-detail-content {
     width: 100%;
     min-height: calc(100vh - 60px);
-
     padding: 0 20px 30px;
-
     background: #ffffff;
 }
-
-
-/* =========================================================
-   DETAIL TOP
-========================================================= */
 
 .detail-top {
     height: 45px;
     width: 100%;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     border-bottom: 1px solid #e2e8f0;
-
     margin-bottom: 0;
 }
 
 .detail-back {
     width: 24px;
     height: 24px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     flex-shrink: 0;
-
     border-radius: 50%;
-
     background: #f1f5f9;
     color: #64748b;
-
     font-size: 11px;
-
     text-decoration: none;
-
     transition: all 0.2s ease;
 }
 
@@ -195,25 +140,16 @@ body {
 .btn-edit {
     display: inline-flex;
     align-items: center;
-
     gap: 6px;
-
     padding: 5px 2px;
-
-    border: none;
-    border-bottom: 1px solid #2563eb;
-
     background: transparent;
     color: #2563eb;
-
     font-family: 'Poppins', sans-serif;
-
     font-size: 0.8rem;
     font-weight: 600;
-
     cursor: pointer;
-
     transition: all 0.2s ease;
+    text-decoration: none;
 }
 
 .btn-edit:hover {
@@ -224,149 +160,59 @@ body {
     font-size: 10px;
 }
 
-
-/* =========================================================
-   TOP GRID
-========================================================= */
-
-/*
-   DESKTOP STRUCTURE:
-
-   ┌───────────────────┬───────────────────┐
-   │ Information       │                   │
-   │ Rectifier         │                   │
-   ├───────────────────┤ Photo Rectifier   │
-   │ Serial Number     │                   │
-   │ Module            │                   │
-   └───────────────────┴───────────────────┘
-
-   Tinggi Photo Card mengikuti total tinggi
-   dua card di sebelah kiri.
-
-   IMPORTANT:
-   - Tidak menggunakan height: 100% pada left column
-   - Tidak menggunakan flex: 1 pada module card
-*/
-
 .detail-top-grid {
     width: 100%;
-
     display: grid;
-
-    grid-template-columns:
-        minmax(0, 1fr)
-        minmax(0, 1fr);
-
-    /*
-       Hanya satu row.
-       Tinggi row ditentukan oleh isi kolom kiri.
-    */
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-rows: auto;
-
     column-gap: 20px;
-
     padding-top: 18px;
-
     margin-bottom: 20px;
-
-    /*
-       Tetap stretch agar photo-card
-       mengikuti tinggi row.
-    */
     align-items: stretch;
     min-height: 0;
 }
 
-
-/* =========================================================
-   LEFT COLUMN
-========================================================= */
-
 .detail-left-column {
     grid-column: 1;
     grid-row: 1;
-
     min-width: 0;
     min-height: 0;
     height: auto;
-
     display: flex;
     flex-direction: column;
     gap: 10px;
     align-items: stretch;
 }
 
-
-/* =========================================================
-   GENERIC DETAIL CARD
-========================================================= */
-
 .detail-card {
     position: relative;
-
     width: 100%;
-
     background: #ffffff;
-
     border: 1px solid #e2e8f0;
-
     border-radius: 12px;
-
-    box-shadow:
-        0 4px 6px -1px rgba(0, 0, 0, 0.05),
-        0 2px 4px -1px rgba(0, 0, 0, 0.03);
-
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
     overflow: hidden;
 }
 
-
-/* =========================================================
-   INFORMATION CARD
-========================================================= */
-
 .information-card {
     width: 100%;
-
-    /*
-       Tinggi minimum tetap.
-       Tinggi aktual mengikuti konten.
-    */
     min-height: 235px;
-
-    /*
-       Jangan flex: 1.
-    */
     flex: 0 0 auto;
 }
 
 .detail-card-title {
     margin: 0;
-
     padding: 14px 16px 6px;
-
     color: #1e293b;
-
     font-size: 1rem;
-
     line-height: 1.3;
-
     font-weight: 600;
 }
 
-
-/* =========================================================
-   INFORMATION GRID
-========================================================= */
-
 .information-grid {
     display: grid;
-
-    grid-template-columns:
-        minmax(0, 1.15fr)
-        minmax(0, 0.85fr);
-
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
     gap: 20px;
-
     padding: 8px 16px 16px;
 }
 
@@ -375,50 +221,29 @@ body {
     min-width: 0;
 }
 
-
-/* =========================================================
-   INFORMATION ROW
-========================================================= */
-
 .info-row {
     display: flex;
     flex-direction: column;
-
     margin-bottom: 6px;
-
     line-height: 1.3;
 }
 
 .info-label {
     display: block;
-
     margin-bottom: 2px;
-
     font-size: 0.65rem;
-
     color: #64748b;
-
     font-weight: 400;
 }
 
 .info-value {
     display: block;
-
     color: #334155;
-
     font-size: 0.7rem;
-
     font-weight: 500;
-
     line-height: 1.35;
-
     word-break: break-word;
 }
-
-
-/* =========================================================
-   RIGHT INFORMATION
-========================================================= */
 
 .information-right {
     padding-top: 1px;
@@ -427,101 +252,67 @@ body {
 .info-small-row {
     display: flex;
     flex-direction: column;
-
     margin-bottom: 12px;
 }
 
 .info-small-row .info-label {
     margin-bottom: 2px;
-
     font-size: 0.65rem;
-
     color: #64748b;
 }
 
 .info-small-row .info-value {
     color: #334155;
-
     font-size: 0.7rem;
-
     font-weight: 500;
-
     line-height: 1.35;
 }
 
-
-/* =========================================================
-   SERIAL NUMBER
-========================================================= */
-
 .serial-box {
     width: 100%;
-
     margin-top: 9px;
 }
 
 .serial-label {
     display: block;
-
     margin-bottom: 4px;
-
     font-size: 0.65rem;
-
     color: #64748b;
 }
 
 .serial-value {
     width: 100%;
-
     min-height: 30px;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     border: 1px solid #cbd5e1;
-
     border-radius: 5px;
-
     overflow: hidden;
-
     background: #ffffff;
 }
 
 .serial-value span {
     min-width: 0;
-
     padding-left: 8px;
-
     color: #475569;
-
     font-size: 0.7rem;
-
     white-space: nowrap;
-
     overflow: hidden;
-
     text-overflow: ellipsis;
 }
 
 .serial-value button {
     width: 28px;
     height: 30px;
-
     flex-shrink: 0;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     border: none;
-
     border-left: 1px solid #e2e8f0;
-
     background: #f8fafc;
-
     color: #64748b;
-
     cursor: pointer;
 }
 
@@ -529,99 +320,43 @@ body {
     background: #e2e8f0;
 }
 
-
-/* =========================================================
-   MODULE CARD
-========================================================= */
-
-/*
-   INI BAGIAN PALING PENTING.
-
-   Sebelumnya:
-       flex: 1;
-
-   Itu membuat card module mengisi sisa
-   tinggi photo-card.
-
-   Sekarang:
-       flex: 0 0 auto;
-
-   Jadi tingginya hanya berdasarkan isi tabel.
-*/
-
 .module-card {
     width: 100%;
-
     margin: 0;
-
     padding: 0;
-
     flex: 0 0 auto;
-
-    /*
-       Jangan gunakan:
-       height: 100%;
-       flex: 1;
-    */
 }
-
-
-/* =========================================================
-   SECTION HEADING
-========================================================= */
 
 .section-heading {
     min-height: 38px;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     padding: 0 10px;
-
     color: #2563eb;
-
     font-size: 0.8rem;
-
     font-weight: 600;
 }
 
 .section-heading small {
     color: #64748b;
-
     font-size: 0.65rem;
-
     font-weight: 400;
 }
 
-
-/* =========================================================
-   MODULE TABLE
-========================================================= */
-
 .module-table {
     width: calc(100% - 20px);
-
     margin: 0 10px 10px;
-
     border: 1px solid #c8c8c8;
-
     border-radius: 5px;
-
     overflow: hidden;
-
     background: #ffffff;
 }
 
 .module-row {
     display: grid;
-
-    grid-template-columns:
-        minmax(0, 0.9fr)
-        minmax(0, 1.4fr);
-
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
     min-height: 28px;
-
     border-bottom: 1px solid #c8c8c8;
 }
 
@@ -631,24 +366,17 @@ body {
 
 .module-row > div {
     min-width: 0;
-
     display: flex;
     align-items: center;
-
     padding: 5px 8px;
-
     border-right: 1px solid #c8c8c8;
-
     color: #222222;
-
     font-size: 0.7rem;
 }
 
 .module-row > div:last-child {
     border-right: none;
-
     justify-content: flex-end;
-
     text-align: right;
 }
 
@@ -658,28 +386,9 @@ body {
 
 .module-header > div {
     color: #222222;
-
     font-size: 0.7rem;
-
     font-weight: 600;
 }
-
-
-/* =========================================================
-   PHOTO CARD
-========================================================= */
-
-/*
-   Photo card berada di row yang sama dengan
-   left-column.
-
-   Karena detail-top-grid menggunakan
-   align-items: stretch, photo-card akan
-   otomatis memiliki tinggi yang sama dengan
-   total tinggi kolom kiri.
-
-   TIDAK perlu height: 100%.
-*/
 
 .photo-card {
     grid-column: 2;
@@ -687,8 +396,7 @@ body {
     width: 100%;
     min-width: 0;
     min-height: 0;
-
-    height:100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     padding: 0 16px 16px;
@@ -696,58 +404,29 @@ body {
     overflow: hidden;
 }
 
-
-/* =========================================================
-   PHOTO HEADER
-========================================================= */
-
 .photo-header {
     min-height: 50px;
-
     display: flex;
     align-items: center;
-
     gap: 9px;
-
     color: #334155;
-
     font-size: 0.9rem;
-
     font-weight: 600;
-
     flex-shrink: 0;
 }
 
 .photo-icon {
     width: 30px;
     height: 30px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     flex-shrink: 0;
-
     border-radius: 6px;
-
     background: #eff6ff;
-
     color: #2563eb;
-
     font-size: 14px;
 }
-
-
-/* =========================================================
-   PHOTO WRAPPER
-========================================================= */
-
-/*
-   Wrapper mengisi ruang yang tersedia
-   setelah header.
-
-   Tinggi wrapper TIDAK menentukan tinggi card.
-*/
 
 .photo-wrapper {
     width: 100%;
@@ -762,38 +441,21 @@ body {
     background: #f8fafc;
 }
 
-
-/* =========================================================
-   PHOTO IMAGE
-========================================================= */
-
 .photo-wrapper img {
     display: block;
-
     max-width: 100%;
     max-height: 100%;
-
     width: auto;
     height: auto;
-
     object-fit: contain;
-
     background: #ffffff;
-
     border-radius: 6px;
-
     flex-shrink: 1;
-
     min-width: 0;
     min-height: 0;
 }
 
-/* =========================================================
-   PHOTO CARD - DESKTOP FIX
-========================================================= */
-
 @media (min-width: 601px) {
-
     .detail-top-grid {
         align-items: stretch;
     }
@@ -815,31 +477,18 @@ body {
         width: auto;
         height: auto;
     }
-
 }
-
-
-/* =========================================================
-   PHOTO PLACEHOLDER
-========================================================= */
 
 .photo-placeholder {
     width: 100%;
     height: 100%;
-
     display: flex;
-
     flex-direction: column;
-
     align-items: center;
     justify-content: center;
-
     gap: 7px;
-
     background: #f8fafc;
-
     color: #94a3b8;
-
     font-size: 0.7rem;
 }
 
@@ -847,14 +496,8 @@ body {
     font-size: 28px;
 }
 
-
-/* =========================================================
-   OUTPUT
-========================================================= */
-
 .output-card {
     width: 100%;
-
     margin-bottom: 20px;
 }
 
@@ -865,64 +508,38 @@ body {
 
 .output-grid {
     display: grid;
-
-    grid-template-columns:
-        minmax(0, 1fr)
-        minmax(0, 1fr);
-
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 16px;
-
     padding: 0 10px 10px;
 }
 
 .output-table {
     width: 100%;
-
     border-collapse: collapse;
-
     table-layout: fixed;
-
     font-size: 0.7rem;
 }
 
 .output-table th {
     height: 28px;
-
     padding: 5px 6px;
-
     background: #dcecf8;
-
     border: 1px solid #c4d0db;
-
     color: #334155;
-
     font-size: 0.65rem;
-
     font-weight: 600;
-
     text-align: center;
 }
 
 .output-table td {
     height: 26px;
-
     padding: 5px 6px;
-
     border: 1px solid #d5dce5;
-
     color: #334155;
-
     font-size: 0.65rem;
-
     text-align: center;
-
     vertical-align: middle;
 }
-
-
-/* =========================================================
-   CHECKLIST
-========================================================= */
 
 .checklist-card {
     width: 100%;
@@ -984,11 +601,6 @@ body {
     border-right: none;
 }
 
-
-/* =========================================================
-   CHECKLIST SECTION TITLE
-========================================================= */
-
 .checklist-section-title {
     height: 38px;
     display: flex;
@@ -1003,11 +615,6 @@ body {
     font-weight: 600;
     text-transform: lowercase;
 }
-
-
-/* =========================================================
-   SPEC TABLE
-========================================================= */
 
 .spec-table-wrapper {
     width: 100%;
@@ -1045,68 +652,38 @@ body {
     font-weight: 400;
 }
 
-
-/* =========================================================
-   SIDEBAR COLLAPSED
-========================================================= */
-
 body.sidebar-collapsed .rectifier-detail-content {
     padding-left: 20px;
     padding-right: 20px;
 }
 
-
-/* =========================================================
-   TABLET
-========================================================= */
-
 @media (max-width: 1100px) {
-
     .detail-top-grid {
-        grid-template-columns:
-            minmax(0, 1fr)
-            minmax(0, 1fr);
-
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
         column-gap: 15px;
-
         row-gap: 10px;
     }
 
     .information-grid {
-        grid-template-columns:
-            minmax(0, 1.1fr)
-            minmax(0, 0.9fr);
-
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
         gap: 12px;
     }
 
     .output-grid {
-        grid-template-columns:
-            minmax(0, 1fr)
-            minmax(0, 1fr);
-
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
         gap: 12px;
     }
-
 }
 
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
 @media (max-width: 600px) {
-
     .topbar {
         height: 55px;
-
         padding: 0 12px;
     }
 
     .sidebar-toggle {
         width: 30px;
         height: 30px;
-
         font-size: 15px;
     }
 
@@ -1125,12 +702,8 @@ body.sidebar-collapsed .rectifier-detail-content {
     .user-avatar {
         width: 32px;
         height: 32px;
-
         font-size: 15px;
     }
-
-
-    /* DETAIL CONTENT */
 
     .rectifier-detail-content {
         padding: 0 12px 20px;
@@ -1140,42 +713,21 @@ body.sidebar-collapsed .rectifier-detail-content {
         height: 42px;
     }
 
-
-    /*
-       MOBILE:
-       Semua card kembali menjadi
-       satu kolom.
-    */
-
     .detail-top-grid {
         grid-template-columns: 1fr;
-
         grid-template-rows: auto;
-
         gap: 15px;
-
         padding-top: 15px;
-
         margin-bottom: 15px;
-
         align-items: stretch;
     }
 
-
-    /* LEFT COLUMN */
-
     .detail-left-column {
         grid-column: 1;
-
         grid-row: auto;
-
         height: auto;
-
         gap: 15px;
     }
-
-
-    /* INFORMATION */
 
     .information-card {
         min-height: 235px;
@@ -1183,7 +735,6 @@ body.sidebar-collapsed .rectifier-detail-content {
 
     .information-grid {
         grid-template-columns: 1fr;
-
         gap: 10px;
     }
 
@@ -1195,16 +746,10 @@ body.sidebar-collapsed .rectifier-detail-content {
         font-size: 0.7rem;
     }
 
-
-    /* MODULE */
-
     .module-card {
         grid-column: 1;
-
         grid-row: auto;
-
         flex: 0 0 auto;
-
         margin: 0;
     }
 
@@ -1221,100 +766,59 @@ body.sidebar-collapsed .rectifier-detail-content {
     }
 
     .module-row {
-        grid-template-columns:
-            0.9fr
-            1.4fr;
+        grid-template-columns: 0.9fr 1.4fr;
     }
 
     .module-row > div {
         font-size: 0.7rem;
     }
 
-
-    /* PHOTO */
-
     .photo-card {
         grid-column: 1;
-
         grid-row: auto;
-
-        /*
-           Mobile tidak perlu mengikuti
-           tinggi kolom kiri.
-        */
         min-height: 280px;
-
         height: 280px;
-
         padding: 0 16px 16px;
     }
 
     .photo-wrapper {
         min-height: 0;
-
         height: auto;
     }
 
     .photo-wrapper img {
         max-width: 100%;
         max-height: 100%;
-
         width: auto;
         height: auto;
-
         object-fit: contain;
     }
 
-
-    /* OUTPUT */
-
     .output-grid {
         grid-template-columns: 1fr;
-
         gap: 12px;
     }
 
-
-    /* CHECKLIST */
-
     .checklist-row {
         display: grid;
-
-        grid-template-columns:
-            0.55fr
-            1.8fr
-            0.75fr
-            1.3fr;
-
+        grid-template-columns: 0.55fr 1.8fr 0.75fr 1.3fr;
         min-height: 34px;
     }
 
     .checklist-label,
     .checklist-value {
         min-width: 0;
-
         display: flex;
-
         align-items: center;
-
         padding: 6px 9px;
-
         border-right: 1px solid #cbd5e1;
-
         border-bottom: 1px solid #cbd5e1;
-
         font-size: 0.7rem;
-
         line-height: 1.35;
     }
 
-
-    /* SPEC TABLE */
-
     .spec-table {
         min-width: 700px;
-
         font-size: 0.65rem;
     }
-
 }

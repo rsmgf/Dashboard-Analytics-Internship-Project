@@ -70,9 +70,9 @@
 
                         {{-- Information --}}
                         <div class="rectifier-information">
-                            <div class="equipment-info">{{ $rectifier->merk ?? '-' }}</div>
-                            <div class="equipment-info">{{ $rectifier->type ?? '-' }}</div>
-                            <div class="equipment-info serial">{{ $rectifier->sn_rectifier ?? '-' }}</div>
+                           <div class="equipment-info"><strong>Merk :</strong> {{ $rectifier->merk ?? '-' }}</div>
+                           <div class="equipment-info"><strong>Type :</strong> {{ $rectifier->type ?? '-' }}</div>
+                           <div class="equipment-info serial"><strong>SN :</strong> {{ $rectifier->sn_rectifier ?? '-' }}</div>
                         </div>
 
                         {{-- Meta --}}
@@ -90,13 +90,16 @@
 
                         {{-- Footer --}}
                         <div class="rectifier-card-footer">
-                            <a href="{{ route('rectifiers.show', [$pop->id, $rectifier->id]) }}" class="detail-button">
-                                <span>Detail</span>
-                                <i class="bi bi-chevron-right"></i>
-                            </a>
+
+                            <button type="button" class="btn-hapus" onclick="alert('Tombol Hapus diklik')">
+                                <i class="bi bi-trash-fill"></i> Hapus
+                            </button>
+                                <a href="{{ route('rectifiers.show', [$pop->id, $rectifier->id]) }}" class="detail-button">
+                                    <span>Detail</span>
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
                         </div>
-                    </div>
-                @empty
+                    @empty
                     <div style="grid-column:1/-1; text-align:center; padding:40px; color:#64748b;">
                         <i class="bi bi-inbox" style="font-size:2rem; display:block; margin-bottom:12px;"></i>
                         Belum ada data Rectifier untuk POP ini.
