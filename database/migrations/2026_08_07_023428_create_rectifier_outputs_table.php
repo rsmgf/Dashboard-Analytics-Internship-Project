@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('rectifier_outputs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('rectifier_id')->constrained('rectifiers')->onDelete('cascade');
-            $table->string('merk_mcb');
-            $table->integer('kapasitas_mcb');
-            $table->string('peruntukan'); // Contoh: Untuk server A, router B
+            $table->string('nama_mcb');                  // Contoh: MCB 1, MCB 2
+            $table->string('merk_mcb')->nullable();      // Contoh: Nader, CHNT
+            $table->string('kapasitas_mcb')->nullable(); // Contoh: 64 A
+            $table->string('peruntukan')->nullable();    // Contoh: BAT I, SPARE, BMS
             $table->timestamps();
         });
     }

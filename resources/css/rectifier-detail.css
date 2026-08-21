@@ -926,81 +926,61 @@ body {
 
 .checklist-card {
     width: 100%;
-
     margin-bottom: 30px;
-
-    padding: 0;
+    padding: 16px;
 }
 
 .checklist-heading {
-    min-height: 42px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 14px;
+}
 
-    display: flex;
-
-    align-items: center;
-
-    padding: 0 10px;
-
-    border-bottom: 1px solid #cbd5e1;
-
-    color: #1e293b;
-
-    font-size: 0.9rem;
-
-    font-weight: 600;
+.checklist-header-box {
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    background: #ffffff;
+    overflow: hidden;
+    margin-bottom: 14px;
 }
 
 .checklist-row {
     display: grid;
-
-    grid-template-columns:
-        0.55fr
-        1.8fr
-        0.75fr
-        1.3fr;
-
-    min-height: 34px;
-
+    grid-template-columns: 80px 1.4fr 100px 1.4fr;
+    min-height: 38px;
     border-bottom: 1px solid #cbd5e1;
+}
+
+.checklist-row:last-child {
+    border-bottom: none;
 }
 
 .checklist-label,
 .checklist-value {
     min-width: 0;
-
     display: flex;
-
     align-items: center;
-
-    padding: 6px 9px;
-
-    border-right: 1px solid #cbd5e1;
-
-    border-bottom: 1px solid #cbd5e1;
-
-    font-size: 0.7rem;
-
+    padding: 8px 12px;
+    font-size: 0.78rem;
     line-height: 1.35;
 }
 
 .checklist-label {
     background: #dcecf8;
-
-    color: #334155;
-
-    font-weight: 600;
+    color: #1e293b;
+    font-weight: 700;
+    border-right: 1px solid #cbd5e1;
 }
 
 .checklist-value {
     background: #ffffff;
-
-    color: #334155;
-
-    font-weight: 400;
+    color: #1e293b;
+    font-weight: 500;
+    border-right: 1px solid #cbd5e1;
 }
 
-.checklist-label:last-child,
-.checklist-value:last-child {
+.checklist-row .checklist-value:last-child {
     border-right: none;
 }
 
@@ -1010,27 +990,18 @@ body {
 ========================================================= */
 
 .checklist-section-title {
-    height: 35px;
-
+    height: 38px;
     display: flex;
-
     align-items: center;
-
-    padding: 0 10px;
-
-    margin-top: 16px;
-
-    background: #dcecf8;
-
-    border-top: 1px solid #cbd5e1;
-
-    border-bottom: 1px solid #cbd5e1;
-
+    padding: 0 14px;
+    background: #e2eef9;
+    border: 1px solid #cbd5e1;
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
     color: #2563eb;
-
-    font-size: 0.7rem;
-
+    font-size: 0.8rem;
     font-weight: 600;
+    text-transform: lowercase;
 }
 
 
@@ -1040,50 +1011,37 @@ body {
 
 .spec-table-wrapper {
     width: 100%;
-
     overflow-x: auto;
 }
 
 .spec-table {
     width: 100%;
-
     border-collapse: collapse;
-
     table-layout: fixed;
-
-    font-size: 0.7rem;
+    font-size: 0.78rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 0 0 4px 4px;
 }
 
 .spec-table th,
 .spec-table td {
-    padding: 7px 9px;
-
+    padding: 8px 12px;
     border: 1px solid #cbd5e1;
-
     text-align: left;
-
     vertical-align: middle;
-
-    line-height: 1.35;
+    line-height: 1.4;
+    background: #ffffff;
 }
 
 .spec-table th {
-    width: 17%;
-
-    background: #f8fafc;
-
-    color: #475569;
-
+    width: 22%;
+    color: #1e293b;
     font-weight: 600;
 }
 
 .spec-table td {
-    width: 33%;
-
-    background: #ffffff;
-
+    width: 28%;
     color: #334155;
-
     font-weight: 400;
 }
 

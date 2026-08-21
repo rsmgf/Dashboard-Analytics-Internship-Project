@@ -4,7 +4,16 @@ import laravel from 'laravel-vite-plugin';
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js'],
+            input: [
+                'resources/css/app.css',
+                'resources/css/sidebar.css',
+                'resources/css/pop.css',
+                'resources/css/add-pop.css',
+                'resources/css/rectifier-card.css',
+                'resources/css/rectifier-detail.css',
+                'resources/css/rectifier-form.css',
+                'resources/js/app.js',
+            ],
             refresh: true,
         }),
     ],

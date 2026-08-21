@@ -13,10 +13,19 @@ class Rectifier extends Model
         'pop_id',
         'nama_alias',
         'deskripsi',
+        'tanggal_pemeriksaan',
+        'pic',
         'merk',
         'type',
         'sn_rectifier',
         'kapasitas_slot',
+        'couple',
+        'type_modul_controller',
+        'type_modul_power',
+        'kapasitas_rectifier',
+        'beban',
+        'utilisasi',
+        'foto_rectifier',
     ];
 
     // Relasi ke POP (Parent)

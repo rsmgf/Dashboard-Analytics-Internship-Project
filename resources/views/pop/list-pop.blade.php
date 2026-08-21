@@ -61,20 +61,38 @@
                     @endcan
                 </div>
 
-                <div class="filter-section">
+                {{-- Flash message sukses/error setelah redirect --}}
+                @if(session('success'))
+                    <div style="background:#dcfce7; border:1px solid #86efac; border-radius:8px; padding:12px 16px; margin-bottom:16px; font-size:0.875rem; color:#166534; display:flex; align-items:center; gap:8px;">
+                        <i class="bi bi-check-circle-fill"></i>
+                        {{ session('success') }}
+                    </div>
+                @endif
+                @if(session('error'))
+                    <div style="background:#fee2e2; border:1px solid #fca5a5; border-radius:8px; padding:12px 16px; margin-bottom:16px; font-size:0.875rem; color:#B91C1C; display:flex; align-items:center; gap:8px;">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        {{ session('error') }}
+                    </div>
+                @endif
+
+                <form id="searchForm" method="GET" action="{{ route('pops.index') }}" class="filter-section">
                     <div class="search-wrapper">
-                        <input type="text" id="searchPOP" name="search" class="search-input" placeholder="Cari data..." value="{{ request('search') }}">
+                        <i class="bi bi-search search-icon"></i>
+                        <input type="text" id="searchPOP" name="search" class="search-input"
+                            placeholder="Cari data..."
+                            value="{{ request('search') }}">
                     </div>
                     <div class="filter-wrapper">
                         <label class="filter-label">Filter harus dipilih <span>*</span></label>
-                        <select id="mainFilter" class="filter-control">
-                            <option value="Rectifier">Rectifier</option>
-                            <option value="kWh">kWh</option>
-                            <option value="Battery">Battery</option>
-                            <option value="AC">AC</option>
+                        <select id="mainFilter" name="filter" class="filter-control"
+                            onchange="document.getElementById('searchForm').submit()">
+                            <option value="Rectifier" {{ request('filter', 'Rectifier') == 'Rectifier' ? 'selected' : '' }}>Rectifier</option>
+                            <option value="kWh"       {{ request('filter') == 'kWh'       ? 'selected' : '' }}>kWh</option>
+                            <option value="Battery"   {{ request('filter') == 'Battery'   ? 'selected' : '' }}>Battery</option>
+                            <option value="AC"        {{ request('filter') == 'AC'        ? 'selected' : '' }}>AC</option>
                         </select>
                     </div>
-                </div>
+                </form>
 
                 <div class="table-card">
                     <table class="pop-table">
@@ -153,82 +171,6 @@
     </form>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const sidebarToggle = document.getElementById('sidebarToggle');
-            const sidebarIcon = sidebarToggle ? sidebarToggle.querySelector('i') : null;
-
-            if (sidebarToggle) {
-                sidebarToggle.addEventListener('click', function() {
-                    document.body.classList.toggle('sidebar-collapsed');
-                    const isCollapsed = document.body.classList.contains('sidebar-collapsed');
-
-                    if (sidebarIcon) {
-                        if (isCollapsed) {
-                            sidebarIcon.classList.remove('bi-list');
-                            sidebarIcon.classList.add('bi-chevron-right');
-                        } else {
-                            sidebarIcon.classList.remove('bi-chevron-right');
-                            sidebarIcon.classList.add('bi-list');
-                        }
-                    }
-
-                    if (isCollapsed) {
-                        const accountMenu = document.getElementById('accountConfigMenu');
-                        const accountToggle = document.getElementById('accountConfigToggle');
-                        const accountArrow = document.getElementById('accountConfigArrow');
-
-                        if (accountMenu) accountMenu.classList.remove('show');
-                        if (accountToggle) accountToggle.classList.remove('active');
-                        if (accountArrow) {
-                            accountArrow.classList.remove('bi-chevron-up');
-                            accountArrow.classList.add('bi-chevron-down');
-                        }
-                    }
-                });
-            }
-
-            // Logika Dropdown Akun
-            const accountConfigToggle = document.getElementById('accountConfigToggle');
-            const accountConfigMenu = document.getElementById('accountConfigMenu');
-            const accountConfigArrow = document.getElementById('accountConfigArrow');
-
-            if (accountConfigToggle && accountConfigMenu) {
-                accountConfigToggle.addEventListener('click', function() {
-                    const isOpen = accountConfigMenu.classList.toggle('show');
-                    accountConfigToggle.classList.toggle('active', isOpen);
-
-                    if (accountConfigArrow) {
-                        if (isOpen) {
-                            accountConfigArrow.classList.remove('bi-chevron-down');
-                            accountConfigArrow.classList.add('bi-chevron-up');
-                        } else {
-                            accountConfigArrow.classList.remove('bi-chevron-up');
-                            accountConfigArrow.classList.add('bi-chevron-down');
-                        }
-                    }
-                });
-            }
-
-            // Logika Pencarian Tabel Client Side
-            const searchInput = document.getElementById('searchPOP');
-            const tableBody = document.getElementById('popTableBody');
-
-            if (searchInput && tableBody) {
-                searchInput.addEventListener('keyup', function() {
-                    const keyword = this.value.toLowerCase();
-                    const rows = tableBody.querySelectorAll('tr');
-
-                    rows.forEach(function(row) {
-                        const text = row.textContent.toLowerCase();
-                        if (text.includes(keyword)) {
-                            row.style.display = '';
-                        } else {
-                            row.style.display = 'none';
-                        }
-                    });
-                });
-            }
-        });
 
         // FUNGSI DETAIL POP DINAMIS BERDASARKAN FILTER
         function lihatPOP(idPOP) {

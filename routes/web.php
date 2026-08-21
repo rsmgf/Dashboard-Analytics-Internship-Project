@@ -26,7 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 // --- SUPER ADMIN: USER & MENU MANAGEMENT ---
 Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->group(function () {
@@ -55,43 +55,46 @@ Route::middleware('auth')->group(function () {
     Route::get('/rma/{id}/download', [RmaController::class, 'downloadPdf'])->name('rma.download');
     Route::get('/rma/{id}/pdf', [RmaController::class, 'generatePdf'])->name('rma.pdf');
 
-    // --- POP: VIEW (Semua Role: Karyawan, Teknisi, Super Admin) ---
+    // --- POP: VIEW (Semua role, cukup login) ---
     Route::get('/pops', [PopController::class, 'index'])->name('pops.index');
+
+    // --- POP: CREATE — harus SEBELUM /pops/{id} agar 'create' tidak ditangkap sebagai id ---
+    Route::middleware('permission:pops.index.create')->group(function () {
+        Route::get('/pops/create', [PopController::class, 'create'])->name('pops.create');
+        Route::post('/pops', [PopController::class, 'store'])->name('pops.store');
+    });
+
+    // --- POP: SHOW (detail satu POP) ---
     Route::get('/pops/{id}', [PopController::class, 'show'])->name('pops.show');
 
-    // --- POP: EDIT (Teknisi & Super Admin) ---
-    Route::middleware('role:super_admin|teknisi')->group(function () {
+    // --- POP: EDIT ---
+    Route::middleware('permission:pops.index.update')->group(function () {
         Route::get('/pops/{id}/edit', [PopController::class, 'edit'])->name('pops.edit');
         Route::put('/pops/{id}', [PopController::class, 'update'])->name('pops.update');
     });
 
-    // --- POP: CREATE & DELETE (Hanya Super Admin) ---
-    Route::middleware('role:super_admin')->group(function () {
-        Route::get('/pops/create', [PopController::class, 'create'])->name('pops.create');
-        Route::post('/pops', [PopController::class, 'store'])->name('pops.store');
+    // --- POP: DELETE ---
+    Route::middleware('permission:pops.index.delete')->group(function () {
         Route::delete('/pops/{id}', [PopController::class, 'destroy'])->name('pops.destroy');
     });
 
     // --- RECTIFIERS ---
     Route::get('/pops/{pop}/rectifiers', [RectifierController::class, 'index'])->name('rectifiers.index');
+
+    // Create harus SEBELUM /{id} agar 'create' tidak ditangkap sebagai id
+    Route::middleware('permission:rectifiers.index.create')->group(function () {
+        Route::get('/pops/{pop}/rectifiers/create', [RectifierController::class, 'create'])->name('rectifiers.create');
+        Route::post('/pops/{pop}/rectifiers', [RectifierController::class, 'store'])->name('rectifiers.store');
+    });
+
     Route::get('/pops/{pop}/rectifiers/{id}', [RectifierController::class, 'show'])->name('rectifiers.show');
-    
-    // Rectifier Edit (Teknisi & Super Admin)
-    Route::middleware('role:super_admin|teknisi')->group(function () {
+
+    Route::middleware('permission:rectifiers.index.update')->group(function () {
+        Route::get('/pops/{pop}/rectifiers/{id}/edit', [RectifierController::class, 'edit'])->name('rectifiers.edit');
         Route::put('/pops/{pop}/rectifiers/{id}', [RectifierController::class, 'update'])->name('rectifiers.update');
     });
-    
-    // Rectifier Create & Delete (Hanya Super Admin)
-    Route::middleware('role:super_admin')->group(function () {
-        Route::post('/pops/{pop}/rectifiers', [RectifierController::class, 'store'])->name('rectifiers.store');
+
+    Route::middleware('permission:rectifiers.index.delete')->group(function () {
         Route::delete('/pops/{pop}/rectifiers/{id}', [RectifierController::class, 'destroy'])->name('rectifiers.destroy');
     });
-
-    Route::get('/rectifier-card', function () {
-    return view('rectifier-card');
-    })->name('rectifier.card');
-
-    Route::get('/rectifier-detail', function () {
-        return view('rectifier-detail');
-    })->name('rectifier.detail');
 });
