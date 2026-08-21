@@ -106,7 +106,7 @@
                                     <label class="form-label">No. Handphone</label>
                                     <div class="custom-input @error('no_hp') input-error @enderror">
                                         <i class="input-icon bi bi-telephone"></i>
-                                        <input type="text" name="no_hp" class="form-control"
+                                        <input type="text" name="no_hp" class="form-control" maxlength="13"
                                             placeholder="Masukkan nomor handphone" value="{{ old('no_hp') }}">
                                     </div>
                                     @error('no_hp')

@@ -18,7 +18,8 @@
     box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
     width: 100%;
     min-height: 100%;
     font-family: 'Poppins', sans-serif;
@@ -33,6 +34,13 @@ body {
 .app-container {
     width: 100%;
     min-height: 100vh;
+}
+
+button.sidebar-menu {
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
 }
 
 .sidebar {
@@ -112,9 +120,11 @@ body {
     transition: background 0.2s ease, color 0.2s ease, border-left 0.2s ease;
 }
 
-.sidebar-menu > i:first-child {
+.sidebar-menu>i:first-child {
     width: 28px;
     min-width: 28px;
+    flex-shrink: 0;
+    /* FIX: icon tidak ikut mengecil saat teks kepanjangan */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -126,6 +136,16 @@ body {
     display: inline-block;
     opacity: 1;
     transition: opacity 0.2s ease;
+    overflow: hidden;
+    /* FIX */
+    text-overflow: ellipsis;
+    /* FIX */
+    white-space: nowrap;
+    /* FIX */
+    min-width: 0;
+    /* FIX: wajib supaya ellipsis bekerja di flex container */
+    flex: 1 1 auto;
+    /* FIX: teks yang menyusut duluan, bukan icon/arrow */
 }
 
 .sidebar-menu:hover {
@@ -146,13 +166,15 @@ body {
     user-select: none;
 }
 
-.sidebar-dropdown > i:first-child {
+.sidebar-dropdown>i:first-child {
     font-size: 22px;
 }
 
 .dropdown-arrow {
     width: auto !important;
     min-width: auto !important;
+    flex-shrink: 0;
+    /* FIX: arrow tidak ikut gepeng saat teks dipotong */
     margin-left: auto;
     font-size: 18px !important;
     transition: transform 0.25s ease;
@@ -208,9 +230,24 @@ body {
 .sidebar-submenu-item i {
     width: 22px;
     min-width: 22px;
+    flex-shrink: 0;
+    /* FIX: konsisten dengan icon parent */
     display: flex;
     justify-content: center;
     font-size: 16px;
+}
+
+.sidebar-submenu-item span {
+    overflow: hidden;
+    /* FIX */
+    text-overflow: ellipsis;
+    /* FIX */
+    white-space: nowrap;
+    /* FIX */
+    min-width: 0;
+    /* FIX */
+    flex: 1 1 auto;
+    /* FIX */
 }
 
 .main-content {
@@ -274,7 +311,7 @@ body {
     font-weight: 600;
 }
 
-.user-profile > div {
+.user-profile>div {
     flex-shrink: 0;
 }
 
@@ -327,13 +364,24 @@ body.sidebar-collapsed .sidebar-menu span {
     display: none;
 }
 
+/* FIX: saat collapsed, submenu (child) & arrow ikut disembunyikan
+   supaya tidak nyisa bocor di luar sidebar yang sudah menyempit */
+body.sidebar-collapsed .sidebar-submenu {
+    display: none !important;
+}
+
+body.sidebar-collapsed .dropdown-arrow {
+    display: none;
+}
+
 /* OVERLAY — backdrop gelap di belakang sidebar saat mobile */
 .sidebar-overlay {
     display: none;
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.45);
-    z-index: 999; /* di bawah sidebar (1000), di atas konten */
+    z-index: 999;
+    /* di bawah sidebar (1000), di atas konten */
     cursor: pointer;
     transition: opacity 0.3s ease;
 }
@@ -363,6 +411,7 @@ body.sidebar-collapsed .sidebar-menu span {
 
 /* RESPONSIVE — MOBILE */
 @media (max-width: 768px) {
+
     /* Sidebar selalu tersembunyi secara default di mobile */
     .sidebar {
         transform: translateX(-100%);
