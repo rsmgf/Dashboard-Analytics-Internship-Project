@@ -31,7 +31,7 @@
                 </div>
 
                 <div class="table-card">
-                    <table class="pop-table">
+                    <table class="access-table">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -41,7 +41,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($roles as $i => $role)
+                            @forelse ($roles as $i => $role)
                                 <tr>
                                     <td>{{ $i + 1 }}</td>
                                     <td>{{ ucfirst(str_replace('_', ' ', $role->name)) }}</td>
@@ -52,7 +52,9 @@
                                         </a>
                                     </td>
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr><td colspan="4" class="access-empty">Belum ada role.</td></tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>

@@ -63,7 +63,7 @@ class AccessManagementController extends Controller
 
         $role->syncPermissions($validPermissionIds);
 
-        return redirect()->route('admin.access.edit', $role)
+        return redirect()->route('admin.access.index', $role)
             ->with('success', "Akses untuk role {$role->name} berhasil diperbarui");
     }
 }

@@ -58,6 +58,42 @@ class MenuSeeder extends Seeder
             'parent_id' => $accountConfig->id,
         ]);
 
+        $rectifier = Menu::create([
+            'name' => 'Rectifier',
+            'route' => 'rectifiers.index',
+            'icon' => 'bi bi-cpu-fill',
+            'order' => 1,
+            'parent_id' => $pop->id,
+            'is_sidebar' => false,
+        ]);
+
+        $kwh = Menu::create([
+            'name' => 'kWh',
+            'route' => null,
+            'icon' => 'bi bi-lightning-charge-fill',
+            'order' => 2,
+            'parent_id' => $pop->id,
+            'is_sidebar' => false,
+        ]);
+
+        $battery = Menu::create([
+            'name' => 'Battery',
+            'route' => null,
+            'icon' => 'bi bi-battery-full',
+            'order' => 3,
+            'parent_id' => $pop->id,
+            'is_sidebar' => false,
+        ]);
+
+        $ac = Menu::create([
+            'name' => 'AC',
+            'route' => null,
+            'icon' => 'bi bi-fan',
+            'order' => 4,
+            'parent_id' => $pop->id,
+            'is_sidebar' => false,
+        ]);
+
 
 
         $karyawan = Role::where('name', 'karyawan')->first();
@@ -67,6 +103,10 @@ class MenuSeeder extends Seeder
         // sesuaikan siapa boleh lihat menu apa
         $dashboard->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id]); // semua role
         $pop->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id]);   // semua role
+        $rectifier->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id]);
+        $kwh->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id]);
+        $battery->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id]);
+        $ac->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id]);
         $rma->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id]);   // semua role
         $usermanagement->roles()->sync([$superAdmin->id]);   // hanya admin
         $accountConfig->roles()->sync([$superAdmin->id]);

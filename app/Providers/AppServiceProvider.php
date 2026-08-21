@@ -34,8 +34,9 @@ class AppServiceProvider extends ServiceProvider
                 };
 
                 $menus = Menu::whereNull('parent_id')
+                    ->where('is_sidebar', true)
                     ->with(['children' => function ($q) {
-                        $q->with('roles')->orderBy('order');
+                        $q->where('is_sidebar', true)->with('roles')->orderBy('order');
                     }, 'roles'])
                     ->orderBy('order')
                     ->get()
