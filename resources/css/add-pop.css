@@ -27,6 +27,10 @@ body {
 }
 
 .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    margin: 0;
     height: 70px;
     display: flex;
     align-items: center;
@@ -71,9 +75,9 @@ body {
 .add-pop-content {
     width: 100%;
     padding: 24px 32px 40px;
-    max-width: 1200px;
-    margin: 0 auto;
+    box-sizing: border-box;
 }
+
 
 .add-pop-back {
     width: 36px;
@@ -287,6 +291,10 @@ body.sidebar-collapsed .sidebar-logo img {
 
 @media (max-width: 768px) {
     .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    margin: 0;
         padding: 0 16px;
     }
 

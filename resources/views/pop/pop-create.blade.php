@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -42,18 +42,11 @@
             <x-topbar />
 
             <div class="add-pop-content">
-                                <a href="{{ route('pops.index') }}" style="
-                    display: inline-flex; align-items: center; justify-content: center;
-                    width: 32px; height: 32px; border-radius: 50%;
-                    background: #f1f5f9; color: #64748b; font-size: 14px;
-                    text-decoration: none; margin-bottom: 16px;
-                    transition: background 0.2s;
-                " title="Kembali ke List POP"
-                   onmouseover="this.style.background='#e2e8f0';this.style.color='#1e293b';"
-                   onmouseout="this.style.background='#f1f5f9';this.style.color='#64748b';">
+                <a href="{{ route('pops.index') }}" class="add-pop-back" title="Kembali ke List POP">
                     <i class="bi bi-arrow-left"></i>
                 </a>
-<div class="add-pop-card">
+                <div class="add-pop-card">
+
 
                     <div class="add-pop-alert">
                         <i class="bi bi-info-circle-fill"></i>

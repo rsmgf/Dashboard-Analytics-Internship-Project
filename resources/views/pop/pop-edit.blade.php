@@ -42,7 +42,11 @@
             <x-topbar />
 
             <div class="add-pop-content">
+                <a href="{{ route('pops.index') }}" class="add-pop-back" title="Kembali ke List POP">
+                    <i class="bi bi-arrow-left"></i>
+                </a>
                 <div class="add-pop-card">
+
 
                     <div class="add-pop-alert">
                         <i class="bi bi-info-circle-fill"></i>
