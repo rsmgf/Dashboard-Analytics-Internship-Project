@@ -135,40 +135,52 @@ button.sidebar-menu {
 }
 
 .breadcrumb-nav {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 20px;
-    margin-bottom: 16px;
-    font-size: 0.82rem;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    line-height: 1.25;
 }
 
 .breadcrumb-link {
     color: #64748b;
     text-decoration: none;
     font-weight: 500;
-    transition: color 0.2s ease;
+    font-size: 0.95rem;
+    transition: color 0.15s ease;
     display: inline-flex;
     align-items: center;
+    gap: 4px;
 }
 
 .breadcrumb-link:hover {
-    color: #2563eb;
+    color: #0284c7;
 }
 
 .breadcrumb-home i {
-    font-size: 0.9rem;
+    font-size: 1rem;
+    color: #64748b;
+    transition: color 0.15s ease;
+}
+
+.breadcrumb-link:hover .bi-house-door-fill,
+.breadcrumb-link:hover i {
+    color: #0284c7;
 }
 
 .breadcrumb-sep {
     font-size: 0.65rem;
-    color: #cbd5e1;
+    color: #94a3b8;
+    margin: 0 1px;
 }
 
 .breadcrumb-current {
-    color: #1e293b;
-    font-weight: 600;
+    color: #0284c7;
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: -0.01em;
 }
 
 .sidebar-menu span {

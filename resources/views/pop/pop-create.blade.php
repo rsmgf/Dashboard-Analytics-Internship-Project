@@ -68,7 +68,20 @@
             <x-topbar />
 
             <div class="add-pop-content">
-                <x-breadcrumb :items="[['label' => 'POP', 'route' => 'pops.index'], ['label' => 'Tambah POP']]" />
+                {{-- HEADER BAR: Back + Breadcrumb As Title --}}
+                <div class="add-pop-header-bar">
+                    <a href="{{ route('pops.index') }}" class="add-pop-back" title="Kembali ke List POP">
+                        <i class="bi bi-arrow-left"></i>
+                    </a>
+                    <div class="add-pop-header-text">
+                        <x-breadcrumb :items="[
+                            ['label' => 'POP', 'route' => 'pops.index'],
+                            ['label' => 'Tambah POP'],
+                        ]" />
+                        <p class="add-pop-subheading">Form Registrasi Data Point of Presence Baru</p>
+                    </div>
+                </div>
+
                 <div class="add-pop-card">
 
                     <div class="add-pop-alert">

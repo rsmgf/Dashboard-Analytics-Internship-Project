@@ -30,25 +30,24 @@
 
         <div class="rectifier-detail-content">
             
-            {{-- BREADCRUMB --}}
-            <x-breadcrumb :items="[
-                ['label' => 'POP', 'route' => 'pops.index'],
-                ['label' => $pop->nama_pop . ': Rectifier', 'route' => 'rectifiers.index', 'params' => ['pop' => $pop->id]],
-                ['label' => 'Detail Rectifier: ' . ($rectifier->merk ?? 'Rectifier')],
-            ]" />
-
-            {{-- HEADER ATAS: Back + Judul Informatif + Tombol Edit --}}
+            {{-- HEADER ATAS: Back + Breadcrumb As Title + Badge + Tombol Edit --}}
             <div class="detail-header-bar">
                 <div class="header-left-group">
                     <a href="{{ route('rectifiers.index', $pop->id) }}" class="detail-back" title="Kembali ke Daftar Rectifier">
                         <i class="bi bi-arrow-left"></i>
                     </a>
                     <div class="header-title-wrapper">
-                        <div class="title-with-badge">
-                            <h1 class="detail-rectifier-name">{{ $rectifier->nama_alias ?? ($rectifier->merk . ' - ' . $rectifier->type) }}</h1>
-                            <span class="device-badge">{{ $rectifier->merk ?? 'Rectifier' }}</span>
+                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                            <x-breadcrumb :items="[
+                                ['label' => 'POP', 'route' => 'pops.index'],
+                                ['label' => $pop->nama_pop, 'route' => 'rectifiers.index', 'params' => ['pop' => $pop->id]],
+                                ['label' => $rectifier->nama_alias ?? ($rectifier->merk . ' - ' . $rectifier->type)],
+                            ]" />
+                            @if($rectifier->merk)
+                                <span class="device-badge">{{ $rectifier->merk }}</span>
+                            @endif
                         </div>
-                        <span class="pop-sub-info">Point of Presence: <strong>{{ $pop->nama_pop }}</strong> ({{ $pop->kode_pop }})</span>
+                        <span class="pop-sub-info">Kode POP: <strong>{{ $pop->kode_pop }}</strong> &middot; {{ $pop->kota_kabupaten }}, {{ $pop->provinsi }}</span>
                     </div>
                 </div>
 
