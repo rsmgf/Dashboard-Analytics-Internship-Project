@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class Rectifier extends Model
 {
@@ -26,12 +27,19 @@ class Rectifier extends Model
         'beban',
         'utilisasi',
         'foto_rectifier',
+        'diupdate_oleh',
     ];
 
     // Relasi ke POP (Parent)
     public function pop()
     {
         return $this->belongsTo(Pop::class);
+    }
+
+    // Relasi ke User yang terakhir mengubah data
+    public function diupdateOleh()
+    {
+        return $this->belongsTo(User::class, 'diupdate_oleh');
     }
 
     // Relasi ke Modul (Child)

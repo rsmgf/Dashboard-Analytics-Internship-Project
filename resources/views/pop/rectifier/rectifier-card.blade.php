@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 
 <head>
@@ -74,32 +74,49 @@
                                 <div class="equipment-info serial">{{ $rectifier->sn_rectifier ?? '-' }}</div>
                             </div>
 
-                            {{-- Meta --}}
-                            <div class="rectifier-meta">
-                                <div class="meta-item">
-                                    <i class="bi bi-calendar-fill"></i>
-                                    <span>{{ $rectifier->updated_at ? $rectifier->updated_at->format('d M Y') : '-' }}</span>
-                                </div>
+                            <span class="rectifier-number">
+                                Rectifier #{{ $loop->iteration }}
+                            </span>
+                        </div>
 
-                                <div class="meta-item">
-                                    <i class="bi bi-geo-alt-fill"></i>
-                                    <span>{{ $pop->kota_kabupaten }}</span>
-                                </div>
+                        {{-- Information --}}
+                        <div class="rectifier-information">
+                            <div class="equipment-info">{{ $rectifier->merk ?? '-' }}</div>
+                            <div class="equipment-info">{{ $rectifier->type ?? '-' }}</div>
+                            <div class="equipment-info serial">{{ $rectifier->sn_rectifier ?? '-' }}</div>
+                        </div>
+
+                        {{-- Meta: PIC & Tanggal Pemeriksaan --}}
+                        <div class="rectifier-meta">
+                            <div class="meta-item">
+                                <i class="bi bi-person-fill"></i>
+                                <span>{{ $rectifier->pic ?? '-' }}</span>
                             </div>
 
-                            {{-- Footer --}}
-                            <div class="rectifier-card-footer">
-                                <a href="{{ route('rectifiers.show', [$pop->id, $rectifier->id]) }}"
-                                    class="detail-button">
-                                    <span>Detail</span>
-                                    <i class="bi bi-chevron-right"></i>
-                                </a>
+                            <div class="meta-item">
+                                <i class="bi bi-calendar-fill"></i>
+                                <span>{{ $rectifier->tanggal_pemeriksaan ? \Carbon\Carbon::parse($rectifier->tanggal_pemeriksaan)->format('d M Y') : '-' }}</span>
                             </div>
                         </div>
-                    @empty
-                        <div style="grid-column:1/-1; text-align:center; padding:40px; color:#64748b;">
-                            <i class="bi bi-inbox" style="font-size:2rem; display:block; margin-bottom:12px;"></i>
-                            Belum ada data Rectifier untuk POP ini.
+
+                        {{-- Last Updated --}}
+                        <div class="rectifier-last-updated">
+                            <i class="bi bi-clock-history"></i>
+                            <span>
+                                @if($rectifier->diupdateOleh)
+                                    {{ $rectifier->diupdateOleh->name }} &middot; {{ $rectifier->updated_at->format('d M Y, H:i') }}
+                                @else
+                                    Belum ada pembaruan
+                                @endif
+                            </span>
+                        </div>
+
+                        {{-- Footer --}}
+                        <div class="rectifier-card-footer">
+                            <a href="{{ route('rectifiers.show', [$pop->id, $rectifier->id]) }}" class="detail-button">
+                                <span>Detail</span>
+                                <i class="bi bi-chevron-right"></i>
+                            </a>
                         </div>
                     @endforelse
                 </div>
@@ -109,3 +126,4 @@
 </body>
 
 </html>
+
