@@ -11,7 +11,7 @@
 
     @vite([
         'resources/css/sidebar.css',
-        'resources/css/rectifier-card.css'
+        'resources/css/card.css'
     ])
 </head>
 
@@ -27,11 +27,11 @@
         {{-- TOPBAR COMPONENT --}}
         <x-topbar />
 
-        <div class="rectifier-content">
+        <div class="content">
 
             {{-- Header: Info POP + Tombol Tambah --}}
-            <div class="rectifier-page-header">
-                <div class="rectifier-page-info">
+            <div class="page-header">
+                <div class="page-info">
                     <a href="{{ route('pops.index') }}" class="back-button" title="Kembali ke List POP">
                         <i class="bi bi-arrow-left"></i>
                     </a>
@@ -49,11 +49,11 @@
             </div>
 
             {{-- Rectifier Grid --}}
-            <div class="rectifier-grid">
+            <div class="grid">
                 @forelse ($rectifiers as $rectifier)
-                    <div class="rectifier-card">
+                    <div class="card">
                         {{-- Header --}}
-                        <div class="rectifier-card-header">
+                        <div class="card-header">
                             <div class="checklist-icon">
                                 <i class="bi bi-file-earmark-text-fill"></i>
                             </div>
@@ -63,20 +63,20 @@
                                 <p>{{ $rectifier->nama_alias ?? 'Data Rectifier' }}</p>
                             </div>
 
-                            <span class="rectifier-number">
+                            <span class="number">
                                 Rectifier #{{ $loop->iteration }}
                             </span>
                         </div>
 
                         {{-- Information --}}
-                        <div class="rectifier-information">
+                        <div class="information">
                            <div class="equipment-info"><strong>Merk :</strong> {{ $rectifier->merk ?? '-' }}</div>
                            <div class="equipment-info"><strong>Type :</strong> {{ $rectifier->type ?? '-' }}</div>
                            <div class="equipment-info serial"><strong>SN :</strong> {{ $rectifier->sn_rectifier ?? '-' }}</div>
                         </div>
 
                         {{-- Meta --}}
-                        <div class="rectifier-meta">
+                        <div class="meta">
                             <div class="meta-item">
                                 <i class="bi bi-calendar-fill"></i>
                                 <span>{{ $rectifier->updated_at ? $rectifier->updated_at->format('d M Y') : '-' }}</span>
@@ -89,7 +89,7 @@
                         </div>
 
                         {{-- Footer --}}
-                        <div class="rectifier-card-footer">
+                        <div class="card-footer">
 
                             <button type="button" class="btn-hapus" onclick="alert('Tombol Hapus diklik')">
                                 <i class="bi bi-trash-fill"></i> Hapus
