@@ -27,12 +27,20 @@
 
             <div class="rform-content">
 
-                {{-- BREADCRUMB --}}
-                <x-breadcrumb :items="[
-                    ['label' => 'POP', 'route' => 'pops.index'],
-                    ['label' => $pop->nama_pop . ': Rectifier', 'route' => 'rectifiers.index', 'params' => ['pop' => $pop->id]],
-                    ['label' => 'Tambah Rectifier'],
-                ]" />
+                {{-- HEADER BAR: Back + Breadcrumb As Title --}}
+                <div class="rform-header-bar">
+                    <a href="{{ route('rectifiers.index', $pop->id) }}" class="rform-back" title="Kembali ke List Rectifier">
+                        <i class="bi bi-arrow-left"></i>
+                    </a>
+                    <div class="rform-header-text">
+                        <x-breadcrumb :items="[
+                            ['label' => 'POP', 'route' => 'pops.index'],
+                            ['label' => $pop->nama_pop, 'route' => 'rectifiers.index', 'params' => ['pop' => $pop->id]],
+                            ['label' => 'Tambah Rectifier'],
+                        ]" />
+                        <p class="rform-page-sub">Kode POP: <strong>{{ $pop->kode_pop }}</strong> &middot; {{ $pop->kota_kabupaten }}, {{ $pop->provinsi }}</p>
+                    </div>
+                </div>
 
                 {{-- Flash Message --}}
                 @if (session('error'))

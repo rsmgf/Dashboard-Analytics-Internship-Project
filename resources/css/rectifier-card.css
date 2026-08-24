@@ -110,7 +110,7 @@ body {
 .rectifier-content {
     width: 100%;
     min-height: calc(100vh - 60px);
-    padding: 0 20px 30px;
+    padding: 20px 24px 36px;
     background: #ffffff;
 }
 
@@ -119,27 +119,54 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 0;
+    padding: 16px 0 18px;
     border-bottom: 1px solid #e2e8f0;
-    margin-bottom: 4px;
+    margin-bottom: 24px;
 }
 
 .rectifier-page-info {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
+}
+
+.back-button {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    color: #64748b;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.back-button:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+.rectifier-header-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 }
 
 .rectifier-pop-name {
-    display: block;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: #1e293b;
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.25;
 }
 
 .rectifier-pop-sub {
     display: block;
-    font-size: 0.75rem;
+    font-size: 0.78rem;
     color: #64748b;
 }
 
@@ -148,7 +175,7 @@ body {
     align-items: center;
     gap: 6px;
     padding: 8px 16px;
-    background: #1688e8;
+    background: #0284c7;
     color: white;
     border: none;
     border-radius: 8px;
@@ -161,7 +188,7 @@ body {
 }
 
 .btn-tambah-rectifier:hover {
-    background: #0d6ec7;
+    background: #0369a1;
 }
 
 .back-button {

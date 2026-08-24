@@ -47,10 +47,20 @@
 
         <div class="rform-content">
 
-            {{-- Back --}}
-            <a href="{{ route('rectifiers.show', [$pop->id, $rectifier->id]) }}" class="rform-back" title="Kembali ke Detail">
-                <i class="bi bi-arrow-left"></i>
-            </a>
+            {{-- HEADER BAR: Back + Breadcrumb As Title --}}
+            <div class="rform-header-bar">
+                <a href="{{ route('rectifiers.show', [$pop->id, $rectifier->id]) }}" class="rform-back" title="Kembali ke Detail Rectifier">
+                    <i class="bi bi-arrow-left"></i>
+                </a>
+                <div class="rform-header-text">
+                    <x-breadcrumb :items="[
+                        ['label' => 'POP', 'route' => 'pops.index'],
+                        ['label' => $pop->nama_pop, 'route' => 'rectifiers.index', 'params' => ['pop' => $pop->id]],
+                        ['label' => 'Edit Rectifier (' . ($rectifier->nama_alias ?? $rectifier->merk) . ')'],
+                    ]" />
+                    <p class="rform-page-sub">Kode POP: <strong>{{ $pop->kode_pop }}</strong> &middot; {{ $pop->kota_kabupaten }}, {{ $pop->provinsi }}</p>
+                </div>
+            </div>
 
             {{-- Flash --}}
             @if(session('error'))

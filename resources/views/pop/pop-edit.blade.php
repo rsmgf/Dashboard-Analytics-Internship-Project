@@ -68,7 +68,20 @@
             <x-topbar />
 
             <div class="add-pop-content">
-                <x-breadcrumb :items="[['label' => 'POP', 'route' => 'pops.index'], ['label' => 'Edit POP: ' . $pop->nama_pop]]" />
+                {{-- HEADER BAR: Back + Breadcrumb As Title --}}
+                <div class="add-pop-header-bar">
+                    <a href="{{ route('pops.index') }}" class="add-pop-back" title="Kembali ke List POP">
+                        <i class="bi bi-arrow-left"></i>
+                    </a>
+                    <div class="add-pop-header-text">
+                        <x-breadcrumb :items="[
+                            ['label' => 'POP', 'route' => 'pops.index'],
+                            ['label' => 'Edit POP (' . $pop->nama_pop . ')'],
+                        ]" />
+                        <p class="add-pop-subheading">Kode POP: <strong>{{ $pop->kode_pop }}</strong> &middot; {{ $pop->kota_kabupaten }}, {{ $pop->provinsi }}</p>
+                    </div>
+                </div>
+
                 <div class="add-pop-card">
 
 

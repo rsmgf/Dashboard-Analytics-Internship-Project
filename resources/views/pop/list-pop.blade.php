@@ -66,8 +66,6 @@
             <x-topbar />
 
             <div class="pop-content">
-                <x-breadcrumb :items="[['label' => 'POP']]" />
-
                 <!-- PAGE TITLE -->
                 <div class="pop-header" style="display: flex; justify-content: space-between; align-items: center;">
                     <div class="pop-title-wrapper" style="display: flex; align-items: center; gap: 15px;">
@@ -75,7 +73,7 @@
                             <i class="bi bi-geo-alt-fill"></i>
                         </div>
                         <div>
-                            <h1>List POP</h1>
+                            <h1>Point of Presence (POP)</h1>
                             <p>List Point of Presence</p>
                         </div>
                     </div>

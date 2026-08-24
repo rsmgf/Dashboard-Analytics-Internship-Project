@@ -35,23 +35,52 @@ html, body {
     box-sizing: border-box;
 }
 
+/* ---- Header Bar with Breadcrumb & Back Button ---- */
+.rform-header-bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.rform-header-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.rform-page-title {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.25;
+}
+
+.rform-page-sub {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #64748b;
+}
 
 /* ---- Back Button ---- */
 .rform-back {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
     background: #f1f5f9;
     color: #64748b;
     font-size: 14px;
     text-decoration: none;
-    margin-bottom: 20px;
-    transition: background 0.2s;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
 }
-.rform-back:hover { background: #e2e8f0; color: #1e293b; }
+.rform-back:hover { background: #e2e8f0; color: #0f172a; }
 
 /* ---- Section Cards ---- */
 .rform-section {

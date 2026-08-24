@@ -80,7 +80,16 @@
             <div class="rma-layout">
 
                 <div class="rma-form-area">
-                    <x-breadcrumb :items="[['label' => 'RMA', 'route' => 'rma'], ['label' => 'Form Pengisian RMA']]" />
+                    <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px;">
+                        <a href="{{ route('rma') }}" class="btn-back" style="width:34px; height:34px; border-radius:50%; background:#f1f5f9; color:#64748b; display:inline-flex; align-items:center; justify-content:center; text-decoration:none;" title="Kembali">
+                            <i class="bi bi-arrow-left"></i>
+                        </a>
+                        <div>
+                            <x-breadcrumb :items="[['label' => 'RMA', 'route' => 'rma'], ['label' => 'Form Pengisian RMA']]" />
+                            <h1 style="font-size:1.2rem; font-weight:700; margin:0; color:#0f172a;">Pengisian Data RMA</h1>
+                            <p style="font-size:0.8rem; color:#64748b; margin:0;">Return Material Authorization</p>
+                        </div>
+                    </div>
 
                     <form id="rmaForm" action="{{ route('rma.store') }}" method="POST" enctype="multipart/form-data"
                         target="_blank">

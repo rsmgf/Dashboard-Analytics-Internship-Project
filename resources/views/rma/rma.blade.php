@@ -31,8 +31,6 @@
 
             <!-- CONTENT -->
             <div class="rma-page">
-                <x-breadcrumb :items="[['label' => 'RMA']]" />
-
                 <!-- PAGE HEADER -->
                 <div class="page-header">
                     <div class="page-title">
