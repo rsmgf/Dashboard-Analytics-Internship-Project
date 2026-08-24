@@ -31,6 +31,7 @@
 
             <!-- CONTENT -->
             <div class="rma-page">
+                <x-breadcrumb :items="[['label' => 'RMA']]" />
 
                 <!-- PAGE HEADER -->
                 <div class="page-header">
@@ -81,30 +82,31 @@
                     <div class="table-responsive">
                         <table class="rma-table">
                             @php
-                            // Tentukan arah sort kebalikan untuk toggle tombol
-                            $nextDirection = ($sort === 'tanggal' && $direction === 'asc') ? 'desc' : 'asc';
+                                // Tentukan arah sort kebalikan untuk toggle tombol
+                                $nextDirection = $sort === 'tanggal' && $direction === 'asc' ? 'desc' : 'asc';
                             @endphp
 
                             <thead>
                                 <tr>
                                     <th>
-                                        <a href="{{ route('rma', array_merge(request()->query(), ['sort' => 'id', 'direction' => ($sort === 'id' && $direction === 'asc') ? 'desc' : 'asc'])) }}" 
-                                        style="text-decoration: none; color: inherit; display: inline-flex; align-items: center; gap: 4px;">
+                                        <a href="{{ route('rma', array_merge(request()->query(), ['sort' => 'id', 'direction' => $sort === 'id' && $direction === 'asc' ? 'desc' : 'asc'])) }}"
+                                            style="text-decoration: none; color: inherit; display: inline-flex; align-items: center; gap: 4px;">
                                             No. RMA
-                                            @if($sort === 'id')
+                                            @if ($sort === 'id')
                                                 <i class="bi bi-arrow-{{ $direction === 'asc' ? 'up' : 'down' }}"></i>
                                             @endif
                                         </a>
                                     </th>
                                     <th>
                                         <!-- Tombol Toggle ASC / DESC untuk Tanggal Pengisian -->
-                                        <a href="{{ route('rma', array_merge(request()->query(), ['sort' => 'tanggal', 'direction' => $nextDirection])) }}" 
-                                        style="text-decoration: none; color: inherit; display: inline-flex; align-items: center; gap: 4px;">
+                                        <a href="{{ route('rma', array_merge(request()->query(), ['sort' => 'tanggal', 'direction' => $nextDirection])) }}"
+                                            style="text-decoration: none; color: inherit; display: inline-flex; align-items: center; gap: 4px;">
                                             Tanggal Pengisian
-                                            @if($sort === 'tanggal')
+                                            @if ($sort === 'tanggal')
                                                 <i class="bi bi-arrow-{{ $direction === 'asc' ? 'up' : 'down' }}"></i>
                                             @else
-                                                <i class="bi bi-arrow-down-up" style="font-size: 11px; opacity: 0.5;"></i>
+                                                <i class="bi bi-arrow-down-up"
+                                                    style="font-size: 11px; opacity: 0.5;"></i>
                                             @endif
                                         </a>
                                     </th>
@@ -161,16 +163,16 @@
         </main>
     </div>
 
-    @if(session('download_pdf_id'))
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Trigger download otomatis lewat iframe tersembunyi
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.src = "{{ route('rma.download', session('download_pdf_id')) }}";
-            document.body.appendChild(iframe);
-        });
-    </script>
+    @if (session('download_pdf_id'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Trigger download otomatis lewat iframe tersembunyi
+                const iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                iframe.src = "{{ route('rma.download', session('download_pdf_id')) }}";
+                document.body.appendChild(iframe);
+            });
+        </script>
     @endif
 
 </body>

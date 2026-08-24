@@ -134,6 +134,43 @@ button.sidebar-menu {
     text-align: center;
 }
 
+.breadcrumb-nav {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 20px;
+    margin-bottom: 16px;
+    font-size: 0.82rem;
+}
+
+.breadcrumb-link {
+    color: #64748b;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+}
+
+.breadcrumb-link:hover {
+    color: #2563eb;
+}
+
+.breadcrumb-home i {
+    font-size: 0.9rem;
+}
+
+.breadcrumb-sep {
+    font-size: 0.65rem;
+    color: #cbd5e1;
+}
+
+.breadcrumb-current {
+    color: #1e293b;
+    font-weight: 600;
+}
+
 .sidebar-menu span {
     display: inline-block;
     opacity: 1;

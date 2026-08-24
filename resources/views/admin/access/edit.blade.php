@@ -18,6 +18,10 @@
             <x-topbar />
 
             <div class="access-content">
+                <x-breadcrumb :items="[
+                    ['label' => 'Manajemen Akses Role', 'route' => 'admin.access.index'],
+                    ['label' => 'Atur Akses: ' . ucfirst(str_replace('_', ' ', $role->name))],
+                ]" />
                 @if (session('success'))
                     <div class="mb-4 p-3"
                         style="background:#dcfce7;color:#166534;border-radius:8px;margin-bottom:16px;">
