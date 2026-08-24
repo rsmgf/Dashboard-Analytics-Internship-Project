@@ -59,18 +59,19 @@
         </div>
     @endauth
 
-</aside>
+    {{-- Script toggle dropdown sidebar --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.sidebar-dropdown').forEach(function(toggle) {
+                toggle.addEventListener('click', function() {
+                    const targetId = this.dataset.dropdownToggle;
+                    const submenu = document.getElementById(targetId);
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.sidebar-dropdown').forEach(function(toggle) {
-            toggle.addEventListener('click', function() {
-                const targetId = this.dataset.dropdownToggle;
-                const submenu = document.getElementById(targetId);
-
-                const isOpen = submenu.classList.toggle('show');
-                this.classList.toggle('active', isOpen);
+                    const isOpen = submenu.classList.toggle('show');
+                    this.classList.toggle('active', isOpen);
+                });
             });
         });
-    });
-</script>
+    </script>
+
+</aside>

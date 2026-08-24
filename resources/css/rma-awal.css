@@ -444,6 +444,10 @@ body.sidebar-collapsed .sidebar-logo img {
 ===================================================== */
 @media (max-width: 700px) {
     .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    margin: 0;
         padding: 0 16px;
     }
 

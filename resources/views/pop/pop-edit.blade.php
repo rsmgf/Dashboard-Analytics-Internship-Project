@@ -71,6 +71,7 @@
                 <x-breadcrumb :items="[['label' => 'POP', 'route' => 'pops.index'], ['label' => 'Edit POP: ' . $pop->nama_pop]]" />
                 <div class="add-pop-card">
 
+
                     <div class="add-pop-alert">
                         <i class="bi bi-info-circle-fill"></i>
                         <span>Perbarui informasi data POP pada form di bawah ini.</span>
