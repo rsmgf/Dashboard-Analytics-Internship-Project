@@ -1,4 +1,4 @@
-<header class="topbar">
+﻿<header class="topbar">
     <button type="button" class="sidebar-toggle" id="sidebarToggle" title="Buka / Tutup Sidebar">
         <i class="bi bi-list" id="sidebarToggleIcon"></i>
     </button>
@@ -78,3 +78,76 @@
         });
     });
 </script>
+
+{{-- ======== GLOBAL TOAST NOTIFICATION ======== --}}
+<div id="toast-container" style="
+    position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999;
+    display: flex; flex-direction: column; gap: 10px; pointer-events: none; align-items: center;
+"></div>
+
+@if(session('success') || session('error') || session('info'))
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        @if(session('success'))
+            showToast('success', @json(session('success')));
+        @endif
+        @if(session('error'))
+            showToast('error', @json(session('error')));
+        @endif
+        @if(session('info'))
+            showToast('info', @json(session('info')));
+        @endif
+    });
+</script>
+@endif
+
+<style>
+.toast-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem; font-weight: 500;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    pointer-events: all;
+    min-width: 280px; max-width: 380px;
+    animation: toastSlideIn 0.35s ease forwards;
+    transition: opacity 0.4s, transform 0.4s;
+}
+.toast-item.success { background:#dcfce7; color:#15803d; border-left:4px solid #16a34a; }
+.toast-item.error   { background:#fee2e2; color:#b91c1c; border-left:4px solid #dc2626; }
+.toast-item.info    { background:#dbeafe; color:#1d4ed8; border-left:4px solid #2563eb; }
+.toast-item.warning { background:#fff7ed; color:#c2410c; border-left:4px solid #f97316; }
+.toast-item .toast-icon { font-size: 1.1rem; flex-shrink: 0; }
+.toast-item .toast-msg  { flex: 1; }
+.toast-item .toast-close { cursor:pointer; opacity:0.5; font-size:1rem; flex-shrink:0; }
+.toast-item .toast-close:hover { opacity:1; }
+@keyframes toastSlideIn {
+    from { opacity:0; transform: translateY(-20px); }
+    to   { opacity:1; transform: translateY(0); }
+}
+</style>
+
+<script>
+function showToast(type, message) {
+    const icons = { success: 'bi-check-circle-fill', error: 'bi-exclamation-circle-fill', info: 'bi-info-circle-fill', warning: 'bi-trash3-fill' };
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = 'toast-item ' + type;
+    toast.innerHTML = `
+        <i class="bi ${icons[type]} toast-icon"></i>
+        <span class="toast-msg">${message}</span>
+        <i class="bi bi-x toast-close" onclick="this.closest('.toast-item').remove()"></i>
+    `;
+    container.appendChild(toast);
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-20px)';
+        setTimeout(() => toast.remove(), 400);
+    }, 7000);
+}
+</script>
+
+
+
+

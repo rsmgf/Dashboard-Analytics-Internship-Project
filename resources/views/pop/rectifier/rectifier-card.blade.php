@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 
 <head>
@@ -75,17 +75,29 @@
                             <div class="equipment-info serial">{{ $rectifier->sn_rectifier ?? '-' }}</div>
                         </div>
 
-                        {{-- Meta --}}
+                        {{-- Meta: PIC & Tanggal Pemeriksaan --}}
                         <div class="rectifier-meta">
                             <div class="meta-item">
-                                <i class="bi bi-calendar-fill"></i>
-                                <span>{{ $rectifier->updated_at ? $rectifier->updated_at->format('d M Y') : '-' }}</span>
+                                <i class="bi bi-person-fill"></i>
+                                <span>{{ $rectifier->pic ?? '-' }}</span>
                             </div>
 
                             <div class="meta-item">
-                                <i class="bi bi-geo-alt-fill"></i>
-                                <span>{{ $pop->kota_kabupaten }}</span>
+                                <i class="bi bi-calendar-fill"></i>
+                                <span>{{ $rectifier->tanggal_pemeriksaan ? \Carbon\Carbon::parse($rectifier->tanggal_pemeriksaan)->format('d M Y') : '-' }}</span>
                             </div>
+                        </div>
+
+                        {{-- Last Updated --}}
+                        <div class="rectifier-last-updated">
+                            <i class="bi bi-clock-history"></i>
+                            <span>
+                                @if($rectifier->diupdateOleh)
+                                    {{ $rectifier->diupdateOleh->name }} &middot; {{ $rectifier->updated_at->format('d M Y, H:i') }}
+                                @else
+                                    Belum ada pembaruan
+                                @endif
+                            </span>
                         </div>
 
                         {{-- Footer --}}
@@ -109,3 +121,4 @@
 </body>
 
 </html>
+

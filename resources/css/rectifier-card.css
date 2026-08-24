@@ -194,8 +194,8 @@ body {
 .rectifier-card {
     position: relative;
     width: 100%;
-    height: 235px;
-    min-height: 235px;
+    height: 295px;
+    min-height: 295px;
     background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 12px;
@@ -289,9 +289,9 @@ body {
 
 .rectifier-meta {
     display: flex;
-    align-items: center;
-    gap: 30px;
-    padding: 12px 25px 0;
+    flex-direction: column;
+    gap: 5px;
+    padding: 10px 25px 0;
 }
 
 .meta-item {
@@ -305,6 +305,23 @@ body {
 .meta-item i {
     color: #2563eb;
     font-size: 13px;
+}
+
+/* Last Updated Row on Card */
+.rectifier-last-updated {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 25px 0;
+    font-size: 0.68rem;
+    color: #94a3b8;
+    font-style: italic;
+}
+
+.rectifier-last-updated i {
+    color: #94a3b8;
+    font-size: 12px;
+    flex-shrink: 0;
 }
 
 .rectifier-card-footer {
@@ -368,8 +385,8 @@ body {
     }
 
     .rectifier-card { 
-        height: 235px; 
-        min-height: 235px; 
+        height: 265px; 
+        min-height: 265px; 
     }
 }
 
