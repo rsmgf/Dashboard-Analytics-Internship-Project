@@ -1,13 +1,31 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Rectifier - {{ $pop->nama_pop }} - PLN Icon Plus</title>
+    <title>Edit Rectifier - {{ $rectifier->nama_alias }} - PLN Icon Plus</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+    // ---- Konfirmasi Simpan Perubahan ----
+    function konfirmasiSimpan() {
+        Swal.fire({
+            icon: 'question',
+            title: 'Simpan Perubahan?',
+            text: 'Pastikan semua data sudah benar sebelum menyimpan.',
+            showCancelButton: true,
+            confirmButtonColor: '#2563eb',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: '<i class="bi bi-check-lg"></i> Ya, Simpan',
+            cancelButtonText: 'Batal',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('rectifierForm').submit();
+            }
+        });
+    }
+</script>
 
     @vite([
         'resources/css/sidebar.css',
@@ -30,7 +48,7 @@
         <div class="rform-content">
 
             {{-- Back --}}
-            <a href="{{ route('rectifiers.index', $pop->id) }}" class="rform-back" title="Kembali">
+            <a href="{{ route('rectifiers.show', [$pop->id, $rectifier->id]) }}" class="rform-back" title="Kembali ke Detail">
                 <i class="bi bi-arrow-left"></i>
             </a>
 
@@ -55,9 +73,10 @@
             @endif
 
             <form id="rectifierForm" method="POST"
-                  action="{{ route('rectifiers.store', $pop->id) }}"
+                  action="{{ route('rectifiers.update', [$pop->id, $rectifier->id]) }}"
                   enctype="multipart/form-data">
                 @csrf
+                @method('PUT')
 
                 {{-- ===============================================
                      SECTION 1 — Information Rectifier (Header)
@@ -82,13 +101,14 @@
 
                             <div class="rform-group">
                                 <label class="rform-label">Tanggal Pemeriksaan <span class="rform-required">*</span></label>
-                                <input type="date" name="tanggal_pemeriksaan" class="rform-input" value="{{ old('tanggal_pemeriksaan', date('Y-m-d')) }}">
+                                <input type="date" name="tanggal_pemeriksaan" class="rform-input"
+                                       value="{{ old('tanggal_pemeriksaan', $rectifier->tanggal_pemeriksaan ? \Carbon\Carbon::parse($rectifier->tanggal_pemeriksaan)->format('Y-m-d') : '') }}">
                             </div>
 
                             <div class="rform-group">
                                 <label class="rform-label">PIC <span class="rform-required">*</span></label>
                                 <input type="text" name="pic" class="rform-input {{ $errors->has('pic') ? 'is-invalid' : '' }}"
-                                       value="{{ old('pic', Auth::user()->name ?? '') }}"
+                                       value="{{ old('pic', $rectifier->pic) }}"
                                        placeholder="Nama penanggung jawab">
                                 @error('pic') <span class="rform-error">{{ $message }}</span> @enderror
                             </div>
@@ -102,14 +122,14 @@
                                     <small style="font-weight:400; color:#94a3b8;">(tampil di card)</small>
                                 </label>
                                 <input type="text" name="nama_alias" class="rform-input {{ $errors->has('nama_alias') ? 'is-invalid' : '' }}"
-                                       value="{{ old('nama_alias') }}"
+                                       value="{{ old('nama_alias', $rectifier->nama_alias) }}"
                                        placeholder="Contoh: Rectifier Utama 1">
                                 @error('nama_alias') <span class="rform-error">{{ $message }}</span> @enderror
                             </div>
                             <div class="rform-group">
                                 <label class="rform-label">Deskripsi</label>
                                 <input type="text" name="deskripsi" class="rform-input"
-                                       value="{{ old('deskripsi') }}"
+                                       value="{{ old('deskripsi', $rectifier->deskripsi) }}"
                                        placeholder="Keterangan tambahan (opsional)">
                             </div>
                         </div>
@@ -133,41 +153,41 @@
                                 <div class="rform-group">
                                     <label class="rform-label">Merk <span class="rform-required">*</span></label>
                                     <input type="text" name="merk" class="rform-input {{ $errors->has('merk') ? 'is-invalid' : '' }}"
-                                           value="{{ old('merk') }}" placeholder="Contoh: EMERSON">
+                                           value="{{ old('merk', $rectifier->merk) }}" placeholder="Contoh: EMERSON">
                                     @error('merk') <span class="rform-error">{{ $message }}</span> @enderror
                                 </div>
 
                                 <div class="rform-group">
                                     <label class="rform-label">Type <span class="rform-required">*</span></label>
                                     <input type="text" name="type" class="rform-input {{ $errors->has('type') ? 'is-invalid' : '' }}"
-                                           value="{{ old('type') }}" placeholder="Contoh: NetSure 531 A91-S1">
+                                           value="{{ old('type', $rectifier->type) }}" placeholder="Contoh: NetSure 531 A91-S1">
                                     @error('type') <span class="rform-error">{{ $message }}</span> @enderror
                                 </div>
 
                                 <div class="rform-group">
                                     <label class="rform-label">SN Rectifier <span class="rform-required">*</span></label>
                                     <input type="text" name="sn_rectifier" class="rform-input {{ $errors->has('sn_rectifier') ? 'is-invalid' : '' }}"
-                                           value="{{ old('sn_rectifier') }}" placeholder="Serial Number">
+                                           value="{{ old('sn_rectifier', $rectifier->sn_rectifier) }}" placeholder="Serial Number">
                                     @error('sn_rectifier') <span class="rform-error">{{ $message }}</span> @enderror
                                 </div>
 
                                 <div class="rform-group">
                                     <label class="rform-label">Couple / tidak</label>
                                     <input type="text" name="couple" class="rform-input"
-                                           value="{{ old('couple') }}" placeholder="Contoh: COUPLE">
+                                           value="{{ old('couple', $rectifier->couple) }}" placeholder="Contoh: COUPLE">
                                 </div>
 
                                 <div class="rform-group">
                                     <label class="rform-label">Type Modul Controller</label>
                                     <input type="text" name="type_modul_controller" class="rform-input"
-                                           value="{{ old('type_modul_controller') }}" placeholder="Contoh: MCU M800D">
+                                           value="{{ old('type_modul_controller', $rectifier->type_modul_controller) }}" placeholder="Contoh: MCU M800D">
                                 </div>
 
                                 <div class="rform-group">
                                     <label class="rform-label">Jumlah Slot Modul <span class="rform-required">*</span></label>
                                     <input type="number" name="kapasitas_slot" id="kapasitas_slot"
                                            class="rform-input {{ $errors->has('kapasitas_slot') ? 'is-invalid' : '' }}"
-                                           value="{{ old('kapasitas_slot') }}" placeholder="Contoh: 9" min="1">
+                                           value="{{ old('kapasitas_slot', $rectifier->kapasitas_slot) }}" placeholder="Contoh: 9" min="1">
                                     @error('kapasitas_slot') <span class="rform-error">{{ $message }}</span> @enderror
                                 </div>
 
@@ -185,14 +205,14 @@
                                 <div class="rform-group">
                                     <label class="rform-label">Jumlah Modul Power Terpasang</label>
                                     <input type="number" name="jumlah_modul" id="jumlah_modul_input" class="rform-input"
-                                           value="{{ old('jumlah_modul') }}" placeholder="Otomatis dari modul SN" readonly
+                                           value="{{ old('jumlah_modul', $rectifier->modules->count()) }}" placeholder="Otomatis dari modul SN" readonly
                                            style="background:#f1f5f9; color:#94a3b8;">
                                 </div>
 
                                 <div class="rform-group">
                                     <label class="rform-label">Type Modul Power</label>
                                     <input type="text" name="type_modul_power" class="rform-input"
-                                           value="{{ old('type_modul_power') }}" placeholder="Contoh: R48-2000e3">
+                                           value="{{ old('type_modul_power', $rectifier->type_modul_power) }}" placeholder="Contoh: R48-2000e3">
                                 </div>
 
                                 <div class="rform-group">
@@ -200,7 +220,7 @@
                                         <small style="font-weight:400;color:#94a3b8">(A)</small>
                                     </label>
                                     <input type="text" name="kapasitas_rectifier" id="kapasitas_rectifier" class="rform-input"
-                                           value="{{ old('kapasitas_rectifier') }}" placeholder="Contoh: 200"
+                                           value="{{ old('kapasitas_rectifier', $rectifier->kapasitas_rectifier) }}" placeholder="Contoh: 200"
                                            oninput="hitungUtilisasi()">
                                 </div>
 
@@ -209,7 +229,7 @@
                                         <small style="font-weight:400;color:#94a3b8">(A)</small>
                                     </label>
                                     <input type="text" name="beban" id="beban" class="rform-input"
-                                           value="{{ old('beban') }}" placeholder="Contoh: 36.5"
+                                           value="{{ old('beban', $rectifier->beban) }}" placeholder="Contoh: 36.5"
                                            oninput="hitungUtilisasi()">
                                 </div>
 
@@ -220,7 +240,7 @@
                                     </label>
                                     <div style="position:relative;">
                                         <input type="text" name="utilisasi" id="utilisasi" class="rform-input"
-                                               value="{{ old('utilisasi') }}"
+                                               value="{{ old('utilisasi', $rectifier->utilisasi) }}"
                                                placeholder="Otomatis: Beban ÷ Kapasitas × 100"
                                                readonly
                                                style="background:#f1f5f9; color:#334155; cursor:not-allowed; padding-right:80px;">
@@ -240,18 +260,18 @@
                      SECTION 3 — Foto Rectifier
                 ================================================ --}}
                 <div class="rform-section">
-                <div class="rform-section-header">
-                    <span class="rform-section-step">3</span>
-                    Foto Rectifier
-                    <span class="rform-section-sub">Upload foto kondisi rectifier di lokasi</span>
-                </div>
+                    <div class="rform-section-header">
+                        <span class="rform-section-step">3</span>
+                        Foto Rectifier
+                        <span class="rform-section-sub">Upload foto baru untuk mengganti foto yang ada</span>
+                    </div>
                     <div class="rform-section-body">
                         <div class="rform-photo-grid">
                             <div class="rform-drop-zone" id="dropZone" onclick="document.getElementById('fotoInput').click()">
                                 <div class="rform-drop-icon">
                                     <i class="bi bi-cloud-arrow-up-fill"></i>
                                 </div>
-                                <div class="rform-drop-text">Masukkan file disini</div>
+                                <div class="rform-drop-text">{{ $rectifier->foto_rectifier ? 'Klik untuk ganti foto' : 'Masukkan file disini' }}</div>
                                 <button type="button" class="rform-browse-btn">Browse</button>
                                 <div class="rform-drop-hint">Format: JPG, JPEG, PNG • Maks. ukuran: 10 MB</div>
                                 <input type="file" id="fotoInput" name="foto_rectifier" accept=".jpg,.jpeg,.png"
@@ -259,13 +279,15 @@
                             </div>
 
                             <div class="rform-photo-preview">
-                                <span class="rform-preview-label">Preview foto</span>
+                                <span class="rform-preview-label">{{ $rectifier->foto_rectifier ? 'Foto saat ini' : 'Preview foto' }}</span>
                                 <div class="rform-preview-box">
-                                    <img id="fotoPreview" src="" alt="" style="display:none;">
-                                    <div class="rform-preview-empty" id="fotoEmpty">
-                                        <i class="bi bi-image"></i>
-                                        <span>Belum ada foto yang dipilih</span>
-                                    </div>
+                                    @if($rectifier->foto_rectifier)
+                                        <img id="fotoPreview" src="{{ asset('storage/' . $rectifier->foto_rectifier) }}" alt="Foto Rectifier" style="display:block;">
+                                        <div class="rform-preview-empty" id="fotoEmpty" style="display:none;"><i class="bi bi-image"></i><span>Belum ada foto</span></div>
+                                    @else
+                                        <img id="fotoPreview" src="" alt="" style="display:none;">
+                                        <div class="rform-preview-empty" id="fotoEmpty"><i class="bi bi-image"></i><span>Belum ada foto yang dipilih</span></div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -277,37 +299,36 @@
                 ================================================ --}}
                 <div class="rform-section">
                 <div class="rform-section-header" style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
+                    <div style="display:flex;align-items:center;gap:10px;">
                         <span class="rform-section-step">4</span>
                         Serial Number (Modul)
-                        <span id="slotStatusBadge" class="rform-section-sub">Tentukan Jumlah Slot Modul di atas terlebih dahulu</span>
+                        <span id="slotStatusBadge" class="rform-section-sub">Terpasang: {{ $rectifier->modules->count() }} dari {{ $rectifier->kapasitas_slot }} slot tersedia</span>
                     </div>
                 </div>
                     <div class="rform-section-body">
 
                         <div class="rform-module-columns" id="moduleContainer">
-                            @if(old('modules'))
-                                @foreach(old('modules') as $i => $mod)
-                                    <div class="rform-module-col" id="modul-{{ $i }}">
-                                        <label class="rform-module-label">Modul {{ $i + 1 }}</label>
-                                        <input type="text"
-                                               name="modules[{{ $i }}][sn_modul]"
-                                               class="rform-input"
-                                               value="{{ $mod['sn_modul'] ?? '' }}"
-                                               placeholder="SN Modul">
-                                        <input type="hidden"
-                                               name="modules[{{ $i }}][kapasitas_ampere]"
-                                               class="modul-kapasitas-input"
-                                               value="{{ $mod['kapasitas_ampere'] ?? '' }}">
-                                        <button type="button" class="rform-module-remove" onclick="removeModul({{ $i }})">
-                                            <i class="bi bi-x-circle"></i> Hapus
-                                        </button>
-                                    </div>
-                                @endforeach
-                            @endif
+                            @foreach($rectifier->modules as $i => $module)
+                                <div class="rform-module-col" id="modul-{{ $i }}">
+                                    <label class="rform-module-label">Modul {{ $i + 1 }}</label>
+                                    <input type="hidden" name="modules[{{ $i }}][id]" value="{{ $module->id }}">
+                                    <input type="text"
+                                           name="modules[{{ $i }}][sn_modul]"
+                                           class="rform-input"
+                                           value="{{ old('modules.' . $i . '.sn_modul', $module->sn_modul) }}"
+                                           placeholder="SN Modul">
+                                    <input type="hidden"
+                                           name="modules[{{ $i }}][kapasitas_ampere]"
+                                           class="modul-kapasitas-input"
+                                           value="{{ old('modules.' . $i . '.kapasitas_ampere', $module->kapasitas_ampere) }}">
+                                    <button type="button" class="rform-module-remove" onclick="removeModul({{ $i }})">
+                                        <i class="bi bi-x-circle"></i> Hapus
+                                    </button>
+                                </div>
+                            @endforeach
                         </div>
 
-                        <div id="noModuleHint" style="{{ old('modules') ? 'display:none;' : 'display:block;' }} padding: 14px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px; margin-bottom: 16px; color: #64748b; font-size: 0.82rem;">
+                        <div id="noModuleHint" style="{{ $rectifier->modules->count() > 0 ? 'display:none;' : 'display:block;' }} padding: 14px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px; margin-bottom: 16px; color: #64748b; font-size: 0.82rem;">
                             <i class="bi bi-info-circle" style="color: #3b82f6; margin-right: 4px;"></i>
                             Isi <strong>Jumlah Slot Modul</strong> pada bagian detail teknis di atas, lalu klik tombol <strong>+ Tambah Modul</strong> untuk mendaftarkan modul yang terpasang.
                         </div>
@@ -341,22 +362,24 @@
                                 </thead>
                                 <tbody>
                                     @for($idx = 0; $idx < 6; $idx++)
+                                        @php $existingOutput = $rectifier->outputs->get($idx); @endphp
                                         <tr>
                                             <td class="mcb-label">MCB {{ $idx + 1 }}</td>
                                             <td>
                                                 <input type="hidden" name="outputs[{{ $idx }}][nama_mcb]" value="MCB {{ $idx + 1 }}">
+                                                @if($existingOutput)<input type="hidden" name="outputs[{{ $idx }}][id]" value="{{ $existingOutput->id }}">@endif
                                                 <input type="text" name="outputs[{{ $idx }}][merk_mcb]"
-                                                       value="{{ old('outputs.' . $idx . '.merk_mcb') }}"
+                                                       value="{{ old('outputs.' . $idx . '.merk_mcb', $existingOutput->merk_mcb ?? '') }}"
                                                        placeholder="Merk">
                                             </td>
                                             <td>
                                                 <input type="text" name="outputs[{{ $idx }}][kapasitas_mcb]"
-                                                       value="{{ old('outputs.' . $idx . '.kapasitas_mcb') }}"
+                                                       value="{{ old('outputs.' . $idx . '.kapasitas_mcb', $existingOutput->kapasitas_mcb ?? '') }}"
                                                        placeholder="Kapasitas">
                                             </td>
                                             <td>
                                                 <input type="text" name="outputs[{{ $idx }}][peruntukan]"
-                                                       value="{{ old('outputs.' . $idx . '.peruntukan') }}"
+                                                       value="{{ old('outputs.' . $idx . '.peruntukan', $existingOutput->peruntukan ?? '') }}"
                                                        placeholder="Peruntukan">
                                             </td>
                                         </tr>
@@ -376,23 +399,24 @@
                                 </thead>
                                 <tbody>
                                     @for($idx = 0; $idx < 6; $idx++)
-                                        @php $i = $idx + 6; @endphp
+                                        @php $i = $idx + 6; $existingOutput = $rectifier->outputs->get($i); @endphp
                                         <tr>
                                             <td class="mcb-label">MCB {{ $i + 1 }}</td>
                                             <td>
                                                 <input type="hidden" name="outputs[{{ $i }}][nama_mcb]" value="MCB {{ $i + 1 }}">
+                                                @if($existingOutput)<input type="hidden" name="outputs[{{ $i }}][id]" value="{{ $existingOutput->id }}">@endif
                                                 <input type="text" name="outputs[{{ $i }}][merk_mcb]"
-                                                       value="{{ old('outputs.' . $i . '.merk_mcb') }}"
+                                                       value="{{ old('outputs.' . $i . '.merk_mcb', $existingOutput->merk_mcb ?? '') }}"
                                                        placeholder="Merk">
                                             </td>
                                             <td>
                                                 <input type="text" name="outputs[{{ $i }}][kapasitas_mcb]"
-                                                       value="{{ old('outputs.' . $i . '.kapasitas_mcb') }}"
+                                                       value="{{ old('outputs.' . $i . '.kapasitas_mcb', $existingOutput->kapasitas_mcb ?? '') }}"
                                                        placeholder="Kapasitas">
                                             </td>
                                             <td>
                                                 <input type="text" name="outputs[{{ $i }}][peruntukan]"
-                                                       value="{{ old('outputs.' . $i . '.peruntukan') }}"
+                                                       value="{{ old('outputs.' . $i . '.peruntukan', $existingOutput->peruntukan ?? '') }}"
                                                        placeholder="Peruntukan">
                                             </td>
                                         </tr>
@@ -403,11 +427,11 @@
                     </div>
                 </div>
 
-                {{-- ---- Tombol Reset & Simpan ---- --}}
+                {{-- ---- Tombol Batal & Simpan ---- --}}
                 <div class="rform-actions">
-                    <button type="button" class="rform-btn-reset" onclick="resetForm()">Reset</button>
-                    <button type="submit" class="rform-btn-simpan">
-                        <i class="bi bi-check-lg"></i> Simpan
+                    <a href="{{ route('rectifiers.show', [$pop->id, $rectifier->id]) }}" class="rform-btn-reset">Batal</a>
+                    <button type="button" class="rform-btn-simpan" onclick="konfirmasiSimpan()">
+                        <i class="bi bi-check-lg"></i> Simpan Perubahan
                     </button>
                 </div>
 
@@ -615,10 +639,27 @@
         }
     });
 
-    // Initial check saat halaman pertama kali dibuka
+    // ---- Init pada load ----
     document.addEventListener('DOMContentLoaded', function () {
         updateSlotStatusBadge();
         updateJumlahModul();
+        
+        // Tampilkan badge utilisasi berdasarkan nilai existing
+        const utilisasiEl = document.getElementById('utilisasi');
+        if (utilisasiEl && utilisasiEl.value) {
+            const badge = document.getElementById('utilisasi_badge');
+            const s = getUtilisasiBadge(parseFloat(utilisasiEl.value));
+            if (badge) {
+                badge.textContent = s.label;
+                badge.style.cssText = `
+                    position:absolute; right:10px; top:50%; transform:translateY(-50%);
+                    display:inline-flex; align-items:center; padding:2px 10px;
+                    border-radius:999px; font-size:0.7rem; font-weight:700;
+                    background:${s.bg}; color:${s.color}; border:1px solid ${s.border};
+                    white-space:nowrap;
+                `;
+            }
+        }
     });
 
     // ---- Photo preview ----
@@ -659,6 +700,25 @@
         updateSlotStatusBadge();
         updateJumlahModul();
     }
+
+    // ---- Konfirmasi Simpan Perubahan ----
+    function konfirmasiSimpan() {
+        Swal.fire({
+            icon: 'question',
+            title: 'Simpan Perubahan?',
+            text: 'Pastikan semua data sudah benar sebelum menyimpan.',
+            showCancelButton: true,
+            confirmButtonColor: '#2563eb',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: '<i class="bi bi-check-lg"></i> Ya, Simpan',
+            cancelButtonText: 'Batal',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('rectifierForm').submit();
+            }
+        });
+    }
 </script>
 </body>
 </html>
+

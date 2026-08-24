@@ -35,6 +35,7 @@ return new class extends Migration
             $table->string('beban')->nullable();                    // Beban (A)
             $table->string('utilisasi')->nullable();                // Utilisasi Rectifier (%)
             $table->string('foto_rectifier')->nullable();           // Path foto upload
+            $table->foreignId('diupdate_oleh')->nullable()->constrained('users')->nullOnDelete();
 
             $table->timestamps();
         });

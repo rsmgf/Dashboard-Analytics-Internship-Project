@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 
 <head>
@@ -29,11 +29,21 @@
         <x-topbar />
 
         <div class="rectifier-detail-content">
-            {{-- Back + Edit --}}
-            <div class="detail-top">
-                <a href="{{ route('rectifiers.index', $pop->id) }}" class="detail-back" title="Kembali ke Daftar Rectifier">
-                    <i class="bi bi-arrow-left"></i>
-                </a>
+            
+            {{-- HEADER ATAS: Back + Judul Informatif + Tombol Edit Asli --}}
+            <div class="detail-header-bar">
+                <div class="header-left-group">
+                    <a href="{{ route('rectifiers.index', $pop->id) }}" class="detail-back" title="Kembali ke Daftar Rectifier">
+                        <i class="bi bi-arrow-left"></i>
+                    </a>
+                    <div class="header-title-wrapper">
+                        <div class="title-with-badge">
+                            <h1 class="detail-rectifier-name">{{ $rectifier->nama_alias ?? ($rectifier->merk . ' - ' . $rectifier->type) }}</h1>
+                            <span class="device-badge">{{ $rectifier->merk ?? 'Rectifier' }}</span>
+                        </div>
+                        <span class="pop-sub-info">Point of Presence: <strong>{{ $pop->nama_pop }}</strong> ({{ $pop->kode_pop }})</span>
+                    </div>
+                </div>
 
                 @can('rectifiers.index.update')
                     <a href="{{ route('rectifiers.edit', [$pop->id, $rectifier->id]) }}" class="btn-edit">
@@ -43,11 +53,28 @@
                 @endcan
             </div>
 
+            {{-- ALERT BANNER LAST UPDATE --}}
+            <div class="alert-info-custom">
+                <i class="bi bi-exclamation-circle-fill"></i>
+                <span>
+                    Terakhir diperbarui: 
+                    <strong>
+                        @if($rectifier->diupdateOleh)
+                            {{ $rectifier->diupdateOleh->name }} &middot; {{ $rectifier->updated_at->translatedFormat('d F Y, H:i') }} WIB
+                        @else
+                            {{ $rectifier->updated_at ? $rectifier->updated_at->translatedFormat('d F Y, H:i') . ' WIB' : 'Belum ada data pembaruan' }}
+                        @endif
+                    </strong>
+                </span>
+            </div>
+
             <div class="detail-top-grid">
                 <div class="detail-left-column">
                     {{-- Card Information Rectifier --}}
                     <div class="detail-card information-card">
-                        <div class="detail-card-title">Information Rectifier</div>
+                        <div class="detail-card-title">
+                            <i class="bi bi-info-circle-fill"></i> Information Rectifier
+                        </div>
 
                         <div class="information-grid">
                             <div class="information-left">
@@ -81,8 +108,11 @@
 
                             <div class="information-right">
                                 <div class="info-small-row">
-                                    <span class="info-label">Jumlah Module</span>
-                                    <span class="info-value">{{ $rectifier->modules->count() }} / {{ $rectifier->kapasitas_slot ?? '-' }}</span>
+                                    <span class="info-label">Jumlah Modul Terpasang</span>
+                                    <!-- REDAKSI LEBIH RAMAH & MUDAH DIPAHAMI -->
+                                    <span class="info-value">
+                                        {{ $rectifier->modules->count() }} Modul <small style="color: #64748b; font-weight: 500;">(dari {{ $rectifier->kapasitas_slot ?? '-' }} slot)</small>
+                                    </span>
                                 </div>
 
                                 <div class="info-small-row">
@@ -119,18 +149,18 @@
                     {{-- Card Serial Number Module --}}
                     <div class="detail-card module-card">
                         <div class="section-heading">
-                            <span>Serial Number Module</span>
+                            <span><i class="bi bi-cpu-fill"></i> Serial Number Module</span>
                             <small>{{ $rectifier->modules->count() }} dari {{ $rectifier->kapasitas_slot ?? '?' }} module terpasang</small>
                         </div>
 
                         <div class="module-table">
                             @forelse($rectifier->modules as $module)
                                 <div class="module-row">
-                                    <div>Module {{ $loop->iteration }}</div>
-                                    <div>{{ $module->sn_modul ?? '-' }}</div>
+                                    <div><strong>Module {{ $loop->iteration }}</strong></div>
+                                    <div><code>{{ $module->sn_modul ?? '-' }}</code></div>
                                 </div>
                             @empty
-                                <div style="text-align:center; color:#64748b; padding:12px;">
+                                <div style="text-align:center; color:#64748b; padding:16px; font-size: 0.8rem;">
                                     Belum ada data module terpasang.
                                 </div>
                             @endforelse
@@ -144,7 +174,7 @@
                         <div class="photo-icon">
                             <i class="bi bi-camera-fill"></i>
                         </div>
-                        <span>Photo Rectifier</span>
+                        <span class="photo-title">Photo Rectifier</span>
                     </div>
 
                     <div class="photo-wrapper">
@@ -170,7 +200,7 @@
             {{-- Card Output --}}
             <div class="detail-card output-card">
                 <div class="section-heading">
-                    <span>Output (MCB)</span>
+                    <span><i class="bi bi-lightning-charge-fill"></i> Output (MCB)</span>
                 </div>
 
                 @php
@@ -181,7 +211,6 @@
                 @endphp
 
                 <div class="output-grid">
-                    {{-- Tabel kiri --}}
                     <table class="output-table">
                         <thead>
                             <tr>
@@ -194,18 +223,17 @@
                         <tbody>
                             @forelse($left as $output)
                                 <tr>
-                                    <td>{{ $output->nama_mcb ?? 'MCB ' . $loop->iteration }}</td>
+                                    <td><strong>{{ $output->nama_mcb ?? 'MCB ' . $loop->iteration }}</strong></td>
                                     <td>{{ $output->merk_mcb ?? '-' }}</td>
                                     <td>{{ $output->kapasitas_mcb ?? '-' }}</td>
                                     <td>{{ $output->peruntukan ?? '-' }}</td>
                                 </tr>
                             @empty
-                                <tr><td colspan="4" style="text-align:center; color:#64748b;">Belum ada data output.</td></tr>
+                                <tr><td colspan="4" style="text-align:center; color:#64748b; padding:12px;">Belum ada data output.</td></tr>
                             @endforelse
                         </tbody>
                     </table>
 
-                    {{-- Tabel kanan --}}
                     @if($right->isNotEmpty())
                         <table class="output-table">
                             <thead>
@@ -219,7 +247,7 @@
                             <tbody>
                                 @foreach($right as $output)
                                     <tr>
-                                        <td>{{ $output->nama_mcb ?? 'MCB ' . ($loop->iteration + $half) }}</td>
+                                        <td><strong>{{ $output->nama_mcb ?? 'MCB ' . ($loop->iteration + $half) }}</strong></td>
                                         <td>{{ $output->merk_mcb ?? '-' }}</td>
                                         <td>{{ $output->kapasitas_mcb ?? '-' }}</td>
                                         <td>{{ $output->peruntukan ?? '-' }}</td>
@@ -233,7 +261,9 @@
 
             {{-- Card Checklist Rectifier --}}
             <div class="detail-card checklist-card">
-                <div class="section-heading checklist-heading">Checklist Rectifier</div>
+                <div class="section-heading checklist-heading">
+                    <span><i class="bi bi-clipboard-check-fill"></i> Checklist Rectifier</span>
+                </div>
 
                 <div class="checklist-header-box">
                     <div class="checklist-row">
@@ -319,5 +349,4 @@ function copySerial() {
 }
 </script>
 </body>
-
 </html>

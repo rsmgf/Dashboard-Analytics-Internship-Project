@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 
 <head>
@@ -60,20 +60,6 @@
                         </a>
                     @endcan
                 </div>
-
-                {{-- Flash message sukses/error setelah redirect --}}
-                @if(session('success'))
-                    <div style="background:#dcfce7; border:1px solid #86efac; border-radius:8px; padding:12px 16px; margin-bottom:16px; font-size:0.875rem; color:#166534; display:flex; align-items:center; gap:8px;">
-                        <i class="bi bi-check-circle-fill"></i>
-                        {{ session('success') }}
-                    </div>
-                @endif
-                @if(session('error'))
-                    <div style="background:#fee2e2; border:1px solid #fca5a5; border-radius:8px; padding:12px 16px; margin-bottom:16px; font-size:0.875rem; color:#B91C1C; display:flex; align-items:center; gap:8px;">
-                        <i class="bi bi-exclamation-triangle-fill"></i>
-                        {{ session('error') }}
-                    </div>
-                @endif
 
                 <form id="searchForm" method="GET" action="{{ route('pops.index') }}" class="filter-section">
                     <div class="search-wrapper">
@@ -241,3 +227,4 @@
 </body>
 
 </html>
+
