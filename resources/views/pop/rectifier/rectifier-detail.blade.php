@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 
 <head>
@@ -30,7 +30,14 @@
 
         <div class="rectifier-detail-content">
             
-            {{-- HEADER ATAS: Back + Judul Informatif + Tombol Edit Asli --}}
+            {{-- BREADCRUMB --}}
+            <x-breadcrumb :items="[
+                ['label' => 'POP', 'route' => 'pops.index'],
+                ['label' => $pop->nama_pop . ': Rectifier', 'route' => 'rectifiers.index', 'params' => ['pop' => $pop->id]],
+                ['label' => 'Detail Rectifier: ' . ($rectifier->merk ?? 'Rectifier')],
+            ]" />
+
+            {{-- HEADER ATAS: Back + Judul Informatif + Tombol Edit --}}
             <div class="detail-header-bar">
                 <div class="header-left-group">
                     <a href="{{ route('rectifiers.index', $pop->id) }}" class="detail-back" title="Kembali ke Daftar Rectifier">
@@ -109,7 +116,6 @@
                             <div class="information-right">
                                 <div class="info-small-row">
                                     <span class="info-label">Jumlah Modul Terpasang</span>
-                                    <!-- REDAKSI LEBIH RAMAH & MUDAH DIPAHAMI -->
                                     <span class="info-value">
                                         {{ $rectifier->modules->count() }} Modul <small style="color: #64748b; font-weight: 500;">(dari {{ $rectifier->kapasitas_slot ?? '-' }} slot)</small>
                                     </span>

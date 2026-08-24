@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     @vite(['resources/css/sidebar.css'])
     @vite(['resources/css/access.css'])
 </head>
+
 <body>
     <div class="app-container">
         <x-sidebar />
@@ -16,8 +18,10 @@
             <x-topbar />
 
             <div class="access-content">
+                <x-breadcrumb :items="[['label' => 'Manajemen Akses Role']]" />
                 @if (session('success'))
-                    <div class="mb-4 p-3" style="background:#dcfce7;color:#166534;border-radius:8px;margin-bottom:16px;">
+                    <div class="mb-4 p-3"
+                        style="background:#dcfce7;color:#166534;border-radius:8px;margin-bottom:16px;">
                         {{ session('success') }}
                     </div>
                 @endif
@@ -53,7 +57,9 @@
                                     </td>
                                 </tr>
                             @empty
-                                <tr><td colspan="4" class="access-empty">Belum ada role.</td></tr>
+                                <tr>
+                                    <td colspan="4" class="access-empty">Belum ada role.</td>
+                                </tr>
                             @endforelse
                         </tbody>
                     </table>
@@ -62,4 +68,5 @@
         </main>
     </div>
 </body>
+
 </html>
