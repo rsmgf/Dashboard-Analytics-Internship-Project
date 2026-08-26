@@ -129,11 +129,14 @@
                                             <span class="text-sub">{{ $rma->type ?? 'Rectifier' }}</span>
                                         </td>
                                         <td class="text-center">
-                                            <a href="{{ route('rma.pdf', $rma->id) }}" class="btn-lihat">Lihat</a>
-                                            <a href="{{ route('rma.download', $rma->id) }}" class="btn-cetak"
-                                                target="_blank">
-                                                <i class="bi bi-printer-fill"></i> Cetak
-                                            </a>
+                                            <div class="action-buttons">
+                                                <a href="{{ route('rma.pdf', $rma->id) }}" class="btn-lihat" target="_blank">
+                                                    <i class="bi bi-eye"></i> Lihat
+                                                </a>
+                                                <a href="{{ route('rma.download', $rma->id) }}" class="btn-download">
+                                                    <i class="bi bi-download"></i> Download
+                                                </a>
+                                            </div>
                                         </td>
                                     </tr>
                                 @empty

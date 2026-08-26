@@ -89,11 +89,6 @@
                         <span>Isi form di bawah ini untuk menambahkan data POP baru.</span>
                     </div>
 
-                    <div class="add-pop-title">
-                        <h1>Tambah Point of Presence</h1>
-                        <p>Form Tambah Data POP</p>
-                    </div>
-
                     {{-- Flash error dari validasi Laravel --}}
                     @if ($errors->any())
                         <div

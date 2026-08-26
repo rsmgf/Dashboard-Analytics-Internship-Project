@@ -75,10 +75,19 @@ class RmaController extends Controller
             ]);
         }
 
-        // Ambil data lengkap & tampilkan PDF langsung di tab baru
+        // Ambil data lengkap & generate PDF
         $data = Rma::with('materials')->findOrFail($rma->id);
-        $pdf = Pdf::loadView('pdf.rma', compact('data'));
 
+        // Jika request dari JS fetch (form submit via AJAX), kembalikan URL PDF
+        if ($request->expectsJson()) {
+            return response()->json([
+                'pdf_url'      => route('rma.pdf', $rma->id),
+                'redirect_url' => route('rma'),
+            ]);
+        }
+
+        // Fallback: stream PDF langsung
+        $pdf = Pdf::loadView('pdf.rma', compact('data'));
         return $pdf->stream('RMA_' . $data->id . '.pdf');
     }
 
