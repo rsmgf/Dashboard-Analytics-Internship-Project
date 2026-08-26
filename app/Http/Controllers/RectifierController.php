@@ -233,13 +233,37 @@ class RectifierController extends Controller
     // 5. Menghapus Data Rectifier (Delete)
     public function destroy($pop_id, $id)
     {
-        $rectifier = Rectifier::where('pop_id', $pop_id)->findOrFail($id);
+        $pop = Pop::findOrFail($pop_id);
+        $rectifier = Rectifier::where('pop_id', $pop->id)->findOrFail($id);
 
-        // Cukup panggil delete(), modul dan output akan ikut hancur berkat onDelete('cascade')
-        $rectifier->delete();
+        try {
+            // Hapus file foto dari storage jika ada
+            if ($rectifier->foto_rectifier && \Storage::disk('public')->exists($rectifier->foto_rectifier)) {
+                \Storage::disk('public')->delete($rectifier->foto_rectifier);
+            }
 
-        return response()->json([
-            'message' => 'Data Rectifier beserta semua isinya berhasil dihapus permanen!'
-        ], 200);
+            // Hapus data (modul & outputs terhapus otomatis secara cascade)
+            $rectifier->delete();
+
+            if (request()->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Data Rectifier berhasil dihapus permanen!'
+                ], 200);
+            }
+
+            return redirect()->route('rectifiers.index', $pop->id)
+                ->with('success', 'Data Rectifier berhasil dihapus permanen!');
+        } catch (\Exception $e) {
+            if (request()->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal menghapus data: ' . $e->getMessage()
+                ], 500);
+            }
+
+            return redirect()->route('rectifiers.index', $pop->id)
+                ->with('error', 'Gagal menghapus data: ' . $e->getMessage());
+        }
     }
 }
