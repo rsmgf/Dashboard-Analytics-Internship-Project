@@ -143,7 +143,7 @@ body {
     gap: 6px;
     padding: 5px 2px;
     background: transparent;
-    color: #2563eb;
+    color: #005ca9;
     font-family: 'Poppins', sans-serif;
     font-size: 0.8rem;
     font-weight: 600;
@@ -153,7 +153,7 @@ body {
 }
 
 .btn-edit:hover {
-    color: #1d4ed8;
+    color: #004680;
 }
 
 .btn-edit i {
@@ -333,7 +333,7 @@ body {
     align-items: center;
     justify-content: space-between;
     padding: 0 10px;
-    color: #2563eb;
+    color: #005ca9;
     font-size: 0.8rem;
     font-weight: 600;
 }
@@ -424,7 +424,7 @@ body {
     flex-shrink: 0;
     border-radius: 6px;
     background: #eff6ff;
-    color: #2563eb;
+    color: #005ca9;
     font-size: 14px;
 }
 
@@ -610,7 +610,7 @@ body {
     border: 1px solid #cbd5e1;
     border-bottom: none;
     border-radius: 4px 4px 0 0;
-    color: #2563eb;
+    color: #005ca9;
     font-size: 0.8rem;
     font-weight: 600;
     text-transform: lowercase;

@@ -11,7 +11,6 @@
 
     @vite([
         'resources/css/sidebar.css',
-        'resources/css/rectifier-card.css',
         'resources/css/rectifier-detail.css'
     ])
 </head>

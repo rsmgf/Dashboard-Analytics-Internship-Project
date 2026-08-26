@@ -1,8 +1,6 @@
-/* ============================
-   RECTIFIER FORM CSS
-   ============================ */
-
-*, *::before, *::after { box-sizing: border-box; }
+*, *::before, *::after {
+    box-sizing: border-box;
+}
 
 html, body {
     margin: 0;
@@ -14,7 +12,6 @@ html, body {
     color: #1e293b;
 }
 
-/* ---- Layout ---- */
 .app-container {
     display: flex;
     width: 100%;
@@ -28,13 +25,11 @@ html, body {
     background: #f8fafc;
 }
 
-/* ---- Content Wrapper ---- */
 .rform-content {
     padding: 24px;
     max-width: 1100px;
 }
 
-/* ---- Back Button ---- */
 .rform-back {
     display: inline-flex;
     align-items: center;
@@ -49,9 +44,12 @@ html, body {
     margin-bottom: 20px;
     transition: background 0.2s;
 }
-.rform-back:hover { background: #e2e8f0; color: #1e293b; }
 
-/* ---- Section Cards ---- */
+.rform-back:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
 .rform-section {
     background: #fff;
     border: 1px solid #e2e8f0;
@@ -64,10 +62,11 @@ html, body {
     padding: 14px 20px;
     font-size: 0.9rem;
     font-weight: 700;
-    color: #1688e8;
+    color: #005ca9;
     border-bottom: 1px solid #e2e8f0;
     background: #fff;
 }
+
 .rform-section-sub {
     font-size: 0.75rem;
     font-weight: 400;
@@ -79,17 +78,24 @@ html, body {
     padding: 20px;
 }
 
-/* ---- Row layouts ---- */
 .rform-row {
     display: grid;
     gap: 16px;
     margin-bottom: 16px;
 }
-.rform-row-4  { grid-template-columns: repeat(4, 1fr); }
-.rform-row-2  { grid-template-columns: 1fr 1fr; }
-.rform-row-1  { grid-template-columns: 1fr; }
 
-/* ---- Field Group ---- */
+.rform-row-4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.rform-row-2 {
+    grid-template-columns: 1fr 1fr;
+}
+
+.rform-row-1 {
+    grid-template-columns: 1fr;
+}
+
 .rform-group {
     display: flex;
     flex-direction: column;
@@ -102,7 +108,9 @@ html, body {
     color: #374151;
 }
 
-.rform-required { color: #dc2626; }
+.rform-required {
+    color: #dc2626;
+}
 
 .rform-input,
 .rform-select {
@@ -117,16 +125,20 @@ html, body {
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
-.rform-input:focus, .rform-select:focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+
+.rform-input:focus,
+.rform-select:focus {
+    border-color: #005ca9;
+    box-shadow: 0 0 0 3px rgba(0, 92, 169, 0.12);
 }
+
 .rform-input[readonly],
 .rform-input[disabled] {
     background: #f1f5f9;
     color: #94a3b8;
     cursor: not-allowed;
 }
+
 .rform-input.is-invalid {
     border-color: #dc2626;
 }
@@ -137,7 +149,6 @@ html, body {
     margin-top: 2px;
 }
 
-/* ---- Photo Upload ---- */
 .rform-photo-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -146,7 +157,7 @@ html, body {
 }
 
 .rform-drop-zone {
-    border: 2px dashed #93c5fd;
+    border: 2px dashed #005ca9;
     border-radius: 12px;
     background: #f8fafc;
     padding: 40px 20px;
@@ -161,34 +172,40 @@ html, body {
     justify-content: center;
     min-height: 220px;
 }
-.rform-drop-zone:hover { 
-    background: #eff6ff; 
-    border-color: #3b82f6;
+
+.rform-drop-zone:hover {
+    background: #f0f6fc;
+    border-color: #005ca9;
 }
+
 .rform-drop-icon {
     font-size: 2.5rem;
-    color: #60a5fa;
+    color: #005ca9;
     margin-bottom: 12px;
     transition: transform 0.3s;
 }
+
 .rform-drop-zone:hover .rform-drop-icon {
     transform: translateY(-5px);
 }
+
 .rform-drop-text {
     font-size: 0.95rem;
     color: #1e293b;
     font-weight: 600;
     margin-bottom: 12px;
 }
+
 .rform-drop-hint {
     font-size: 0.75rem;
     color: #64748b;
     margin-top: 12px;
 }
+
 .rform-browse-btn {
     display: inline-block;
     padding: 8px 24px;
-    background: #3b82f6;
+    background: #005ca9;
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -197,10 +214,11 @@ html, body {
     cursor: pointer;
     font-family: 'Poppins', sans-serif;
     transition: background 0.2s, transform 0.2s;
-    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
+    box-shadow: 0 4px 6px -1px rgba(0, 92, 169, 0.2);
 }
+
 .rform-browse-btn:hover {
-    background: #2563eb;
+    background: #004680;
     transform: translateY(-1px);
 }
 
@@ -212,11 +230,13 @@ html, body {
     margin-top: 16px;
     width: 100%;
 }
+
 .rform-preview-label {
     font-size: 0.85rem;
     color: #475569;
     font-weight: 600;
 }
+
 .rform-preview-box {
     width: 100%;
     max-width: 400px;
@@ -231,12 +251,14 @@ html, body {
     overflow: hidden;
     box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.04);
 }
+
 .rform-preview-box img {
     width: 100%;
     height: 100%;
     object-fit: contain;
     background: #e2e8f0;
 }
+
 .rform-preview-empty {
     display: flex;
     flex-direction: column;
@@ -245,9 +267,11 @@ html, body {
     color: #94a3b8;
     font-size: 0.8rem;
 }
-.rform-preview-empty i { font-size: 2rem; }
 
-/* ---- Module Columns ---- */
+.rform-preview-empty i {
+    font-size: 2rem;
+}
+
 .rform-module-columns {
     display: flex;
     gap: 16px;
@@ -269,6 +293,7 @@ html, body {
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
     transition: transform 0.2s, box-shadow 0.2s;
 }
+
 .rform-module-col:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
@@ -302,6 +327,7 @@ html, body {
     justify-content: center;
     gap: 4px;
 }
+
 .rform-module-remove:hover {
     background: #f87171;
     color: #fff;
@@ -324,13 +350,13 @@ html, body {
     transition: all 0.2s;
     width: auto;
 }
+
 .btn-tambah-modul:hover {
     background: #22c55e;
     color: #fff;
     border-style: solid;
 }
 
-/* ---- Output MCB Tables ---- */
 .rform-output-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -376,9 +402,11 @@ html, body {
     outline: none;
     transition: border-color 0.2s;
 }
+
 .rform-output-table input:focus {
-    border-color: #3b82f6;
+    border-color: #005ca9;
 }
+
 .rform-output-table .peruntukan-cell {
     font-size: 0.78rem;
     color: #374151;
@@ -386,7 +414,6 @@ html, body {
     white-space: nowrap;
 }
 
-/* ---- Bottom Buttons ---- */
 .rform-actions {
     display: flex;
     justify-content: flex-end;
@@ -407,11 +434,14 @@ html, body {
     cursor: pointer;
     transition: all 0.2s;
 }
-.rform-btn-reset:hover { background: #f8fafc; }
+
+.rform-btn-reset:hover {
+    background: #f8fafc;
+}
 
 .rform-btn-simpan {
     padding: 10px 28px;
-    background: #1688e8;
+    background: #005ca9;
     border: none;
     color: #fff;
     border-radius: 8px;
@@ -421,9 +451,11 @@ html, body {
     cursor: pointer;
     transition: background 0.2s;
 }
-.rform-btn-simpan:hover { background: #0d6ec7; }
 
-/* ---- Flash message ---- */
+.rform-btn-simpan:hover {
+    background: #004680;
+}
+
 .rform-flash {
     display: flex;
     align-items: center;
@@ -433,21 +465,33 @@ html, body {
     font-size: 0.85rem;
     margin-bottom: 16px;
 }
+
 .rform-flash.success {
     background: #dcfce7;
     border: 1px solid #86efac;
     color: #166534;
 }
+
 .rform-flash.error {
     background: #fee2e2;
     border: 1px solid #fca5a5;
     color: #B91C1C;
 }
 
-/* ---- Responsive ---- */
 @media (max-width: 768px) {
-    .rform-row-4  { grid-template-columns: 1fr 1fr; }
-    .rform-row-2  { grid-template-columns: 1fr; }
-    .rform-photo-grid { grid-template-columns: 1fr; }
-    .rform-output-grid { grid-template-columns: 1fr; }
+    .rform-row-4 {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .rform-row-2 {
+        grid-template-columns: 1fr;
+    }
+    
+    .rform-photo-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .rform-output-grid {
+        grid-template-columns: 1fr;
+    }
 }

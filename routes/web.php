@@ -102,4 +102,16 @@ Route::middleware('auth')->group(function () {
     //BARU DITAMBAH KILA
     Route::get('/kwh-card', function () {
     return view('pop.kwh.kwh-card'); })->name('kwh.card');
+
+    Route::get('/kwh-detail', function () {
+    return view('pop.kwh.kwh-detail'); })->name('kwh.detail');
+
+    Route::get('/kwh-create', function () {
+    return view('pop.kwh.kwh-create'); })->name('kwh.create');
+
+
+
 });
+
+
+
