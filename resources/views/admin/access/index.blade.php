@@ -35,7 +35,7 @@
                                 <th style="width: 70px;">No.</th>
                                 <th>Nama Role</th>
                                 <th style="width: 220px;">Jumlah Permission</th>
-                                <th style="width: 140px; text-align: center;">Aksi</th>
+                                <th style="width: 170px; text-align: center;">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>

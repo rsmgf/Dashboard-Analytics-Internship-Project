@@ -102,6 +102,12 @@
 
                             {{-- Footer --}}
                             <div class="rectifier-card-footer">
+                                @can('rectifiers.index.delete')
+                                    <button type="button" class="btn-hapus"
+                                        onclick="hapusRectifier('{{ route('rectifiers.destroy', [$pop->id, $rectifier->id]) }}', '{{ addslashes($rectifier->nama_alias ?? ($rectifier->merk . ' - ' . $rectifier->type)) }}')">
+                                        <i class="bi bi-trash3-fill"></i> Hapus
+                                    </button>
+                                @endcan
                                 <a href="{{ route('rectifiers.show', [$pop->id, $rectifier->id]) }}" class="detail-button">
                                     <span>Detail</span>
                                     <i class="bi bi-chevron-right"></i>
@@ -118,6 +124,77 @@
             </div>
         </main>
     </div>
+
+    {{-- SweetAlert2 JS --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        @if (session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: "{{ session('success') }}",
+                showConfirmButton: false,
+                timer: 2500,
+                timerProgressBar: true
+            });
+        @endif
+
+        @if (session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: "{{ session('error') }}",
+                confirmButtonColor: '#ef4444'
+            });
+        @endif
+
+        function hapusRectifier(deleteUrl, rectifierName) {
+            Swal.fire({
+                title: 'Hapus Rectifier?',
+                html: `Apakah Anda yakin ingin menghapus data <strong>"${rectifierName}"</strong>?<br><small style="color: #64748b;">Seluruh data modul dan output MCB di dalamnya akan ikut terhapus secara permanen.</small>`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: '<i class="bi bi-trash3-fill"></i> Ya, Hapus!',
+                cancelButtonText: 'Batal',
+                reverseButtons: true,
+                focusCancel: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Tampilkan loading saat proses penghapusan
+                    Swal.fire({
+                        title: 'Menghapus...',
+                        text: 'Mohon tunggu sebentar',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    // Buat dan submit form DELETE secara dinamis
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = deleteUrl;
+
+                    const csrf = document.createElement('input');
+                    csrf.type = 'hidden';
+                    csrf.name = '_token';
+                    csrf.value = '{{ csrf_token() }}';
+
+                    const method = document.createElement('input');
+                    method.type = 'hidden';
+                    method.name = '_method';
+                    method.value = 'DELETE';
+
+                    form.appendChild(csrf);
+                    form.appendChild(method);
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+        }
+    </script>
 </body>
 </html>
 
