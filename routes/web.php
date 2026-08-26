@@ -98,4 +98,20 @@ Route::middleware('auth')->group(function () {
     Route::middleware('permission:rectifiers.index.delete')->group(function () {
         Route::delete('/pops/{pop}/rectifiers/{id}', [RectifierController::class, 'destroy'])->name('rectifiers.destroy');
     });
+
+    //BARU DITAMBAH KILA
+    Route::get('/kwh-card', function () {
+    return view('pop.kwh.kwh-card'); })->name('kwh.card');
+
+    Route::get('/kwh-detail', function () {
+    return view('pop.kwh.kwh-detail'); })->name('kwh.detail');
+
+    Route::get('/kwh-create', function () {
+    return view('pop.kwh.kwh-create'); })->name('kwh.create');
+
+
+
 });
+
+
+
