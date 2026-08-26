@@ -90,11 +90,6 @@
                         <span>Perbarui informasi data POP pada form di bawah ini.</span>
                     </div>
 
-                    <div class="add-pop-title">
-                        <h1>Edit Point of Presence</h1>
-                        <p>Ubah Data POP â€” {{ $pop->nama_pop }}</p>
-                    </div>
-
                     {{-- Flash error dari validasi Laravel --}}
                     @if ($errors->any())
                         <div

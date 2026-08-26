@@ -18,26 +18,19 @@
             <x-topbar />
 
             <div class="access-content">
-                <x-breadcrumb :items="[
-                    ['label' => 'Manajemen Akses Role', 'route' => 'admin.access.index'],
-                    ['label' => 'Atur Akses: ' . ucfirst(str_replace('_', ' ', $role->name))],
-                ]" />
-                @if (session('success'))
-                    <div class="mb-4 p-3"
-                        style="background:#dcfce7;color:#166534;border-radius:8px;margin-bottom:16px;">
-                        {{ session('success') }}
-                    </div>
-                @endif
-
-                <div class="access-header">
-                    <div class="access-title-icon"><i class="bi bi-shield-lock-fill"></i></div>
-                    <div>
-                        <h1>Atur Akses: {{ ucfirst(str_replace('_', ' ', $role->name)) }}</h1>
-                        <p>Centang toggle untuk memberi izin create/read/update/delete pada tiap menu</p>
-                    </div>
-                    <a href="{{ route('admin.access.index') }}" class="access-back-link" style="margin-left:auto;">
-                        <i class="bi bi-arrow-left"></i> Kembali
+                <div style="display:flex; align-items:center; gap:14px; margin-bottom:20px;">
+                    <a href="{{ route('admin.access.index') }}"
+                       style="width:34px; height:34px; border-radius:50%; background:#f1f5f9; color:#64748b; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; flex-shrink:0;"
+                       title="Kembali ke Manajemen Akses">
+                        <i class="bi bi-arrow-left"></i>
                     </a>
+                    <div>
+                        <x-breadcrumb :items="[
+                            ['label' => 'Manajemen Akses Role', 'route' => 'admin.access.index'],
+                            ['label' => 'Atur Akses: ' . ucfirst(str_replace('_', ' ', $role->name))],
+                        ]" />
+                        <p style="margin:2px 0 0; font-size:0.8rem; color:#64748b;">Centang toggle untuk memberi izin create/read/update/delete pada tiap menu</p>
+                    </div>
                 </div>
 
                 <form id="form-akses" action="{{ route('admin.access.update', $role) }}" method="POST">
