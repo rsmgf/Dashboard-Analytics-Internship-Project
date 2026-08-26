@@ -18,11 +18,18 @@
             <x-topbar />
 
             <div class="access-content">
-                <div class="access-header">
-                    <div class="access-title-icon"><i class="bi bi-shield-lock-fill"></i></div>
+                <div style="display:flex; align-items:center; gap:14px; margin-bottom:20px;">
+                    <a href="{{ route('admin.access.index') }}"
+                       style="width:34px; height:34px; border-radius:50%; background:#f1f5f9; color:#64748b; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; flex-shrink:0;"
+                       title="Kembali ke Manajemen Akses">
+                        <i class="bi bi-arrow-left"></i>
+                    </a>
                     <div>
-                        <h1>Atur Akses: {{ ucfirst(str_replace('_', ' ', $role->name)) }}</h1>
-                        <p>Centang toggle untuk memberi izin create/read/update/delete pada tiap menu</p>
+                        <x-breadcrumb :items="[
+                            ['label' => 'Manajemen Akses Role', 'route' => 'admin.access.index'],
+                            ['label' => 'Atur Akses: ' . ucfirst(str_replace('_', ' ', $role->name))],
+                        ]" />
+                        <p style="margin:2px 0 0; font-size:0.8rem; color:#64748b;">Centang toggle untuk memberi izin create/read/update/delete pada tiap menu</p>
                     </div>
                 </div>
 
@@ -52,7 +59,7 @@
                     </div>
 
                     <div class="table-card">
-                        <table class="pop-table">
+                        <table class="access-table">
                             <thead>
                                 <tr>
                                     <th style="width: 260px;">Menu</th>
@@ -61,7 +68,6 @@
                             </thead>
                             <tbody>
                                 @forelse ($menus as $menu)
-                                    {{-- Parent tanpa route sendiri (cuma dropdown/group) --}}
                                     @if (!$menu->route)
                                         <tr class="access-group-row">
                                             <td colspan="2">{{ $menu->name }}</td>
@@ -86,7 +92,7 @@
                                     @endif
                                 @empty
                                     <tr>
-                                        <td colspan="2" style="text-align:center; padding: 24px; color:#94a3b8;">
+                                        <td colspan="2" class="access-empty">
                                             Role ini belum punya menu yang di-assign. Atur dulu di halaman "Menu".
                                         </td>
                                     </tr>
@@ -107,7 +113,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // --- SEARCH MENU ---
             const searchInput = document.getElementById('searchMenu');
             searchInput.addEventListener('input', function() {
                 const q = this.value.toLowerCase().trim();
@@ -117,14 +122,13 @@
                 });
             });
 
-            // --- SELECT ALL PER ROW ---
             document.querySelectorAll('.select-all-check').forEach(check => {
                 check.addEventListener('change', function() {
                     const row = this.closest('.access-menu-row');
                     row.querySelectorAll('.action-toggle').forEach(t => t.checked = this.checked);
                 });
             });
-            // sinkron balik: kalau semua toggle di-uncheck manual, checkbox induk ikut off
+
             document.querySelectorAll('.action-toggle').forEach(t => {
                 t.addEventListener('change', function() {
                     const row = this.closest('.access-menu-row');
@@ -134,7 +138,6 @@
                 });
             });
 
-            // --- COPY DARI ROLE LAIN ---
             document.getElementById('btnTerapkanCopy').addEventListener('click', async function() {
                 const roleId = document.getElementById('copyFromRole').value;
                 if (!roleId) {
@@ -143,12 +146,11 @@
                 }
                 try {
                     const res = await fetch(`/admin/access/${roleId}/permissions`);
-                    const permissionIds = await res.json(); // array of ids
+                    const permissionIds = await res.json();
 
                     document.querySelectorAll('.action-toggle').forEach(t => {
                         t.checked = permissionIds.includes(Number(t.value));
                     });
-                    // refresh state checkbox "select all" tiap baris
                     document.querySelectorAll('.access-menu-row').forEach(row => {
                         const all = row.querySelectorAll('.action-toggle');
                         const checkedCount = row.querySelectorAll('.action-toggle:checked')

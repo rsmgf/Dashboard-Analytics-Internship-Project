@@ -33,6 +33,9 @@ body {
 
 /* Topbar Components */
 .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 999;
     height: 60px;
     width: 100%;
     display: flex;
@@ -40,6 +43,7 @@ body {
     padding: 0 20px;
     background: #ffffff;
     border-bottom: 1px solid #dddddd;
+    margin: 0;
 }
 
 .sidebar-toggle {
@@ -106,7 +110,7 @@ body {
 .content {
     width: 100%;
     min-height: calc(100vh - 60px);
-    padding: 0 20px 30px;
+    padding: 20px 24px 36px;
     background: #ffffff;
 }
 
@@ -115,27 +119,54 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 0;
+    padding: 16px 0 18px;
     border-bottom: 1px solid #e2e8f0;
-    margin-bottom: 4px;
+    margin-bottom: 24px;
 }
 
 .page-info {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
 }
 
-.pop-name {
-    display: block;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: #1e293b;
+.back-button {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    color: #64748b;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.back-button:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+.rectifier-header-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.rectifier-pop-name {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.25;
 }
 
 .pop-sub {
     display: block;
-    font-size: 0.75rem;
+    font-size: 0.78rem;
     color: #64748b;
 }
 
@@ -144,7 +175,7 @@ body {
     align-items: center;
     gap: 6px;
     padding: 8px 16px;
-    background: #1688e8;
+    background: #0284c7;
     color: white;
     border: none;
     border-radius: 8px;
@@ -157,7 +188,7 @@ body {
 }
 
 .btn-tambah-rectifier:hover {
-    background: #0d6ec7;
+    background: #0369a1;
 }
 
 .back-button {
@@ -194,8 +225,8 @@ body {
 .card {
     position: relative;
     width: 100%;
-
-    min-height: 235px;
+    height: 295px;
+    min-height: 295px;
     background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 12px;
@@ -289,9 +320,9 @@ body {
 
 .meta {
     display: flex;
-    align-items: center;
-    gap: 30px;
-    padding: 12px 25px 0;
+    flex-direction: column;
+    gap: 5px;
+    padding: 10px 25px 0;
 }
 
 .meta-item {
@@ -307,7 +338,24 @@ body {
     font-size: 13px;
 }
 
-.card-footer {
+/* Last Updated Row on Card */
+.rectifier-last-updated {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 25px 0;
+    font-size: 0.68rem;
+    color: #94a3b8;
+    font-style: italic;
+}
+
+.rectifier-last-updated i {
+    color: #94a3b8;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.rectifier-card-footer {
     position: absolute;
     left: 25px;
     right: 24px;
@@ -386,9 +434,9 @@ body {
         grid-template-columns: 1fr;
     }
 
-    .card { 
-        height: 235px; 
-        min-height: 235px; 
+    .rectifier-card { 
+        height: 265px; 
+        min-height: 265px; 
     }
 }
 

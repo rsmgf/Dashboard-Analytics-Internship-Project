@@ -11,70 +11,73 @@
             <i class="bi bi-person-fill" style="font-size: 20px;"></i>
         </div>
     </div>
-</header>
+</header><div id="toast-container"></div><script>
+function showToast(type, message) {
+    const icons = {
+        success: 'bi-check-circle-fill',
+        error:   'bi-exclamation-circle-fill',
+        info:    'bi-info-circle-fill',
+        warning: 'bi-exclamation-triangle-fill'
+    };
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = 'toast-item ' + type;
+    toast.innerHTML = `<i class="bi ${icons[type]} toast-icon"></i><span class="toast-msg">${message}</span><button class="toast-close bi bi-x" onclick="this.closest('.toast-item').remove()"></button>`;
+    container.appendChild(toast);
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-16px)';
+        setTimeout(() => toast.remove(), 400);
+    }, 7000);
+}
 
-{{-- Script toggle sidebar — didefinisikan sekali di sini, tidak perlu ditulis ulang di setiap blade --}}
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const sidebarToggle = document.getElementById('sidebarToggle');
-        const sidebarIcon   = document.getElementById('sidebarToggleIcon');
-        const overlay       = document.getElementById('sidebarOverlay');
+document.addEventListener('DOMContentLoaded', function() {
+    @if(session('success'))
+        showToast('success', @json(session('success')));
+    @endif
+    @if(session('error'))
+        showToast('error', @json(session('error')));
+    @endif
+    @if(session('info'))
+        showToast('info', @json(session('info')));
+    @endif
+    @if(session('warning'))
+        showToast('warning', @json(session('warning')));
+    @endif
 
-        function isMobile() {
-            return window.innerWidth <= 768;
-        }
-
-        // Tutup sidebar di mobile
-        function closeMobileSidebar() {
-            document.body.classList.remove('sidebar-open');
-            if (sidebarIcon) {
-                sidebarIcon.classList.replace('bi-x', 'bi-list');
-            }
-        }
-
-        if (sidebarToggle) {
-            sidebarToggle.addEventListener('click', function () {
-                if (isMobile()) {
-                    // ── MOBILE: toggle sidebar-open + overlay ──
-                    const isNowOpen = document.body.classList.toggle('sidebar-open');
-                    if (sidebarIcon) {
-                        if (isNowOpen) {
-                            sidebarIcon.classList.replace('bi-list', 'bi-x');
-                        } else {
-                            sidebarIcon.classList.replace('bi-x', 'bi-list');
-                        }
-                    }
-                } else {
-                    // ── DESKTOP: toggle collapsed (icon-only mode) ──
-                    document.body.classList.toggle('sidebar-collapsed');
-                    if (sidebarIcon) {
-                        if (document.body.classList.contains('sidebar-collapsed')) {
-                            sidebarIcon.classList.replace('bi-list', 'bi-chevron-right');
-                        } else {
-                            sidebarIcon.classList.replace('bi-chevron-right', 'bi-list');
-                        }
-                    }
-                }
-            });
-        }
-
-        // Klik overlay → tutup sidebar
-        if (overlay) {
-            overlay.addEventListener('click', closeMobileSidebar);
-        }
-
-        // Resize window → bersihkan state yang tidak sesuai platform
-        window.addEventListener('resize', function () {
-            if (!isMobile()) {
-                // Kembali ke desktop: hapus state mobile
-                closeMobileSidebar();
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const sidebarIcon   = document.getElementById('sidebarToggleIcon');
+    const overlay       = document.getElementById('sidebarOverlay');
+    function isMobile() { return window.innerWidth <= 768; }
+    function closeMobileSidebar() {
+        document.body.classList.remove('sidebar-open');
+        if (sidebarIcon) sidebarIcon.classList.replace('bi-x', 'bi-list');
+    }
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', function () {
+            if (isMobile()) {
+                const isNowOpen = document.body.classList.toggle('sidebar-open');
+                if (sidebarIcon) sidebarIcon.classList.replace(isNowOpen ? 'bi-list' : 'bi-x', isNowOpen ? 'bi-x' : 'bi-list');
             } else {
-                // Kembali ke mobile: hapus collapsed state desktop
-                document.body.classList.remove('sidebar-collapsed');
-                if (sidebarIcon && sidebarIcon.classList.contains('bi-chevron-right')) {
-                    sidebarIcon.classList.replace('bi-chevron-right', 'bi-list');
+                document.body.classList.toggle('sidebar-collapsed');
+                if (sidebarIcon) {
+                    if (document.body.classList.contains('sidebar-collapsed')) {
+                        sidebarIcon.classList.replace('bi-list', 'bi-chevron-right');
+                    } else {
+                        sidebarIcon.classList.replace('bi-chevron-right', 'bi-list');
+                    }
                 }
             }
         });
+    }
+    if (overlay) overlay.addEventListener('click', closeMobileSidebar);
+    window.addEventListener('resize', function () {
+        if (!isMobile()) { closeMobileSidebar(); }
+        else {
+            document.body.classList.remove('sidebar-collapsed');
+            if (sidebarIcon && sidebarIcon.classList.contains('bi-chevron-right'))
+                sidebarIcon.classList.replace('bi-chevron-right', 'bi-list');
+        }
     });
+});
 </script>

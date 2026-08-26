@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     @vite(['resources/css/sidebar.css'])
     @vite(['resources/css/access.css'])
 </head>
+
 <body>
     <div class="app-container">
         <x-sidebar />
@@ -16,11 +18,7 @@
             <x-topbar />
 
             <div class="access-content">
-                @if (session('success'))
-                    <div class="mb-4 p-3" style="background:#dcfce7;color:#166534;border-radius:8px;margin-bottom:16px;">
-                        {{ session('success') }}
-                    </div>
-                @endif
+
 
                 <div class="access-header">
                     <div class="access-title-icon"><i class="bi bi-shield-lock-fill"></i></div>
@@ -30,29 +28,37 @@
                     </div>
                 </div>
 
-                <div class="table-card">
-                    <table class="pop-table">
+                <div class="table-container">
+                    <table class="access-table">
                         <thead>
                             <tr>
-                                <th>No</th>
+                                <th style="width: 70px;">No.</th>
                                 <th>Nama Role</th>
-                                <th>Jumlah Permission</th>
-                                <th>Aksi</th>
+                                <th style="width: 220px;">Jumlah Permission</th>
+                                <th style="width: 140px; text-align: center;">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($roles as $i => $role)
+                            @forelse ($roles as $i => $role)
                                 <tr>
-                                    <td>{{ $i + 1 }}</td>
-                                    <td>{{ ucfirst(str_replace('_', ' ', $role->name)) }}</td>
-                                    <td><span class="role-badge-count">{{ $role->permissions_count }}</span></td>
+                                    <td>{{ $i + 1 }}.</td>
+                                    <td style="color: #1E293B; font-weight: 500;">
+                                        {{ ucfirst(str_replace('_', ' ', $role->name)) }}
+                                    </td>
                                     <td>
+                                        <span class="permission-count">{{ $role->permissions_count }} permission</span>
+                                    </td>
+                                    <td style="text-align: center;">
                                         <a href="{{ route('admin.access.edit', $role) }}" class="btn-atur-akses">
                                             <i class="bi bi-sliders"></i> Atur Akses
                                         </a>
                                     </td>
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="access-empty">Belum ada data role.</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
@@ -60,4 +66,5 @@
         </main>
     </div>
 </body>
+
 </html>

@@ -20,6 +20,8 @@
 
 html,
 body {
+    margin: 0;
+    padding: 0;
     width: 100%;
     min-height: 100%;
     font-family: 'Poppins', sans-serif;
@@ -130,6 +132,55 @@ button.sidebar-menu {
     justify-content: center;
     font-size: 22px;
     text-align: center;
+}
+
+.breadcrumb-nav {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    line-height: 1.25;
+}
+
+.breadcrumb-link {
+    color: #64748b;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: color 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.breadcrumb-link:hover {
+    color: #0284c7;
+}
+
+.breadcrumb-home i {
+    font-size: 1rem;
+    color: #64748b;
+    transition: color 0.15s ease;
+}
+
+.breadcrumb-link:hover .bi-house-door-fill,
+.breadcrumb-link:hover i {
+    color: #0284c7;
+}
+
+.breadcrumb-sep {
+    font-size: 0.65rem;
+    color: #94a3b8;
+    margin: 0 1px;
+}
+
+.breadcrumb-current {
+    color: #0284c7;
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: -0.01em;
 }
 
 .sidebar-menu span {
@@ -266,7 +317,6 @@ button.sidebar-menu {
     left: 0;
     width: 100%;
     height: var(--topbar-height);
-    min-height: var(--topbar-height);
     display: flex !important;
     align-items: center;
     margin: 0 !important;
@@ -438,5 +488,85 @@ body.sidebar-collapsed .dropdown-arrow {
     body.sidebar-collapsed .sidebar {
         transform: translateX(-100%);
         width: var(--sidebar-width) !important;
+    }
+}
+
+/* ======== GLOBAL TOAST NOTIFICATION ======== */
+#toast-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+    align-items: center;
+}
+
+.toast-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    pointer-events: all;
+    min-width: 280px;
+    max-width: 420px;
+    animation: toastSlideIn 0.35s ease forwards;
+    transition: opacity 0.4s, transform 0.4s;
+}
+
+.toast-item.success {
+    background: #dcfce7;
+    color: #15803d;
+    border-left: 4px solid #16a34a;
+}
+
+.toast-item.error {
+    background: #fee2e2;
+    color: #b91c1c;
+    border-left: 4px solid #dc2626;
+}
+
+.toast-item.info {
+    background: #dbeafe;
+    color: #1d4ed8;
+    border-left: 4px solid #2563eb;
+}
+
+.toast-item.warning {
+    background: #fff7ed;
+    color: #c2410c;
+    border-left: 4px solid #f97316;
+}
+
+.toast-item .toast-close {
+    cursor: pointer;
+    opacity: 0.5;
+    font-size: 1rem;
+    flex-shrink: 0;
+    background: none;
+    border: none;
+}
+
+.toast-item .toast-close:hover {
+    opacity: 1;
+}
+
+@keyframes toastSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }

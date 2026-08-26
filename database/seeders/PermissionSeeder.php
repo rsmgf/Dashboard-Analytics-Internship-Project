@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Menu;
 use App\Models\Role;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 
@@ -17,31 +16,26 @@ class PermissionSeeder extends Seeder
     {
         $actions = ['create', 'read', 'update', 'delete'];
 
-        // hanya menu yang punya route asli (bukan parent dropdown)
-        $menus = Menu::whereNotNull('route')->get();
+        // hanya menu yang punya route asli — tolak NULL *dan* string kosong
+        $menus = Menu::whereNotNull('route')
+            ->where('route', '<>', '')
+            ->get();
 
         foreach ($menus as $menu) {
             foreach ($actions as $action) {
-                Permission::create([
-                    'name' => "{$menu->route}.{$action}", // contoh: pops.index.create
-                    'guard_name' => 'web',
-                    'menu_id' => $menu->id,
-                ]);
+                Permission::firstOrCreate(
+                    [
+                        'name' => "{$menu->route}.{$action}",
+                        'guard_name' => 'web',
+                    ],
+                    [
+                        'menu_id' => $menu->id,
+                    ]
+                );
             }
         }
 
-        // Tambahan permission untuk halaman non-menu (seperti rectifier di dalam POP)
-        $extraRoutes = ['rectifiers.index'];
-        foreach ($extraRoutes as $route) {
-            foreach ($actions as $action) {
-                Permission::create([
-                    'name' => "{$route}.{$action}",
-                    'guard_name' => 'web',
-                    'menu_id' => null, // null karena bukan menu utama di sidebar
-                ]);
-            }
-        }
-
+        // Bootstrap: super_admin otomatis dapat SEMUA permission
         $superAdmin = Role::where('name', 'super_admin')->first();
         $superAdmin->syncPermissions(Permission::all());
     }

@@ -37,6 +37,68 @@
     box-shadow: 0 4px 10px rgba(13, 92, 158, 0.2);
 }
 
+/* Table Container — Seragam dengan Manajemen User */
+.table-container {
+    background: #fff;
+    border-radius: 16px;
+    overflow-x: auto;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    border: 1px solid #E2E8F0;
+}
+
+/* Tabel — mengikuti gaya Manajemen User */
+.access-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.access-table thead th {
+    background: #EAF4FC;
+    color: #003B73;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid #D6E4F0;
+    white-space: nowrap;
+}
+
+.access-table tbody td {
+    padding: 16px;
+    font-size: 13px;
+    color: #475569;
+    border-bottom: 1px solid #EEF2F7;
+    vertical-align: middle;
+}
+
+.access-table tbody tr {
+    transition: background-color 0.25s ease;
+}
+
+.access-table tbody tr:hover {
+    background: #F8FBFF;
+}
+
+.access-empty {
+    text-align: center;
+    padding: 24px;
+    color: #94a3b8;
+}
+
+.access-back-link {
+    color: #64748b;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.access-back-link:hover {
+    color: #1e293b;
+}
+
 .access-header h1 {
     font-size: 1.25rem;
     font-weight: 600;
@@ -49,6 +111,13 @@
     color: #64748b;
     margin: 0;
     font-weight: 500;
+}
+
+/* Permission Count Text */
+.permission-count {
+    font-size: 13px;
+    font-weight: 600;
+    color: #0066DC;
 }
 
 /* Role badge di halaman index */
@@ -67,26 +136,31 @@
 }
 
 .btn-atur-akses {
-    background-color: #1E8AE2;
-    color: #fff;
-    border: 1px solid #1E8AE2;
-    padding: 6px 16px;
-    border-radius: 6px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-decoration: none;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
+    min-width: 95px;
+    height: 34px;
+    padding: 0 16px;
+    background: linear-gradient(135deg, #0086FF, #005BD4);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.25s ease;
+    text-decoration: none;
+    box-shadow: 0 2px 6px rgba(0, 91, 212, 0.15);
 }
 
 .btn-atur-akses:hover {
-    background-color: #166bb5;
-    border-color: #166bb5;
-    color: #fff;
+    background: linear-gradient(135deg, #0078E8, #0052C2);
     transform: translateY(-1px);
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 91, 212, 0.25);
 }
 
 /* --- Halaman Edit --- */

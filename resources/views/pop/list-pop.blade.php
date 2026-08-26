@@ -16,15 +16,40 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 
     <style>
-        svg.w-5.h-5 { width: 16px; height: 16px; }
-        .hidden { display: none !important; }
+        svg.w-5.h-5 {
+            width: 16px;
+            height: 16px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
 
         /* Kustomisasi SweetAlert2 agar sesuai font & tema web */
-        .swal-popup-custom   { font-family: 'Poppins', sans-serif; border-radius: 16px !important; }
-        .swal-title-custom   { font-size: 1.15rem !important; font-weight: 700 !important; color: #111827 !important; }
-        .swal-html-custom    { font-size: 0.875rem !important; color: #6b7280 !important; line-height: 1.6 !important; }
+        .swal-popup-custom {
+            font-family: 'Poppins', sans-serif;
+            border-radius: 16px !important;
+        }
+
+        .swal-title-custom {
+            font-size: 1.15rem !important;
+            font-weight: 700 !important;
+            color: #111827 !important;
+        }
+
+        .swal-html-custom {
+            font-size: 0.875rem !important;
+            color: #6b7280 !important;
+            line-height: 1.6 !important;
+        }
+
         .swal-btn-confirm,
-        .swal-btn-cancel     { font-family: 'Poppins', sans-serif !important; font-weight: 600 !important; border-radius: 8px !important; padding: 10px 20px !important; }
+        .swal-btn-cancel {
+            font-family: 'Poppins', sans-serif !important;
+            font-weight: 600 !important;
+            border-radius: 8px !important;
+            padding: 10px 20px !important;
+        }
     </style>
 </head>
 
@@ -41,7 +66,6 @@
             <x-topbar />
 
             <div class="pop-content">
-
                 <!-- PAGE TITLE -->
                 <div class="pop-header" style="display: flex; justify-content: space-between; align-items: center;">
                     <div class="pop-title-wrapper" style="display: flex; align-items: center; gap: 15px;">
@@ -49,7 +73,7 @@
                             <i class="bi bi-geo-alt-fill"></i>
                         </div>
                         <div>
-                            <h1>List POP</h1>
+                            <h1>Point of Presence (POP)</h1>
                             <p>List Point of Presence</p>
                         </div>
                     </div>
@@ -61,15 +85,10 @@
                     @endcan
                 </div>
 
-                {{-- Flash message sukses/error setelah redirect --}}
-                @if(session('success'))
-                    <div style="background:#dcfce7; border:1px solid #86efac; border-radius:8px; padding:12px 16px; margin-bottom:16px; font-size:0.875rem; color:#166534; display:flex; align-items:center; gap:8px;">
-                        <i class="bi bi-check-circle-fill"></i>
-                        {{ session('success') }}
-                    </div>
-                @endif
-                @if(session('error'))
-                    <div style="background:#fee2e2; border:1px solid #fca5a5; border-radius:8px; padding:12px 16px; margin-bottom:16px; font-size:0.875rem; color:#B91C1C; display:flex; align-items:center; gap:8px;">
+                {{-- Flash message error setelah redirect --}}
+                @if (session('error'))
+                    <div
+                        style="background:#fee2e2; border:1px solid #fca5a5; border-radius:8px; padding:12px 16px; margin-bottom:16px; font-size:0.875rem; color:#B91C1C; display:flex; align-items:center; gap:8px;">
                         <i class="bi bi-exclamation-triangle-fill"></i>
                         {{ session('error') }}
                     </div>
@@ -79,17 +98,18 @@
                     <div class="search-wrapper">
                         <i class="bi bi-search search-icon"></i>
                         <input type="text" id="searchPOP" name="search" class="search-input"
-                            placeholder="Cari data..."
-                            value="{{ request('search') }}">
+                            placeholder="Cari data..." value="{{ request('search') }}">
                     </div>
                     <div class="filter-wrapper">
                         <label class="filter-label">Filter harus dipilih <span>*</span></label>
                         <select id="mainFilter" name="filter" class="filter-control"
                             onchange="document.getElementById('searchForm').submit()">
-                            <option value="Rectifier" {{ request('filter', 'Rectifier') == 'Rectifier' ? 'selected' : '' }}>Rectifier</option>
-                            <option value="kWh"       {{ request('filter') == 'kWh'       ? 'selected' : '' }}>kWh</option>
-                            <option value="Battery"   {{ request('filter') == 'Battery'   ? 'selected' : '' }}>Battery</option>
-                            <option value="AC"        {{ request('filter') == 'AC'        ? 'selected' : '' }}>AC</option>
+                            <option value="Rectifier"
+                                {{ request('filter', 'Rectifier') == 'Rectifier' ? 'selected' : '' }}>Rectifier</option>
+                            <option value="kWh" {{ request('filter') == 'kWh' ? 'selected' : '' }}>kWh</option>
+                            <option value="Battery" {{ request('filter') == 'Battery' ? 'selected' : '' }}>Battery
+                            </option>
+                            <option value="AC" {{ request('filter') == 'AC' ? 'selected' : '' }}>AC</option>
                         </select>
                     </div>
                 </form>
@@ -133,8 +153,8 @@
 
                                             @can('pops.index.delete')
                                                 <button type="button" title="Hapus POP"
-                                                        onclick="openDeleteModal('{{ route('pops.destroy', $pop->id) }}', '{{ $pop->nama_pop }}')" class="btn-hapus"><i
-                                                        class="bi bi-trash3-fill"></i></button>
+                                                    onclick="openDeleteModal('{{ route('pops.destroy', $pop->id) }}', '{{ $pop->nama_pop }}')"
+                                                    class="btn-hapus"><i class="bi bi-trash3-fill"></i></button>
                                             @endcan
 
                                         </div>
@@ -163,7 +183,7 @@
             </div>
         </main>
     </div>
-    
+
     {{-- Hidden form untuk submit DELETE — action diisi oleh SweetAlert2 --}}
     <form id="deleteForm" method="POST" style="display:none;">
         @csrf
@@ -171,7 +191,6 @@
     </form>
 
     <script>
-
         // FUNGSI DETAIL POP DINAMIS BERDASARKAN FILTER
         function lihatPOP(idPOP) {
             const filterValue = document.getElementById('mainFilter').value;
@@ -231,13 +250,33 @@
     </script>
     <style>
         /* Kustomisasi SweetAlert2 agar sesuai font & tema web */
-        .swal-popup-custom { font-family: 'Poppins', sans-serif; border-radius: 16px !important; }
-        .swal-title-custom { font-size: 1.15rem !important; font-weight: 700 !important; color: #111827 !important; }
-        .swal-html-custom { font-size: 0.875rem !important; color: #6b7280 !important; line-height: 1.6 !important; }
+        .swal-popup-custom {
+            font-family: 'Poppins', sans-serif;
+            border-radius: 16px !important;
+        }
+
+        .swal-title-custom {
+            font-size: 1.15rem !important;
+            font-weight: 700 !important;
+            color: #111827 !important;
+        }
+
+        .swal-html-custom {
+            font-size: 0.875rem !important;
+            color: #6b7280 !important;
+            line-height: 1.6 !important;
+        }
+
         .swal-btn-confirm,
-        .swal-btn-cancel { font-family: 'Poppins', sans-serif !important; font-weight: 600 !important; border-radius:
-        8px !important; padding: 10px 20px !important; }
-        </style>
+        .swal-btn-cancel {
+            font-family: 'Poppins', sans-serif !important;
+            font-weight: 600 !important;
+            border-radius:
+                8px !important;
+            padding: 10px 20px !important;
+        }
+    </style>
 </body>
 
 </html>
+

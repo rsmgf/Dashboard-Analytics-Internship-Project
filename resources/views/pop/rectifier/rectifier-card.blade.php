@@ -9,106 +9,115 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
 
-    @vite([
-        'resources/css/sidebar.css',
-        'resources/css/card.css'
-    ])
+    @vite(['resources/css/sidebar.css', 'resources/css/rectifier-card.css'])
 </head>
 
 <body>
-<div class="app-container">
+    <div class="app-container">
 
-    {{-- SIDEBAR COMPONENT --}}
-    <x-sidebar />
-    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+        {{-- SIDEBAR COMPONENT --}}
+        <x-sidebar />
+        <div id="sidebarOverlay" class="sidebar-overlay"></div>
 
-    <main class="main-content">
+        <main class="main-content">
 
-        {{-- TOPBAR COMPONENT --}}
-        <x-topbar />
+            {{-- TOPBAR COMPONENT --}}
+            <x-topbar />
 
-        <div class="content">
-
-            {{-- Header: Info POP + Tombol Tambah --}}
-            <div class="page-header">
-                <div class="page-info">
-                    <a href="{{ route('pops.index') }}" class="back-button" title="Kembali ke List POP">
-                        <i class="bi bi-arrow-left"></i>
-                    </a>
-                    <div>
-                        <span class="rectifier-pop-name">{{ $pop->nama_pop }}</span>
-                        <span class="rectifier-pop-sub">{{ $pop->kota_kabupaten }}, {{ $pop->provinsi }} &mdash; {{ $rectifiers->count() }} Rectifier</span>
+            <div class="rectifier-content">
+                {{-- Header: Back Button + Breadcrumb As Title + Tombol Tambah --}}
+                <div class="rectifier-page-header">
+                    <div class="rectifier-page-info">
+                        <a href="{{ route('pops.index') }}" class="back-button" title="Kembali ke List POP">
+                            <i class="bi bi-arrow-left"></i>
+                        </a>
+                        <div class="rectifier-header-text">
+                            <x-breadcrumb :items="[
+                                ['label' => 'POP', 'route' => 'pops.index'],
+                                ['label' => $pop->nama_pop]
+                            ]" />
+                            <span class="rectifier-pop-sub">Kode: <strong>{{ $pop->kode_pop }}</strong> &middot; {{ $pop->kota_kabupaten }}, {{ $pop->provinsi }} &mdash;
+                                {{ $rectifiers->count() }} Rectifier</span>
+                        </div>
                     </div>
+
+                    @can('rectifiers.index.create')
+                        <a href="{{ route('rectifiers.create', $pop->id) }}" class="btn-tambah-rectifier">
+                            <i class="bi bi-plus-lg"></i> Tambah Rectifier
+                        </a>
+                    @endcan
                 </div>
 
-                @can('rectifiers.index.create')
-                    <a href="{{ route('rectifiers.create', $pop->id) }}" class="btn-tambah-rectifier">
-                        <i class="bi bi-plus-lg"></i> Tambah
-                    </a>
-                @endcan
-            </div>
+                {{-- Rectifier Grid --}}
+                <div class="rectifier-grid">
+                    @forelse ($rectifiers as $rectifier)
+                        <div class="rectifier-card">
+                            {{-- Header --}}
+                            <div class="rectifier-card-header">
+                                <div class="checklist-icon">
+                                    <i class="bi bi-file-earmark-text-fill"></i>
+                                </div>
 
-            {{-- Rectifier Grid --}}
-            <div class="grid">
-                @forelse ($rectifiers as $rectifier)
-                    <div class="card">
-                        {{-- Header --}}
-                        <div class="card-header">
-                            <div class="checklist-icon">
-                                <i class="bi bi-file-earmark-text-fill"></i>
+                                <div class="checklist-title">
+                                    <h3>Checklist Rectifier</h3>
+                                    <p>{{ $rectifier->nama_alias ?? 'Data Rectifier' }}</p>
+                                </div>
+
+                                <span class="rectifier-number">
+                                    Rectifier #{{ $loop->iteration }}
+                                </span>
                             </div>
 
-                            <div class="checklist-title">
-                                <h3>Checklist Rectifier</h3>
-                                <p>{{ $rectifier->nama_alias ?? 'Data Rectifier' }}</p>
+                            {{-- Information --}}
+                            <div class="rectifier-information">
+                                <div class="equipment-info">{{ $rectifier->merk ?? '-' }}</div>
+                                <div class="equipment-info">{{ $rectifier->type ?? '-' }}</div>
+                                <div class="equipment-info serial">{{ $rectifier->sn_rectifier ?? '-' }}</div>
                             </div>
 
-                            <span class="number">
-                                Rectifier #{{ $loop->iteration }}
-                            </span>
-                        </div>
+                            {{-- Meta: PIC & Tanggal Pemeriksaan --}}
+                            <div class="rectifier-meta">
+                                <div class="meta-item">
+                                    <i class="bi bi-person-fill"></i>
+                                    <span>{{ $rectifier->pic ?? '-' }}</span>
+                                </div>
 
-                        {{-- Information --}}
-                        <div class="information">
-                           <div class="equipment-info"><strong>Merk :</strong> {{ $rectifier->merk ?? '-' }}</div>
-                           <div class="equipment-info"><strong>Type :</strong> {{ $rectifier->type ?? '-' }}</div>
-                           <div class="equipment-info serial"><strong>SN :</strong> {{ $rectifier->sn_rectifier ?? '-' }}</div>
-                        </div>
-
-                        {{-- Meta --}}
-                        <div class="meta">
-                            <div class="meta-item">
-                                <i class="bi bi-calendar-fill"></i>
-                                <span>{{ $rectifier->updated_at ? $rectifier->updated_at->format('d M Y') : '-' }}</span>
+                                <div class="meta-item">
+                                    <i class="bi bi-calendar-fill"></i>
+                                    <span>{{ $rectifier->tanggal_pemeriksaan ? \Carbon\Carbon::parse($rectifier->tanggal_pemeriksaan)->format('d M Y') : '-' }}</span>
+                                </div>
                             </div>
 
-                            <div class="meta-item">
-                                <i class="bi bi-geo-alt-fill"></i>
-                                <span>{{ $pop->kota_kabupaten }}</span>
+                            {{-- Last Updated --}}
+                            <div class="rectifier-last-updated">
+                                <i class="bi bi-clock-history"></i>
+                                <span>
+                                    @if($rectifier->diupdateOleh)
+                                        {{ $rectifier->diupdateOleh->name }} &middot; {{ $rectifier->updated_at->format('d M Y, H:i') }}
+                                    @else
+                                        Belum ada pembaruan
+                                    @endif
+                                </span>
                             </div>
-                        </div>
 
-                        {{-- Footer --}}
-                        <div class="card-footer">
-
-                            <button type="button" class="btn-hapus" onclick="alert('Tombol Hapus diklik')">
-                                <i class="bi bi-trash-fill"></i> Hapus
-                            </button>
+                            {{-- Footer --}}
+                            <div class="rectifier-card-footer">
                                 <a href="{{ route('rectifiers.show', [$pop->id, $rectifier->id]) }}" class="detail-button">
                                     <span>Detail</span>
                                     <i class="bi bi-chevron-right"></i>
                                 </a>
+                            </div>
                         </div>
                     @empty
-                    <div style="grid-column:1/-1; text-align:center; padding:40px; color:#64748b;">
-                        <i class="bi bi-inbox" style="font-size:2rem; display:block; margin-bottom:12px;"></i>
-                        Belum ada data Rectifier untuk POP ini.
-                    </div>
-                @endforelse
+                        <div style="grid-column:1/-1; text-align:center; padding:40px; color:#64748b;">
+                            <i class="bi bi-inbox" style="font-size:2rem; display:block; margin-bottom:12px;"></i>
+                            Belum ada data Rectifier untuk POP ini.
+                        </div>
+                    @endforelse
+                </div>
             </div>
-        </div>
-    </main>
-</div>
+        </main>
+    </div>
 </body>
-
 </html>
+
