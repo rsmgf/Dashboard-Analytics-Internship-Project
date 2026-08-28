@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah KWH - PLN Icon Plus</title>
+    <title>Edit KWH - PLN Icon Plus</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
@@ -30,20 +30,21 @@
 
             {{-- HEADER BAR: Back + Breadcrumb As Title --}}
             <div class="rform-header-bar">
-                <a href="{{ route('kwh.card') }}" class="rform-back" title="Kembali ke List KWH">
+                <a href="{{ route('kwh.detail') }}" class="rform-back" title="Kembali ke Detail KWH">
                     <i class="bi bi-arrow-left"></i>
                 </a>
                 <div class="rform-header-text">
                     <x-breadcrumb :items="[
                         ['label' => 'POP', 'route' => 'pops.index'],
                         ['label' => 'POP Jambi Kota', 'route' => 'kwh.card'],
-                        ['label' => 'Tambah KWH'],
+                        ['label' => 'KWH Utama - iEM3255', 'route' => 'kwh.detail'],
+                        ['label' => 'Edit KWH'],
                     ]" />
                     <p class="rform-page-sub">Kode POP: <strong>POP_1MBN10004</strong> &middot; Jambi Kota, Jambi</p>
                 </div>
             </div>
 
-            <form id="kwhForm" action="{{ route('kwh.card') }}" method="GET" enctype="multipart/form-data">
+            <form id="kwhEditForm" action="{{ route('kwh.detail') }}" method="GET" enctype="multipart/form-data">
 
                 {{-- ===============================================
                      SECTION 1 — General Information
@@ -62,29 +63,29 @@
 
                             <div class="rform-group">
                                 <label class="rform-label">Building <span class="rform-required">*</span></label>
-                                <input type="text" class="rform-input" placeholder="Contoh: POP-SB" required>
+                                <input type="text" class="rform-input" value="POP-SB" required>
                             </div>
 
                             <div class="rform-group">
                                 <label class="rform-label">PIC / Petugas <span class="rform-required">*</span></label>
-                                <input type="text" class="rform-input" placeholder="Masukkan nama PIC" required>
+                                <input type="text" class="rform-input" value="40 D AC / 13 A AC" required>
                             </div>
                         </div>
 
                         <div class="rform-row rform-row-3">
                             <div class="rform-group">
                                 <label class="rform-label">Type POP <span class="rform-required">*</span></label>
-                                <input type="text" class="rform-input" placeholder="Contoh: POP-SB" required>
+                                <input type="text" class="rform-input" value="POP-SB" required>
                             </div>
 
                             <div class="rform-group">
                                 <label class="rform-label">ID Customer (PLN) <span class="rform-required">*</span></label>
-                                <input type="text" class="rform-input" placeholder="Masukkan ID Customer PLN" required>
+                                <input type="text" class="rform-input" value="1431011655492" required>
                             </div>
 
                             <div class="rform-group">
                                 <label class="rform-label">Tanggal Pemeriksaan <span class="rform-required">*</span></label>
-                                <input type="date" class="rform-input" value="{{ date('Y-m-d') }}" required>
+                                <input type="date" class="rform-input" value="2026-08-17" required>
                             </div>
                         </div>
                     </div>
@@ -102,12 +103,12 @@
                         <div class="rform-row rform-row-4">
                             <div class="rform-group">
                                 <label class="rform-label">Daya (PS GI) <span class="rform-required">*</span></label>
-                                <input type="text" class="rform-input" placeholder="Contoh: 33.000 VA" required>
+                                <input type="text" class="rform-input" value="33.000 VA" required>
                             </div>
 
                             <div class="rform-group">
                                 <label class="rform-label">MCB Utama <span class="rform-required">*</span></label>
-                                <input type="text" class="rform-input" placeholder="Contoh: 50A x 3 (150 A) / ABB" required>
+                                <input type="text" class="rform-input" value="50A x 3 (150 A) / ABB" required>
                             </div>
 
                             <div class="rform-group">
@@ -130,7 +131,7 @@
                         <div class="rform-row rform-row-2">
                             <div class="rform-group">
                                 <label class="rform-label">Merk / Type Arrester <span class="rform-required">*</span></label>
-                                <input type="text" class="rform-input" placeholder="Contoh: OBO / OBO Bettermann V20-C" required>
+                                <input type="text" class="rform-input" value="OBO" required>
                             </div>
 
                             <div class="rform-group">
@@ -169,14 +170,14 @@
                                         <td><strong>R - N</strong></td>
                                         <td>
                                             <div class="input-with-unit">
-                                                <input type="text" class="rform-input" placeholder="211.5" required>
+                                                <input type="text" class="rform-input" value="211.5" required>
                                                 <span class="unit-text">Vac</span>
                                             </div>
                                         </td>
                                         <td><strong>R</strong></td>
                                         <td>
                                             <div class="input-with-unit">
-                                                <input type="text" class="rform-input" placeholder="20.1" required>
+                                                <input type="text" class="rform-input" value="20.1" required>
                                                 <span class="unit-text">A</span>
                                             </div>
                                         </td>
@@ -185,14 +186,14 @@
                                         <td><strong>S - N</strong></td>
                                         <td>
                                             <div class="input-with-unit">
-                                                <input type="text" class="rform-input" placeholder="213.5" required>
+                                                <input type="text" class="rform-input" value="213.5" required>
                                                 <span class="unit-text">Vac</span>
                                             </div>
                                         </td>
                                         <td><strong>S</strong></td>
                                         <td>
                                             <div class="input-with-unit">
-                                                <input type="text" class="rform-input" placeholder="14.8" required>
+                                                <input type="text" class="rform-input" value="14.8" required>
                                                 <span class="unit-text">A</span>
                                             </div>
                                         </td>
@@ -201,14 +202,14 @@
                                         <td><strong>T - N</strong></td>
                                         <td>
                                             <div class="input-with-unit">
-                                                <input type="text" class="rform-input" placeholder="204.6" required>
+                                                <input type="text" class="rform-input" value="204.6" required>
                                                 <span class="unit-text">Vac</span>
                                             </div>
                                         </td>
                                         <td><strong>T</strong></td>
                                         <td>
                                             <div class="input-with-unit">
-                                                <input type="text" class="rform-input" placeholder="22.8" required>
+                                                <input type="text" class="rform-input" value="22.8" required>
                                                 <span class="unit-text">A</span>
                                             </div>
                                         </td>
@@ -217,7 +218,7 @@
                                         <td><strong>R - S</strong></td>
                                         <td>
                                             <div class="input-with-unit">
-                                                <input type="text" class="rform-input" placeholder="371.5" required>
+                                                <input type="text" class="rform-input" value="371.5" required>
                                                 <span class="unit-text">Vac</span>
                                             </div>
                                         </td>
@@ -228,7 +229,7 @@
                                         <td><strong>S - T</strong></td>
                                         <td>
                                             <div class="input-with-unit">
-                                                <input type="text" class="rform-input" placeholder="360.8" required>
+                                                <input type="text" class="rform-input" value="360.8" required>
                                                 <span class="unit-text">Vac</span>
                                             </div>
                                         </td>
@@ -239,7 +240,7 @@
                                         <td><strong>R - T</strong></td>
                                         <td>
                                             <div class="input-with-unit">
-                                                <input type="text" class="rform-input" placeholder="358.2" required>
+                                                <input type="text" class="rform-input" value="358.2" required>
                                                 <span class="unit-text">Vac</span>
                                             </div>
                                         </td>
@@ -250,7 +251,7 @@
                                         <td><strong>N - G</strong></td>
                                         <td>
                                             <div class="input-with-unit">
-                                                <input type="text" class="rform-input" placeholder="0.4" required>
+                                                <input type="text" class="rform-input" value="0.4" required>
                                                 <span class="unit-text">Vac</span>
                                             </div>
                                         </td>
@@ -264,12 +265,12 @@
                         <div class="rform-row rform-row-2 kwh-totals-row">
                             <div class="rform-group">
                                 <label class="rform-label">Total Daya Terpakai (VA) <span class="rform-required">*</span></label>
-                                <input type="text" class="rform-input" placeholder="Contoh: 4930.5" required>
+                                <input type="text" class="rform-input" value="4930.5" required>
                             </div>
 
                             <div class="rform-group">
                                 <label class="rform-label">Total Beban (A) <span class="rform-required">*</span></label>
-                                <input type="text" class="rform-input" placeholder="Contoh: 57.7" required>
+                                <input type="text" class="rform-input" value="57.7" required>
                             </div>
                         </div>
                     </div>
@@ -351,40 +352,136 @@
                             <span class="rform-section-step">5</span>
                             Dokumentasi Foto KWH
                         </div>
-                        <span id="kwhPhotoCountBadge" class="photo-count-badge">
-                            <i class="bi bi-images"></i> Total: 1 Foto
+                        <span id="kwhEditPhotoCountBadge" class="photo-count-badge">
+                            <i class="bi bi-images"></i> Total: 5 Foto
                         </span>
                     </div>
                     <div class="rform-section-body">
                         
                         {{-- Dynamic Photo Cards Grid --}}
-                        <div id="kwhPhotoCardsGrid" class="kwh-photo-cards-grid">
+                        <div id="kwhEditPhotoCardsGrid" class="kwh-photo-cards-grid">
                             
-                            {{-- Foto 1 (Default) --}}
-                            <div class="kwh-photo-card" id="photoCard-0">
+                            {{-- Foto 1 --}}
+                            <div class="kwh-photo-card" id="photoCardEdit-0">
                                 <div class="kwh-photo-card-header">
                                     <span class="kwh-photo-card-title">Foto 1</span>
-                                    <button type="button" class="btn-photo-remove" onclick="removePhotoCard(0)" title="Hapus foto ini">
+                                    <button type="button" class="btn-photo-remove" onclick="removePhotoCardEdit(0)" title="Hapus foto ini">
                                         <i class="bi bi-trash3-fill"></i>
                                     </button>
                                 </div>
                                 <div class="kwh-photo-card-body">
                                     <div class="kwh-photo-preview-box">
-                                        <div class="kwh-photo-empty" id="photoEmpty-0">
-                                            <i class="bi bi-image"></i>
-                                            <small>Belum ada foto</small>
-                                        </div>
-                                        <img id="photoPreview-0" class="kwh-photo-img" style="display: none;" alt="Preview Foto" onclick="openKwhLightbox(this.src, document.querySelector('#photoCard-0 input[type=text]')?.value || 'Foto 1')">
+                                        <img id="photoPreviewEdit-0" src="{{ asset('images/kwh/tampak-kwh.jpg') }}" class="kwh-photo-img" onerror="this.src='https://placehold.co/400x300/f1f5f9/94a3b8?text=Tampak+KWh'" alt="Preview Foto 1" onclick="openKwhLightbox(this.src, 'Tampak KWh')">
                                     </div>
                                     <div class="kwh-photo-upload-action">
-                                        <label for="photoInput-0" class="btn-kwh-browse">
-                                            <i class="bi bi-camera-fill"></i> Pilih Foto
+                                        <label for="photoInputEdit-0" class="btn-kwh-browse">
+                                            <i class="bi bi-arrow-repeat"></i> Ganti Foto
                                         </label>
-                                        <input type="file" id="photoInput-0" accept="image/jpeg,image/png,image/jpg,image/webp" onchange="previewDynamicPhoto(this, 0)" hidden>
+                                        <input type="file" id="photoInputEdit-0" accept="image/jpeg,image/png,image/jpg,image/webp" onchange="previewDynamicPhotoEdit(this, 0)" hidden>
                                     </div>
                                     <div class="rform-group" style="margin-top: 6px;">
                                         <label class="rform-label" style="font-size: 0.76rem;">Keterangan Foto <span class="rform-required">*</span></label>
-                                        <input type="text" class="rform-input" placeholder="Contoh: Tampak KWh Utama" required>
+                                        <input type="text" class="rform-input" value="Tampak KWh" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Foto 2 --}}
+                            <div class="kwh-photo-card" id="photoCardEdit-1">
+                                <div class="kwh-photo-card-header">
+                                    <span class="kwh-photo-card-title">Foto 2</span>
+                                    <button type="button" class="btn-photo-remove" onclick="removePhotoCardEdit(1)" title="Hapus foto ini">
+                                        <i class="bi bi-trash3-fill"></i>
+                                    </button>
+                                </div>
+                                <div class="kwh-photo-card-body">
+                                    <div class="kwh-photo-preview-box">
+                                        <img id="photoPreviewEdit-1" src="{{ asset('images/kwh/kwh-meter.jpg') }}" class="kwh-photo-img" onerror="this.src='https://placehold.co/400x300/f1f5f9/94a3b8?text=KWh+Meter'" alt="Preview Foto 2" onclick="openKwhLightbox(this.src, 'KWh Meter')">
+                                    </div>
+                                    <div class="kwh-photo-upload-action">
+                                        <label for="photoInputEdit-1" class="btn-kwh-browse">
+                                            <i class="bi bi-arrow-repeat"></i> Ganti Foto
+                                        </label>
+                                        <input type="file" id="photoInputEdit-1" accept="image/jpeg,image/png,image/jpg,image/webp" onchange="previewDynamicPhotoEdit(this, 1)" hidden>
+                                    </div>
+                                    <div class="rform-group" style="margin-top: 6px;">
+                                        <label class="rform-label" style="font-size: 0.76rem;">Keterangan Foto <span class="rform-required">*</span></label>
+                                        <input type="text" class="rform-input" value="KWh Meter" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Foto 3 --}}
+                            <div class="kwh-photo-card" id="photoCardEdit-2">
+                                <div class="kwh-photo-card-header">
+                                    <span class="kwh-photo-card-title">Foto 3</span>
+                                    <button type="button" class="btn-photo-remove" onclick="removePhotoCardEdit(2)" title="Hapus foto ini">
+                                        <i class="bi bi-trash3-fill"></i>
+                                    </button>
+                                </div>
+                                <div class="kwh-photo-card-body">
+                                    <div class="kwh-photo-preview-box">
+                                        <img id="photoPreviewEdit-2" src="{{ asset('images/kwh/mcb-kwh.jpg') }}" class="kwh-photo-img" onerror="this.src='https://placehold.co/400x300/f1f5f9/94a3b8?text=MCB+KWh'" alt="Preview Foto 3" onclick="openKwhLightbox(this.src, 'Tampak MCB KWh')">
+                                    </div>
+                                    <div class="kwh-photo-upload-action">
+                                        <label for="photoInputEdit-2" class="btn-kwh-browse">
+                                            <i class="bi bi-arrow-repeat"></i> Ganti Foto
+                                        </label>
+                                        <input type="file" id="photoInputEdit-2" accept="image/jpeg,image/png,image/jpg,image/webp" onchange="previewDynamicPhotoEdit(this, 2)" hidden>
+                                    </div>
+                                    <div class="rform-group" style="margin-top: 6px;">
+                                        <label class="rform-label" style="font-size: 0.76rem;">Keterangan Foto <span class="rform-required">*</span></label>
+                                        <input type="text" class="rform-input" value="Tampak MCB KWh" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Foto 4 --}}
+                            <div class="kwh-photo-card" id="photoCardEdit-3">
+                                <div class="kwh-photo-card-header">
+                                    <span class="kwh-photo-card-title">Foto 4</span>
+                                    <button type="button" class="btn-photo-remove" onclick="removePhotoCardEdit(3)" title="Hapus foto ini">
+                                        <i class="bi bi-trash3-fill"></i>
+                                    </button>
+                                </div>
+                                <div class="kwh-photo-card-body">
+                                    <div class="kwh-photo-preview-box">
+                                        <img id="photoPreviewEdit-3" src="{{ asset('images/kwh/mcb-kwh-2.jpg') }}" class="kwh-photo-img" onerror="this.src='https://placehold.co/400x300/f1f5f9/94a3b8?text=MCB+KWh+2'" alt="Preview Foto 4" onclick="openKwhLightbox(this.src, 'MCB KWh (Tampak Dalam)')">
+                                    </div>
+                                    <div class="kwh-photo-upload-action">
+                                        <label for="photoInputEdit-3" class="btn-kwh-browse">
+                                            <i class="bi bi-arrow-repeat"></i> Ganti Foto
+                                        </label>
+                                        <input type="file" id="photoInputEdit-3" accept="image/jpeg,image/png,image/jpg,image/webp" onchange="previewDynamicPhotoEdit(this, 3)" hidden>
+                                    </div>
+                                    <div class="rform-group" style="margin-top: 6px;">
+                                        <label class="rform-label" style="font-size: 0.76rem;">Keterangan Foto <span class="rform-required">*</span></label>
+                                        <input type="text" class="rform-input" value="MCB KWh (Tampak Dalam)" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Foto 5 --}}
+                            <div class="kwh-photo-card" id="photoCardEdit-4">
+                                <div class="kwh-photo-card-header">
+                                    <span class="kwh-photo-card-title">Foto 5</span>
+                                    <button type="button" class="btn-photo-remove" onclick="removePhotoCardEdit(4)" title="Hapus foto ini">
+                                        <i class="bi bi-trash3-fill"></i>
+                                    </button>
+                                </div>
+                                <div class="kwh-photo-card-body">
+                                    <div class="kwh-photo-preview-box">
+                                        <img id="photoPreviewEdit-4" src="{{ asset('images/kwh/pengukuran.jpg') }}" class="kwh-photo-img" onerror="this.src='https://placehold.co/400x300/f1f5f9/94a3b8?text=Pengukuran+KWh'" alt="Preview Foto 5" onclick="openKwhLightbox(this.src, 'Pengukuran KWh')">
+                                    </div>
+                                    <div class="kwh-photo-upload-action">
+                                        <label for="photoInputEdit-4" class="btn-kwh-browse">
+                                            <i class="bi bi-arrow-repeat"></i> Ganti Foto
+                                        </label>
+                                        <input type="file" id="photoInputEdit-4" accept="image/jpeg,image/png,image/jpg,image/webp" onchange="previewDynamicPhotoEdit(this, 4)" hidden>
+                                    </div>
+                                    <div class="rform-group" style="margin-top: 6px;">
+                                        <label class="rform-label" style="font-size: 0.76rem;">Keterangan Foto <span class="rform-required">*</span></label>
+                                        <input type="text" class="rform-input" value="Pengukuran KWh" required>
                                     </div>
                                 </div>
                             </div>
@@ -393,7 +490,7 @@
 
                         {{-- Tombol Tambah Foto --}}
                         <div style="margin-top: 18px;">
-                            <button type="button" class="rform-btn-add-module" onclick="addPhotoCard()">
+                            <button type="button" class="rform-btn-add-module" onclick="addPhotoCardEdit()">
                                 <i class="bi bi-plus-lg"></i> Tambah Foto
                             </button>
                         </div>
@@ -417,12 +514,12 @@
                 </div>
 
                 {{-- ===============================================
-                     FORM ACTIONS: Reset & Simpan
+                     FORM ACTIONS: Reset & Perbarui
                 ================================================ --}}
                 <div class="rform-actions">
-                    <button type="button" class="rform-btn-reset" onclick="resetKwhForm()">Reset</button>
+                    <button type="button" class="rform-btn-reset" onclick="resetKwhEditForm()">Reset</button>
                     <button type="submit" class="rform-btn-simpan">
-                        <i class="bi bi-check-lg"></i> Simpan
+                        <i class="bi bi-check-lg"></i> Perbarui
                     </button>
                 </div>
 
@@ -432,9 +529,9 @@
 </div>
 
 <script>
-    let photoIndexCounter = 1;
+    let photoEditCounter = 5;
 
-    function previewDynamicPhoto(input, idx) {
+    function previewDynamicPhotoEdit(input, idx) {
         const file = input.files[0];
         if (!file) return;
 
@@ -451,58 +548,56 @@
 
         const reader = new FileReader();
         reader.onload = function (e) {
-            const img = document.getElementById('photoPreview-' + idx);
-            const empty = document.getElementById('photoEmpty-' + idx);
-            if (img && empty) {
+            const img = document.getElementById('photoPreviewEdit-' + idx);
+            if (img) {
                 img.src = e.target.result;
                 img.style.display = 'block';
-                empty.style.display = 'none';
             }
         };
         reader.readAsDataURL(file);
     }
 
-    function addPhotoCard() {
-        const grid = document.getElementById('kwhPhotoCardsGrid');
-        const idx = photoIndexCounter++;
+    function addPhotoCardEdit() {
+        const grid = document.getElementById('kwhEditPhotoCardsGrid');
+        const idx = photoEditCounter++;
         const currentCount = grid.querySelectorAll('.kwh-photo-card').length + 1;
 
         const card = document.createElement('div');
         card.className = 'kwh-photo-card';
-        card.id = 'photoCard-' + idx;
+        card.id = 'photoCardEdit-' + idx;
         card.innerHTML = `
             <div class="kwh-photo-card-header">
                 <span class="kwh-photo-card-title">Foto ${currentCount}</span>
-                <button type="button" class="btn-photo-remove" onclick="removePhotoCard(${idx})" title="Hapus foto ini">
+                <button type="button" class="btn-photo-remove" onclick="removePhotoCardEdit(${idx})" title="Hapus foto ini">
                     <i class="bi bi-trash3-fill"></i>
                 </button>
             </div>
             <div class="kwh-photo-card-body">
                 <div class="kwh-photo-preview-box">
-                    <div class="kwh-photo-empty" id="photoEmpty-${idx}">
+                    <div class="kwh-photo-empty" id="photoEmptyEdit-${idx}">
                         <i class="bi bi-image"></i>
                         <small>Belum ada foto</small>
                     </div>
-                    <img id="photoPreview-${idx}" class="kwh-photo-img" style="display: none;" alt="Preview Foto" onclick="openKwhLightbox(this.src, document.querySelector('#photoCard-${idx} input[type=text]')?.value || 'Foto ${currentCount}')">
+                    <img id="photoPreviewEdit-${idx}" class="kwh-photo-img" style="display: none;" alt="Preview Foto" onclick="openKwhLightbox(this.src, document.querySelector('#photoCardEdit-${idx} input[type=text]')?.value || 'Foto ${currentCount}')">
                 </div>
                 <div class="kwh-photo-upload-action">
-                    <label for="photoInput-${idx}" class="btn-kwh-browse">
+                    <label for="photoInputEdit-${idx}" class="btn-kwh-browse">
                         <i class="bi bi-camera-fill"></i> Pilih Foto
                     </label>
-                    <input type="file" id="photoInput-${idx}" accept="image/jpeg,image/png,image/jpg,image/webp" onchange="previewDynamicPhoto(this, ${idx})" hidden>
+                    <input type="file" id="photoInputEdit-${idx}" accept="image/jpeg,image/png,image/jpg,image/webp" onchange="previewDynamicPhotoEdit(this, ${idx})" hidden>
                 </div>
                 <div class="rform-group" style="margin-top: 6px;">
                     <label class="rform-label" style="font-size: 0.76rem;">Keterangan Foto <span class="rform-required">*</span></label>
-                    <input type="text" class="rform-input" placeholder="Keterangan foto..." required>
+                    <input type="text" class="rform-input" placeholder="Keterangan foto baru..." required>
                 </div>
             </div>
         `;
         grid.appendChild(card);
-        reindexPhotoCards();
+        reindexPhotoCardsEdit();
     }
 
-    function removePhotoCard(idx) {
-        const grid = document.getElementById('kwhPhotoCardsGrid');
+    function removePhotoCardEdit(idx) {
+        const grid = document.getElementById('kwhEditPhotoCardsGrid');
         const cards = grid.querySelectorAll('.kwh-photo-card');
         if (cards.length <= 1) {
             Swal.fire({
@@ -514,74 +609,42 @@
             return;
         }
 
-        const el = document.getElementById('photoCard-' + idx);
+        const el = document.getElementById('photoCardEdit-' + idx);
         if (el) {
             el.remove();
-            reindexPhotoCards();
+            reindexPhotoCardsEdit();
         }
     }
 
-    function reindexPhotoCards() {
-        const cards = document.querySelectorAll('#kwhPhotoCardsGrid .kwh-photo-card');
+    function reindexPhotoCardsEdit() {
+        const cards = document.querySelectorAll('#kwhEditPhotoCardsGrid .kwh-photo-card');
         cards.forEach((card, i) => {
             const title = card.querySelector('.kwh-photo-card-title');
             if (title) title.innerText = 'Foto ' + (i + 1);
         });
 
-        const badge = document.getElementById('kwhPhotoCountBadge');
+        const badge = document.getElementById('kwhEditPhotoCountBadge');
         if (badge) {
             badge.innerHTML = `<i class="bi bi-images"></i> Total: ${cards.length} Foto`;
         }
     }
 
-    function resetKwhForm() {
+    function resetKwhEditForm() {
         Swal.fire({
-            title: 'Reset Formulir?',
-            text: 'Seluruh isian data dan foto yang telah Anda masukkan akan dikosongkan.',
+            title: 'Kembalikan Data Semula?',
+            text: 'Perubahan yang belum tersimpan akan dikembalikan ke data awal.',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#2563eb',
             cancelButtonColor: '#64748b',
-            confirmButtonText: 'Ya, Reset',
+            confirmButtonText: 'Ya, Kembalikan',
             cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {
-                document.getElementById('kwhForm').reset();
-                // Reset foto cards back to 1 empty card
-                const grid = document.getElementById('kwhPhotoCardsGrid');
-                grid.innerHTML = `
-                    <div class="kwh-photo-card" id="photoCard-0">
-                        <div class="kwh-photo-card-header">
-                            <span class="kwh-photo-card-title">Foto 1</span>
-                            <button type="button" class="btn-photo-remove" onclick="removePhotoCard(0)" title="Hapus foto ini">
-                                <i class="bi bi-trash3-fill"></i>
-                            </button>
-                        </div>
-                        <div class="kwh-photo-card-body">
-                            <div class="kwh-photo-preview-box">
-                                <div class="kwh-photo-empty" id="photoEmpty-0">
-                                    <i class="bi bi-image"></i>
-                                    <small>Belum ada foto</small>
-                                </div>
-                                <img id="photoPreview-0" class="kwh-photo-img" style="display: none;" alt="Preview Foto" onclick="openKwhLightbox(this.src, document.querySelector('#photoCard-0 input[type=text]')?.value || 'Foto 1')">
-                            </div>
-                            <div class="kwh-photo-upload-action">
-                                <label for="photoInput-0" class="btn-kwh-browse">
-                                    <i class="bi bi-camera-fill"></i> Pilih Foto
-                                </label>
-                                <input type="file" id="photoInput-0" accept="image/jpeg,image/png,image/jpg,image/webp" onchange="previewDynamicPhoto(this, 0)" hidden>
-                            </div>
-                            <div class="rform-group" style="margin-top: 6px;">
-                                <label class="rform-label" style="font-size: 0.76rem;">Keterangan Foto <span class="rform-required">*</span></label>
-                                <input type="text" class="rform-input" placeholder="Contoh: Tampak KWh Utama" required>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                reindexPhotoCards();
+                document.getElementById('kwhEditForm').reset();
                 Swal.fire({
                     icon: 'success',
-                    title: 'Formulir Dikosongkan',
+                    title: 'Data Direset',
                     showConfirmButton: false,
                     timer: 1200
                 });

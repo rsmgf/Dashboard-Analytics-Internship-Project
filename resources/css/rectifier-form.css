@@ -221,10 +221,10 @@ html, body {
 }
 
 .rform-drop-zone {
-    border: 2px dashed #005ca9;
+    border: 2px dashed #93c5fd;
     border-radius: 12px;
-    background: #f8fafc;
-    padding: 40px 20px;
+    background: #f0f7ff;
+    padding: 36px 20px;
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -234,23 +234,23 @@ html, body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 220px;
+    min-height: 200px;
 }
 
 .rform-drop-zone:hover {
-    background: #f0f6fc;
-    border-color: #005ca9;
+    background: #e6f0fd;
+    border-color: #2563eb;
 }
 
 .rform-drop-icon {
     font-size: 2.5rem;
-    color: #005ca9;
-    margin-bottom: 12px;
-    transition: transform 0.3s;
+    color: #2563eb;
+    margin-bottom: 10px;
+    transition: transform 0.3s ease;
 }
 
 .rform-drop-zone:hover .rform-drop-icon {
-    transform: translateY(-5px);
+    transform: translateY(-4px);
 }
 
 .rform-drop-text {
@@ -269,7 +269,7 @@ html, body {
 .rform-browse-btn {
     display: inline-block;
     padding: 8px 24px;
-    background: #005ca9;
+    background: linear-gradient(135deg, #0086FF, #005BD4);
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -277,13 +277,14 @@ html, body {
     font-weight: 600;
     cursor: pointer;
     font-family: 'Poppins', sans-serif;
-    transition: background 0.2s, transform 0.2s;
-    box-shadow: 0 4px 6px -1px rgba(0, 92, 169, 0.2);
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 91, 212, 0.2);
 }
 
 .rform-browse-btn:hover {
-    background: #004680;
+    background: linear-gradient(135deg, #0078E8, #0052C2);
     transform: translateY(-1px);
+    box-shadow: 0 6px 12px -1px rgba(0, 91, 212, 0.3);
 }
 
 .rform-photo-preview {
@@ -311,7 +312,7 @@ html, body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: #f1f5f9;
+    background: #f8fafc;
     overflow: hidden;
     box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.04);
 }
@@ -320,7 +321,8 @@ html, body {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    background: #e2e8f0;
+    background: #f8fafc;
+    cursor: zoom-in;
 }
 
 .rform-preview-empty {
