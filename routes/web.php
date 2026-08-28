@@ -107,7 +107,12 @@ Route::middleware('auth')->group(function () {
     return view('pop.kwh.kwh-detail'); })->name('kwh.detail');
 
     Route::get('/kwh-create', function () {
-    return view('pop.kwh.kwh-create'); })->name('kwh.create');
+        return view('pop.KWh.kwh-create');
+    })->name('kwh.create');
+
+    Route::get('/kwh-edit', function () {
+        return view('pop.KWh.kwh-edit');
+    })->name('kwh.edit');
 
 
 

@@ -14,7 +14,7 @@ html, body {
 
 body {
     font-family: 'Poppins', sans-serif;
-    background: #ffffff;
+    background: #f8fafc;
     color: #1e293b;
 }
 
@@ -22,35 +22,21 @@ body {
     display: flex;
     width: 100%;
     min-height: 100vh;
-    background: #ffffff;
+    background: #f8fafc;
 }
 
 .main-content {
     flex: 1;
     min-width: 0;
     min-height: 100vh;
-    background: #ffffff;
-}
-
-.topbar {
-    position: sticky;
-    top: 0;
-    z-index: 999;
-    margin: 0;
-    height: 60px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    padding: 0 20px;
-    background: #ffffff;
-    border-bottom: 1px solid #e2e8f0;
+    background: #f8fafc;
 }
 
 .rectifier-detail-content {
     width: 100%;
-    min-height: calc(100vh - 60px);
-    padding: 16px 24px 36px;
-    background: #ffffff;
+    min-height: calc(100vh - 70px);
+    padding: 24px;
+    background: #f8fafc;
 }
 
 /* =========================================================
@@ -62,7 +48,9 @@ body {
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    padding-bottom: 8px;
+    padding: 0 0 16px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid #e2e8f0;
 }
 
 .header-left-group {
