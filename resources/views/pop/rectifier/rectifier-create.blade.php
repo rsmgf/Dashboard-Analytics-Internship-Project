@@ -404,7 +404,7 @@
         // ---- Auto-hitung Utilisasi = (Beban / Kapasitas Rectifier) * 100 ----
         function getUtilisasiBadge(nilai) {
             if (nilai <= 50) {
-                return { label: 'Safe', bg: '#dcfce7', color: '#16a34a', border: '#bbf7d0' };
+                return { label: 'Good', bg: '#dcfce7', color: '#16a34a', border: '#bbf7d0' };
             } else if (nilai <= 70) {
                 return { label: 'Warning', bg: '#fef9c3', color: '#ca8a04', border: '#fde68a' };
             } else {
