@@ -46,6 +46,7 @@ body {
         opacity: 0;
         transform: translateY(8px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -136,6 +137,31 @@ body {
     box-shadow: 0 4px 12px rgba(0, 91, 212, 0.3);
 }
 
+.status-auto-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-aman {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.status-waspada {
+    background-color: #fef9c3;
+    color: #854d0e;
+}
+
+.status-kritis {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
 /* Rectifier Grid & Card */
 .rectifier-grid,
 .grid {
@@ -151,13 +177,15 @@ body {
 .card {
     position: relative;
     width: 100%;
-    height: 295px;
+    height: auto;
     min-height: 295px;
+    display: flex;
+    flex-direction: column;
     background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 12px;
-    box-shadow: 
-        0 4px 6px -1px rgba(0, 0, 0, 0.05), 
+    box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.05),
         0 2px 4px -1px rgba(0, 0, 0, 0.03);
     overflow: hidden;
     transition: all 0.2s ease;
@@ -166,8 +194,8 @@ body {
 .rectifier-card:hover,
 .card:hover {
     border-color: #b8c9dc;
-    box-shadow: 
-        0 8px 15px -3px rgba(0, 0, 0, 0.08), 
+    box-shadow:
+        0 8px 15px -3px rgba(0, 0, 0, 0.08),
         0 4px 6px -2px rgba(0, 0, 0, 0.04);
     transform: translateY(-1px);
 }
@@ -239,20 +267,6 @@ body {
     padding: 14px 25px 8px;
 }
 
-.equipment-info {
-    margin: 0;
-    font-size: 0.9rem;
-    line-height: 1.7;
-    font-weight: 500;
-    color: #334155;
-    word-break: break-word;
-}
-
-.equipment-info.serial {
-    font-weight: 400;
-    color: #475569;
-}
-
 .rectifier-meta,
 .meta {
     display: flex;
@@ -283,6 +297,9 @@ body {
     font-size: 0.68rem;
     color: #94a3b8;
     font-style: italic;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .rectifier-last-updated i {
@@ -293,13 +310,13 @@ body {
 
 .rectifier-card-footer,
 .card-footer {
-    position: absolute;
-    left: 25px;
-    right: 24px;
-    bottom: 18px;
+    position: relative;
+    margin-top: auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 14px 25px 18px;
+    border-top: 1px solid #f1f5f9;
 }
 
 .btn-hapus {
@@ -376,84 +393,123 @@ body {
     font-size: 0.9rem;
 }
 
+/* Sejajarkan label:value */
+.equipment-info {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    font-weight: 500;
+    color: #334155;
+    word-break: break-word;
+}
+
+.equipment-info.serial {
+    font-weight: 400;
+    color: #475569;
+    font-weight: 500;
+
+}
+
+.info-label {
+    display: inline-block;
+    width: 128px;
+    position: relative;
+    padding-right: 10px;
+    font-weight: 600;
+    color: inherit;
+    flex-shrink: 0;
+}
+
+.info-label::after {
+    content: ":";
+    position: absolute;
+    right: 0;
+}
+
+
 /* Responsive Styles */
 @media (max-width: 1100px) {
+
     .rectifier-grid,
     .grid {
         grid-template-columns: 1fr;
     }
 
     .rectifier-card,
-    .card { 
-        height: 280px; 
-        min-height: 280px; 
+    .card {
+        height: 280px;
+        min-height: 280px;
     }
 }
 
 @media (max-width: 600px) {
+
     .rectifier-content,
-    .content { 
-        padding: 12px 14px 20px; 
-    } 
-    
+    .content {
+        padding: 12px 14px 20px;
+    }
+
     .rectifier-grid,
-    .grid { 
-        grid-template-columns: 1fr; 
-        row-gap: 15px; 
-        padding-top: 10px; 
-    } 
-    
+    .grid {
+        grid-template-columns: 1fr;
+        row-gap: 15px;
+        padding-top: 10px;
+    }
+
     .rectifier-card,
-    .card { 
-        height: auto; 
-        min-height: 260px; 
+    .card {
+        height: auto;
+        min-height: 260px;
         padding-bottom: 50px;
-    } 
-    
+    }
+
     .rectifier-card-header,
-    .card-header { 
-        gap: 9px; 
-        padding: 12px; 
-    } 
-    
-    .checklist-icon { 
-        width: 34px; 
-        height: 34px; 
-        font-size: 15px; 
-    } 
-    
-    .checklist-title h3 { 
-        font-size: 0.9rem; 
-    } 
-    
-    .checklist-title p { 
-        font-size: 0.72rem; 
-    } 
-    
+    .card-header {
+        gap: 9px;
+        padding: 12px;
+    }
+
+    .checklist-icon {
+        width: 34px;
+        height: 34px;
+        font-size: 15px;
+    }
+
+    .checklist-title h3 {
+        font-size: 0.9rem;
+    }
+
+    .checklist-title p {
+        font-size: 0.72rem;
+    }
+
     .rectifier-number,
-    .number { 
-        font-size: 0.65rem; 
-        padding: 4px 7px; 
-    } 
-    
+    .number {
+        font-size: 0.65rem;
+        padding: 4px 7px;
+    }
+
     .rectifier-information,
-    .information { 
-        padding: 10px 18px 5px; 
-    } 
-    
-    .equipment-info { 
-        font-size: 0.8rem; 
-        line-height: 1.6; 
-    } 
-    
+    .information {
+        padding: 10px 18px 5px;
+    }
+
+    .equipment-info {
+        font-size: 0.8rem;
+        line-height: 1.6;
+    }
+
     .rectifier-meta,
-    .meta { 
-        padding: 10px 18px 0; 
-        gap: 8px; 
-    } 
-    
-    .meta-item { 
-        font-size: 0.7rem; 
+    .meta {
+        padding: 10px 18px 0;
+        gap: 8px;
+    }
+
+    .meta-item {
+        font-size: 0.7rem;
     }
 
     .rectifier-card-footer,

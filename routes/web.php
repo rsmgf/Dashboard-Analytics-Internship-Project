@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AccessManagementController;
 use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\KwhController;
 use App\Http\Controllers\MenuManagementController;
 use App\Http\Controllers\PopController;
 use App\Http\Controllers\ProfileController;
@@ -99,24 +100,23 @@ Route::middleware('auth')->group(function () {
         Route::delete('/pops/{pop}/rectifiers/{id}', [RectifierController::class, 'destroy'])->name('rectifiers.destroy');
     });
 
-    //BARU DITAMBAH KILA
-    Route::get('/kwh-card', function () {
-    return view('pop.kwh.kwh-card'); })->name('kwh.card');
+    // --- KWH ---
+    Route::get('/pops/{pop}/kwh', [KwhController::class, 'index'])->name('kwh.card');
 
-    Route::get('/kwh-detail', function () {
-    return view('pop.kwh.kwh-detail'); })->name('kwh.detail');
+    // Create HARUS sebelum /{id} agar 'create' tidak ditangkap sebagai id
+    Route::middleware('permission:kwh.card.create')->group(function () {
+        Route::get('/pops/{pop}/kwh/create', [KwhController::class, 'create'])->name('kwh.create');
+        Route::post('/pops/{pop}/kwh', [KwhController::class, 'store'])->name('kwh.store');
+    });
 
-    Route::get('/kwh-create', function () {
-        return view('pop.KWh.kwh-create');
-    })->name('kwh.create');
+    Route::get('/pops/{pop}/kwh/{id}', [KwhController::class, 'show'])->name('kwh.detail');
 
-    Route::get('/kwh-edit', function () {
-        return view('pop.KWh.kwh-edit');
-    })->name('kwh.edit');
+    Route::middleware('permission:kwh.card.update')->group(function () {
+        Route::get('/pops/{pop}/kwh/{id}/edit', [KwhController::class, 'edit'])->name('kwh.edit');
+        Route::put('/pops/{pop}/kwh/{id}', [KwhController::class, 'update'])->name('kwh.update');
+    });
 
-
-
+    Route::middleware('permission:kwh.card.delete')->group(function () {
+        Route::delete('/pops/{pop}/kwh/{id}', [KwhController::class, 'destroy'])->name('kwh.destroy');
+    });
 });
-
-
-
