@@ -69,7 +69,7 @@ class MenuSeeder extends Seeder
 
         $kwh = Menu::create([
             'name' => 'kWh',
-            'route' => null,
+            'route' => 'kwh.card',
             'icon' => 'bi bi-lightning-charge-fill',
             'order' => 2,
             'parent_id' => $pop->id,
