@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class UserManagementController extends Controller
 {
@@ -40,6 +41,13 @@ class UserManagementController extends Controller
 
     public function updateRole(Request $request, User $user)
     {
+        if ($user->id === auth()->id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda tidak dapat mengubah role akun Anda sendiri.',
+            ], 403);
+        }
+
         $request->validate([
             'role'        => ['required', 'in:karyawan,teknisi,super_admin'],
         ], [
@@ -52,6 +60,8 @@ class UserManagementController extends Controller
 
         $user->syncRoles([$request->role]);
 
+        Cache::flush();
+
         return response()->json([
             'success'   => true,
             'message'   => "Role {$user->name} berhasil diubah ke {$request->role}.",
@@ -62,8 +72,17 @@ class UserManagementController extends Controller
 
     public function toggleStatus(User $user)
     {
+        if ($user->id === auth()->id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda tidak dapat menonaktifkan akun Anda sendiri.',
+            ], 403);
+        }
+
         $user->is_active = !$user->is_active;
         $user->save();
+
+        Cache::flush();
 
         $roleName = $user->roles->first()?->name;
         $roleLabel = ($user->is_active && $roleName)

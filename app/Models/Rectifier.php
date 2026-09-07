@@ -57,6 +57,6 @@ class Rectifier extends Model
     // Accessor untuk menghitung sisa slot terpakai secara otomatis
     public function getSisaSlotAttribute()
     {
-        return $this->kapasitas_slot - $this->modules()->count();
+        return $this->kapasitas_slot - $this->modules->count();
     }
 }

@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
         $this->call([
-            PopSeeder::class,
+            // PopSeeder::class, // Dinonaktifkan agar data POP bersih dan diisi lewat Import Excel / Form
             RoleSeeder::class,
             SuperAdminSeeder::class,
             MenuSeeder::class,

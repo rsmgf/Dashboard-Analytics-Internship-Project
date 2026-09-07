@@ -33,8 +33,8 @@ class PopSeeder extends Seeder
 
         $typePops = ['POP-A', 'POP-B', 'POP-SB', 'POP-D'];
         
-        // Diubah menjadi buildingList
-        $buildingList = ['Shelter Permanent', 'Shelter Outdoor', 'Gedung PLN', 'Ruang Server Khusus', 'GI Shelter'];
+        // Nilai resmi jenis bangunan POP
+        $buildingList = ['Shelter', 'Shelter CKD', 'Shelter Permanen', 'Mini Shelter', 'ODC', 'Mini POP', 'Mikro POP', 'OLT Gantung'];
 
         for ($i = 0; $i < 50; $i++) {
             Pop::create([

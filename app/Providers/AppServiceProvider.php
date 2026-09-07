@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Menu;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -22,8 +23,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::composer('components.sidebar', function ($view) {
-            if (auth()->check()) {
-                $user = auth()->user();
+            if (Auth::check()) {
+                $user = Auth::user();
                 $userRoleIds = $user->roles->pluck('id');
 
                 // helper: cek 1 menu boleh diakses user ini atau tidak

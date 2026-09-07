@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\Admin\AccessManagementController;
+use App\Http\Controllers\Admin\MenuManagementController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\KwhController;
-use App\Http\Controllers\MenuManagementController;
 use App\Http\Controllers\PopController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RectifierController;
@@ -50,12 +50,16 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->group(function
 Route::middleware('auth')->group(function () {
 
     // --- FORM & RIWAYAT RMA ---
-    Route::get('/rma', [RmaController::class, 'index'])->name('rma');          // Menampilkan Riwayat RMA (Halaman Utama)
-    Route::get('/rma/create', [RmaController::class, 'create'])->name('rma.create');   // Menampilkan Form Pengisian RMA
-    Route::post('/rma', [RmaController::class, 'store'])->name('rma.store');          // Menyimpan Data Form RMA
-    // Preview & Download PDF
-    Route::get('/rma/{id}/download', [RmaController::class, 'downloadPdf'])->name('rma.download');
-    Route::get('/rma/{id}/pdf', [RmaController::class, 'generatePdf'])->name('rma.pdf');
+    Route::middleware('permission:rma.read')->group(function () {
+        Route::get('/rma', [RmaController::class, 'index'])->name('rma');
+        Route::get('/rma/{id}/download', [RmaController::class, 'downloadPdf'])->name('rma.download');
+        Route::get('/rma/{id}/pdf', [RmaController::class, 'generatePdf'])->name('rma.pdf');
+    });
+
+    Route::middleware('permission:rma.create')->group(function () {
+        Route::get('/rma/create', [RmaController::class, 'create'])->name('rma.create');
+        Route::post('/rma', [RmaController::class, 'store'])->name('rma.store');
+    });
 
     // --- POP: VIEW (Semua role, cukup login) ---
     Route::get('/pops', [PopController::class, 'index'])->name('pops.index');
@@ -64,6 +68,12 @@ Route::middleware('auth')->group(function () {
     Route::middleware('permission:pops.index.create')->group(function () {
         Route::get('/pops/create', [PopController::class, 'create'])->name('pops.create');
         Route::post('/pops', [PopController::class, 'store'])->name('pops.store');
+    });
+
+    // --- POP: IMPORT EXCEL — harus SEBELUM /pops/{id} ---
+    Route::middleware('permission:pops.index.create')->group(function () {
+        Route::get('/pops/import', [PopController::class, 'importForm'])->name('pops.import');
+        Route::post('/pops/import', [PopController::class, 'import'])->name('pops.import.store');
     });
 
     // --- POP: SHOW (detail satu POP) ---

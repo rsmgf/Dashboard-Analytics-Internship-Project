@@ -157,7 +157,7 @@
                                 <select id="jenis_bangunan" name="jenis_bangunan"
                                     class="add-pop-select {{ $errors->has('jenis_bangunan') ? 'is-invalid' : '' }}">
                                     <option value="" disabled>Pilih Building</option>
-                                    @foreach (['Shelter Permanent', 'Shelter Temporary', 'Building', 'Outdoor'] as $opt)
+                                    @foreach (['Shelter', 'Shelter CKD', 'Shelter Permanen', 'Mini Shelter', 'ODC', 'Mini POP', 'Mikro POP', 'OLT Gantung'] as $opt)
                                         <option value="{{ $opt }}"
                                             {{ old('jenis_bangunan', $pop->jenis_bangunan) == $opt ? 'selected' : '' }}>
                                             {{ $opt }}
@@ -176,8 +176,8 @@
                             <div class="add-pop-select-wrapper">
                                 <select id="tipe_pop" name="tipe_pop"
                                     class="add-pop-select {{ $errors->has('tipe_pop') ? 'is-invalid' : '' }}">
-                                    <option value="" disabled>Pilih Type POP</option>
-                                    @foreach (['POP-SB', 'POP-DC', 'POP-ODC', 'POP-FO'] as $opt)
+                                    <option value="" disabled>Pilih Tipe POP</option>
+                                    @foreach (['POP-SB', 'POP-A', 'POP-B', 'POP-D'] as $opt)
                                         <option value="{{ $opt }}"
                                             {{ old('tipe_pop', $pop->tipe_pop) == $opt ? 'selected' : '' }}>
                                             {{ $opt }}

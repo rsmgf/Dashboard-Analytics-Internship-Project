@@ -151,20 +151,15 @@
                             <div class="add-pop-select-wrapper">
                                 <select id="jenis_bangunan" name="jenis_bangunan"
                                     class="add-pop-select {{ $errors->has('jenis_bangunan') ? 'is-invalid' : '' }}">
-                                    <option value="" disabled {{ old('jenis_bangunan') ? '' : 'selected' }}>Pilih
-                                        Building</option>
-                                    <option value="Shelter Permanent"
-                                        {{ old('jenis_bangunan') == 'Shelter Permanent' ? 'selected' : '' }}>Shelter
-                                        Permanent</option>
-                                    <option value="Shelter Temporary"
-                                        {{ old('jenis_bangunan') == 'Shelter Temporary' ? 'selected' : '' }}>Shelter
-                                        Temporary</option>
-                                    <option value="Building"
-                                        {{ old('jenis_bangunan') == 'Building' ? 'selected' : '' }}>Building
-                                    </option>
-                                    <option value="Outdoor"
-                                        {{ old('jenis_bangunan') == 'Outdoor' ? 'selected' : '' }}>Outdoor
-                                    </option>
+                                    <option value="" disabled {{ old('jenis_bangunan') ? '' : 'selected' }}>Pilih Building</option>
+                                    <option value="Shelter" {{ old('jenis_bangunan') == 'Shelter' ? 'selected' : '' }}>Shelter</option>
+                                    <option value="Shelter CKD" {{ old('jenis_bangunan') == 'Shelter CKD' ? 'selected' : '' }}>Shelter CKD</option>
+                                    <option value="Shelter Permanen" {{ old('jenis_bangunan') == 'Shelter Permanen' ? 'selected' : '' }}>Shelter Permanen</option>
+                                    <option value="Mini Shelter" {{ old('jenis_bangunan') == 'Mini Shelter' ? 'selected' : '' }}>Mini Shelter</option>
+                                    <option value="ODC" {{ old('jenis_bangunan') == 'ODC' ? 'selected' : '' }}>ODC</option>
+                                    <option value="Mini POP" {{ old('jenis_bangunan') == 'Mini POP' ? 'selected' : '' }}>Mini POP</option>
+                                    <option value="Mikro POP" {{ old('jenis_bangunan') == 'Mikro POP' ? 'selected' : '' }}>Mikro POP</option>
+                                    <option value="OLT Gantung" {{ old('jenis_bangunan') == 'OLT Gantung' ? 'selected' : '' }}>OLT Gantung</option>
                                 </select>
                                 <i class="bi bi-chevron-down add-pop-select-arrow"></i>
                             </div>
@@ -178,16 +173,11 @@
                             <div class="add-pop-select-wrapper">
                                 <select id="tipe_pop" name="tipe_pop"
                                     class="add-pop-select {{ $errors->has('tipe_pop') ? 'is-invalid' : '' }}">
-                                    <option value="" disabled {{ old('tipe_pop') ? '' : 'selected' }}>Pilih Type
-                                        POP</option>
-                                    <option value="POP-SB" {{ old('tipe_pop') == 'POP-SB' ? 'selected' : '' }}>POP-SB
-                                    </option>
-                                    <option value="POP-DC" {{ old('tipe_pop') == 'POP-DC' ? 'selected' : '' }}>POP-DC
-                                    </option>
-                                    <option value="POP-ODC" {{ old('tipe_pop') == 'POP-ODC' ? 'selected' : '' }}>
-                                        POP-ODC</option>
-                                    <option value="POP-FO" {{ old('tipe_pop') == 'POP-FO' ? 'selected' : '' }}>POP-FO
-                                    </option>
+                                    <option value="" disabled {{ old('tipe_pop') ? '' : 'selected' }}>Pilih Tipe POP</option>
+                                    <option value="POP-SB" {{ old('tipe_pop') == 'POP-SB' ? 'selected' : '' }}>POP-SB</option>
+                                    <option value="POP-A" {{ old('tipe_pop') == 'POP-A' ? 'selected' : '' }}>POP-A</option>
+                                    <option value="POP-B" {{ old('tipe_pop') == 'POP-B' ? 'selected' : '' }}>POP-B</option>
+                                    <option value="POP-D" {{ old('tipe_pop') == 'POP-D' ? 'selected' : '' }}>POP-D</option>
                                 </select>
                                 <i class="bi bi-chevron-down add-pop-select-arrow"></i>
                             </div>
