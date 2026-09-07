@@ -261,24 +261,57 @@
 
 
         .btn-tambah-pop {
-        background-color: #007bff; /* Ubah warna sesuai tema PLN (misal teal/biru) */
-        color: #ffffff;
-        padding: 10px 18px;
-        border-radius: 6px;
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: 500;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        transition: background-color 0.3s ease;
-        border: none;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #0086FF, #005BD4);
+            color: #ffffff;
+            text-decoration: none;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 91, 212, 0.2);
+            transition: all 0.25s ease;
         }
 
         .btn-tambah-pop:hover {
-            background-color: #0056b3;
+            background: linear-gradient(135deg, #0078E8, #0052C2);
             color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 91, 212, 0.3);
+        }
+
+        .btn-import-pop {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: #ffffff;
+            text-decoration: none;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(5, 150, 105, 0.2);
+            transition: all 0.25s ease;
+        }
+
+        .btn-import-pop:hover {
+            background: linear-gradient(135deg, #059669, #047857);
+            color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
         }
 
         .pop-table {

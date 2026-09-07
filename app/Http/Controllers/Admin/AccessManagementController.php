@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Menu;
 use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class AccessManagementController extends Controller
 {
@@ -62,6 +63,8 @@ class AccessManagementController extends Controller
             ->pluck('id');
 
         $role->syncPermissions($validPermissionIds);
+
+        Cache::flush();
 
         return redirect()->route('admin.access.index', $role)
             ->with('success', "Akses untuk role {$role->name} berhasil diperbarui");
