@@ -79,9 +79,14 @@
                     </div>
 
                     @can('pops.index.create')
-                        <a href="{{ route('pops.create') }}" class="btn-tambah-pop">
-                            <i class="bi bi-plus-lg"></i> Tambah POP
-                        </a>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <a href="{{ route('pops.import') }}" class="btn-import-pop">
+                                <i class="bi bi-file-earmark-arrow-up"></i> Import Excel
+                            </a>
+                            <a href="{{ route('pops.create') }}" class="btn-tambah-pop">
+                                <i class="bi bi-plus-lg"></i> Tambah POP
+                            </a>
+                        </div>
                     @endcan
                 </div>
 
@@ -147,14 +152,19 @@
                                                 onclick="lihatPOP('{{ $pop->id }}')">Lihat</button>
 
                                             @can('pops.index.update')
-                                                <a href="{{ route('pops.edit', $pop->id) }}" class="btn-edit"><i
-                                                        class="bi bi-pencil-fill"></i></a>
+                                                <a href="{{ route('pops.edit', $pop->id) }}" class="btn-edit"
+                                                    title="Edit POP" aria-label="Edit POP {{ $pop->nama_pop }}">
+                                                    <i class="bi bi-pencil-fill"></i>
+                                                </a>
                                             @endcan
 
                                             @can('pops.index.delete')
                                                 <button type="button" title="Hapus POP"
+                                                    aria-label="Hapus POP {{ $pop->nama_pop }}"
                                                     onclick="openDeleteModal('{{ route('pops.destroy', $pop->id) }}', '{{ $pop->nama_pop }}')"
-                                                    class="btn-hapus"><i class="bi bi-trash3-fill"></i></button>
+                                                    class="btn-hapus">
+                                                    <i class="bi bi-trash3-fill"></i>
+                                                </button>
                                             @endcan
 
                                         </div>

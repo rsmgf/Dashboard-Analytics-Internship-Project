@@ -2,9 +2,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pop;
+use App\Imports\PopImport;
 use Illuminate\Http\Request;
 use App\Http\Requests\StorePopRequest;
 use App\Http\Requests\UpdatePopRequest;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PopController extends Controller
 {
@@ -77,5 +79,44 @@ class PopController extends Controller
 
         return redirect()->route('pops.index')
             ->with('success', 'Data POP berhasil dihapus!');
+    }
+
+    // 8. Tampilkan halaman form Import Excel
+    public function importForm()
+    {
+        return view('pop.pop-import');
+    }
+
+    // 9. Proses import file Excel
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls,csv|max:5120',
+        ], [
+            'file.required' => 'File Excel wajib dipilih.',
+            'file.mimes'    => 'Format file harus .xlsx, .xls, atau .csv.',
+            'file.max'      => 'Ukuran file maksimal 5MB.',
+        ]);
+
+        $import = new PopImport();
+
+        try {
+            Excel::import($import, $request->file('file'));
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withErrors(['file' => 'Terjadi kesalahan saat membaca file: ' . $e->getMessage()]);
+        }
+
+        $importedCount = $import->getImportedCount();
+        $errorMessages = $import->getErrors();
+
+        $successMsg = "{$importedCount} data POP berhasil diimport." .
+                      (count($errorMessages) > 0
+                          ? ' ' . count($errorMessages) . ' baris dilewati.'
+                          : ' Semua baris berhasil.');
+
+        return redirect()->route('pops.import')
+            ->with('import_success', $successMsg)
+            ->with('import_errors', $errorMessages);
     }
 }
