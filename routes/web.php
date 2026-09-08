@@ -114,7 +114,21 @@ Route::middleware('auth')->group(function () {
         return view('pop.KWh.kwh-edit');
     })->name('kwh.edit');
 
+    Route::get('/battery-card', function () {
+        return view('pop.battery.battery-card');
+    })->name('battery.card');
 
+    route::get('/battery-create', function () {
+        return view('pop.battery.battery-create');
+    })->name('battery.create');
+
+    route::get('/battery-detail', function () {
+        return view('pop.battery.battery-detail');
+    })->name('battery.detail');
+
+    route::get('/battery-edit', function () {
+        return view('pop.battery.battery-edit');
+    })->name('battery.edit');
 
 });
 

@@ -1,11 +1,27 @@
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.rectifier-section,
+.battery-grid {
+    animation: fadeIn 0.4s ease-in-out;
+}
+
 * {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
 html,
 body {
-    margin: 0;
-    padding: 0;
     width: 100%;
     min-height: 100%;
 }
@@ -16,7 +32,6 @@ body {
     color: #1e293b;
 }
 
-/* Layout Container */
 .app-container {
     display: flex;
     width: 100%;
@@ -29,9 +44,10 @@ body {
     min-width: 0;
     min-height: 100vh;
     background: #f8fafc;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Content Area */
 .rectifier-content,
 .content {
     width: 100%;
@@ -41,18 +57,6 @@ body {
     animation: fadeIn 0.4s ease-in-out;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(8px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Page Header */
 .rectifier-page-header,
 .page-header {
     display: flex;
@@ -63,6 +67,7 @@ body {
     margin-bottom: 24px;
     gap: 16px;
     flex-wrap: wrap;
+    background: transparent;
 }
 
 .rectifier-page-info,
@@ -75,8 +80,9 @@ body {
 .back-button {
     width: 34px;
     height: 34px;
-    border-radius: 50%;
+    border: 1px solid #d1d5db;
     background: #f1f5f9;
+    border-radius: 50%;
     color: #64748b;
     display: inline-flex;
     align-items: center;
@@ -96,6 +102,24 @@ body {
     display: flex;
     flex-direction: column;
     gap: 3px;
+}
+
+.rectifier-header-text .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 2px;
+}
+
+.rectifier-header-text .breadcrumb a {
+    color: #075baa;
+    text-decoration: none;
+}
+
+.rectifier-header-text .breadcrumb a:hover {
+    text-decoration: underline;
 }
 
 .rectifier-pop-sub,
@@ -136,9 +160,39 @@ body {
     box-shadow: 0 4px 12px rgba(0, 91, 212, 0.3);
 }
 
-/* Rectifier Grid & Card */
-.rectifier-grid,
-.grid {
+.rectifier-section {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.rectifier-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.rectifier-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #075baa;
+}
+
+.backup-time {
+    font-size: 13px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+.rectifier-grid, 
+.battery-grid {
     width: 100%;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -147,12 +201,12 @@ body {
     padding-top: 6px;
 }
 
-.rectifier-card,
-.card {
+.rectifier-card, 
+.battery-card {
     position: relative;
     width: 100%;
-    height: 295px;
-    min-height: 295px;
+    height: 310px;
+    min-height: 310px;
     background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 12px;
@@ -160,11 +214,13 @@ body {
         0 4px 6px -1px rgba(0, 0, 0, 0.05), 
         0 2px 4px -1px rgba(0, 0, 0, 0.03);
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
     transition: all 0.2s ease;
 }
 
-.rectifier-card:hover,
-.card:hover {
+.rectifier-card:hover, 
+.battery-card:hover {
     border-color: #b8c9dc;
     box-shadow: 
         0 8px 15px -3px rgba(0, 0, 0, 0.08), 
@@ -172,34 +228,35 @@ body {
     transform: translateY(-1px);
 }
 
-.rectifier-card-header,
-.card-header {
+.rectifier-card-header {
     width: 100%;
     display: flex;
     align-items: flex-start;
     gap: 12px;
     padding: 14px 16px 8px;
+    border-bottom: 1px solid #f1f5f9;
+    margin-bottom: 2px;
 }
 
-.checklist-icon {
+.card-icon {
     width: 38px;
     height: 38px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     border-radius: 8px;
     background: #eff6ff;
     color: #2563eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 17px;
+    flex-shrink: 0;
 }
 
-.checklist-title {
+.card-title-text {
     flex: 1;
     min-width: 0;
 }
 
-.checklist-title h3 {
+.card-title-text h3 {
     margin: 0;
     font-size: 1rem;
     line-height: 1.3;
@@ -210,63 +267,100 @@ body {
     text-overflow: ellipsis;
 }
 
-.checklist-title p {
+.card-title-text span {
+    display: block;
     margin: 3px 0 0;
     font-size: 0.8rem;
-    line-height: 1.2;
     color: #64748b;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.rectifier-number,
-.number {
-    flex-shrink: 0;
-    padding: 4px 9px;
-    border: 1px solid #bfdbfe;
-    border-radius: 6px;
-    background: #eff6ff;
-    color: #2563eb;
-    font-size: 0.7rem;
-    line-height: 1.2;
-    font-weight: 600;
-    white-space: nowrap;
-}
-
-.rectifier-information,
-.information {
-    padding: 14px 25px 8px;
-}
-
-.equipment-info {
-    margin: 0;
-    font-size: 0.9rem;
-    line-height: 1.7;
-    font-weight: 500;
-    color: #334155;
-    word-break: break-word;
-}
-
-.equipment-info.serial {
-    font-weight: 400;
-    color: #475569;
-}
-
-.rectifier-meta,
-.meta {
+.rectifier-information, 
+.battery-data {
     display: flex;
     flex-direction: column;
     gap: 5px;
-    padding: 10px 25px 0;
+    padding: 10px 20px 6px;
+    border-bottom: 1px dashed #e2e8f0;
+}
+
+.equipment-info, 
+.data-row {
+    font-size: 0.85rem;
+    color: #334155;
+    display: flex;
+    justify-content: space-between;
+}
+
+.equipment-info strong, 
+.data-label {
+    font-weight: 500;
+    color: #64748b;
+}
+
+.data-value {
+    color: #1e293b;
+    font-weight: 500;
+}
+
+.status-badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+}
+
+.status-excellent {
+    background: #dcfce7;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+}
+.dot-excellent { background: #22c55e; }
+
+.status-good-enough, .status-good {
+    background: #fef9c3;
+    color: #a16207;
+    border: 1px solid #fde047;
+}
+.dot-good-enough, .dot-good { background: #eab308; }
+
+.status-warning {
+    background: #ffedd5;
+    color: #c2410c;
+    border: 1px solid #fed7aa;
+}
+.dot-warning { background: #f97316; }
+
+.status-alert {
+    background: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+.dot-alert { background: #ef4444; }
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.rectifier-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px 20px 0;
+    font-size: 0.7rem;
+    color: #64748b;
 }
 
 .meta-item {
     display: flex;
     align-items: center;
     gap: 7px;
-    font-size: 0.7rem;
-    color: #64748b;
 }
 
 .meta-item i {
@@ -274,15 +368,14 @@ body {
     font-size: 13px;
 }
 
-/* Last Updated Row on Card */
 .rectifier-last-updated {
+    font-size: 0.68rem;
+    color: #94a3b8;
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 8px 25px 0;
-    font-size: 0.68rem;
-    color: #94a3b8;
     font-style: italic;
+    padding: 6px 20px 0;
 }
 
 .rectifier-last-updated i {
@@ -291,18 +384,22 @@ body {
     flex-shrink: 0;
 }
 
-.rectifier-card-footer,
+.rectifier-card-footer, 
 .card-footer {
     position: absolute;
-    left: 25px;
-    right: 24px;
-    bottom: 18px;
+    left: 20px;
+    right: 20px;
+    bottom: 16px;
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 10px;
+    margin-top: auto;
 }
 
-.btn-hapus {
+.btn-hapus, 
+.delete-btn {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -318,7 +415,8 @@ body {
     transition: all 0.2s ease;
 }
 
-.btn-hapus:hover {
+.btn-hapus:hover, 
+.delete-btn:hover {
     background: #dc2626;
     color: #ffffff;
     border-color: #dc2626;
@@ -327,14 +425,14 @@ body {
 }
 
 .detail-button {
+    color: #2563eb;
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 600;
     display: inline-flex;
     align-items: center;
     gap: 6px;
     padding: 5px 2px;
-    color: #2563eb;
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-decoration: none;
     transition: all 0.2s ease;
     margin-left: auto;
 }
@@ -353,40 +451,48 @@ body {
     transform: translateX(3px);
 }
 
-.empty-rectifier {
+.empty-battery {
     grid-column: 1 / -1;
     min-height: 250px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: #94a3b8;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px dashed #cbd5e1;
     text-align: center;
     padding: 40px;
+    color: #94a3b8;
 }
 
-.empty-rectifier i {
+.empty-battery i {
     font-size: 35px;
     margin-bottom: 10px;
     color: #94a3b8;
 }
 
-.empty-rectifier p {
-    margin: 0;
-    font-size: 0.9rem;
+.empty-battery h3 {
+    margin-top: 4px;
+    font-size: 16px;
+    color: #334155;
 }
 
-/* Responsive Styles */
+.empty-battery p {
+    font-size: 13px;
+    color: #64748b;
+}
+
 @media (max-width: 1100px) {
-    .rectifier-grid,
-    .grid {
+    .rectifier-grid, 
+    .battery-grid {
         grid-template-columns: 1fr;
     }
 
-    .rectifier-card,
-    .card { 
-        height: 280px; 
-        min-height: 280px; 
+    .rectifier-card, 
+    .battery-card { 
+        height: 300px; 
+        min-height: 300px; 
     }
 }
 
@@ -396,67 +502,56 @@ body {
         padding: 12px 14px 20px; 
     } 
     
-    .rectifier-grid,
-    .grid { 
+    .rectifier-grid, 
+    .battery-grid { 
         grid-template-columns: 1fr; 
         row-gap: 15px; 
         padding-top: 10px; 
     } 
     
-    .rectifier-card,
-    .card { 
+    .rectifier-card, 
+    .battery-card { 
         height: auto; 
-        min-height: 260px; 
+        min-height: 280px; 
         padding-bottom: 50px;
     } 
     
-    .rectifier-card-header,
-    .card-header { 
+    .rectifier-card-header { 
         gap: 9px; 
         padding: 12px; 
     } 
     
-    .checklist-icon { 
+    .card-icon { 
         width: 34px; 
         height: 34px; 
         font-size: 15px; 
     } 
     
-    .checklist-title h3 { 
+    .card-title-text h3 { 
         font-size: 0.9rem; 
     } 
     
-    .checklist-title p { 
+    .card-title-text span { 
         font-size: 0.72rem; 
     } 
     
-    .rectifier-number,
-    .number { 
-        font-size: 0.65rem; 
-        padding: 4px 7px; 
-    } 
-    
-    .rectifier-information,
-    .information { 
+    .rectifier-information, 
+    .battery-data { 
         padding: 10px 18px 5px; 
     } 
     
-    .equipment-info { 
+    .equipment-info, 
+    .data-row { 
         font-size: 0.8rem; 
         line-height: 1.6; 
     } 
     
-    .rectifier-meta,
-    .meta { 
-        padding: 10px 18px 0; 
-        gap: 8px; 
+    .rectifier-meta { 
+        padding: 8px 18px 0; 
+        gap: 6px; 
     } 
-    
-    .meta-item { 
-        font-size: 0.7rem; 
-    }
 
-    .rectifier-card-footer,
+    .rectifier-card-footer, 
     .card-footer {
         left: 18px;
         right: 18px;
