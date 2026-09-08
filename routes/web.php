@@ -129,4 +129,20 @@ Route::middleware('auth')->group(function () {
     Route::middleware('permission:kwh.card.delete')->group(function () {
         Route::delete('/pops/{pop}/kwh/{id}', [KwhController::class, 'destroy'])->name('kwh.destroy');
     });
+  
+      Route::get('/battery-card', function () {
+        return view('pop.battery.battery-card');
+    })->name('battery.card');
+
+    route::get('/battery-create', function () {
+        return view('pop.battery.battery-create');
+    })->name('battery.create');
+
+    route::get('/battery-detail', function () {
+        return view('pop.battery.battery-detail');
+    })->name('battery.detail');
+
+    route::get('/battery-edit', function () {
+        return view('pop.battery.battery-edit');
+    })->name('battery.edit');
 });
