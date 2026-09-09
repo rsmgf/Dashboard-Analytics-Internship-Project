@@ -32,7 +32,7 @@ class StoreRectifierRequest extends FormRequest
             'type_modul_power'        => 'nullable|string|max:255',
             'kapasitas_rectifier'     => 'nullable|string|max:255',
             'beban'                   => 'nullable|string|max:255',
-            'utilisasi'               => 'nullable|string|max:255',
+            'utilisasi'               => 'nullable|numeric|min:0|max:100',
             'foto_rectifier'          => 'nullable|image|mimes:jpeg,png,jpg|max:10240',
 
             // Modules
@@ -47,5 +47,14 @@ class StoreRectifierRequest extends FormRequest
             'outputs.*.kapasitas_mcb'    => 'nullable|string',
             'outputs.*.peruntukan'       => 'nullable|string',
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('utilisasi') && is_string($this->input('utilisasi'))) {
+            $this->merge([
+                'utilisasi' => str_replace(',', '.', $this->input('utilisasi')),
+            ]);
+        }
     }
 }
