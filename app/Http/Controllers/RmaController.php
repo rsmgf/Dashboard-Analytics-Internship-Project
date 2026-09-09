@@ -44,8 +44,8 @@ class RmaController extends Controller
     {
         $validatedData = $request->validated();
 
-        // 1. Simpan tanda tangan
-        $ttdPath = $request->file('ttd_pemohon')->store('signatures', 'public');
+        // 1. Simpan tanda tangan di private storage (local)
+        $ttdPath = $request->file('ttd_pemohon')->store('signatures', 'local');
 
         // 2. Simpan data utama
         $rma = Rma::create([

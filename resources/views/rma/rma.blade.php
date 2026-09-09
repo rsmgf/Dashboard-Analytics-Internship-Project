@@ -122,7 +122,7 @@
                                             <span class="text-sub">{{ $rma->created_at->format('H:i') }} WIB</span>
                                         </td>
                                         <td>
-                                            {{ $rma->pop->name ?? '-' }}
+                                            {{ $rma->lokasi_asal ?? '-' }}
                                         </td>
                                         <td>
                                             <strong>{{ $rma->merk ?? '-' }}</strong>
@@ -130,10 +130,12 @@
                                         </td>
                                         <td class="text-center">
                                             <div class="action-buttons">
-                                                <a href="{{ route('rma.pdf', $rma->id) }}" class="btn-lihat" target="_blank">
+                                                <a href="{{ route('rma.pdf', $rma->id) }}" class="btn-lihat" target="_blank"
+                                                    title="Lihat Dokumen RMA" aria-label="Lihat PDF RMA {{ $rma->so_po }}">
                                                     <i class="bi bi-eye"></i> Lihat
                                                 </a>
-                                                <a href="{{ route('rma.download', $rma->id) }}" class="btn-download">
+                                                <a href="{{ route('rma.download', $rma->id) }}" class="btn-download"
+                                                    title="Download Dokumen RMA" aria-label="Download PDF RMA {{ $rma->so_po }}">
                                                     <i class="bi bi-download"></i> Download
                                                 </a>
                                             </div>
@@ -151,9 +153,9 @@
 
                     <!-- PAGINATION -->
                     <div class="pagination-footer">
-                        <div>Menampilkan data RMA</div>
+                        <div>Menampilkan {{ $rmas->firstItem() ?? 0 }} - {{ $rmas->lastItem() ?? 0 }} dari {{ $rmas->total() }} data RMA</div>
                         <div class="pagination-controls">
-                            {{-- {{ $rma->links() }} --}}
+                            {{ $rmas->links('vendor.pagination.custom') }}
                         </div>
                     </div>
 
