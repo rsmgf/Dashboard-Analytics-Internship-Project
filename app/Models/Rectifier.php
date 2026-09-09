@@ -54,6 +54,12 @@ class Rectifier extends Model
         return $this->hasMany(RectifierOutput::class);
     }
 
+    // Relasi ke Baterai (Child)
+    public function batteries()
+    {
+        return $this->hasMany(Battery::class);
+    }
+
     // Accessor untuk menghitung sisa slot terpakai secara otomatis
     public function getSisaSlotAttribute()
     {

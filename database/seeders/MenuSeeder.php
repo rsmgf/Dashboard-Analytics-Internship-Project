@@ -78,7 +78,7 @@ class MenuSeeder extends Seeder
 
         $battery = Menu::create([
             'name' => 'Battery',
-            'route' => null,
+            'route' => 'batteries.index',
             'icon' => 'bi bi-battery-full',
             'order' => 3,
             'parent_id' => $pop->id,

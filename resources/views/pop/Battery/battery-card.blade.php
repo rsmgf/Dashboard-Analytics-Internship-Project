@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
     <title>Data Baterai - PLN Icon Plus</title>
 
     {{-- Bootstrap Icons --}}
@@ -13,6 +14,9 @@
     {{-- Google Font --}}
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
         rel="stylesheet">
+
+    {{-- SweetAlert2 --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     {{-- Vite CSS --}}
     @vite([
@@ -39,197 +43,200 @@
         {{-- CONTENT --}}
         <div class="rectifier-content">
 
-            {{-- HEADER HALAMAN (TANPA KOTAK TABEL) --}}
+            {{-- HEADER HALAMAN --}}
             <div class="rectifier-page-header">
 
                 <div class="rectifier-page-info">
 
-                    <a href="#"
+                    <a href="{{ route('pops.index') }}"
                        class="back-button"
-                       title="Kembali">
+                       title="Kembali ke Daftar POP">
                         <i class="bi bi-arrow-left"></i>
                     </a>
 
                     <div class="rectifier-header-text">
 
-                        <div class="breadcrumb">
-                            <a href="#"><i class="bi bi-house-door-fill"></i></a>
-                            <i class="bi bi-chevron-right"></i>
-                            <a href="#">POP</a>
-                            <i class="bi bi-chevron-right"></i>
-                            <span style="color: #0785dc; font-weight: 600;">QUAE DOLORES 5</span>
-                        </div>
+                        <x-breadcrumb :items="[
+                            ['label' => 'POP', 'route' => 'pops.index'],
+                            ['label' => $pop->nama_pop]
+                        ]" />
 
                         <span class="rectifier-pop-sub">
-                            Kode: <strong>POP_FDPD40172</strong> &middot; Kota Sungai Penuh, Jambi &mdash; 2 Baterai
+                            Kode: <strong>{{ $pop->kode_pop }}</strong> &middot; {{ $pop->kota_kabupaten }}, {{ $pop->provinsi ?? 'Jambi' }} &mdash; {{ $batteries->count() }} Baterai
                         </span>
 
                     </div>
 
                 </div>
 
-                <a href="#"
+                @can('batteries.index.create')
+                <a href="{{ route('batteries.create', $pop->id) }}"
                    class="btn-tambah-rectifier">
                     <i class="bi bi-plus-lg"></i>
                     Tambah Baterai
                 </a>
+                @endcan
 
             </div>
 
+            {{-- Flash Message Success --}}
+            @if (session('success'))
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: "{{ session('success') }}",
+                            timer: 3000,
+                            showConfirmButton: false,
+                        });
+                    });
+                </script>
+            @endif
 
             {{-- ==================================================
-                RECTIFIER 1 SECTION
+                BATTERY SECTIONS GROUPED BY RECTIFIER
             ================================================== --}}
-            <div class="rectifier-section">
+            @forelse ($groupedBatteries as $nomorRecti => $batteryGroup)
+                @php
+                    $stats = $rectifierBackupStats[$nomorRecti] ?? null;
+                    $badgeClass = $stats['badge_class'] ?? 'status-warning';
+                    $performaText = $stats['performa_backup'] ?? 'BLM UJI BATT';
+                    $backupJam = $stats['backup_time'] !== null ? $stats['backup_time'] . ' Jam' : '-';
+                @endphp
 
-                <div class="rectifier-header">
-                    <div class="rectifier-title">
-                        Rectifier 1 : POP_1SRG012_RECT01
-                    </div>
-                    <div class="backup-time status-excellent">
-                        Performance Backup Time : 6.50
-                    </div>
-                </div>
+                <div class="rectifier-section">
 
-                <div class="rectifier-grid" id="batteryGrid1">
-
-                    {{-- CARD 1 (EXCELLENT - Hijau) --}}
-                    <div class="rectifier-card battery-card" id="battery-card-1">
-
-                        {{-- Card Header Sesuai Gambar --}}
-                        <div class="rectifier-card-header">
-                            <div class="card-icon">
-                                <i class="bi bi-file-earmark-text-fill"></i>
-                            </div>
-                            <div class="card-title-text">
-                                <h3>Daftar pemeriksaan Baterai</h3>
-                                <span>Data Baterai</span>
-                            </div>
+                    <div class="rectifier-header">
+                        <div class="rectifier-title">
+                            Rectifier : {{ $nomorRecti }}
                         </div>
-
-                        <div class="rectifier-information">
-                            <div class="equipment-info">
-                                <strong>Merk</strong>
-                                <span class="data-value">: SACRED SUN</span>
-                            </div>
-                            <div class="equipment-info">
-                                <strong>Tipe</strong>
-                                <span class="data-value">: SSIFP48100B</span>
-                            </div>
-                            <div class="equipment-info">
-                                <strong>Performa Baterai</strong>
-                                <span class="data-value">
-                                    : <span class="status-badge status-excellent" style="padding: 3px 8px; border-radius: 4px; display: inline-flex; align-items: center; gap: 6px;">
-                                        100% - EXCELLENT
-                                        <span class="status-dot dot-excellent"></span>
-                                    </span>
-                                </span>
-                            </div>
-                            <div class="equipment-info">
-                                <strong>Status Uji Baterai</strong>
-                                <span class="data-value">: Belum di Uji</span>
-                            </div>
+                        <div class="backup-time {{ $badgeClass }}">
+                            Performance Backup Time : {{ $backupJam }} ({{ $performaText }})
                         </div>
-
-                        <div class="rectifier-meta">
-                            <div class="meta-item">
-                                <i class="bi bi-calendar-event-fill"></i>
-                                <span>07 Ags 2026</span>
-                            </div>
-                            <div class="meta-item">
-                                <i class="bi bi-geo-alt-fill"></i>
-                                <span>Jambi</span>
-                            </div>
-                        </div>
-
-                        <div class="rectifier-last-updated">
-                            <i class="bi bi-clock-history"></i>
-                            <span>Manager Unit ICONPLUS KP JAMBI - Sandria Abhiseka . 04 Sep 2026, 10.31</span>
-                        </div>
-
-                        <div class="rectifier-card-footer">
-                            <button type="button" class="btn-hapus" onclick="hapusBaterai('battery-card-1', 'Battery #1')">
-                                <i class="bi bi-trash3-fill"></i>
-                                Hapus
-                            </button>
-                            <a href="#" class="detail-button">
-                                <span>Detail</span>
-                                <i class="bi bi-chevron-right"></i>
-                            </a>
-                        </div>
-
                     </div>
 
-                    {{-- CARD 2 (GOOD ENOUGH - Kuning) --}}
-                    <div class="rectifier-card battery-card" id="battery-card-2">
+                    <div class="rectifier-grid">
 
-                        {{-- Card Header Sesuai Gambar --}}
-                        <div class="rectifier-card-header">
-                            <div class="card-icon">
-                                <i class="bi bi-file-earmark-text-fill"></i>
-                            </div>
-                            <div class="card-title-text">
-                                <h3>Daftar pemeriksaan Baterai</h3>
-                                <span>Data Baterai</span>
-                            </div>
-                        </div>
+                        @foreach ($batteryGroup as $battery)
+                            @php
+                                $persen = $battery->kapasitas_battery_persen;
+                                $performa = $battery->performa_baterai;
 
-                        <div class="rectifier-information">
-                            <div class="equipment-info">
-                                <strong>Merk</strong>
-                                <span class="data-value">: SACRED SUN</span>
-                            </div>
-                            <div class="equipment-info">
-                                <strong>Tipe</strong>
-                                <span class="data-value">: SSIFP48100B</span>
-                            </div>
-                            <div class="equipment-info">
-                                <strong>Performa Baterai</strong>
-                                <span class="data-value">
-                                    : <span class="status-badge status-good-enough" style="padding: 3px 8px; border-radius: 4px; display: inline-flex; align-items: center; gap: 6px;">
-                                        80% - GOOD ENOUGH
-                                        <span class="status-dot dot-good-enough"></span>
-                                    </span>
-                                </span>
-                            </div>
-                            <div class="equipment-info">
-                                <strong>Status Uji Baterai</strong>
-                                <span class="data-value">: Sudah di Uji</span>
-                            </div>
-                        </div>
+                                $badgeStyleClass = 'status-excellent';
+                                $dotClass = 'dot-excellent';
 
-                        <div class="rectifier-meta">
-                            <div class="meta-item">
-                                <i class="bi bi-calendar-event-fill"></i>
-                                <span>07 Ags 2026</span>
-                            </div>
-                            <div class="meta-item">
-                                <i class="bi bi-geo-alt-fill"></i>
-                                <span>Jambi</span>
-                            </div>
-                        </div>
+                                if ($persen === null || $persen <= 0) {
+                                    $badgeStyleClass = 'status-warning';
+                                    $dotClass = 'dot-warning';
+                                    $performaBadgeText = 'BLM UJI BATT';
+                                } elseif ($persen >= 90) {
+                                    $badgeStyleClass = 'status-excellent';
+                                    $dotClass = 'dot-excellent';
+                                    $performaBadgeText = $persen . '% - EXCELLENT';
+                                } elseif ($persen >= 75) {
+                                    $badgeStyleClass = 'status-good-enough';
+                                    $dotClass = 'dot-good-enough';
+                                    $performaBadgeText = $persen . '% - GOOD ENOUGH';
+                                } elseif ($persen >= 50) {
+                                    $badgeStyleClass = 'status-warning';
+                                    $dotClass = 'dot-warning';
+                                    $performaBadgeText = $persen . '% - WARNING';
+                                } else {
+                                    $badgeStyleClass = 'status-danger';
+                                    $dotClass = 'dot-danger';
+                                    $performaBadgeText = $persen . '% - ALERT';
+                                }
+                            @endphp
 
-                        <div class="rectifier-last-updated">
-                            <i class="bi bi-clock-history"></i>
-                            <span>Manager Unit ICONPLUS KP JAMBI - Sandria Abhiseka . 04 Sep 2026, 10.31</span>
-                        </div>
+                            <div class="rectifier-card battery-card" id="battery-card-{{ $battery->id }}">
 
-                        <div class="rectifier-card-footer">
-                            <button type="button" class="btn-hapus" onclick="hapusBaterai('battery-card-2', 'Battery #2')">
-                                <i class="bi bi-trash3-fill"></i>
-                                Hapus
-                            </button>
-                            <a href="#" class="detail-button">
-                                <span>Detail</span>
-                                <i class="bi bi-chevron-right"></i>
-                            </a>
-                        </div>
+                                {{-- Card Header --}}
+                                <div class="rectifier-card-header">
+                                    <div class="card-icon">
+                                        <i class="bi bi-battery-charging"></i>
+                                    </div>
+                                    <div class="card-title-text">
+                                        <h3>{{ $battery->nomor_bank }}</h3>
+                                        <span>Data Baterai ({{ $battery->jenis_battery ?? 'Lithium' }})</span>
+                                    </div>
+                                </div>
+
+                                <div class="rectifier-information">
+                                    <div class="equipment-info">
+                                        <strong>Merk</strong>
+                                        <span class="info-sep">:</span>
+                                        <span class="data-value">{{ $battery->merk_battery }}</span>
+                                    </div>
+                                    <div class="equipment-info">
+                                        <strong>Tipe</strong>
+                                        <span class="info-sep">:</span>
+                                        <span class="data-value">{{ $battery->tipe_battery }}</span>
+                                    </div>
+                                    <div class="equipment-info">
+                                        <strong>Kapasitas</strong>
+                                        <span class="info-sep">:</span>
+                                        <span class="data-value">{{ $battery->kapasitas_battery }} AH</span>
+                                    </div>
+                                    <div class="equipment-info">
+                                        <strong>Performa Baterai</strong>
+                                        <span class="info-sep">:</span>
+                                        <span class="data-value">
+                                            <span class="status-badge {{ $badgeStyleClass }}">
+                                                {{ $performaBadgeText }}
+                                                <span class="status-dot {{ $dotClass }}"></span>
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div class="equipment-info">
+                                        <strong>Status Uji</strong>
+                                        <span class="info-sep">:</span>
+                                        <span class="data-value">{{ $battery->status_uji ?? 'BLM UJI BATT' }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="rectifier-meta">
+                                    <div class="meta-item">
+                                        <i class="bi bi-calendar-event-fill"></i>
+                                        <span>{{ $battery->tanggal_uji_terakhir ? $battery->tanggal_uji_terakhir->format('d M Y') : '-' }}</span>
+                                    </div>
+                                    <div class="meta-item">
+                                        <i class="bi bi-geo-alt-fill"></i>
+                                        <span>{{ $battery->area_sti ?? $pop->kota_kabupaten }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="rectifier-last-updated">
+                                    <i class="bi bi-clock-history"></i>
+                                    <span>{{ $battery->diupdateOleh?->name ?? 'Admin' }} &middot; {{ $battery->updated_at->format('d M Y, H.i') }} WIB</span>
+                                </div>
+
+                                <div class="rectifier-card-footer">
+                                    @can('batteries.index.delete')
+                                    <button type="button" class="btn-hapus" onclick="hapusBaterai('{{ route('batteries.destroy', [$pop->id, $battery->id]) }}', '{{ $battery->nomor_bank }}')">
+                                        <i class="bi bi-trash3-fill"></i>
+                                        Hapus
+                                    </button>
+                                    @endcan
+                                    <a href="{{ route('batteries.show', [$pop->id, $battery->id]) }}" class="detail-button">
+                                        <span>Detail</span>
+                                        <i class="bi bi-chevron-right"></i>
+                                    </a>
+                                </div>
+
+                            </div>
+                        @endforeach
 
                     </div>
 
                 </div>
-
-            </div>
+            @empty
+                <div class="empty-battery">
+                    <i class="bi bi-battery"></i>
+                    <h3>Belum Ada Data Baterai</h3>
+                    <p>Silakan tambahkan data baterai untuk POP <strong>{{ $pop->nama_pop }}</strong> menggunakan tombol <strong>Tambah Baterai</strong> di kanan atas.</p>
+                </div>
+            @endforelse
 
         </div>
 
@@ -237,52 +244,39 @@
 
 </div>
 
-{{-- SweetAlert2 JS --}}
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{{-- SweetAlert2 Delete Handler --}}
 <script>
-    function hapusBaterai(cardId, batteryName) {
+    function hapusBaterai(deleteUrl, batteryName) {
         Swal.fire({
             title: 'Hapus Baterai?',
-            html: `Apakah Anda yakin ingin menghapus data <strong>"${batteryName}"</strong>?<br><small style="color: #64748b;">Data baterai dan riwayat pemeriksaannya akan dihapus.</small>`,
+            html: `Apakah Anda yakin ingin menghapus data <strong>"${batteryName}"</strong>?<br><small style="color: #64748b;">Data baterai dan riwayat pengujiannya akan dihapus permanen.</small>`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#dc2626',
             cancelButtonColor: '#64748b',
-            confirmButtonText: '<i class="bi bi-trash3-fill"></i> Ya, Hapus!',
+            confirmButtonText: 'Ya, Hapus!',
             cancelButtonText: 'Batal',
             reverseButtons: true,
-            focusCancel: true
         }).then((result) => {
             if (result.isConfirmed) {
-                const cardElement = document.getElementById(cardId);
-                if (cardElement) {
-                    cardElement.style.transition = 'all 0.3s ease';
-                    cardElement.style.opacity = '0';
-                    cardElement.style.transform = 'scale(0.95)';
-                    
-                    setTimeout(() => {
-                        const grid = cardElement.closest('.rectifier-grid');
-                        cardElement.remove();
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = deleteUrl;
 
-                        if (grid && grid.querySelectorAll('.battery-card').length === 0) {
-                            grid.innerHTML = `
-                                <div class="empty-battery" style="grid-column: 1 / -1; text-align: center; padding: 40px;">
-                                    <i class="bi bi-battery" style="font-size: 3rem; color: #cbd5e1;"></i>
-                                    <h3 style="margin-top: 15px; color: #475569;">Belum Ada Data Baterai</h3>
-                                    <p style="color: #64748b;">Data baterai belum tersedia untuk rectifier ini.</p>
-                                </div>
-                            `;
-                        }
-                    }, 300);
-                }
+                const csrfToken = document.createElement('input');
+                csrfToken.type = 'hidden';
+                csrfToken.name = '_token';
+                csrfToken.value = '{{ csrf_token() }}';
+                form.appendChild(csrfToken);
 
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: `Data "${batteryName}" berhasil dihapus.`,
-                    showConfirmButton: false,
-                    timer: 1500
-                });
+                const methodField = document.createElement('input');
+                methodField.type = 'hidden';
+                methodField.name = '_method';
+                methodField.value = 'DELETE';
+                form.appendChild(methodField);
+
+                document.body.appendChild(form);
+                form.submit();
             }
         });
     }

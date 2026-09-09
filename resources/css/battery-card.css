@@ -205,8 +205,8 @@ body {
 .battery-card {
     position: relative;
     width: 100%;
-    height: 310px;
-    min-height: 310px;
+    height: auto;
+    min-height: 295px;
     background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 12px;
@@ -283,34 +283,51 @@ body {
     flex-direction: column;
     gap: 5px;
     padding: 10px 20px 6px;
-    border-bottom: 1px dashed #e2e8f0;
 }
 
 .equipment-info, 
 .data-row {
     font-size: 0.85rem;
     color: #334155;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 130px 14px 1fr;
+    align-items: center;
+    line-height: 1.6;
 }
 
 .equipment-info strong, 
 .data-label {
     font-weight: 500;
-    color: #64748b;
+    color: #1e293b;
+    white-space: nowrap;
+}
+
+.info-sep {
+    text-align: left;
+    color: #1e293b;
+    font-weight: 500;
 }
 
 .data-value {
     color: #1e293b;
     font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 6px;
+    text-align: left;
 }
 
 .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     font-size: 10px;
     font-weight: 600;
-    padding: 2px 8px;
+    padding: 3px 8px;
     border-radius: 4px;
     letter-spacing: 0.5px;
+    white-space: nowrap;
 }
 
 .status-excellent {
@@ -350,10 +367,11 @@ body {
 
 .rectifier-meta {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
-    padding: 8px 20px 0;
-    font-size: 0.7rem;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 20px 0;
+    font-size: 0.75rem;
     color: #64748b;
 }
 
@@ -386,15 +404,12 @@ body {
 
 .rectifier-card-footer, 
 .card-footer {
-    position: absolute;
-    left: 20px;
-    right: 20px;
-    bottom: 16px;
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-top: 1px solid #f1f5f9;
-    padding-top: 10px;
+    padding: 10px 20px 14px;
     margin-top: auto;
 }
 
@@ -453,34 +468,38 @@ body {
 
 .empty-battery {
     grid-column: 1 / -1;
-    min-height: 250px;
+    min-height: 280px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: #f8fafc;
-    border-radius: 8px;
+    background: #ffffff;
+    border-radius: 12px;
     border: 1px dashed #cbd5e1;
     text-align: center;
-    padding: 40px;
-    color: #94a3b8;
+    padding: 48px 24px;
+    color: #64748b;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .empty-battery i {
-    font-size: 35px;
-    margin-bottom: 10px;
+    font-size: 3rem;
+    margin-bottom: 12px;
     color: #94a3b8;
 }
 
 .empty-battery h3 {
-    margin-top: 4px;
-    font-size: 16px;
-    color: #334155;
+    margin: 0 0 6px 0;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #1e293b;
 }
 
 .empty-battery p {
-    font-size: 13px;
+    font-size: 0.9rem;
     color: #64748b;
+    margin-bottom: 16px;
+    max-width: 480px;
 }
 
 @media (max-width: 1100px) {

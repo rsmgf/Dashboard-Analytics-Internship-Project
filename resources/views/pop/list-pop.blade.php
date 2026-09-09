@@ -214,7 +214,7 @@
                     targetUrl = `/pops/${idPOP}/ac`;
                     break;
                 case 'Battery':
-                    targetUrl = `/pops/${idPOP}/battery`;
+                    targetUrl = `/pops/${idPOP}/batteries`;
                     break;
                 case 'kWh':
                     targetUrl = `/pops/${idPOP}/kwh`;

@@ -265,6 +265,9 @@ body {
 .rectifier-information,
 .information {
     padding: 14px 25px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
 .rectifier-meta,
@@ -370,6 +373,54 @@ body {
     transform: translateX(3px);
 }
 
+/* Status Badge Styles (Same as Battery Card) */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.status-safe, .status-excellent {
+    background: #dcfce7;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+}
+.dot-safe, .dot-excellent { background: #22c55e; }
+
+.status-warning, .status-good-enough, .status-good {
+    background: #fef9c3;
+    color: #a16207;
+    border: 1px solid #fef08a;
+}
+.dot-warning, .dot-good-enough, .dot-good { background: #eab308; }
+
+.status-alert {
+    background: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+.dot-alert { background: #ef4444; }
+
+.status-unknown {
+    background: #f1f5f9;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+}
+.dot-unknown { background: #94a3b8; }
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
 .empty-rectifier {
     grid-column: 1 / -1;
     min-height: 250px;
@@ -395,25 +446,55 @@ body {
 
 /* Sejajarkan label:value */
 .equipment-info {
-    display: flex;
-    align-items: baseline;
-    gap: 4px;
+    display: grid;
+    grid-template-columns: 130px 14px 1fr;
+    align-items: center;
+    gap: 0;
     margin: 0;
-    font-size: 0.9rem;
-    line-height: 1.7;
-    font-weight: 500;
+    font-size: 0.85rem;
+    line-height: 1.8;
     color: #334155;
     word-break: break-word;
 }
 
-.equipment-info.serial {
-    font-weight: 400;
-    color: #475569;
+.equipment-info .info-label,
+.equipment-info strong {
     font-weight: 500;
-
+    color: #1e293b;
+    white-space: nowrap;
+    width: auto;
+    padding-right: 0;
+    position: static;
 }
 
-.info-label {
+.equipment-info .info-label::after {
+    display: none;
+}
+
+.equipment-info .info-sep {
+    color: #1e293b;
+    font-weight: 500;
+    text-align: left;
+}
+
+.equipment-info .data-value {
+    color: #1e293b;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 6px;
+    text-align: left;
+}
+
+/* Fallback for components without info-sep (e.g. kwh-card legacy markup) */
+.equipment-info:not(:has(.info-sep)) {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.equipment-info:not(:has(.info-sep)) .info-label {
     display: inline-block;
     width: 128px;
     position: relative;
@@ -423,7 +504,7 @@ body {
     flex-shrink: 0;
 }
 
-.info-label::after {
+.equipment-info:not(:has(.info-sep)) .info-label::after {
     content: ":";
     position: absolute;
     right: 0;
