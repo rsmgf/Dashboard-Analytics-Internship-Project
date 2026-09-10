@@ -278,7 +278,6 @@
                         },
                         body: JSON.stringify({
                             role: selectedRole,
-                            id_karyawan: email
                         }),
                     })
                     .then(res => res.json())
@@ -287,7 +286,6 @@
 
                         // update DOM sesuai response, tanpa perlu reload halaman
                         selectedRow.dataset.role = selectedRole;
-                        selectedRow.dataset.email = email;
                         selectedRow.querySelector('.current-role').textContent =
                             selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1).replace('_', ' ');
 

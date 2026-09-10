@@ -1,8 +1,9 @@
 <?php
 
 use App\Http\Controllers\Admin\AccessManagementController;
+use App\Http\Controllers\Admin\MenuManagementController;
 use App\Http\Controllers\Admin\UserManagementController;
-use App\Http\Controllers\MenuManagementController;
+use App\Http\Controllers\KwhController;
 use App\Http\Controllers\PopController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RectifierController;
@@ -49,12 +50,16 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->group(function
 Route::middleware('auth')->group(function () {
 
     // --- FORM & RIWAYAT RMA ---
-    Route::get('/rma', [RmaController::class, 'index'])->name('rma');          // Menampilkan Riwayat RMA (Halaman Utama)
-    Route::get('/rma/create', [RmaController::class, 'create'])->name('rma.create');   // Menampilkan Form Pengisian RMA
-    Route::post('/rma', [RmaController::class, 'store'])->name('rma.store');          // Menyimpan Data Form RMA
-    // Preview & Download PDF
-    Route::get('/rma/{id}/download', [RmaController::class, 'downloadPdf'])->name('rma.download');
-    Route::get('/rma/{id}/pdf', [RmaController::class, 'generatePdf'])->name('rma.pdf');
+    Route::middleware('permission:rma.read')->group(function () {
+        Route::get('/rma', [RmaController::class, 'index'])->name('rma');
+        Route::get('/rma/{id}/download', [RmaController::class, 'downloadPdf'])->name('rma.download');
+        Route::get('/rma/{id}/pdf', [RmaController::class, 'generatePdf'])->name('rma.pdf');
+    });
+
+    Route::middleware('permission:rma.create')->group(function () {
+        Route::get('/rma/create', [RmaController::class, 'create'])->name('rma.create');
+        Route::post('/rma', [RmaController::class, 'store'])->name('rma.store');
+    });
 
     // --- POP: VIEW (Semua role, cukup login) ---
     Route::get('/pops', [PopController::class, 'index'])->name('pops.index');
@@ -63,6 +68,12 @@ Route::middleware('auth')->group(function () {
     Route::middleware('permission:pops.index.create')->group(function () {
         Route::get('/pops/create', [PopController::class, 'create'])->name('pops.create');
         Route::post('/pops', [PopController::class, 'store'])->name('pops.store');
+    });
+
+    // --- POP: IMPORT EXCEL — harus SEBELUM /pops/{id} ---
+    Route::middleware('permission:pops.index.create')->group(function () {
+        Route::get('/pops/import', [PopController::class, 'importForm'])->name('pops.import');
+        Route::post('/pops/import', [PopController::class, 'import'])->name('pops.import.store');
     });
 
     // --- POP: SHOW (detail satu POP) ---
@@ -99,22 +110,27 @@ Route::middleware('auth')->group(function () {
         Route::delete('/pops/{pop}/rectifiers/{id}', [RectifierController::class, 'destroy'])->name('rectifiers.destroy');
     });
 
-    //BARU DITAMBAH KILA
-    Route::get('/kwh-card', function () {
-    return view('pop.kwh.kwh-card'); })->name('kwh.card');
+    // --- KWH ---
+    Route::get('/pops/{pop}/kwh', [KwhController::class, 'index'])->name('kwh.card');
 
-    Route::get('/kwh-detail', function () {
-    return view('pop.kwh.kwh-detail'); })->name('kwh.detail');
+    // Create HARUS sebelum /{id} agar 'create' tidak ditangkap sebagai id
+    Route::middleware('permission:kwh.card.create')->group(function () {
+        Route::get('/pops/{pop}/kwh/create', [KwhController::class, 'create'])->name('kwh.create');
+        Route::post('/pops/{pop}/kwh', [KwhController::class, 'store'])->name('kwh.store');
+    });
 
-    Route::get('/kwh-create', function () {
-        return view('pop.KWh.kwh-create');
-    })->name('kwh.create');
+    Route::get('/pops/{pop}/kwh/{id}', [KwhController::class, 'show'])->name('kwh.detail');
 
-    Route::get('/kwh-edit', function () {
-        return view('pop.KWh.kwh-edit');
-    })->name('kwh.edit');
+    Route::middleware('permission:kwh.card.update')->group(function () {
+        Route::get('/pops/{pop}/kwh/{id}/edit', [KwhController::class, 'edit'])->name('kwh.edit');
+        Route::put('/pops/{pop}/kwh/{id}', [KwhController::class, 'update'])->name('kwh.update');
+    });
 
-    Route::get('/battery-card', function () {
+    Route::middleware('permission:kwh.card.delete')->group(function () {
+        Route::delete('/pops/{pop}/kwh/{id}', [KwhController::class, 'destroy'])->name('kwh.destroy');
+    });
+  
+      Route::get('/battery-card', function () {
         return view('pop.battery.battery-card');
     })->name('battery.card');
 
@@ -129,8 +145,4 @@ Route::middleware('auth')->group(function () {
     route::get('/battery-edit', function () {
         return view('pop.battery.battery-edit');
     })->name('battery.edit');
-
 });
-
-
-

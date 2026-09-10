@@ -284,7 +284,12 @@
         <tr>
             <td style="width: 50%; vertical-align: bottom; height: 100px;">
                 <div style="margin-top: 5px;">
-                    <img src="{{ public_path('storage/' . $data->ttd_pemohon) }}"
+                    @php
+                        $ttdPath = file_exists(storage_path('app/private/' . $data->ttd_pemohon))
+                            ? storage_path('app/private/' . $data->ttd_pemohon)
+                            : public_path('storage/' . $data->ttd_pemohon);
+                    @endphp
+                    <img src="{{ $ttdPath }}"
                         style="max-height: 90px; max-width: 250px; object-fit: contain; display: block; margin: 0 auto;">
                 </div>
             </td>

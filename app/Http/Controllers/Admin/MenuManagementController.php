@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Menu;
 use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class MenuManagementController extends Controller
 {
@@ -26,6 +28,8 @@ class MenuManagementController extends Controller
 
         $menu = Menu::create($request->only('name', 'route', 'icon', 'order'));
 
+        Cache::flush();
+
         return back()->with('success', 'Menu berhasil ditambahkan');
     }
 
@@ -38,12 +42,17 @@ class MenuManagementController extends Controller
 
         $menu->roles()->sync($request->roles ?? []);
 
+        Cache::flush();
+
         return back()->with('success', "Akses menu {$menu->name} berhasil diperbarui");
     }
 
     public function destroy(Menu $menu)
     {
         $menu->delete(); // otomatis hapus submenu juga karena onDelete('cascade') di migration
+
+        Cache::flush();
+
         return back()->with('success', "Menu {$menu->name} berhasil dihapus");
     }
 }

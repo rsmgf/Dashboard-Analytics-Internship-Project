@@ -18,8 +18,16 @@ class StorePopRequest extends FormRequest
             'nama_pop'       => 'required|string',
             'provinsi'       => 'required|string',
             'kota_kabupaten' => 'required|string',
-            'tipe_pop'       => 'nullable|string',
-            'jenis_bangunan' => 'nullable|string',
+            'tipe_pop'       => 'nullable|in:POP-SB,POP-A,POP-B,POP-D',
+            'jenis_bangunan' => 'nullable|in:Shelter,Shelter CKD,Shelter Permanen,Mini Shelter,ODC,Mini POP,Mikro POP,OLT Gantung',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'tipe_pop.in'       => 'Tipe POP harus salah satu dari: POP-SB, POP-A, POP-B, POP-D.',
+            'jenis_bangunan.in' => 'Building harus salah satu dari: Shelter, Shelter CKD, Shelter Permanen, Mini Shelter, ODC, Mini POP, Mikro POP, OLT Gantung.',
         ];
     }
 }
