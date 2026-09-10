@@ -25,13 +25,6 @@
     width: 100%;
 }
 
-.form-section-subtitle {
-    font-size: 0.85rem;
-    color: #64748b;
-    margin-top: -12px;
-    margin-bottom: 16px;
-}
-
 .detail-grid-3 {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -57,48 +50,68 @@
     word-break: break-word;
 }
 
-.table-detail-container {
-    width: 100%;
-    overflow-x: auto;
+/* Penyesuaian Tabel Detail agar Senada dengan Form Create */
+.checklist-table-container {
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #ffffff;
 }
 
-.table-detail {
-    width: 100%;
-    border-collapse: collapse;
+.checklist-row {
+    display: flex;
+    border-bottom: 1px solid #cbd5e1;
 }
 
-.table-detail tr {
-    border-bottom: 1px solid #f1f5f9;
-}
-
-.table-detail tr:last-child {
+.checklist-row:last-child {
     border-bottom: none;
 }
 
-.table-detail td {
-    padding: 12px 0;
-    font-size: 0.88rem;
-    vertical-align: middle;
-}
-
-.td-label {
-    width: 25%;
-    color: #64748b;
+.checklist-label {
+    width: 280px;
+    background: #ebf3ff;
+    padding: 12px 16px;
+    font-size: 0.84rem;
     font-weight: 500;
-}
-
-.td-separator {
-    width: 3%;
-    color: #64748b;
-    font-weight: 500;
-    text-align: center;
-}
-
-.td-val {
-    width: 72%;
     color: #1e293b;
+    display: flex;
+    align-items: center;
+    border-right: 1px solid #cbd5e1;
+}
+
+.checklist-field {
+    flex: 1;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    font-size: 0.84rem;
     font-weight: 600;
-    word-break: break-word;
+    color: #1e293b;
+}
+
+/* Grid Kapasitas Uji VRLA pada Detail */
+.uji-grid-4-detail {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    width: 100%;
+}
+
+.uji-sub-display {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #f8fafc;
+    padding: 6px 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 0.8rem;
+}
+
+.sub-lbl {
+    color: #64748b;
+    font-weight: 500;
 }
 
 .capacity-value {
@@ -125,138 +138,24 @@
     border: 1px solid transparent;
 }
 
-.status-excellent,
-.opt-excellent {
-    color: #15803d !important;
-    background-color: #dcfce7 !important;
-    border-color: #bbf7d0 !important;
-    font-weight: 600;
-}
-
-.status-good,
-.opt-good {
-    color: #a16207 !important;
-    background-color: #fef9c3 !important;
-    border-color: #fef08a !important;
-    font-weight: 600;
-}
-
-.status-warning,
-.opt-warning {
-    color: #c2410c !important;
-    background-color: #ffedd5 !important;
-    border-color: #fed7aa !important;
-    font-weight: 600;
-}
-
-.status-alert,
-.status-danger,
-.opt-alert,
-.opt-danger {
-    color: #b91c1c !important;
-    background-color: #fee2e2 !important;
-    border-color: #fecaca !important;
-    font-weight: 600;
-}
-
-.btn-edit-detail {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    text-decoration: none;
-}
+.status-excellent { color: #15803d !important; background-color: #dcfce7 !important; border-color: #bbf7d0 !important; }
+.status-good { color: #a16207 !important; background-color: #fef9c3 !important; border-color: #fef08a !important; }
+.status-warning { color: #c2410c !important; background-color: #ffedd5 !important; border-color: #fed7aa !important; }
+.status-danger { color: #b91c1c !important; background-color: #fee2e2 !important; border-color: #fecaca !important; }
 
 @media (max-width: 900px) {
     .detail-grid-3 {
         grid-template-columns: 1fr;
     }
-
-    .td-label {
-        width: 40%;
+    .checklist-row {
+        flex-direction: column;
     }
-
-    .td-separator {
-        width: 5%;
+    .checklist-label {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #cbd5e1;
     }
-
-    .td-val {
-        width: 55%;
-    }
-}
-
-@media (max-width: 600px) {
-    .detail-page-header {
-        margin-bottom: 16px;
-    }
-
-    .btn-edit-form {
-        font-size: 0.82rem;
-    }
-
-    .detail-grid-3 {
-        gap: 16px;
-    }
-
-    .detail-label {
-        font-size: 0.75rem;
-    }
-
-    .detail-value {
-        font-size: 0.85rem;
-    }
-
-    .table-detail td {
-        padding: 10px 0;
-        font-size: 0.82rem;
-    }
-
-    .td-label {
-        width: 42%;
-    }
-
-    .td-separator {
-        width: 5%;
-    }
-
-    .td-val {
-        width: 53%;
-    }
-
-    .status-badge {
-        padding: 4px 10px;
-        font-size: 0.7rem;
-    }
-
-    .capacity-value {
-        padding: 4px 8px;
-        font-size: 0.75rem;
-    }
-
-    .form-actions {
-        gap: 10px;
-    }
-}
-
-@media (max-width: 400px) {
-    .td-label {
-        width: 45%;
-    }
-
-    .td-separator {
-        width: 5%;
-    }
-
-    .td-val {
-        width: 50%;
-    }
-
-    .table-detail td {
-        font-size: 0.78rem;
-    }
-
-    .btn-edit-form {
-        gap: 5px;
-        font-size: 0.78rem;
+    .uji-grid-4-detail {
+        grid-template-columns: 1fr;
     }
 }

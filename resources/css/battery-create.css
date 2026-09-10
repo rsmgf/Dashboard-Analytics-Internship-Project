@@ -82,12 +82,6 @@ body {
     gap: 20px;
 }
 
-.form-grid-2 {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 20px;
-}
-
 .form-grid-1 {
     display: grid;
     grid-template-columns: 1fr;
@@ -122,15 +116,7 @@ body {
     color: #1e293b;
     font-family: 'Poppins', sans-serif;
     font-size: 0.84rem;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-}
-
-.form-control::placeholder {
-    color: #94a3b8;
-}
-
-.form-control:hover {
-    border-color: #94a3b8;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .form-control:focus {
@@ -138,7 +124,78 @@ body {
     box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.12);
 }
 
-.disabled-input,
+.disabled-input {
+    background: #f1f5f9 !important;
+    border-color: #e2e8f0 !important;
+    color: #64748b !important;
+    cursor: not-allowed !important;
+}
+
+/* Checklist Table Layout (Sesuai Desain Baru) */
+.checklist-table-container {
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+.checklist-row {
+    display: flex;
+    border-bottom: 1px solid #cbd5e1;
+}
+
+.checklist-row:last-child {
+    border-bottom: none;
+}
+
+.checklist-label {
+    width: 280px;
+    background: #ebf3ff;
+    padding: 12px 16px;
+    font-size: 0.84rem;
+    font-weight: 500;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    border-right: 1px solid #cbd5e1;
+}
+
+.checklist-field {
+    flex: 1;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+}
+
+.table-input {
+    width: 100%;
+    height: 36px;
+    padding: 6px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    outline: none;
+    background: #ffffff;
+    color: #1e293b;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.84rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.table-input:focus {
+    border-color: #1e40af;
+    box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.12);
+}
+
+select.table-input, select.form-control {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+    padding-right: 32px;
+}
+
 .auto-field {
     background: #f1f5f9 !important;
     border-color: #e2e8f0 !important;
@@ -146,25 +203,133 @@ body {
     cursor: not-allowed !important;
 }
 
-.disabled-input:hover,
-.auto-field:hover {
-    border-color: #e2e8f0 !important;
+.default-uji-text {
+    color: #94a3b8;
+    font-size: 0.84rem;
+    font-style: italic;
 }
 
-.disabled-input:focus,
-.auto-field:focus {
-    border-color: #e2e8f0 !important;
-    box-shadow: none !important;
+.uji-wrapper {
+    width: 100%;
 }
 
-.auto-info {
+.uji-grid-4 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    width: 100%;
+}
+
+.uji-sub-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sub-label {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: #475569;
+    min-width: 65px;
+}
+
+/* Upload Foto Layout */
+.upload-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    align-items: center;
+}
+
+.upload-dropzone {
+    border: 2px dashed #93c5fd;
+    background: #eff6ff;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.upload-icon {
+    font-size: 2.5rem;
+    color: #3b82f6;
+}
+
+.upload-text {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.btn-browse {
+    background: #0284c7;
+    color: #ffffff;
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-browse:hover {
+    background: #0369a1;
+}
+
+.preview-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.preview-title {
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.preview-box {
+    width: 100%;
+    height: 130px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.preview-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.no-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    color: #94a3b8;
+    font-size: 0.7rem;
+    text-align: center;
+    padding: 10px;
+}
+
+.upload-info {
     display: block;
-    margin-top: 0;
+    margin-top: 5px;
     color: #94a3b8;
     font-size: 0.68rem;
     font-style: italic;
 }
 
+/* Status Display Styles */
 .status-display-wrapper {
     width: 100%;
 }
@@ -204,45 +369,14 @@ body {
     background: #cbd5e1;
 }
 
-.status-excellent {
-    background: #f0fdf4 !important;
-    border-color: #bbf7d0 !important;
-    color: #15803d !important;
-}
-
-.status-dot-excellent {
-    background: #22c55e !important;
-}
-
-.status-good {
-    background: #fefce8 !important;
-    border-color: #fde68a !important;
-    color: #a16207 !important;
-}
-
-.status-dot-good {
-    background: #eab308 !important;
-}
-
-.status-warning {
-    background: #fff7ed !important;
-    border-color: #fed7aa !important;
-    color: #c2410c !important;
-}
-
-.status-dot-warning {
-    background: #f97316 !important;
-}
-
-.status-danger {
-    background: #fef2f2 !important;
-    border-color: #fecaca !important;
-    color: #b91c1c !important;
-}
-
-.status-dot-danger {
-    background: #ef4444 !important;
-}
+.status-excellent { background: #f0fdf4 !important; border-color: #bbf7d0 !important; color: #15803d !important; }
+.status-dot-excellent { background: #22c55e !important; }
+.status-good { background: #fefce8 !important; border-color: #fde68a !important; color: #a16207 !important; }
+.status-dot-good { background: #eab308 !important; }
+.status-warning { background: #fff7ed !important; border-color: #fed7aa !important; color: #c2410c !important; }
+.status-dot-warning { background: #f97316 !important; }
+.status-danger { background: #fef2f2 !important; border-color: #fecaca !important; color: #b91c1c !important; }
+.status-dot-danger { background: #ef4444 !important; }
 
 .form-actions {
     display: flex;
@@ -268,11 +402,6 @@ body {
 
 .btn-reset:hover {
     background: #475569;
-    transform: translateY(-1px);
-}
-
-.btn-reset:active {
-    transform: translateY(0);
 }
 
 .btn-submit {
@@ -292,79 +421,18 @@ body {
 
 .btn-submit:hover {
     background: #005fbd;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 112, 216, 0.25);
-}
-
-.btn-submit:active {
-    transform: translateY(0);
-}
-
-input[type="number"] {
-    appearance: textfield;
-    -moz-appearance: textfield;
-}
-
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-    margin: 0;
-    appearance: none;
-}
-
-input[type="date"] {
-    color: #1e293b;
-}
-
-input[type="date"]:focus {
-    color: #1e293b;
-}
-
-@media (max-width: 1100px) {
-    .form-grid-3 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
 }
 
 @media (max-width: 900px) {
-    .rectifier-content {
-        padding: 20px;
-    }
-
     .form-grid-3,
-    .form-grid-2 {
-        grid-template-columns: 1fr;
+    .upload-container,
+    .uji-grid-4,
+    .checklist-row {
+        flex-direction: column;
     }
-
-    .form-card {
-        padding: 20px;
-    }
-}
-
-@media (max-width: 600px) {
-    .rectifier-content {
-        padding: 15px;
-    }
-
-    .form-card {
-        padding: 16px;
-        border-radius: 10px;
-    }
-
-    .form-actions {
-        flex-direction: column-reverse;
-        align-items: stretch;
-    }
-
-    .btn-reset,
-    .btn-submit {
+    .checklist-label {
         width: 100%;
-    }
-
-    .status-source {
-        font-size: 0.62rem;
-    }
-
-    .form-section-title {
-        font-size: 0.95rem;
+        border-right: none;
+        border-bottom: 1px solid #cbd5e1;
     }
 }
