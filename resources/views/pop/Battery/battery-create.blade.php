@@ -135,12 +135,12 @@
                                     <div id="defaultUjiText" class="default-uji-text">Pilih jenis battery terlebih dahulu</div>
                                     
                                     <!-- Lithium (1 Input) -->
-                                    <div id="lithiumUjiWrapper" class="uji-wrapper" style="display: none;">
+                                    <div id="lithiumUjiWrapper" class="uji-wrapper" style="display: none; width: 100%;">
                                         <input type="number" id="kapasitas_uji_1" name="kapasitas_uji[]" class="table-input" min="0" step="0.01" placeholder="Masukkan kapasitas uji">
                                     </div>
 
                                     <!-- VRLA (4 Input 2x2 Grid) -->
-                                    <div id="vrlaUjiWrapper" class="uji-grid-4" style="display: none;">
+                                    <div id="vrlaUjiWrapper" class="uji-grid-4" style="display: none; width: 100%;">
                                         <div class="uji-sub-item">
                                             <span class="sub-label">Battery 1</span>
                                             <input type="number" name="kapasitas_uji[]" class="table-input vrla-input" min="0" step="0.01" placeholder="Kapasitas 1">
@@ -223,6 +223,7 @@
                             <small class="upload-info">Format: JPG, JPEG, PNG + Maks, ukuran : 10 MB</small>
                         </div>
 
+                        <!-- Keterangan gambar dibuat opsional (tidak wajib) -->
                         <div class="form-group" style="margin-top: 20px;">
                             <label for="keterangan_gambar">Tuliskan keterangan gambar</label>
                             <input type="text" id="keterangan_gambar" name="keterangan_gambar" class="form-control" placeholder="Masukkan keterangan gambar">
