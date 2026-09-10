@@ -27,7 +27,7 @@
                     </a>
                 </div>
 
-                <form action="#" method="POST">
+                <form action="#" method="POST" enctype="multipart/form-data" id="batteryEditForm">
                     @csrf
                     @method('PUT')
 
@@ -64,47 +64,114 @@
                     <div class="form-card">
                         <h3 class="form-section-title">Checklist Baterai</h3>
                         <p class="form-section-subtitle">Informasi Baterai</p>
-                        <div class="form-grid-2">
-                            <div class="form-group">
-                                <label>Nomor Recti / Bank <span class="required">*</span></label>
-                                <input type="text" class="form-control" name="nomor_recti_bank" value="POP_1SRG012_BANK01" required>
+                        
+                        <div class="checklist-table-container">
+                            <div class="checklist-row">
+                                <div class="checklist-label">Nomor Recti <span class="required">*</span></div>
+                                <div class="checklist-field">
+                                    <input type="text" class="table-input" name="nomor_recti" value="POP_1SRG012" required>
+                                </div>
                             </div>
 
-                            <div class="form-group">
-                                <label>Kapasitas Battery (AH) <span class="required">*</span></label>
-                                <input type="number" step="0.01" min="0" id="kapasitas_battery" name="kapasitas_battery" class="form-control" value="100" required>
+                            <div class="checklist-row">
+                                <div class="checklist-label">Nomor Bank <span class="required">*</span></div>
+                                <div class="checklist-field">
+                                    <input type="text" class="table-input" name="nomor_bank" value="BANK01" required>
+                                </div>
                             </div>
 
-                            <div class="form-group">
-                                <label>Kapasitas Uji (AH)</label>
-                                <input type="number" step="0.01" id="kapasitas_uji" name="kapasitas_uji" class="form-control auto-field" value="100.00" readonly>
-                                <small class="auto-info">Terisi otomatis berdasarkan hasil pengujian.</small>
+                            <div class="checklist-row">
+                                <div class="checklist-label">Merk Battery <span class="required">*</span></div>
+                                <div class="checklist-field">
+                                    <select id="merk_battery" name="merk_battery" class="table-input" required>
+                                        <option value="" disabled>Pilih Merk</option>
+                                        <option value="Sacred Sun" selected>Sacred Sun</option>
+                                        <option value="BSB">BSB</option>
+                                        <option value="Fortis Power">Fortis Power</option>
+                                        <option value="Monolite">Monolite</option>
+                                        <option value="Nagoya">Nagoya</option>
+                                        <option value="Narada">Narada</option>
+                                        <option value="Nippres">Nippres</option>
+                                        <option value="Sinergi">Sinergi</option>
+                                        <option value="Vision">Vision</option>
+                                    </select>
+                                </div>
                             </div>
 
-                            <div class="form-group">
-                                <label>Merk Battery <span class="required">*</span></label>
-                                <input type="text" class="form-control" name="merk_battery" value="SACRED SUN" required>
+                            <div class="checklist-row">
+                                <div class="checklist-label">Jenis Battery <span class="required">*</span></div>
+                                <div class="checklist-field">
+                                    <select id="jenis_battery" name="jenis_battery" class="table-input" required>
+                                        <option value="" disabled>Pilih Jenis</option>
+                                        <option value="Lithium" selected>Lithium</option>
+                                        <option value="VRLA">VRLA</option>
+                                    </select>
+                                </div>
                             </div>
 
-                            <div class="form-group">
-                                <label>Kapasitas Battery (%)</label>
-                                <input type="number" step="0.01" id="kapasitas_persen" name="kapasitas_persen" class="form-control auto-field" value="100.00" readonly>
-                                <small class="auto-info">Dihitung otomatis dari Kapasitas Uji.</small>
+                            <div class="checklist-row">
+                                <div class="checklist-label">Tipe Battery <span class="required">*</span></div>
+                                <div class="checklist-field">
+                                    <input type="text" class="table-input" name="tipe_battery" value="SSIFP48100B" required>
+                                </div>
                             </div>
 
-                            <div class="form-group">
-                                <label>Jenis Battery <span class="required">*</span></label>
-                                <input type="text" class="form-control" name="jenis_battery" value="LITHIUM" required>
+                            <div class="checklist-row">
+                                <div class="checklist-label">Tegangan (V) <span class="required">*</span></div>
+                                <div class="checklist-field">
+                                    <input type="number" step="0.01" min="0" class="table-input" name="tegangan" value="48" required>
+                                </div>
                             </div>
 
-                            <div class="form-group">
-                                <label>Backup Timer (Hour) <span class="required">*</span></label>
-                                <input type="number" step="0.01" min="0" class="form-control" name="backup_timer" value="6.54" required>
+                            <div class="checklist-row">
+                                <div class="checklist-label">Kapasitas Battery (AH) <span class="required">*</span></div>
+                                <div class="checklist-field">
+                                    <input type="number" step="0.01" min="0" id="kapasitas_battery" name="kapasitas_battery" class="table-input" value="100" required>
+                                </div>
                             </div>
 
-                            <div class="form-group">
-                                <label>Tipe Battery <span class="required">*</span></label>
-                                <input type="text" class="form-control" name="tipe_battery" value="SSIFP48100B" required>
+                            <div class="checklist-row">
+                                <div class="checklist-label">Kapasitas Uji Battery <span class="required">*</span></div>
+                                <div class="checklist-field">
+                                    <!-- Wrapper Lithium (1 Input) -->
+                                    <div id="lithiumUjiWrapper" class="uji-wrapper" style="width: 100%;">
+                                        <input type="number" step="0.01" min="0" id="kapasitas_uji_1" name="kapasitas_uji[]" class="table-input" value="100.00" placeholder="Masukkan kapasitas uji">
+                                    </div>
+
+                                    <!-- Wrapper VRLA (4 Input 2x2 Grid) -->
+                                    <div id="vrlaUjiWrapper" class="uji-grid-4" style="display: none; width: 100%;">
+                                        <div class="uji-sub-item">
+                                            <span class="sub-label">Battery 1</span>
+                                            <input type="number" step="0.01" min="0" name="kapasitas_uji[]" class="table-input vrla-input" value="25.00" placeholder="Kapasitas 1">
+                                        </div>
+                                        <div class="uji-sub-item">
+                                            <span class="sub-label">Battery 3</span>
+                                            <input type="number" step="0.01" min="0" name="kapasitas_uji[]" class="table-input vrla-input" value="25.00" placeholder="Kapasitas 3">
+                                        </div>
+                                        <div class="uji-sub-item">
+                                            <span class="sub-label">Battery 2</span>
+                                            <input type="number" step="0.01" min="0" name="kapasitas_uji[]" class="table-input vrla-input" value="25.00" placeholder="Kapasitas 2">
+                                        </div>
+                                        <div class="uji-sub-item">
+                                            <span class="sub-label">Battery 4</span>
+                                            <input type="number" step="0.01" min="0" name="kapasitas_uji[]" class="table-input vrla-input" value="25.00" placeholder="Kapasitas 4">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="checklist-row">
+                                <div class="checklist-label">Kapasitas Battery %</div>
+                                <div class="checklist-field">
+                                    <input type="text" id="kapasitas_persen" name="kapasitas_persen" class="table-input auto-field" value="100.00%" readonly tabindex="-1">
+                                </div>
+                            </div>
+
+                            <div class="checklist-row">
+                                <div class="checklist-label">Backup Timer (Hour) <span class="required">*</span></div>
+                                <div class="checklist-field">
+                                    <input type="number" step="0.01" min="0" class="table-input" name="backup_timer" value="6.54" required>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -113,8 +180,8 @@
                         <h3 class="form-section-title">Uji Baterai</h3>
                         <div class="form-grid-1">
                             <div class="form-group">
-                                <label>Tanggal Uji Terakhir <span class="required">*</span></label>
-                                <input type="date" class="form-control" name="tanggal_uji_terakhir" value="2025-10-31" required>
+                                <label>Tanggal Uji Terakhir</label>
+                                <input type="date" class="form-control" name="tanggal_uji_terakhir" value="2025-10-31">
                             </div>
 
                             <div class="form-group">
@@ -124,18 +191,52 @@
 
                             <div class="form-group">
                                 <label>Status Uji Baterai</label>
-                                <div id="statusUjiDisplay" class="status-readonly-box status-good">
-                                    <span class="status-dot"></span>
-                                    <span id="statusUjiText">GOOD</span>
+                                <div class="status-display-wrapper">
+                                    <div id="statusUjiDisplay" class="form-control status-readonly-box status-good" aria-readonly="true">
+                                        <span class="status-dot status-dot-good" id="statusDot"></span>
+                                        <strong id="statusUjiText">GOOD</strong>
+                                        <span class="status-source">Otomatis dari sistem</span>
+                                    </div>
                                 </div>
                                 <input type="hidden" id="status_uji" name="status_uji" value="good">
-                                <small class="auto-info">Status ditentukan otomatis berdasarkan kapasitas baterai.</small>
                             </div>
 
                             <div class="form-group">
                                 <label>Area STI <span class="required">*</span></label>
                                 <input type="text" class="form-control" name="area_sti" value="Baten 1" required>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Bagian Photo Battery -->
+                    <div class="form-card">
+                        <h3 class="form-section-title">Photo Battery</h3>
+                        <div class="form-group">
+                            <label>Upload foto kondisi Battery di lokasi</label>
+                            <div class="upload-container">
+                                <div class="upload-dropzone" id="dropzone">
+                                    <i class="bi bi-cloud-arrow-up upload-icon"></i>
+                                    <span class="upload-text">Masukkan file disini</span>
+                                    <label for="photo_battery" class="btn-browse">Browse</label>
+                                    <input type="file" id="photo_battery" name="photo_battery" accept="image/jpeg,image/png,image/jpg" hidden>
+                                </div>
+                                <div class="preview-container">
+                                    <span class="preview-title">Preview foto</span>
+                                    <div class="preview-box">
+                                        <img id="previewImage" src="" alt="Preview" style="display: none;">
+                                        <div id="noPreviewText" class="no-preview">
+                                            <i class="bi bi-image" style="font-size: 2rem; color: #cbd5e1;"></i>
+                                            <span>Belum ada foto yang dipilih</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <small class="upload-info">Format: JPG, JPEG, PNG + Maks, ukuran : 10 MB</small>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 20px;">
+                            <label for="keterangan_gambar">Tuliskan keterangan gambar</label>
+                            <input type="text" id="keterangan_gambar" name="keterangan_gambar" class="form-control" value="Kondisi baterai aman dan aktif di lokasi POP" placeholder="Masukkan keterangan gambar">
                         </div>
                     </div>
 
@@ -150,16 +251,43 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('batteryEditForm');
+            const jenisBattery = document.getElementById('jenis_battery');
             const kapasitasBattery = document.getElementById('kapasitas_battery');
-            const kapasitasUji = document.getElementById('kapasitas_uji');
             const kapasitasPersen = document.getElementById('kapasitas_persen');
+            const lithiumWrapper = document.getElementById('lithiumUjiWrapper');
+            const vrlaWrapper = document.getElementById('vrlaUjiWrapper');
+            
             const statusDisplay = document.getElementById('statusUjiDisplay');
             const statusText = document.getElementById('statusUjiText');
+            const statusDot = document.getElementById('statusDot');
             const statusInput = document.getElementById('status_uji');
             const resetButton = document.getElementById('resetButton');
 
+            // Logika Jenis Baterai (Lithium vs VRLA)
+            jenisBattery.addEventListener('change', function () {
+                if (this.value === 'Lithium') {
+                    lithiumWrapper.style.display = 'block';
+                    vrlaWrapper.style.display = 'none';
+                } else if (this.value === 'VRLA') {
+                    lithiumWrapper.style.display = 'none';
+                    vrlaWrapper.style.display = 'grid';
+                }
+                updateBatteryCalculation();
+            });
+
+            // Trigger awal sesuai selected value di awal load
+            if (jenisBattery.value === 'VRLA') {
+                lithiumWrapper.style.display = 'none';
+                vrlaWrapper.style.display = 'grid';
+            } else {
+                lithiumWrapper.style.display = 'block';
+                vrlaWrapper.style.display = 'none';
+            }
+
             function updateStatus(persen) {
-                statusDisplay.className = 'status-readonly-box';
+                statusDisplay.classList.remove('status-excellent', 'status-good', 'status-warning', 'status-danger');
+                statusDot.classList.remove('status-dot-excellent', 'status-dot-good', 'status-dot-warning', 'status-dot-danger');
 
                 let status = '';
                 let label = '';
@@ -179,26 +307,54 @@
                 }
 
                 statusDisplay.classList.add('status-' + status);
+                statusDot.classList.add('status-dot-' + status);
                 statusText.textContent = label;
                 statusInput.value = status;
             }
 
             function updateBatteryCalculation() {
                 const battery = parseFloat(kapasitasBattery.value) || 0;
-                const uji = parseFloat(kapasitasUji.value) || 0;
+                let ujiPertama = 0;
 
-                if (battery > 0 && uji >= 0) {
-                    const persen = (uji / battery) * 100;
-                    kapasitasPersen.value = persen.toFixed(2);
+                if (jenisBattery.value === 'Lithium') {
+                    ujiPertama = parseFloat(document.getElementById('kapasitas_uji_1').value) || 0;
+                } else if (jenisBattery.value === 'VRLA') {
+                    const firstVrlaInput = document.querySelector('.vrla-input');
+                    ujiPertama = firstVrlaInput ? (parseFloat(firstVrlaInput.value) || 0) : 0;
+                }
+
+                if (battery > 0 && ujiPertama >= 0) {
+                    const persen = (ujiPertama / battery) * 100;
+                    kapasitasPersen.value = persen.toFixed(2) + '%';
                     updateStatus(persen);
                 } else {
-                    kapasitasPersen.value = '0.00';
+                    kapasitasPersen.value = '0.00%';
                     updateStatus(0);
                 }
             }
 
-            kapasitasBattery.addEventListener('input', function () {
-                updateBatteryCalculation();
+            kapasitasBattery.addEventListener('input', updateBatteryCalculation);
+            document.getElementById('kapasitas_uji_1').addEventListener('input', updateBatteryCalculation);
+            document.querySelectorAll('.vrla-input').forEach(el => {
+                el.addEventListener('input', updateBatteryCalculation);
+            });
+
+            // Preview Foto Handler
+            const photoInput = document.getElementById('photo_battery');
+            const previewImage = document.getElementById('previewImage');
+            const noPreviewText = document.getElementById('noPreviewText');
+
+            photoInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        previewImage.src = event.target.result;
+                        previewImage.style.display = 'block';
+                        noPreviewText.style.display = 'none';
+                    }
+                    reader.readAsDataURL(file);
+                }
             });
 
             updateBatteryCalculation();
@@ -206,6 +362,8 @@
             resetButton.addEventListener('click', function () {
                 setTimeout(function () {
                     updateBatteryCalculation();
+                    previewImage.style.display = 'none';
+                    noPreviewText.style.display = 'flex';
                 }, 50);
             });
         });
