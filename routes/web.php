@@ -145,4 +145,24 @@ Route::middleware('auth')->group(function () {
     route::get('/battery-edit', function () {
         return view('pop.battery.battery-edit');
     })->name('battery.edit');
+
+    route::get('genset-create', function () {
+        return view('pop.genset.genset-create');
+    })->name('genset.create');
+    
+    route::get('genset-detail', function () {
+        return view('pop.genset.genset-detail');
+    })->name('genset.detail');
+
+    route::get('genset-edit', function () {
+        return view('pop.genset.genset-edit');
+    })->name('genset.edit');
+
+    route::get('genset-card', function () {
+        return view('pop.genset.genset-card');
+    })->name('genset.card');
+
+    route::get('ac-card', function () {
+        return view('pop.ac.ac-card');
+    })->name('ac.card');
 });
