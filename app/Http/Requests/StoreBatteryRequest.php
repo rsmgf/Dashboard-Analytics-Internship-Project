@@ -25,10 +25,14 @@ class StoreBatteryRequest extends FormRequest
             'merk_battery'             => ['required', 'string', 'max:255'],
             'tipe_battery'             => ['required', 'string', 'max:255'],
             'jenis_battery'            => ['required', 'in:Lithium,VRLA'],
-            'kapasitas_battery'        => ['required', 'numeric', 'in:20,50,100,200'],
+            'kapasitas_battery'        => ['required', 'numeric', 'min:1'],
             'kapasitas_uji'            => ['nullable', 'string', 'max:20'],
             'kapasitas_battery_persen' => ['nullable', 'numeric', 'min:0'],
             'performa_baterai'         => ['nullable', 'string', 'max:255'],
+            'recti'                    => ['nullable', 'string', 'max:255'],
+            'tegangan'                 => ['nullable', 'numeric', 'min:0'],
+            'photo_battery'            => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:10240'],
+            'keterangan_gambar'        => ['nullable', 'string', 'max:255'],
 
             // Uji Baterai
             'tanggal_uji_terakhir'     => ['nullable', 'date'],
