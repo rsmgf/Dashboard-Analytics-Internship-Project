@@ -1,40 +1,231 @@
-.detail-page-header {
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #f8fafc;
+    color: #1e293b;
+}
+
+.app-container {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    background: #f8fafc;
+}
+
+.main-content {
+    flex: 1;
+    min-width: 0;
+    min-height: 100vh;
+    background: #f8fafc;
+}
+
+.rectifier-content {
+    width: 100%;
+    min-height: calc(100vh - 70px);
+    padding: 24px;
+    background: #f8fafc;
+}
+
+/* Header Bar */
+.detail-header-bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 20px;
+    gap: 16px;
+    padding: 0 0 16px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid #e2e8f0;
 }
 
-.btn-edit-form {
+.header-left-group {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+}
+
+.detail-back {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #f1f5f9;
+    border: 1px solid #d1d5db;
+    color: #64748b;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.detail-back:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+.header-title-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.device-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    background: #e0f2fe;
+    color: #0369a1;
+    border: 1px solid #bae6fd;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+
+.pop-sub-info {
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+.pop-sub-info strong {
+    color: #1e293b;
+}
+
+.btn-edit {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    color: #0086ff;
-    font-size: 0.9rem;
+    padding: 9px 18px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #0086FF, #005BD4);
+    color: #ffffff;
+    font-size: 0.82rem;
     font-weight: 600;
     text-decoration: none;
-    transition: color 0.2s ease;
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(0, 91, 212, 0.2);
+    transition: all 0.25s ease;
 }
 
-.btn-edit-form:hover {
-    color: #005bd4;
-    text-decoration: underline;
+.btn-edit:hover {
+    background: linear-gradient(135deg, #0078E8, #0052C2);
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 91, 212, 0.3);
 }
 
 .detail-container {
     width: 100%;
 }
 
+/* Card Styles */
+.form-card {
+    margin-bottom: 20px;
+    padding: 24px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+}
+
+.form-section-title {
+    margin: 0 0 16px 0;
+    color: #1e40af;
+    font-size: 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-section-title i {
+    font-size: 1.15rem;
+    color: #2563eb;
+}
+
+.checklist-section-subtitle {
+    font-size: 0.85rem;
+    color: #64748b;
+    font-weight: 500;
+    margin-top: -8px;
+    margin-bottom: 14px;
+}
+
+/* General Information Section (Mini Cards) */
+.general-info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.general-info-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+.general-info-card:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.info-card-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: #eff6ff;
+    color: #2563eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    flex-shrink: 0;
+    border: 1px solid #dbeafe;
+}
+
+.info-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.info-card-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.info-card-value {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #0f172a;
+    word-break: break-word;
+    line-height: 1.35;
+}
+
 .detail-grid-3 {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 20px;
+    gap: 20px 24px;
 }
 
 .detail-item {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 4px;
 }
 
 .detail-label {
@@ -44,13 +235,14 @@
 }
 
 .detail-value {
-    font-size: 0.9rem;
-    color: #1e293b;
-    font-weight: 600;
+    font-size: 0.92rem;
+    color: #0f172a;
+    font-weight: 700;
     word-break: break-word;
+    line-height: 1.4;
 }
 
-/* Penyesuaian Tabel Detail agar Senada dengan Form Create */
+/* Checklist Table (Clean Consistent Style) */
 .checklist-table-container {
     border: 1px solid #cbd5e1;
     border-radius: 8px;
@@ -60,7 +252,8 @@
 
 .checklist-row {
     display: flex;
-    border-bottom: 1px solid #cbd5e1;
+    border-bottom: 1px solid #e2e8f0;
+    min-height: 44px;
 }
 
 .checklist-row:last-child {
@@ -68,11 +261,13 @@
 }
 
 .checklist-label {
-    width: 280px;
+    width: 260px;
+    min-width: 220px;
+    flex-shrink: 0;
     background: #ebf3ff;
-    padding: 12px 16px;
+    padding: 11px 18px;
     font-size: 0.84rem;
-    font-weight: 500;
+    font-weight: 600;
     color: #1e293b;
     display: flex;
     align-items: center;
@@ -81,69 +276,319 @@
 
 .checklist-field {
     flex: 1;
-    padding: 10px 16px;
+    padding: 11px 20px;
     display: flex;
+    flex-direction: row;
     align-items: center;
+    justify-content: flex-start;
+    text-align: left;
+    gap: 8px;
     background: #ffffff;
+    font-size: 0.84rem;
+    font-weight: 500;
+    color: #1e293b;
+    min-width: 0;
+}
+
+.field-colon {
+    color: #64748b;
+    font-weight: 600;
+    min-width: 12px;
+    user-select: none;
+    flex-shrink: 0;
+}
+
+.field-value {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    color: #0f172a;
+    font-weight: 600;
+}
+
+.checklist-row.align-top {
+    align-items: flex-start;
+}
+
+.checklist-row.align-top .checklist-label {
+    align-items: flex-start;
+    padding-top: 13px;
+}
+
+.checklist-row.align-top .checklist-field {
+    align-items: flex-start;
+    padding-top: 13px;
+}
+
+.checklist-row.align-top .field-colon {
+    padding-top: 2px;
+}
+
+.field-value-column {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    width: 100%;
+    min-width: 0;
+}
+
+.updated-user {
     font-size: 0.84rem;
     font-weight: 600;
     color: #1e293b;
+    line-height: 1.4;
+    word-break: break-word;
 }
 
-/* Grid Kapasitas Uji VRLA pada Detail */
-.uji-grid-4-detail {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-    width: 100%;
-}
-
-.uji-sub-display {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: #f8fafc;
-    padding: 6px 10px;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    font-size: 0.8rem;
-}
-
-.sub-lbl {
-    color: #64748b;
-    font-weight: 500;
-}
-
-.capacity-value {
+.updated-timestamp {
     display: inline-flex;
     align-items: center;
-    padding: 4px 10px;
-    border-radius: 6px;
-    color: #15803d;
-    background-color: #dcfce7;
-    font-size: 0.85rem;
+    gap: 6px;
+    font-size: 0.76rem;
+    font-weight: 500;
+    color: #64748b;
+    background: #f1f5f9;
+    padding: 3px 9px;
+    border-radius: 4px;
+    border: 1px solid #e2e8f0;
+}
+
+.updated-timestamp i {
+    font-size: 0.75rem;
+    color: #2563eb;
+}
+
+/* Status Badges - Harmonized Standard */
+.capacity-percent {
     font-weight: 700;
+    color: #0f172a;
 }
 
 .status-badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.3px;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    letter-spacing: 0.2px;
     white-space: nowrap;
     border: 1px solid transparent;
 }
 
-.status-excellent { color: #15803d !important; background-color: #dcfce7 !important; border-color: #bbf7d0 !important; }
-.status-good { color: #a16207 !important; background-color: #fef9c3 !important; border-color: #fef08a !important; }
-.status-warning { color: #c2410c !important; background-color: #ffedd5 !important; border-color: #fed7aa !important; }
-.status-danger { color: #b91c1c !important; background-color: #fee2e2 !important; border-color: #fecaca !important; }
+/* 1-EXCELLENT: Hijau */
+.status-excellent {
+    color: #15803d;
+    background-color: #dcfce7;
+    border-color: #86efac;
+}
 
+/* 2-GOOD ENOUGH: Kuning */
+.status-good,
+.status-good-enough {
+    color: #854d0e;
+    background-color: #fef9c3;
+    border-color: #fde047;
+}
+
+/* 3-WARNING: Orange */
+.status-warning {
+    color: #c2410c;
+    background-color: #fff7ed;
+    border-color: #fed7aa;
+}
+
+/* 4-ALERT: Merah */
+.status-danger,
+.status-alert {
+    color: #b91c1c;
+    background-color: #fee2e2;
+    border-color: #fca5a5;
+}
+
+.status-neutral {
+    color: #475569;
+    background-color: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+/* 2-Column Bottom Grid (Uji Baterai & Photo Battery) */
+.detail-bottom-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: stretch;
+}
+
+.bottom-card {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0;
+    height: 100%;
+}
+
+.bottom-card .checklist-table-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.bottom-card .checklist-row:last-child {
+    border-bottom: none;
+    flex: 1;
+}
+
+/* Photo Battery Card (Figma Style) */
+.photo-card-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.figma-photo-card {
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 250px;
+}
+
+.figma-photo-img-area {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8fafc;
+    padding: 16px;
+    min-height: 200px;
+    position: relative;
+}
+
+.figma-photo-img-area img {
+    max-height: 220px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.25s ease;
+    cursor: pointer;
+}
+
+.figma-photo-img-area img:hover {
+    transform: scale(1.02);
+}
+
+.photo-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #94a3b8;
+}
+
+.photo-empty-state i {
+    font-size: 2.8rem;
+    color: #cbd5e1;
+}
+
+.photo-empty-state span {
+    font-size: 0.82rem;
+    font-weight: 500;
+}
+
+.figma-photo-caption-bar {
+    padding: 12px 16px;
+    background: #ffffff;
+    border-top: 1px solid #e2e8f0;
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: #1e293b;
+}
+
+/* VRLA 4-Cell Grid in Detail */
+.uji-grid-4-detail {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 2px 0 6px;
+    width: 100%;
+}
+
+.uji-cell-box {
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 8px 16px;
+    min-width: 110px;
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 2px;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    transition: all 0.2s ease;
+}
+
+.uji-cell-box:hover {
+    border-color: #94a3b8;
+    background: #f1f5f9;
+}
+
+.uji-cell-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.uji-cell-val {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.uji-avg-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+    padding: 5px 12px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    align-self: flex-start;
+}
+
+.uji-avg-badge i {
+    font-size: 0.85rem;
+    color: #2563eb;
+}
+
+.uji-avg-badge strong {
+    font-weight: 700;
+    color: #1e40af;
+}
+
+/* Responsive */
 @media (max-width: 900px) {
+    .general-info-grid {
+        grid-template-columns: 1fr;
+    }
     .detail-grid-3 {
         grid-template-columns: 1fr;
     }
@@ -155,7 +600,11 @@
         border-right: none;
         border-bottom: 1px solid #cbd5e1;
     }
-    .uji-grid-4-detail {
+    .detail-bottom-grid {
         grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .uji-grid-4-detail {
+        grid-template-columns: repeat(2, 1fr);
     }
 }

@@ -68,11 +68,58 @@
                                 </span>
                             </div>
 
+                            @php
+                                $utilVal = $rectifier->utilisasi;
+                                if ($utilVal === null || $utilVal === '') {
+                                    $uBadgeClass = 'status-unknown';
+                                    $uDotClass   = 'dot-unknown';
+                                    $uText       = '-';
+                                } else {
+                                    $numUtil = (float) $utilVal;
+                                    if ($numUtil <= 50) {
+                                        $uBadgeClass = 'status-safe';
+                                        $uDotClass   = 'dot-safe';
+                                        $uStatus     = 'SAFE';
+                                    } elseif ($numUtil <= 70) {
+                                        $uBadgeClass = 'status-warning';
+                                        $uDotClass   = 'dot-warning';
+                                        $uStatus     = 'WARNING';
+                                    } else {
+                                        $uBadgeClass = 'status-alert';
+                                        $uDotClass   = 'dot-alert';
+                                        $uStatus     = 'ALERT';
+                                    }
+                                    $uText = rtrim(rtrim(number_format($numUtil, 2, '.', ''), '0'), '.') . '% - ' . $uStatus;
+                                }
+                            @endphp
+
                             {{-- Information --}}
                             <div class="rectifier-information">
-                                <div class="equipment-info">{{ $rectifier->merk ?? '-' }}</div>
-                                <div class="equipment-info">{{ $rectifier->type ?? '-' }}</div>
-                                <div class="equipment-info serial">{{ $rectifier->sn_rectifier ?? '-' }}</div>
+                                <div class="equipment-info">
+                                    <span class="info-label">Merk</span>
+                                    <span class="info-sep">:</span>
+                                    <span class="data-value">{{ $rectifier->merk ?? '-' }}</span>
+                                </div>
+                                <div class="equipment-info">
+                                    <span class="info-label">Type</span>
+                                    <span class="info-sep">:</span>
+                                    <span class="data-value">{{ $rectifier->type ?? '-' }}</span>
+                                </div>
+                                <div class="equipment-info">
+                                    <span class="info-label">SN</span>
+                                    <span class="info-sep">:</span>
+                                    <span class="data-value">{{ $rectifier->sn_rectifier ?? '-' }}</span>
+                                </div>
+                                <div class="equipment-info">
+                                    <span class="info-label">Status Utilisasi</span>
+                                    <span class="info-sep">:</span>
+                                    <span class="data-value">
+                                        <span class="status-badge {{ $uBadgeClass }}">
+                                            {{ $uText }}
+                                            <span class="status-dot {{ $uDotClass }}"></span>
+                                        </span>
+                                    </span>
+                                </div>
                             </div>
 
                             {{-- Meta: PIC & Tanggal Pemeriksaan --}}
@@ -84,7 +131,7 @@
 
                                 <div class="meta-item">
                                     <i class="bi bi-calendar-fill"></i>
-                                    <span>{{ $rectifier->tanggal_pemeriksaan ? \Carbon\Carbon::parse($rectifier->tanggal_pemeriksaan)->format('d M Y') : '-' }}</span>
+                                    <span>{{ $rectifier->tanggal_pemeriksaan ? \Carbon\Carbon::parse($rectifier->tanggal_pemeriksaan)->locale('id')->translatedFormat('d M Y') : '-' }}</span>
                                 </div>
                             </div>
 
@@ -93,7 +140,7 @@
                                 <i class="bi bi-clock-history"></i>
                                 <span>
                                     @if($rectifier->diupdateOleh)
-                                        {{ $rectifier->diupdateOleh->name }} &middot; {{ $rectifier->updated_at->format('d M Y, H:i') }}
+                                        {{ $rectifier->diupdateOleh->name }} &middot; {{ $rectifier->updated_at->locale('id')->translatedFormat('d M Y, H:i') }} WIB
                                     @else
                                         Belum ada pembaruan
                                     @endif

@@ -60,6 +60,69 @@
         .btn-hapus:hover {
             background: #dc2626;
         }
+
+        /* Tooltip Popover untuk info tombol Gunakan Data Terakhir */
+        .tooltip-info-container {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+        }
+        .tooltip-trigger-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            color: #475569;
+            border: none;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .tooltip-trigger-btn:hover, .tooltip-trigger-btn:focus {
+            background: #0284c7;
+            color: #ffffff;
+            outline: none;
+        }
+        .tooltip-content-box {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            width: 270px;
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            line-height: 1.5;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            z-index: 50;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-4px);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+        }
+        .tooltip-content-box::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            right: 8px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: transparent transparent #0f172a transparent;
+        }
+        .tooltip-info-container:hover .tooltip-content-box,
+        .tooltip-info-container:focus-within .tooltip-content-box,
+        .tooltip-info-container.active .tooltip-content-box {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
     </style>
 </head>
 
@@ -98,15 +161,28 @@
                         <!-- STEP 1: DATA MATERIAL & KERUSAKAN          -->
                         <!-- ========================================== -->
                         <div id="step-1">
-                            <div class="alert-box info-alert">
-                                <i class="bi bi-info-circle-fill"></i>
-                                <span>Isi Form berikut setiap melakukan pengembalian alat</span>
-                                <button type="button" class="alert-close" aria-label="Tutup"><i
-                                        class="bi bi-x"></i></button>
-                            </div>
-
                             <div class="form-card">
-                                <h2>Return Material Authorization (RMA)</h2>
+                                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 22px; border-bottom: 1px solid #f1f5f9; padding-bottom: 14px;">
+                                    <h2 style="margin: 0; font-size: 1.25rem;">Return Material Authorization (RMA)</h2>
+                                    
+                                    <!-- Tombol Gunakan Data Terakhir + Bulatan (?) Tooltip -->
+                                    <div style="display: flex; align-items: center; gap: 6px;">
+                                        <button type="button" id="btnUseLastData" class="btn-use-last"
+                                            style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; padding: 6px 13px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: 0.2s;">
+                                            <i class="bi bi-clock-history"></i> Gunakan Data Terakhir
+                                        </button>
+                                        
+                                        <div class="tooltip-info-container">
+                                            <button type="button" class="tooltip-trigger-btn" aria-label="Penjelasan Gunakan Data Terakhir">
+                                                ?
+                                            </button>
+                                            <div class="tooltip-content-box">
+                                                <div style="font-weight: 600; color: #38bdf8; margin-bottom: 3px;">Fungsi Tombol:</div>
+                                                Mengisi otomatis No. Dokumen, Valuation Type, Tanggal, Lokasi Asal, Nama Engineer, dan Nama Manager dari data RMA yang terakhir kali Anda simpan.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <div class="form-group">
                                     <label for="so_po">No. IO.SP2K/SO/PO/ANDOP <span>*</span></label>
@@ -130,19 +206,13 @@
 
                                 <div class="form-group">
                                     <label for="tanggal">Tanggal <span>*</span></label>
-                                    <input type="date" id="tanggal" name="tanggal" class="form-control" required>
+                                    <input type="date" id="tanggal" name="tanggal" class="form-control" value="{{ old('tanggal', date('Y-m-d')) }}" required>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="lokasi_asal">Lokasi asal <span>*</span></label>
                                     <input type="text" id="lokasi_asal" name="lokasi_asal" class="form-control"
                                         placeholder="Masukkan lokasi asal" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="nama_manager">Supervisor/Manager Name <span>*</span></label>
-                                    <input type="text" id="nama_manager" name="nama_manager" class="form-control"
-                                        placeholder="Nama Supervisor atau Manager" required>
                                 </div>
 
                                 <div class="form-group">
@@ -275,51 +345,53 @@
 
                                 <div id="sfp-container" style="margin-top: 15px;"></div>
 
-                                <hr style="margin: 30px 0; border: 0; border-top: 1px solid #e2e8f0;">
+                                <!-- PENGESAHAN: NAMA PEMOHON & SUPERVISOR/MANAGER -->
+                                <div style="margin-top: 25px; border-top: 1px solid #f1f5f9; padding-top: 20px;">
+                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
+                                        <div class="form-group" style="margin-bottom: 0;">
+                                            <label for="nama_pemohon">Nama Engineer / Pemohon <span>*</span></label>
+                                            <input type="text" id="nama_pemohon" name="nama_pemohon" class="form-control"
+                                                placeholder="Nama Terang Engineer" required>
+                                        </div>
 
-                                <div class="form-group">
-                                    <label for="nama_pemohon">Nama Engineer / Pemohon <span>*</span></label>
-                                    <input type="text" id="nama_pemohon" name="nama_pemohon" class="form-control"
-                                        placeholder="Nama Terang Engineer" required>
+                                        <div class="form-group" style="margin-bottom: 0;">
+                                            <label for="nama_manager">Supervisor / Manager Name <span>*</span></label>
+                                            <input type="text" id="nama_manager" name="nama_manager" class="form-control"
+                                                placeholder="Nama Terang Supervisor / Manager" required>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <div class="form-group" style="margin-bottom: 0;">
-                                    <label>Upload Tanda Tangan (Engineer Sign) <span>*</span></label>
-
-                                    <!-- Container yang meniru bentuk form-control -->
-                                    <div
-                                        style="display: flex; align-items: center; gap: 15px; margin-top: 5px; padding: 10px 15px; border: 1px solid #e2e8f0; border-radius: 6px; background-color: #fff;">
-
-                                        <!-- Tombol custom memicu input file hidden -->
-                                        <button type="button" class="btn-browse"
-                                            onclick="this.nextElementSibling.click()"
-                                            style="padding: 8px 16px; font-size: 13px;">Pilih Foto</button>
-
-                                        <!-- Input file hidden -->
-                                        <input type="file" id="ttd_pemohon" name="ttd_pemohon"
-                                            accept="image/png,image/jpeg,image/jpg,image/webp" required style="display: none;"
-                                            onchange="this.nextElementSibling.innerText = this.files.length ? this.files[0].name : 'Belum ada file dipilih'; this.nextElementSibling.style.color = this.files.length ? '#10b981' : '#64748b';">
-
-                                        <!-- Teks indikator nama file -->
-                                        <span style="font-size: 13px; color: #64748b; font-weight: 500;">Belum ada file
-                                            dipilih</span>
-
+                                <!-- INFO TANDA TANGAN BASAH -->
+                                <div style="display: flex; align-items: flex-start; gap: 12px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 12px 16px; margin-top: 18px;">
+                                    <i class="bi bi-pen-fill" style="font-size: 1.3rem; color: #16a34a; margin-top: 2px;"></i>
+                                    <div>
+                                        <div style="font-weight: 600; color: #15803d; font-size: 13.5px;">Tanda Tangan Fisik (Basah)</div>
+                                        <div style="font-size: 12px; color: #475569; margin-top: 2px; line-height: 1.5;">
+                                            Dokumen PDF RMA resmi yang digenerate menyertakan kolom bertanda tangan basah untuk Engineer dan Supervisor/Manager setelah dokumen dicetak.
+                                        </div>
                                     </div>
-
-                                    <div class="field-description" style="margin-top: 5px;">Unggah foto tanda tangan
-                                        dengan latar belakang putih/transparan. <strong>Maks. 2MB, format JPG/PNG/WEBP.</strong></div>
                                 </div>
 
                                 <!-- FORM ACTIONS -->
                                 <div class="form-actions"
-                                    style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px; gap: 15px;">
+                                    style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px; gap: 12px; flex-wrap: wrap;">
                                     <button type="button" class="btn-preview" id="prevButton">
                                         <i class="bi bi-arrow-left"></i> Kembali
                                     </button>
 
-                                    <button type="submit" class="btn-submit">
-                                        <i class="bi bi-floppy"></i> Simpan RMA
-                                    </button>
+                                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                                        <button type="button" id="btnSubmitNext" class="btn-submit-next"
+                                            style="background: #0284c7; color: #ffffff; border: none; padding: 11px 18px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; transition: 0.2s;"
+                                            title="Simpan RMA ini, lalu form langsung siap untuk input unit berikutnya tanpa perlu mengetik ulang data header">
+                                            <i class="bi bi-arrow-repeat" style="font-size: 1.1rem;"></i> Simpan & Input Unit Berikutnya
+                                        </button>
+
+                                        <button type="submit" id="btnSubmitFinish" class="btn-submit"
+                                            style="display: inline-flex; align-items: center; gap: 7px;">
+                                            <i class="bi bi-check2-circle" style="font-size: 1.1rem;"></i> Simpan & Selesai
+                                        </button>
+                                    </div>
                                 </div>
 
                             </div>
@@ -387,7 +459,105 @@
             const step2 = document.getElementById('step-2');
             const nextButton = document.getElementById('nextButton');
             const prevButton = document.getElementById('prevButton');
-            const submitBtn = form.querySelector('[type="submit"]');
+            const btnSubmitFinish = document.getElementById('btnSubmitFinish');
+            const btnSubmitNext = document.getElementById('btnSubmitNext');
+            const btnUseLastData = document.getElementById('btnUseLastData');
+
+            // 0. FITUR GUNAKAN DATA TERAKHIR
+            const CACHE_KEY = 'rma_header_cache_v3';
+            const headerFields = ['so_po', 'tanggal', 'lokasi_asal', 'nama_pemohon', 'nama_manager', 'customer_name'];
+
+            function saveHeaderCache() {
+                const data = {};
+                headerFields.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) data[id] = el.value;
+                });
+                const valType = document.querySelector('input[name="valuation_type"]:checked');
+                if (valType) data['valuation_type'] = valType.value;
+                try {
+                    localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+                } catch (e) {}
+            }
+
+            function applyLastData() {
+                try {
+                    const raw = localStorage.getItem(CACHE_KEY);
+                    if (!raw) {
+                        Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            icon: 'info',
+                            title: 'Belum ada data RMA sebelumnya tersimpan',
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                        return;
+                    }
+                    const data = JSON.parse(raw);
+                    let filledCount = 0;
+                    headerFields.forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el && data[id]) {
+                            el.value = data[id];
+                            el.classList.remove('is-invalid');
+                            filledCount++;
+                        }
+                    });
+                    if (data['valuation_type']) {
+                        const radio = document.querySelector(`input[name="valuation_type"][value="${data['valuation_type']}"]`);
+                        if (radio) {
+                            radio.checked = true;
+                            document.querySelector('.radio-group')?.classList.remove('is-invalid');
+                            filledCount++;
+                        }
+                    }
+
+                    if (filledCount > 0) {
+                        Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Data unit terakhir berhasil dimuat! ✨',
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                    }
+                } catch (e) {
+                    console.error('Apply last data error:', e);
+                }
+            }
+
+            if (btnUseLastData) {
+                btnUseLastData.addEventListener('click', applyLastData);
+            }
+
+            // Simpan cache otomatis saat user mengetik
+            headerFields.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('input', saveHeaderCache);
+                    el.addEventListener('change', saveHeaderCache);
+                }
+            });
+            document.querySelectorAll('input[name="valuation_type"]').forEach(radio => {
+                radio.addEventListener('change', saveHeaderCache);
+            });
+
+            // Toggle info popover pada mobile/klik
+            const tooltipTrigger = document.querySelector('.tooltip-trigger-btn');
+            const tooltipContainer = document.querySelector('.tooltip-info-container');
+            if (tooltipTrigger && tooltipContainer) {
+                tooltipTrigger.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    tooltipContainer.classList.toggle('active');
+                });
+                document.addEventListener('click', function(e) {
+                    if (!tooltipContainer.contains(e.target)) {
+                        tooltipContainer.classList.remove('active');
+                    }
+                });
+            }
 
             // 1. PEMBERSIHAN KELAS IS-INVALID SAAT USER MULAI MENGISI
             form.addEventListener('input', function(e) {
@@ -407,10 +577,6 @@
                 const dropzone = e.target.closest('.upload-dropzone');
                 if (dropzone && dropzone.classList.contains('is-invalid')) {
                     dropzone.classList.remove('is-invalid');
-                }
-                const ttdWrapper = e.target.parentElement;
-                if (ttdWrapper && ttdWrapper.classList.contains('is-invalid')) {
-                    ttdWrapper.classList.remove('is-invalid');
                 }
             });
 
@@ -445,13 +611,6 @@
                 if (!lokasiAsal.value.trim()) {
                     lokasiAsal.classList.add('is-invalid');
                     errors.push('Lokasi asal wajib diisi');
-                    isValid = false;
-                }
-
-                const namaManager = document.getElementById('nama_manager');
-                if (!namaManager.value.trim()) {
-                    namaManager.classList.add('is-invalid');
-                    errors.push('Supervisor / Manager Name wajib diisi');
                     isValid = false;
                 }
 
@@ -507,7 +666,18 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
 
-            // 3. SUBMIT FORM VIA AJAX DENGAN PENANGANAN ERROR LENGKAP
+            // 3. LOGIKA SUBMIT (DUA MODE: 'finish' ATAU 'next')
+            let currentSubmitMode = 'finish';
+
+            btnSubmitNext.addEventListener('click', function() {
+                currentSubmitMode = 'next';
+                form.requestSubmit();
+            });
+
+            btnSubmitFinish.addEventListener('click', function() {
+                currentSubmitMode = 'finish';
+            });
+
             form.addEventListener('submit', async function(e) {
                 e.preventDefault();
 
@@ -528,11 +698,60 @@
                     }
                 }
 
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Menyimpan...';
+                // Cek apakah foto material utama sudah dipilih
+                const primaryFile = document.getElementById('fileInput');
+                if (!primaryFile || primaryFile.files.length === 0) {
+                    document.getElementById('dropzone')?.classList.add('is-invalid');
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Foto Material Belum Dipilih',
+                        text: 'Silakan pilih atau unggah minimal 1 foto material utama.',
+                        confirmButtonColor: '#0066DC'
+                    });
+                    return;
+                }
+
+                // Cek Nama Engineer / Pemohon
+                const namaPemohon = document.getElementById('nama_pemohon');
+                if (!namaPemohon.value.trim()) {
+                    namaPemohon.classList.add('is-invalid');
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Nama Engineer Belum Diisi',
+                        text: 'Silakan isi Nama Engineer / Pemohon pada kolom pengesahan.',
+                        confirmButtonColor: '#0066DC'
+                    }).then(() => {
+                        namaPemohon.focus();
+                    });
+                    return;
+                }
+
+                // Cek Supervisor / Manager Name
+                const namaManager = document.getElementById('nama_manager');
+                if (!namaManager.value.trim()) {
+                    namaManager.classList.add('is-invalid');
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Nama Supervisor/Manager Belum Diisi',
+                        text: 'Silakan isi Supervisor / Manager Name pada kolom pengesahan.',
+                        confirmButtonColor: '#0066DC'
+                    }).then(() => {
+                        namaManager.focus();
+                    });
+                    return;
+                }
+
+                btnSubmitFinish.disabled = true;
+                btnSubmitNext.disabled = true;
+                const activeBtn = currentSubmitMode === 'next' ? btnSubmitNext : btnSubmitFinish;
+                const originalText = activeBtn.innerHTML;
+                activeBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Menyimpan...';
 
                 // Bersihkan is-invalid lama
                 form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+
+                // Simpan cache header terbaru
+                saveHeaderCache();
 
                 const formData = new FormData(form);
 
@@ -547,20 +766,55 @@
                         body: formData,
                     });
 
-                    // Coba parse JSON
                     let responseData = null;
                     try {
                         responseData = await response.json();
-                    } catch (jsonErr) {
-                        // Response bukan JSON (misal HTML error page dari web server)
-                    }
+                    } catch (jsonErr) {}
 
                     if (response.ok && responseData) {
-                        // Buka PDF di tab baru
-                        window.open(responseData.pdf_url, '_blank');
-                        // Redirect halaman ini ke riwayat RMA
-                        window.location.href = responseData.redirect_url;
-                        return;
+                        // Tangani berdasarkan mode (TIDAK ADA POP-UP TAB PDF LAGI)
+                        if (currentSubmitMode === 'next') {
+                            // Reset field khusus unit
+                            document.getElementById('merk').value = '';
+                            document.getElementById('type').value = '';
+                            document.getElementById('serial_number_primary').value = '';
+                            document.getElementById('material_number').value = '';
+                            document.getElementById('description').value = '';
+                            document.getElementById('alasan').value = '';
+                            
+                            // Reset checkboxes kerusakan
+                            damageCheckboxes.forEach(cb => { cb.checked = false; });
+                            isMaterialRusakInput.value = '0';
+
+                            // Reset file foto
+                            primaryFile.value = '';
+                            dropzoneText.innerText = 'Masukkan file disini';
+                            dropzoneText.style.color = '#64748b';
+
+                            // Bersihkan SFP tambahan
+                            sfpContainer.innerHTML = '';
+
+                            // Kembali ke Langkah 1 dengan halus
+                            step2.style.display = 'none';
+                            step1.style.display = 'block';
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                            // Notifikasi toast sukses
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'RMA Berhasil Disimpan! 🎉',
+                                text: 'Data unit telah disimpan. Form langsung siap untuk unit berikutnya.',
+                                confirmButtonColor: '#0284c7',
+                                confirmButtonText: 'Lanjut Isi Unit Berikutnya'
+                            }).then(() => {
+                                document.getElementById('serial_number_primary').focus();
+                            });
+                            return;
+                        } else {
+                            // Mode Selesai -> Langsung redirect ke daftar riwayat RMA
+                            window.location.href = responseData.redirect_url;
+                            return;
+                        }
                     }
 
                     // Penanganan Error Berdasarkan Status Code
@@ -595,14 +849,10 @@
                                 document.getElementById('dropzone')?.classList.add('is-invalid');
                                 hasStep2Error = true;
                             }
-                            if (k === 'ttd_pemohon') {
-                                document.getElementById('ttd_pemohon')?.parentElement?.classList.add('is-invalid');
-                                hasStep2Error = true;
-                            }
-                            if (['so_po','valuation_type','tanggal','lokasi_asal','nama_manager','merk','type','serial_number','description'].includes(k)) {
+                            if (['so_po','valuation_type','tanggal','lokasi_asal','merk','type','serial_number','description'].includes(k)) {
                                 hasStep1Error = true;
                             }
-                            if (['nama_pemohon','ttd_pemohon'].includes(k)) {
+                            if (k.startsWith('foto_material') || k === 'nama_pemohon' || k === 'nama_manager') {
                                 hasStep2Error = true;
                             }
                         });
@@ -663,8 +913,9 @@
                         confirmButtonColor: '#ef4444'
                     });
                 } finally {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = '<i class="bi bi-floppy"></i> Simpan RMA';
+                    btnSubmitFinish.disabled = false;
+                    btnSubmitNext.disabled = false;
+                    activeBtn.innerHTML = originalText;
                 }
             });
 

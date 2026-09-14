@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AccessManagementController;
 use App\Http\Controllers\Admin\MenuManagementController;
 use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\BatteryController;
 use App\Http\Controllers\KwhController;
 use App\Http\Controllers\PopController;
 use App\Http\Controllers\ProfileController;
@@ -52,6 +53,7 @@ Route::middleware('auth')->group(function () {
     // --- FORM & RIWAYAT RMA ---
     Route::middleware('permission:rma.read')->group(function () {
         Route::get('/rma', [RmaController::class, 'index'])->name('rma');
+        Route::post('/rma/batch-download', [RmaController::class, 'downloadBatch'])->name('rma.batch-download');
         Route::get('/rma/{id}/download', [RmaController::class, 'downloadPdf'])->name('rma.download');
         Route::get('/rma/{id}/pdf', [RmaController::class, 'generatePdf'])->name('rma.pdf');
     });
@@ -130,21 +132,24 @@ Route::middleware('auth')->group(function () {
         Route::delete('/pops/{pop}/kwh/{id}', [KwhController::class, 'destroy'])->name('kwh.destroy');
     });
   
-      Route::get('/battery-card', function () {
-        return view('pop.battery.battery-card');
-    })->name('battery.card');
+    // --- BATTERIES ---
+    Route::get('/pops/{pop}/batteries', [BatteryController::class, 'index'])->name('batteries.index');
 
-    route::get('/battery-create', function () {
-        return view('pop.battery.battery-create');
-    })->name('battery.create');
+    Route::middleware('permission:batteries.index.create')->group(function () {
+        Route::get('/pops/{pop}/batteries/create', [BatteryController::class, 'create'])->name('batteries.create');
+        Route::post('/pops/{pop}/batteries', [BatteryController::class, 'store'])->name('batteries.store');
+    });
 
-    route::get('/battery-detail', function () {
-        return view('pop.battery.battery-detail');
-    })->name('battery.detail');
+    Route::get('/pops/{pop}/batteries/{id}', [BatteryController::class, 'show'])->name('batteries.show');
 
-    route::get('/battery-edit', function () {
-        return view('pop.battery.battery-edit');
-    })->name('battery.edit');
+    Route::middleware('permission:batteries.index.update')->group(function () {
+        Route::get('/pops/{pop}/batteries/{id}/edit', [BatteryController::class, 'edit'])->name('batteries.edit');
+        Route::put('/pops/{pop}/batteries/{id}', [BatteryController::class, 'update'])->name('batteries.update');
+    });
+
+    Route::middleware('permission:batteries.index.delete')->group(function () {
+        Route::delete('/pops/{pop}/batteries/{id}', [BatteryController::class, 'destroy'])->name('batteries.destroy');
+    });
 
     route::get('genset-create', function () {
         return view('pop.genset.genset-create');

@@ -22,4 +22,9 @@ class Pop extends Model
     {
         return $this->hasMany(Rectifier::class);
     }
+
+    public function batteries()
+    {
+        return $this->hasMany(Battery::class);
+    }
 }
