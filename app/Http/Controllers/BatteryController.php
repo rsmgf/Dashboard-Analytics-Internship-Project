@@ -108,6 +108,20 @@ class BatteryController extends Controller
             ? (float) str_replace(',', '.', $validated['kapasitas_uji'])
             : null;
 
+        $vrla1 = isset($validated['vrla_1']) && $validated['vrla_1'] !== '' ? (float) str_replace(',', '.', $validated['vrla_1']) : null;
+        $vrla2 = isset($validated['vrla_2']) && $validated['vrla_2'] !== '' ? (float) str_replace(',', '.', $validated['vrla_2']) : null;
+        $vrla3 = isset($validated['vrla_3']) && $validated['vrla_3'] !== '' ? (float) str_replace(',', '.', $validated['vrla_3']) : null;
+        $vrla4 = isset($validated['vrla_4']) && $validated['vrla_4'] !== '' ? (float) str_replace(',', '.', $validated['vrla_4']) : null;
+
+        if ($validated['jenis_battery'] === 'VRLA') {
+            $cells = array_filter([$vrla1, $vrla2, $vrla3, $vrla4], fn($v) => $v !== null);
+            if (!empty($cells) && $kapasitasUji === null) {
+                $kapasitasUji = round(array_sum($cells) / count($cells), 2);
+            }
+        } else {
+            $vrla1 = $vrla2 = $vrla3 = $vrla4 = null;
+        }
+
         $persen   = null;
         $performa = 'BLM UJI BATT';
         if ($kapasitasUji !== null && $kapasitasBattery > 0) {
@@ -126,27 +140,37 @@ class BatteryController extends Controller
             $statusUji = (abs($diffDays) >= 365) ? 'JADWAL UJI BATT' : 'SUDAH UJI BATT';
         }
 
+        $photoPath = null;
+        if ($request->hasFile('photo_battery')) {
+            $photoPath = $request->file('photo_battery')->store('battery_images', 'public');
+        }
+
         Battery::create([
             'pop_id'                   => $pop->id,
             'rectifier_id'             => $matchingRectifier?->id,
             'building'                 => $validated['building'],
             'pic'                      => $validated['pic'],
             'type_pop'                 => $validated['type_pop'],
-            'recti'                    => $validated['recti'] ?? null,
+            'recti'                    => $nomorRecti,
             'nomor_recti'              => $nomorRecti,
             'nomor_bank'               => $validated['nomor_bank'],
             'merk_battery'             => $validated['merk_battery'],
             'tipe_battery'             => $validated['tipe_battery'],
+            'tegangan'                 => isset($validated['tegangan']) ? (float)$validated['tegangan'] : 48,
             'jenis_battery'            => $validated['jenis_battery'],
             'kapasitas_battery'        => $kapasitasBattery,
             'kapasitas_uji'            => $kapasitasUji,
+            'vrla_1'                   => $vrla1,
+            'vrla_2'                   => $vrla2,
+            'vrla_3'                   => $vrla3,
+            'vrla_4'                   => $vrla4,
             'kapasitas_battery_persen' => $persen,
             'performa_baterai'         => $performa,
-            'backup_timer'             => null,
             'tanggal_uji_terakhir'     => $validated['tanggal_uji_terakhir'] ?? null,
             'tanggal_penggantian'      => $validated['tanggal_penggantian'] ?? null,
             'status_uji'               => $statusUji,
-            'area_sti'                 => $validated['area_sti'],
+            'photo_battery'            => $photoPath,
+            'keterangan_gambar'        => $validated['keterangan_gambar'] ?? null,
             'diupdate_oleh'            => Auth::id(),
         ]);
 
@@ -216,6 +240,20 @@ class BatteryController extends Controller
             ? (float) str_replace(',', '.', $validated['kapasitas_uji'])
             : null;
 
+        $vrla1 = isset($validated['vrla_1']) && $validated['vrla_1'] !== '' ? (float) str_replace(',', '.', $validated['vrla_1']) : null;
+        $vrla2 = isset($validated['vrla_2']) && $validated['vrla_2'] !== '' ? (float) str_replace(',', '.', $validated['vrla_2']) : null;
+        $vrla3 = isset($validated['vrla_3']) && $validated['vrla_3'] !== '' ? (float) str_replace(',', '.', $validated['vrla_3']) : null;
+        $vrla4 = isset($validated['vrla_4']) && $validated['vrla_4'] !== '' ? (float) str_replace(',', '.', $validated['vrla_4']) : null;
+
+        if ($validated['jenis_battery'] === 'VRLA') {
+            $cells = array_filter([$vrla1, $vrla2, $vrla3, $vrla4], fn($v) => $v !== null);
+            if (!empty($cells) && $kapasitasUji === null) {
+                $kapasitasUji = round(array_sum($cells) / count($cells), 2);
+            }
+        } else {
+            $vrla1 = $vrla2 = $vrla3 = $vrla4 = null;
+        }
+
         $persen   = null;
         $performa = 'BLM UJI BATT';
         if ($kapasitasUji !== null && $kapasitasBattery > 0) {
@@ -233,28 +271,38 @@ class BatteryController extends Controller
             $statusUji = (abs($diffDays) >= 365) ? 'JADWAL UJI BATT' : 'SUDAH UJI BATT';
         }
 
-        $battery->update([
+        $updateData = [
             'rectifier_id'             => $matchingRectifier?->id,
             'building'                 => $validated['building'],
             'pic'                      => $validated['pic'],
             'type_pop'                 => $validated['type_pop'],
-            'recti'                    => $validated['recti'] ?? $battery->recti,
+            'recti'                    => $nomorRecti,
             'nomor_recti'              => $nomorRecti,
             'nomor_bank'               => $validated['nomor_bank'],
             'merk_battery'             => $validated['merk_battery'],
             'tipe_battery'             => $validated['tipe_battery'],
+            'tegangan'                 => isset($validated['tegangan']) ? (float)$validated['tegangan'] : ($battery->tegangan ?? 48),
             'jenis_battery'            => $validated['jenis_battery'],
             'kapasitas_battery'        => $kapasitasBattery,
             'kapasitas_uji'            => $kapasitasUji,
+            'vrla_1'                   => $vrla1,
+            'vrla_2'                   => $vrla2,
+            'vrla_3'                   => $vrla3,
+            'vrla_4'                   => $vrla4,
             'kapasitas_battery_persen' => $persen,
             'performa_baterai'         => $performa,
-            'backup_timer'             => null,
             'tanggal_uji_terakhir'     => $validated['tanggal_uji_terakhir'] ?? null,
             'tanggal_penggantian'      => $validated['tanggal_penggantian'] ?? null,
             'status_uji'               => $statusUji,
-            'area_sti'                 => $validated['area_sti'],
+            'keterangan_gambar'        => $validated['keterangan_gambar'] ?? $battery->keterangan_gambar,
             'diupdate_oleh'            => Auth::id(),
-        ]);
+        ];
+
+        if ($request->hasFile('photo_battery')) {
+            $updateData['photo_battery'] = $request->file('photo_battery')->store('battery_images', 'public');
+        }
+
+        $battery->update($updateData);
 
         return redirect()->route('batteries.show', [$pop->id, $battery->id])
             ->with('success', 'Data Baterai berhasil diperbarui!');

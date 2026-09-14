@@ -11,6 +11,16 @@ class StoreBatteryRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('kapasitas_battery_persen') && is_string($this->kapasitas_battery_persen)) {
+            $clean = trim(str_replace(['%', ' '], '', $this->kapasitas_battery_persen));
+            $this->merge([
+                'kapasitas_battery_persen' => $clean === '' ? null : $clean,
+            ]);
+        }
+    }
+
     public function rules(): array
     {
         return [
@@ -27,6 +37,10 @@ class StoreBatteryRequest extends FormRequest
             'jenis_battery'            => ['required', 'in:Lithium,VRLA'],
             'kapasitas_battery'        => ['required', 'numeric', 'min:1'],
             'kapasitas_uji'            => ['nullable', 'string', 'max:20'],
+            'vrla_1'                   => ['nullable', 'string', 'max:20'],
+            'vrla_2'                   => ['nullable', 'string', 'max:20'],
+            'vrla_3'                   => ['nullable', 'string', 'max:20'],
+            'vrla_4'                   => ['nullable', 'string', 'max:20'],
             'kapasitas_battery_persen' => ['nullable', 'numeric', 'min:0'],
             'performa_baterai'         => ['nullable', 'string', 'max:255'],
             'recti'                    => ['nullable', 'string', 'max:255'],
@@ -38,7 +52,6 @@ class StoreBatteryRequest extends FormRequest
             'tanggal_uji_terakhir'     => ['nullable', 'date'],
             'tanggal_penggantian'      => ['nullable', 'date'],
             'status_uji'               => ['nullable', 'string', 'max:255'],
-            'area_sti'                 => ['required', 'string', 'max:255'],
         ];
     }
 
@@ -56,8 +69,6 @@ class StoreBatteryRequest extends FormRequest
             'jenis_battery.required'     => 'Jenis Baterai wajib dipilih.',
             'jenis_battery.in'           => 'Jenis Baterai harus Lithium atau VRLA.',
             'kapasitas_battery.required' => 'Kapasitas Baterai wajib dipilih.',
-            'kapasitas_battery.in'       => 'Pilihan Kapasitas Baterai adalah 20, 50, 100, atau 200 AH.',
-            'area_sti.required'          => 'Area STI wajib diisi.',
         ];
     }
 }

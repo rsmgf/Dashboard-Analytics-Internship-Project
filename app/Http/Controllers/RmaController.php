@@ -37,15 +37,24 @@ class RmaController extends Controller
 
     public function create()
     {
-        return view('rma.rma-create');
+        $managers = Rma::select('nama_manager')
+            ->whereNotNull('nama_manager')
+            ->where('nama_manager', '!=', '')
+            ->distinct()
+            ->orderBy('nama_manager')
+            ->pluck('nama_manager');
+
+        return view('rma.rma-create', compact('managers'));
     }
 
     public function store(StoreRmaRequest $request)
     {
         $validatedData = $request->validated();
 
-        // 1. Simpan tanda tangan di private storage (local)
-        $ttdPath = $request->file('ttd_pemohon')->store('signatures', 'local');
+        // 1. Simpan tanda tangan jika diunggah (opsional karena tanda tangan basah fisik)
+        $ttdPath = $request->hasFile('ttd_pemohon')
+            ? $request->file('ttd_pemohon')->store('signatures', 'local')
+            : null;
 
         // 2. Simpan data utama
         $rma = Rma::create([
@@ -88,20 +97,106 @@ class RmaController extends Controller
 
         // Fallback: stream PDF langsung
         $pdf = Pdf::loadView('pdf.rma', compact('data'));
-        return $pdf->stream('RMA_' . $data->id . '.pdf');
+        return $pdf->stream($this->formatRmaPdfFilename($data));
     }
 
     public function generatePdf($id)
     {
         $data = Rma::with('materials')->findOrFail($id);
         $pdf = Pdf::loadView('pdf.rma', compact('data'));
-        return $pdf->stream('RMA_' . $data->id . '.pdf');
+        return $pdf->stream($this->formatRmaPdfFilename($data));
     }
 
     public function downloadPdf($id)
     {
         $data = Rma::with('materials')->findOrFail($id);
         $pdf = Pdf::loadView('pdf.rma', compact('data'));
-        return $pdf->download('RMA_' . $data->id . '.pdf');
+        return $pdf->download($this->formatRmaPdfFilename($data));
+    }
+
+    public function downloadBatch(Request $request)
+    {
+        $ids = $request->input('ids');
+        if (is_string($ids)) {
+            $ids = explode(',', $ids);
+        }
+        $ids = array_filter(array_map('intval', (array) $ids));
+
+        if (empty($ids)) {
+            return redirect()->route('rma')->with('error', 'Pilih minimal satu data RMA untuk didownload.');
+        }
+
+        $rmas = Rma::with('materials')->whereIn('id', $ids)->get();
+        if ($rmas->isEmpty()) {
+            return redirect()->route('rma')->with('error', 'Data RMA tidak ditemukan.');
+        }
+
+        // Jika hanya 1 data yang dipilih, download langsung sebagai file PDF tunggal
+        if ($rmas->count() === 1) {
+            $rma = $rmas->first();
+            $pdf = Pdf::loadView('pdf.rma', ['data' => $rma]);
+            $filename = $this->formatRmaPdfFilename($rma);
+            return $pdf->download($filename);
+        }
+
+        // Jika lebih dari 1 data, kemas ke dalam file ZIP
+        $zipFileName = 'RMA_Batch_' . date('Ymd_His') . '.zip';
+        $zipDirectory = storage_path('app/temp_zip');
+        if (!file_exists($zipDirectory)) {
+            mkdir($zipDirectory, 0755, true);
+        }
+        $zipFilePath = $zipDirectory . '/' . $zipFileName;
+
+        $zip = new \ZipArchive();
+        if ($zip->open($zipFilePath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === true) {
+            $usedNames = [];
+            foreach ($rmas as $rma) {
+                $pdf = Pdf::loadView('pdf.rma', ['data' => $rma]);
+                $pdfContent = $pdf->output();
+                $baseName = $this->formatRmaPdfFilename($rma);
+
+                // Cegah bentrok nama jika ada SO/PO dan SN identik di dalam file ZIP
+                $pdfName = $baseName;
+                $counter = 1;
+                while (isset($usedNames[$pdfName])) {
+                    $info = pathinfo($baseName);
+                    $pdfName = $info['filename'] . "_{$counter}." . $info['extension'];
+                    $counter++;
+                }
+                $usedNames[$pdfName] = true;
+
+                $zip->addFromString($pdfName, $pdfContent);
+            }
+            $zip->close();
+
+            return response()->download($zipFilePath)->deleteFileAfterSend(true);
+        }
+
+        return redirect()->route('rma')->with('error', 'Gagal membuat file arsip ZIP.');
+    }
+
+    /**
+     * Format nama file PDF RMA berdasarkan Nomor SO/PO dan Serial Number
+     */
+    private function formatRmaPdfFilename($rma): string
+    {
+        $soPo = preg_replace('/[^a-zA-Z0-9_-]/', '-', trim($rma->so_po ?? ''));
+        $sn   = preg_replace('/[^a-zA-Z0-9_-]/', '-', trim($rma->serial_number ?? ''));
+
+        // Bersihkan multiple dash berturut-turut (misal 'SP2K---001' jadi 'SP2K-001')
+        $soPo = trim(preg_replace('/-+/', '-', $soPo), '-');
+        $sn   = trim(preg_replace('/-+/', '-', $sn), '-');
+
+        $parts = ['RMA'];
+        if (!empty($soPo)) {
+            $parts[] = $soPo;
+        }
+        if (!empty($sn)) {
+            $parts[] = $sn;
+        } else {
+            $parts[] = 'ID' . $rma->id;
+        }
+
+        return implode('_', $parts) . '.pdf';
     }
 }

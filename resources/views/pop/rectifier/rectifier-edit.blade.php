@@ -7,25 +7,7 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11">
-    // ---- Konfirmasi Simpan Perubahan ----
-    function konfirmasiSimpan() {
-        Swal.fire({
-            icon: 'question',
-            title: 'Simpan Perubahan?',
-            text: 'Pastikan semua data sudah benar sebelum menyimpan.',
-            showCancelButton: true,
-            confirmButtonColor: '#2563eb',
-            cancelButtonColor: '#64748b',
-            confirmButtonText: '<i class="bi bi-check-lg"></i> Ya, Simpan',
-            cancelButtonText: 'Batal',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                document.getElementById('rectifierForm').submit();
-            }
-        });
-    }
-</script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     @vite([
         'resources/css/sidebar.css',
@@ -209,7 +191,7 @@
                                 <div class="rform-group">
                                     <label class="rform-label">Kapasitas Modul Terpasang</label>
                                     <input type="text" name="kapasitas_modul" id="kapasitas_modul" class="rform-input"
-                                           value="{{ old('kapasitas_modul') }}" placeholder="Contoh: 40 A DC / 13 A AC">
+                                           value="{{ old('kapasitas_modul', $rectifier->modules->first()?->kapasitas_ampere) }}" placeholder="Contoh: 40 A DC / 13 A AC">
                                 </div>
 
                                 <div class="rform-group">

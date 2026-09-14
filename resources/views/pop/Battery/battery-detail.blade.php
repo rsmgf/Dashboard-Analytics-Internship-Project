@@ -10,7 +10,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @vite([
         'resources/css/sidebar.css',
-        'resources/css/battery-create.css',
         'resources/css/battery-detail.css'
     ])
 </head>
@@ -23,6 +22,7 @@
             <x-topbar />
 
             <div class="rectifier-content">
+                {{-- Header Bar --}}
                 <div class="detail-header-bar">
                     <div class="header-left-group">
                         <a href="{{ route('batteries.index', $pop->id) }}" class="detail-back" title="Kembali ke Daftar Baterai">
@@ -67,195 +67,301 @@
                 <div class="detail-container">
                     {{-- SECTION 1: GENERAL INFORMATION --}}
                     <div class="form-card">
-                        <h3 class="form-section-title">General Information</h3>
-                        <div class="detail-grid-3">
-                            <div class="detail-item">
-                                <span class="detail-label">POP</span>
-                                <span class="detail-value">{{ $pop->kode_pop }} - {{ $pop->nama_pop }}</span>
+                        <h3 class="form-section-title">
+                            <i class="bi bi-info-circle-fill"></i> General Information
+                        </h3>
+                        <div class="general-info-grid">
+                            <div class="general-info-card">
+                                <div class="info-card-icon">
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                </div>
+                                <div class="info-card-content">
+                                    <span class="info-card-label">POP</span>
+                                    <span class="info-card-value">{{ $pop->kode_pop }} - {{ $pop->nama_pop }}</span>
+                                </div>
                             </div>
 
-                            <div class="detail-item">
-                                <span class="detail-label">Building</span>
-                                <span class="detail-value">{{ $battery->building ?? $pop->jenis_bangunan }}</span>
+                            <div class="general-info-card">
+                                <div class="info-card-icon">
+                                    <i class="bi bi-building"></i>
+                                </div>
+                                <div class="info-card-content">
+                                    <span class="info-card-label">Building</span>
+                                    <span class="info-card-value">{{ $battery->building ?? $pop->jenis_bangunan }}</span>
+                                </div>
                             </div>
 
-                            <div class="detail-item">
-                                <span class="detail-label">PIC</span>
-                                <span class="detail-value">{{ $battery->pic ?? '-' }}</span>
+                            <div class="general-info-card">
+                                <div class="info-card-icon">
+                                    <i class="bi bi-person-fill"></i>
+                                </div>
+                                <div class="info-card-content">
+                                    <span class="info-card-label">PIC</span>
+                                    <span class="info-card-value">{{ $battery->pic ?? '-' }}</span>
+                                </div>
                             </div>
 
-                            <div class="detail-item">
-                                <span class="detail-label">Type POP</span>
-                                <span class="detail-value">{{ $battery->type_pop ?? $pop->tipe_pop }}</span>
+                            <div class="general-info-card">
+                                <div class="info-card-icon">
+                                    <i class="bi bi-tag-fill"></i>
+                                </div>
+                                <div class="info-card-content">
+                                    <span class="info-card-label">Type POP</span>
+                                    <span class="info-card-value">{{ $battery->type_pop ?? $pop->tipe_pop }}</span>
+                                </div>
                             </div>
 
-                            <div class="detail-item">
-                                <span class="detail-label">Rectifier / Keterangan</span>
-                                <span class="detail-value">{{ $battery->nomor_recti }} {{ $battery->recti ? '(' . $battery->recti . ')' : '' }}</span>
+                            <div class="general-info-card">
+                                <div class="info-card-icon">
+                                    <i class="bi bi-hdd-rack-fill"></i>
+                                </div>
+                                <div class="info-card-content">
+                                    <span class="info-card-label">Nomor Recti</span>
+                                    <span class="info-card-value">{{ $battery->nomor_recti }}{{ $battery->recti && $battery->recti !== $battery->nomor_recti ? ' (' . $battery->recti . ')' : '' }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     {{-- SECTION 2: CHECKLIST BATERAI --}}
-                    {{-- SECTION 2: CHECKLIST BATERAI --}}
                     <div class="form-card">
-                        <h3 class="form-section-title">Checklist Baterai</h3>
-                        <p class="form-section-subtitle">Informasi Baterai</p>
+                        <h3 class="form-section-title">
+                            <i class="bi bi-battery-charging"></i> Checklist Baterai
+                        </h3>
+                        <div class="checklist-section-subtitle">Informasi Baterai</div>
 
                         @php
                             $persen = $battery->kapasitas_battery_persen;
                             $performa = $battery->performa_baterai ?? 'BLM UJI BATT';
 
-                            $badgeClass = 'status-warning';
+                            $badgeClass = 'status-neutral';
                             if ($persen === null || $persen <= 0) {
-                                $badgeClass = 'status-warning';
+                                $badgeClass = 'status-neutral';
                             } elseif ($persen >= 90) {
-                                $badgeClass = 'status-good';
+                                $badgeClass = 'status-excellent'; // Hijau
                             } elseif ($persen >= 75) {
-                                $badgeClass = 'status-good';
+                                $badgeClass = 'status-good'; // Kuning (Good Enough)
                             } elseif ($persen >= 50) {
-                                $badgeClass = 'status-warning';
+                                $badgeClass = 'status-warning'; // Orange (Warning)
                             } else {
-                                $badgeClass = 'status-danger';
+                                $badgeClass = 'status-danger'; // Merah (Alert)
                             }
                         @endphp
 
                         <div class="checklist-table-container">
                             <div class="checklist-row">
-                                <div class="checklist-label">Nomor Recti</div>
-                                <div class="checklist-field">{{ $battery->nomor_recti }}</div>
-                            </div>
-
-                            <div class="checklist-row">
                                 <div class="checklist-label">Nomor Bank</div>
-                                <div class="checklist-field">{{ $battery->nomor_bank }}</div>
+                                <div class="checklist-field">
+                                    <span class="field-colon">:</span>
+                                    <span class="field-value">{{ $battery->nomor_bank }}</span>
+                                </div>
                             </div>
 
                             <div class="checklist-row">
-                                <div class="checklist-label">Merk Battery</div>
-                                <div class="checklist-field">{{ $battery->merk_battery }}</div>
+                                <div class="checklist-label">Merk Baterai</div>
+                                <div class="checklist-field">
+                                    <span class="field-colon">:</span>
+                                    <span class="field-value">{{ $battery->merk_battery }}</span>
+                                </div>
                             </div>
 
                             <div class="checklist-row">
-                                <div class="checklist-label">Jenis Battery</div>
-                                <div class="checklist-field">{{ strtoupper($battery->jenis_battery ?? 'LITHIUM') }}</div>
+                                <div class="checklist-label">Jenis Baterai</div>
+                                <div class="checklist-field">
+                                    <span class="field-colon">:</span>
+                                    <span class="field-value">{{ strtoupper($battery->jenis_battery ?? 'LITHIUM') }}</span>
+                                </div>
                             </div>
 
                             <div class="checklist-row">
-                                <div class="checklist-label">Tipe Battery</div>
-                                <div class="checklist-field">{{ $battery->tipe_battery }}</div>
+                                <div class="checklist-label">Tipe Baterai</div>
+                                <div class="checklist-field">
+                                    <span class="field-colon">:</span>
+                                    <span class="field-value">{{ $battery->tipe_battery ?? '-' }}</span>
+                                </div>
                             </div>
 
                             <div class="checklist-row">
                                 <div class="checklist-label">Tegangan (V)</div>
-                                <div class="checklist-field">{{ $battery->tegangan ?? 48 }} V</div>
-                            </div>
-
-                            <div class="checklist-row">
-                                <div class="checklist-label">Kapasitas Battery (AH)</div>
-                                <div class="checklist-field">{{ $battery->kapasitas_battery }} AH</div>
-                            </div>
-
-                            <div class="checklist-row">
-                                <div class="checklist-label">Kapasitas Uji Battery</div>
                                 <div class="checklist-field">
-                                    <div class="uji-val-single">{{ $battery->kapasitas_uji !== null ? number_format($battery->kapasitas_uji, 2) . ' AH' : '-' }}</div>
+                                    <span class="field-colon">:</span>
+                                    <span class="field-value">{{ $battery->tegangan ?? 48 }} V</span>
                                 </div>
                             </div>
 
                             <div class="checklist-row">
-                                <div class="checklist-label">Kapasitas Battery %</div>
+                                <div class="checklist-label">Kapasitas Baterai (AH)</div>
                                 <div class="checklist-field">
-                                    @if ($battery->kapasitas_battery_persen !== null && $battery->kapasitas_battery_persen > 0)
-                                        <span class="capacity-value">{{ number_format($battery->kapasitas_battery_persen, 2) }}%</span>
-                                        <span class="status-badge {{ $badgeClass }}" style="margin-left: 8px;">{{ $performa }}</span>
-                                    @else
-                                        <span class="status-badge status-warning">BLM UJI BATT</span>
-                                    @endif
+                                    <span class="field-colon">:</span>
+                                    <span class="field-value">{{ $battery->kapasitas_battery }} AH</span>
+                                </div>
+                            </div>
+
+                            <div class="checklist-row align-top">
+                                <div class="checklist-label">Kapasitas Uji Baterai</div>
+                                <div class="checklist-field">
+                                    <span class="field-colon">:</span>
+                                    <div class="field-value-column">
+                                        @if (strtoupper($battery->jenis_battery ?? '') === 'VRLA')
+                                            <div class="uji-grid-4-detail">
+                                                <div class="uji-cell-box">
+                                                    <span class="uji-cell-label">Batt 1</span>
+                                                    <span class="uji-cell-val">{{ $battery->vrla_1 !== null ? number_format($battery->vrla_1, 2) : ($battery->kapasitas_uji !== null ? number_format($battery->kapasitas_uji, 2) : '-') }} AH</span>
+                                                </div>
+                                                <div class="uji-cell-box">
+                                                    <span class="uji-cell-label">Batt 2</span>
+                                                    <span class="uji-cell-val">{{ $battery->vrla_2 !== null ? number_format($battery->vrla_2, 2) : ($battery->kapasitas_uji !== null ? number_format($battery->kapasitas_uji, 2) : '-') }} AH</span>
+                                                </div>
+                                                <div class="uji-cell-box">
+                                                    <span class="uji-cell-label">Batt 3</span>
+                                                    <span class="uji-cell-val">{{ $battery->vrla_3 !== null ? number_format($battery->vrla_3, 2) : ($battery->kapasitas_uji !== null ? number_format($battery->kapasitas_uji, 2) : '-') }} AH</span>
+                                                </div>
+                                                <div class="uji-cell-box">
+                                                    <span class="uji-cell-label">Batt 4</span>
+                                                    <span class="uji-cell-val">{{ $battery->vrla_4 !== null ? number_format($battery->vrla_4, 2) : ($battery->kapasitas_uji !== null ? number_format($battery->kapasitas_uji, 2) : '-') }} AH</span>
+                                                </div>
+                                            </div>
+                                            @if ($battery->kapasitas_uji !== null)
+                                                <div class="uji-avg-badge">
+                                                    <i class="bi bi-speedometer2"></i>
+                                                    <span>Rata-rata: <strong>{{ number_format($battery->kapasitas_uji, 2) }} AH</strong></span>
+                                                </div>
+                                            @endif
+                                        @else
+                                            <span>{{ $battery->kapasitas_uji !== null ? number_format($battery->kapasitas_uji, 2) . ' AH' : '-' }}</span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="checklist-row">
+                                <div class="checklist-label">Kapasitas Baterai (%)</div>
+                                <div class="checklist-field">
+                                    <span class="field-colon">:</span>
+                                    <span class="field-value">
+                                        @if ($battery->kapasitas_battery_persen !== null && $battery->kapasitas_battery_persen > 0)
+                                            <span class="capacity-percent">{{ number_format($battery->kapasitas_battery_persen, 2) }}%</span>
+                                            <span class="status-badge {{ $badgeClass }}">{{ $performa }}</span>
+                                        @else
+                                            <span class="status-badge status-neutral">BLM UJI BATT</span>
+                                        @endif
+                                    </span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {{-- SECTION 3: UJI BATERAI --}}
-                    <div class="form-card">
-                        <h3 class="form-section-title">Uji Baterai</h3>
+                    {{-- SECTION 3 + 4: UJI BATERAI & PHOTO (2-column side by side - OPSI A) --}}
+                    <div class="detail-bottom-grid">
 
-                        @php
-                            $statusUjiClass = 'status-warning';
-                            if ($battery->status_uji === 'SUDAH UJI BATT' || $battery->status_uji === 'good' || $battery->status_uji === 'excellent') {
-                                $statusUjiClass = 'status-good';
-                            } elseif ($battery->status_uji === 'JADWAL UJI BATT' || $battery->status_uji === 'poor') {
-                                $statusUjiClass = 'status-danger';
-                            }
-                        @endphp
+                        {{-- Kiri: Uji Baterai --}}
+                        <div class="form-card bottom-card">
+                            <h3 class="form-section-title">
+                                <i class="bi bi-speedometer2"></i> Uji Baterai
+                            </h3>
 
-                        <div class="checklist-table-container">
-                            <div class="checklist-row">
-                                <div class="checklist-label">Tanggal Uji Terakhir</div>
-                                <div class="checklist-field">{{ $battery->tanggal_uji_terakhir ? $battery->tanggal_uji_terakhir->format('d/m/Y') : '-' }}</div>
-                            </div>
+                            @php
+                                $statusUjiClass = 'status-neutral';
+                                $statusUpper = strtoupper($battery->status_uji ?? '');
+                                if ($statusUpper === 'SUDAH UJI BATT' || $statusUpper === 'GOOD' || $statusUpper === 'EXCELLENT') {
+                                    $statusUjiClass = 'status-excellent'; // Hijau
+                                } elseif ($statusUpper === 'JADWAL UJI BATT' || $statusUpper === 'POOR' || $statusUpper === 'ALERT') {
+                                    $statusUjiClass = 'status-danger'; // Merah
+                                } elseif ($statusUpper === 'WARNING') {
+                                    $statusUjiClass = 'status-warning'; // Orange
+                                }
+                            @endphp
 
-                            <div class="checklist-row">
-                                <div class="checklist-label">Tanggal Penggantian</div>
-                                <div class="checklist-field">{{ $battery->tanggal_penggantian ? $battery->tanggal_penggantian->format('d/m/Y') : '-' }}</div>
-                            </div>
+                            <div class="checklist-table-container">
+                                <div class="checklist-row">
+                                    <div class="checklist-label">Tanggal Uji Terakhir</div>
+                                    <div class="checklist-field">
+                                        <span class="field-colon">:</span>
+                                        <span class="field-value">{{ $battery->tanggal_uji_terakhir ? $battery->tanggal_uji_terakhir->format('d/m/Y') : '-' }}</span>
+                                    </div>
+                                </div>
 
-                            <div class="checklist-row">
-                                <div class="checklist-label">Status Uji Baterai</div>
-                                <div class="checklist-field">
-                                    <span class="status-badge {{ $statusUjiClass }}">{{ $battery->status_uji ?? 'BLM UJI BATT' }}</span>
+                                <div class="checklist-row">
+                                    <div class="checklist-label">Tanggal Penggantian</div>
+                                    <div class="checklist-field">
+                                        <span class="field-colon">:</span>
+                                        <span class="field-value">{{ $battery->tanggal_penggantian ? $battery->tanggal_penggantian->format('d/m/Y') : '-' }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="checklist-row">
+                                    <div class="checklist-label">Status Uji Baterai</div>
+                                    <div class="checklist-field">
+                                        <span class="field-colon">:</span>
+                                        <span class="field-value">
+                                            <span class="status-badge {{ $statusUjiClass }}">{{ $battery->status_uji ?? 'BLM UJI BATT' }}</span>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="checklist-row align-top">
+                                    <div class="checklist-label">Terakhir Diperbarui</div>
+                                    <div class="checklist-field">
+                                        <span class="field-colon">:</span>
+                                        <div class="field-value-column">
+                                            <span class="updated-user">{{ $battery->diupdateOleh?->name ?? 'Admin' }}</span>
+                                            <span class="updated-timestamp">
+                                                <i class="bi bi-clock-history"></i> {{ $battery->updated_at ? $battery->updated_at->format('d M Y, H.i') . ' WIB' : '-' }}
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
-                            <div class="checklist-row">
-                                <div class="checklist-label">Area STI</div>
-                                <div class="checklist-field">{{ $battery->area_sti ?? $pop->kota_kabupaten }}</div>
-                            </div>
-
-                            <div class="checklist-row">
-                                <div class="checklist-label">Terakhir Diperbarui Oleh</div>
-                                <div class="checklist-field text-sub" style="font-size: 0.85rem; color: #64748b;">{{ $battery->diupdateOleh?->name ?? 'Admin' }} &middot; {{ $battery->updated_at->format('d M Y, H.i') }} WIB</div>
-                            </div>
                         </div>
-                    </div>
 
-                    <!-- Bagian Tambahan Photo Battery pada Detail -->
-                    <div class="form-card">
-                        <h3 class="form-section-title">Photo Battery</h3>
-                        <div class="detail-grid-3" style="align-items: center;">
-                            <div class="detail-item" style="grid-column: span 2;">
-                                <span class="detail-label">Keterangan Gambar</span>
-                                <span class="detail-value">{{ $battery->keterangan_gambar ?? 'Kondisi baterai di lokasi POP' }}</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Dokumentasi Foto</span>
-                                <div class="preview-box" style="height: 100px; width: 150px; margin-top: 5px;">
+                        {{-- Kanan: Photo Battery (Figma Framed Card) --}}
+                        <div class="form-card bottom-card photo-card-container">
+                            <h3 class="form-section-title">
+                                <i class="bi bi-camera-fill"></i> Photo Battery
+                            </h3>
+
+                            <div class="figma-photo-card">
+                                <div class="figma-photo-img-area">
                                     @if (!empty($battery->photo_battery) && file_exists(public_path('storage/' . $battery->photo_battery)))
-                                        <img src="{{ asset('storage/' . $battery->photo_battery) }}" alt="Foto Baterai" style="width: 100%; height: 100%; object-fit: cover; display: block;" id="detailPhoto">
+                                        <img src="{{ asset('storage/' . $battery->photo_battery) }}" 
+                                             alt="Foto Baterai" 
+                                             id="detailPhoto"
+                                             onclick="previewPhoto('{{ asset('storage/' . $battery->photo_battery) }}', '{{ addslashes($battery->keterangan_gambar ?? 'Foto Baterai') }}')"
+                                             title="Klik untuk melihat ukuran penuh">
                                     @else
-                                        <div class="no-preview" id="noPhotoDetail">
-                                            <i class="bi bi-image" style="font-size: 1.5rem; color: #cbd5e1;"></i>
-                                            <span style="font-size: 0.65rem;">Tidak ada foto</span>
+                                        <div class="photo-empty-state">
+                                            <i class="bi bi-image"></i>
+                                            <span>Belum ada dokumentasi foto</span>
                                         </div>
                                     @endif
                                 </div>
+                                <div class="figma-photo-caption-bar">
+                                    <span>{{ $battery->keterangan_gambar ? $battery->keterangan_gambar : 'Keterangan Battery' }}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="form-actions" style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
-                        <a href="{{ route('batteries.index', $pop->id) }}" class="btn-reset" style="height: 42px; padding: 0 24px; border: none; border-radius: 8px; background: #64748b; color: #ffffff; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">Kembali</a>
-                        @can('batteries.index.update')
-                        <a href="{{ route('batteries.edit', [$pop->id, $battery->id]) }}" class="btn-submit btn-edit-detail" style="height: 42px; padding: 0 28px; border-radius: 8px; background: #0070d8; color: #ffffff; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; text-decoration: none;">
-                            <i class="bi bi-pencil-fill"></i>
-                            Edit Data Baterai
-                        </a>
-                        @endcan
-                    </div>
+                    </div>{{-- end detail-bottom-grid --}}
+
                 </div>
             </div>
         </main>
     </div>
+
+    <script>
+        function previewPhoto(url, title) {
+            Swal.fire({
+                title: title || 'Dokumentasi Baterai',
+                imageUrl: url,
+                imageAlt: title || 'Foto Baterai',
+                showCloseButton: true,
+                showConfirmButton: false,
+                width: 'auto',
+                customClass: {
+                    popup: 'swal2-photo-modal'
+                }
+            });
+        }
+    </script>
 </body>
 </html>

@@ -202,7 +202,7 @@
                                     </div>
                                     <div class="meta-item">
                                         <i class="bi bi-geo-alt-fill"></i>
-                                        <span>{{ $battery->area_sti ?? $pop->kota_kabupaten }}</span>
+                                        <span>{{ $pop->kota_kabupaten }}</span>
                                     </div>
                                 </div>
 

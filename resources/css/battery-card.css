@@ -351,12 +351,19 @@ body {
 }
 .dot-warning { background: #f97316; }
 
-.status-alert {
+.status-alert, .status-danger {
     background: #fee2e2;
     color: #dc2626;
     border: 1px solid #fecaca;
 }
-.dot-alert { background: #ef4444; }
+.dot-alert, .dot-danger { background: #ef4444; }
+
+.status-neutral {
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+}
+.dot-neutral { background: #94a3b8; }
 
 .status-dot {
     width: 8px;

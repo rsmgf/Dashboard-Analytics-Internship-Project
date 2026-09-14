@@ -53,6 +53,7 @@ Route::middleware('auth')->group(function () {
     // --- FORM & RIWAYAT RMA ---
     Route::middleware('permission:rma.read')->group(function () {
         Route::get('/rma', [RmaController::class, 'index'])->name('rma');
+        Route::post('/rma/batch-download', [RmaController::class, 'downloadBatch'])->name('rma.batch-download');
         Route::get('/rma/{id}/download', [RmaController::class, 'downloadPdf'])->name('rma.download');
         Route::get('/rma/{id}/pdf', [RmaController::class, 'generatePdf'])->name('rma.pdf');
     });
