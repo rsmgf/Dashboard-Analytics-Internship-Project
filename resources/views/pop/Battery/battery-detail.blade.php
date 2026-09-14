@@ -64,104 +64,127 @@
 
                     <div class="form-card">
                         <h3 class="form-section-title">Checklist Baterai</h3>
-                        <p class="form-section-subtitle">Informasi Baterai</p>
+                        
+                        <div class="checklist-table-container">
+                            <div class="checklist-row">
+                                <div class="checklist-label">Nomor Recti</div>
+                                <div class="checklist-field">POP_1SRG012</div>
+                            </div>
 
-                        <div class="table-detail-container">
-                            <table class="table-detail">
-                                <tbody>
-                                    <tr>
-                                        <td class="td-label">Nomor Bank</td>
-                                        <td class="td-separator">:</td>
-                                        <td class="td-val">POP_1SRG012_BANK01</td>
-                                    </tr>
+                            <div class="checklist-row">
+                                <div class="checklist-label">Nomor Bank</div>
+                                <div class="checklist-field">POP_1SRG012_BANK01</div>
+                            </div>
 
-                                    <tr>
-                                        <td class="td-label">Merk Baterai</td>
-                                        <td class="td-separator">:</td>
-                                        <td class="td-val">SACRED SUN</td>
-                                    </tr>
+                            <div class="checklist-row">
+                                <div class="checklist-label">Merk Battery</div>
+                                <div class="checklist-field">SACRED SUN</div>
+                            </div>
 
-                                    <tr>
-                                        <td class="td-label">Jenis Baterai</td>
-                                        <td class="td-separator">:</td>
-                                        <td class="td-val">LITHIUM</td>
-                                    </tr>
+                            <div class="checklist-row">
+                                <div class="checklist-label">Jenis Battery</div>
+                                <div class="checklist-field">LITHIUM</div>
+                            </div>
 
-                                    <tr>
-                                        <td class="td-label">Tipe Baterai</td>
-                                        <td class="td-separator">:</td>
-                                        <td class="td-val">SSIFP48100B</td>
-                                    </tr>
+                            <div class="checklist-row">
+                                <div class="checklist-label">Tipe Battery</div>
+                                <div class="checklist-field">SSIFP48100B</div>
+                            </div>
 
-                                    <tr>
-                                        <td class="td-label">Kapasitas Baterai (AH)</td>
-                                        <td class="td-separator">:</td>
-                                        <td class="td-val">100 AH</td>
-                                    </tr>
+                            <div class="checklist-row">
+                                <div class="checklist-label">Tegangan (V)</div>
+                                <div class="checklist-field">48 V</div>
+                            </div>
 
-                                    <tr>
-                                        <td class="td-label">Kapasitas Uji (AH)</td>
-                                        <td class="td-separator">:</td>
-                                        <td class="td-val">100.00 AH</td>
-                                    </tr>
+                            <div class="checklist-row">
+                                <div class="checklist-label">Kapasitas Battery (AH)</div>
+                                <div class="checklist-field">100 AH</div>
+                            </div>
 
-                                    <tr>
-                                        <td class="td-label">Kapasitas Baterai (%)</td>
-                                        <td class="td-separator">:</td>
-                                        <td class="td-val">
-                                            <span class="capacity-value">100.00%</span>
-                                        </td>
-                                    </tr>
+                            <div class="checklist-row">
+                                <div class="checklist-label">Kapasitas Uji Battery</div>
+                                <div class="checklist-field">
+                                    <!-- Jika Lithium (1 Nilai) -->
+                                    <div class="uji-val-single">100.00 AH</div>
+                                    
+                                    <!-- Jika VRLA (4 Nilai dalam Grid, aktifkan jika VRLA) -->
+                                    <!-- 
+                                    <div class="uji-grid-4-detail">
+                                        <div class="uji-sub-display"><span class="sub-lbl">Battery 1:</span> <strong>25.00 AH</strong></div>
+                                        <div class="uji-sub-display"><span class="sub-lbl">Battery 3:</span> <strong>25.00 AH</strong></div>
+                                        <div class="uji-sub-display"><span class="sub-lbl">Battery 2:</span> <strong>25.00 AH</strong></div>
+                                        <div class="uji-sub-display"><span class="sub-lbl">Battery 4:</span> <strong>25.00 AH</strong></div>
+                                    </div> 
+                                    -->
+                                </div>
+                            </div>
 
-                                    <tr>
-                                        <td class="td-label">Backup Timer (Hour)</td>
-                                        <td class="td-separator">:</td>
-                                        <td class="td-val">6.54 Hour</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div class="checklist-row">
+                                <div class="checklist-label">Kapasitas Battery %</div>
+                                <div class="checklist-field">
+                                    <span class="capacity-value">100.00%</span>
+                                </div>
+                            </div>
+
+                            <div class="checklist-row">
+                                <div class="checklist-label">Backup Timer (Hour)</div>
+                                <div class="checklist-field">6.54 Hour</div>
+                            </div>
                         </div>
                     </div>
 
                     <div class="form-card">
                         <h3 class="form-section-title">Uji Baterai</h3>
 
-                        <div class="table-detail-container">
-                            <table class="table-detail">
-                                <tbody>
-                                    <tr>
-                                        <td class="td-label">Tanggal Uji Terakhir</td>
-                                        <td class="td-separator">:</td>
-                                        <td class="td-val">10/31/2025</td>
-                                    </tr>
+                        <div class="checklist-table-container">
+                            <div class="checklist-row">
+                                <div class="checklist-label">Tanggal Uji Terakhir</div>
+                                <div class="checklist-field">10/31/2025</div>
+                            </div>
 
-                                    <tr>
-                                        <td class="td-label">Tanggal Penggantian</td>
-                                        <td class="td-separator">:</td>
-                                        <td class="td-val">05/05/2020</td>
-                                    </tr>
+                            <div class="checklist-row">
+                                <div class="checklist-label">Tanggal Penggantian</div>
+                                <div class="checklist-field">05/05/2020</div>
+                            </div>
 
-                                    <tr>
-                                        <td class="td-label">Status Uji Baterai</td>
-                                        <td class="td-separator">:</td>
-                                        <td class="td-val">
-                                            <span class="status-badge status-good">GOOD</span>
-                                        </td>
-                                    </tr>
+                            <div class="checklist-row">
+                                <div class="checklist-label">Status Uji Baterai</div>
+                                <div class="checklist-field">
+                                    <span class="status-badge status-good">GOOD</span>
+                                </div>
+                            </div>
 
-                                    <tr>
-                                        <td class="td-label">Area STI</td>
-                                        <td class="td-separator">:</td>
-                                        <td class="td-val">Baten 1</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div class="checklist-row">
+                                <div class="checklist-label">Area STI</div>
+                                <div class="checklist-field">Baten 1</div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="form-actions">
-                        <button type="button" class="btn-reset" onclick="history.back()">Kembali</button>
-                        <a href="#" class="btn-submit btn-edit-detail">
+                    <!-- Bagian Tambahan Photo Battery pada Detail -->
+                    <div class="form-card">
+                        <h3 class="form-section-title">Photo Battery</h3>
+                        <div class="detail-grid-3" style="align-items: center;">
+                            <div class="detail-item" style="grid-column: span 2;">
+                                <span class="detail-label">Keterangan Gambar</span>
+                                <span class="detail-value">Kondisi baterai aman dan aktif di lokasi POP</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Dokumentasi Foto</span>
+                                <div class="preview-box" style="height: 100px; width: 150px; margin-top: 5px;">
+                                    <img src="" alt="Foto Baterai" style="width: 100%; height: 100%; object-fit: cover; display: none;" id="detailPhoto">
+                                    <div class="no-preview" id="noPhotoDetail">
+                                        <i class="bi bi-image" style="font-size: 1.5rem; color: #cbd5e1;"></i>
+                                        <span style="font-size: 0.65rem;">Tidak ada foto</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions" style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
+                        <button type="button" class="btn-reset" onclick="history.back()" style="height: 42px; padding: 0 24px; border: none; border-radius: 8px; background: #64748b; color: #ffffff; font-weight: 600; cursor: pointer;">Kembali</button>
+                        <a href="#" class="btn-submit btn-edit-detail" style="height: 42px; padding: 0 28px; border-radius: 8px; background: #0070d8; color: #ffffff; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; text-decoration: none;">
                             <i class="bi bi-pencil-fill"></i>
                             Edit
                         </a>
