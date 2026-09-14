@@ -10,16 +10,21 @@ class Pop extends Model
     use HasFactory;
 
     protected $fillable = [
-        'kode_pop', 
-        'nama_pop', 
-        'provinsi', 
-        'kota_kabupaten', 
-        'tipe_pop', 
+        'kode_pop',
+        'nama_pop',
+        'provinsi',
+        'kota_kabupaten',
+        'tipe_pop',
         'jenis_bangunan',
     ];
 
     public function rectifiers()
     {
         return $this->hasMany(Rectifier::class);
+    }
+
+    public function kwhs()
+    {
+        return $this->hasMany(Kwh::class);
     }
 }

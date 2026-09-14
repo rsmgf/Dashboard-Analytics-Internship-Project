@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AccessManagementController;
 use App\Http\Controllers\Admin\MenuManagementController;
 use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KwhController;
 use App\Http\Controllers\PopController;
 use App\Http\Controllers\ProfileController;
@@ -48,6 +49,12 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->group(function
 
 // --- AUTHENTICATED ROUTES ---
 Route::middleware('auth')->group(function () {
+
+    Route::middleware('auth')->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard/search-pop', [DashboardController::class, 'searchPop'])->name('dashboard.searchPop');
+        Route::get('/dashboard/pop/{pop}/summary', [DashboardController::class, 'popSummary'])->name('dashboard.popSummary');
+    });
 
     // --- FORM & RIWAYAT RMA ---
     Route::middleware('permission:rma.read')->group(function () {
@@ -129,8 +136,8 @@ Route::middleware('auth')->group(function () {
     Route::middleware('permission:kwh.card.delete')->group(function () {
         Route::delete('/pops/{pop}/kwh/{id}', [KwhController::class, 'destroy'])->name('kwh.destroy');
     });
-  
-      Route::get('/battery-card', function () {
+
+    Route::get('/battery-card', function () {
         return view('pop.battery.battery-card');
     })->name('battery.card');
 
