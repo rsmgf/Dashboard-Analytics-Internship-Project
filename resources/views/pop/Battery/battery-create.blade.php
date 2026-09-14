@@ -108,10 +108,29 @@
                                 </div>
                             </div>
 
+                            <!-- Tipe Battery diubah menjadi Dropdown -->
                             <div class="checklist-row">
                                 <div class="checklist-label">Tipe Battery <span class="required">*</span></div>
                                 <div class="checklist-field">
-                                    <input type="text" id="tipe_battery" name="tipe_battery" class="table-input" placeholder="Masukkan tipe battery" required>
+                                    <select id="tipe_battery" name="tipe_battery" class="table-input" required>
+                                        <option value="" disabled selected>Pilih Tipe</option>
+                                        <option value="SSIFP48100B">SSIFP48100B</option>
+                                        <option value="LFPG12100FT">LFPG12100FT</option>
+                                        <option value="NSGF 12-100">NSGF 12-100</option>
+                                        <option value="NSAF 12-100">NSAF 12-100</option>
+                                        <option value="SINELITH-LPF48S-100">SINELITH-LPF48S-100</option>
+                                        <option value="CT12-100EX">CT12-100EX</option>
+                                        <option value="NSLi 48-100">NSLi 48-100</option>
+                                        <option value="LIB 48-100">LIB 48-100</option>
+                                        <option value="48NPFC100">48NPFC100</option>
+                                        <option value="FP-4850-Li-ico">FP-4850-Li-ico</option>
+                                        <option value="SSIFP15S48100A">SSIFP15S48100A</option>
+                                        <option value="SINELITH LFP48-50">SINELITH LFP48-50</option>
+                                        <option value="SINELITH LFP48-100">SINELITH LFP48-100</option>
+                                        <option value="SSIFP18100B">SSIFP18100B</option>
+                                        <option value="NSAF 12-200">NSAF 12-200</option>
+                                        <option value="12FIT100/M">12FIT100/M</option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -135,12 +154,12 @@
                                     <div id="defaultUjiText" class="default-uji-text">Pilih jenis battery terlebih dahulu</div>
                                     
                                     <!-- Lithium (1 Input) -->
-                                    <div id="lithiumUjiWrapper" class="uji-wrapper" style="display: none;">
+                                    <div id="lithiumUjiWrapper" class="uji-wrapper" style="display: none; width: 100%;">
                                         <input type="number" id="kapasitas_uji_1" name="kapasitas_uji[]" class="table-input" min="0" step="0.01" placeholder="Masukkan kapasitas uji">
                                     </div>
 
                                     <!-- VRLA (4 Input 2x2 Grid) -->
-                                    <div id="vrlaUjiWrapper" class="uji-grid-4" style="display: none;">
+                                    <div id="vrlaUjiWrapper" class="uji-grid-4" style="display: none; width: 100%;">
                                         <div class="uji-sub-item">
                                             <span class="sub-label">Battery 1</span>
                                             <input type="number" name="kapasitas_uji[]" class="table-input vrla-input" min="0" step="0.01" placeholder="Kapasitas 1">

@@ -125,11 +125,6 @@
                                     <span class="capacity-value">100.00%</span>
                                 </div>
                             </div>
-
-                            <div class="checklist-row">
-                                <div class="checklist-label">Backup Timer (Hour)</div>
-                                <div class="checklist-field">6.54 Hour</div>
-                            </div>
                         </div>
                     </div>
 
@@ -152,11 +147,6 @@
                                 <div class="checklist-field">
                                     <span class="status-badge status-good">GOOD</span>
                                 </div>
-                            </div>
-
-                            <div class="checklist-row">
-                                <div class="checklist-label">Area STI</div>
-                                <div class="checklist-field">Baten 1</div>
                             </div>
                         </div>
                     </div>

@@ -166,13 +166,6 @@
                                     <input type="text" id="kapasitas_persen" name="kapasitas_persen" class="table-input auto-field" value="100.00%" readonly tabindex="-1">
                                 </div>
                             </div>
-
-                            <div class="checklist-row">
-                                <div class="checklist-label">Backup Timer (Hour) <span class="required">*</span></div>
-                                <div class="checklist-field">
-                                    <input type="number" step="0.01" min="0" class="table-input" name="backup_timer" value="6.54" required>
-                                </div>
-                            </div>
                         </div>
                     </div>
 
@@ -199,11 +192,6 @@
                                     </div>
                                 </div>
                                 <input type="hidden" id="status_uji" name="status_uji" value="good">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Area STI <span class="required">*</span></label>
-                                <input type="text" class="form-control" name="area_sti" value="Baten 1" required>
                             </div>
                         </div>
                     </div>

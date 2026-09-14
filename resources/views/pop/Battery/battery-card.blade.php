@@ -19,6 +19,41 @@
         'resources/css/sidebar.css',
         'resources/css/battery-card.css'
     ])
+
+    <style>
+        /* Styling Tambahan untuk Badge Status Backup Time & Performance */
+        .backup-time.status-excellent {
+            background-color: #f0fdf4 !important;
+            color: #15803d !important;
+            border: 1px solid #bbf7d0 !important;
+        }
+        .backup-time.status-good-enough,
+        .backup-time.status-good {
+            background-color: #fefce8 !important;
+            color: #a16207 !important;
+            border: 1px solid #fde68a !important;
+        }
+        .backup-time.status-warning {
+            background-color: #fff7ed !important;
+            color: #c2410c !important;
+            border: 1px solid #fed7aa !important;
+        }
+        .backup-time.status-alert,
+        .backup-time.status-danger {
+            background-color: #fef2f2 !important;
+            color: #b91c1c !important;
+            border: 1px solid #fecaca !important;
+        }
+        .backup-time {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+    </style>
 </head>
 
 <body>
@@ -86,8 +121,9 @@
                     <div class="rectifier-title">
                         Rectifier 1 : POP_1SRG012_RECT01
                     </div>
+                    <!-- Keterangan backup time dengan status warna (contoh: status-excellent) -->
                     <div class="backup-time status-excellent">
-                        Performance Backup Time : 6.50
+                        <i class="bi bi-battery-full"></i> Performance Backup Time : 6.50 Jam (EXCELLENT)
                     </div>
                 </div>
 
@@ -96,7 +132,6 @@
                     {{-- CARD 1 (EXCELLENT - Hijau) --}}
                     <div class="rectifier-card battery-card" id="battery-card-1">
 
-                        {{-- Card Header Sesuai Gambar --}}
                         <div class="rectifier-card-header">
                             <div class="card-icon">
                                 <i class="bi bi-file-earmark-text-fill"></i>
@@ -163,7 +198,6 @@
                     {{-- CARD 2 (GOOD ENOUGH - Kuning) --}}
                     <div class="rectifier-card battery-card" id="battery-card-2">
 
-                        {{-- Card Header Sesuai Gambar --}}
                         <div class="rectifier-card-header">
                             <div class="card-icon">
                                 <i class="bi bi-file-earmark-text-fill"></i>
