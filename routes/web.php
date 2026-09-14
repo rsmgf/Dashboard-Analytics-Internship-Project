@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AccessManagementController;
 use App\Http\Controllers\Admin\MenuManagementController;
 use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BatteryController;
 use App\Http\Controllers\KwhController;
 use App\Http\Controllers\PopController;
@@ -49,6 +50,12 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->group(function
 
 // --- AUTHENTICATED ROUTES ---
 Route::middleware('auth')->group(function () {
+
+    Route::middleware('auth')->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard/search-pop', [DashboardController::class, 'searchPop'])->name('dashboard.searchPop');
+        Route::get('/dashboard/pop/{pop}/summary', [DashboardController::class, 'popSummary'])->name('dashboard.popSummary');
+    });
 
     // --- FORM & RIWAYAT RMA ---
     Route::middleware('permission:rma.read')->group(function () {
