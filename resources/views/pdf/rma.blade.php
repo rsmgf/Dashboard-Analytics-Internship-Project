@@ -41,14 +41,13 @@
 
         .box {
             display: inline-block;
-            width: 12px;
-            height: 12px;
-            border: 1px solid #000;
+            width: 15px;
+            height: 15px;
+            border: 2px solid #000;
             text-align: center;
-            line-height: 12px;
-            font-weight: bold;
-            margin-right: 2px;
-            font-size: 9pt;
+            line-height: 14px;
+            vertical-align: middle;
+            margin-right: 3px;
         }
 
         .text-red {
@@ -115,7 +114,23 @@
 
 <body>
 
-    <h2>Return Material Authorization</h2>
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px;">
+        <tr>
+            <td style="width: 140px; vertical-align: middle;">
+                <!-- Spacer kiri agar judul tepat berada di tengah -->
+            </td>
+            <td style="vertical-align: middle; text-align: center;">
+                <h2 style="margin: 0; text-decoration: underline; font-size: 14pt; text-align: center;">Return Material Authorization</h2>
+            </td>
+            <td style="width: 140px; vertical-align: middle; text-align: right;">
+                @if (file_exists(public_path('images/logo-iconplus-dark.png')))
+                    <img src="{{ public_path('images/logo-iconplus-dark.png') }}" style="height: 36px; max-width: 140px; object-fit: contain;">
+                @elseif (file_exists(public_path('images/logo-iconplus.png')))
+                    <img src="{{ public_path('images/logo-iconplus.png') }}" style="height: 36px; max-width: 140px; object-fit: contain;">
+                @endif
+            </td>
+        </tr>
+    </table>
 
     <table class="info-table">
         <tr>
@@ -152,14 +167,15 @@
         </tr>
     </table>
 
-    <p style="font-weight: bold; margin-bottom: 10px; font-size: 9.5pt;">
-        Beri Tanda Checker Pada Kotak Jika Material Rusak
-        <span class="box" style="margin-left: 15px;">{{ $data->is_material_rusak ? '✓' : '' }}</span>
-    </p>
-
     @php
+        $checkImg = '<img src="' . public_path('images/check_black.png') . '" width="11" height="11" style="vertical-align: 1px;">';
         $kerusakan = $data->is_material_rusak ? $data->kerusakan ?? [] : [];
     @endphp
+
+    <p style="margin-bottom: 10px; font-size: 9.5pt;">
+        Beri Tanda Checker Pada Kotak Jika Material Rusak
+        <span class="box" style="margin-left: 15px;">{!! $data->is_material_rusak ? $checkImg : '' !!}</span>
+    </p>
 
     <table class="wrapper-table">
         <tr>
@@ -167,63 +183,51 @@
             <td style="width: 38%; padding-right: 2px;">
                 <table class="damage-table">
                     <tr>
-                        <td class="col-check"><span
-                                class="box">{{ in_array('Continue', $kerusakan) ? '✓' : '' }}</span></td>
+                        <td class="col-check"><span class="box">{!! in_array('Continue', $kerusakan) ? $checkImg : '' !!}</span></td>
                         <td class="col-text"><span class="text-red">Continue</span></td>
                     </tr>
                     <tr>
-                        <td class="col-check"><span
-                                class="box">{{ in_array('Dead on Arrival', $kerusakan) ? '✓' : '' }}</span></td>
+                        <td class="col-check"><span class="box">{!! in_array('Dead on Arrival', $kerusakan) ? $checkImg : '' !!}</span></td>
                         <td class="col-text"><span class="text-red">Dead on Arrival</span></td>
                     </tr>
                     <tr>
-                        <td class="col-check"><span
-                                class="box">{{ in_array('Dead on Operational', $kerusakan) ? '✓' : '' }}</span></td>
+                        <td class="col-check"><span class="box">{!! in_array('Dead on Operational', $kerusakan) ? $checkImg : '' !!}</span></td>
                         <td class="col-text"><span class="text-red">Dead on Operational</span></td>
                     </tr>
                     <tr>
-                        <td class="col-check"><span
-                                class="box">{{ in_array('BER Indication', $kerusakan) ? '✓' : '' }}</span></td>
+                        <td class="col-check"><span class="box">{!! in_array('BER Indication', $kerusakan) ? $checkImg : '' !!}</span></td>
                         <td class="col-text"><span class="text-red">BER Indication*)</span></td>
-                        < /tr>
+                    </tr>
                     <tr>
-                        <td class="col-check"><span
-                                class="box">{{ in_array('Software Error', $kerusakan) ? '✓' : '' }}</span></td>
+                        <td class="col-check"><span class="box">{!! in_array('Software Error', $kerusakan) ? $checkImg : '' !!}</span></td>
                         <td class="col-text"><span class="text-red">Software Error</span></td>
                     </tr>
                     <tr>
-                        <td class="col-check"><span
-                                class="box">{{ in_array('Tributary Error', $kerusakan) ? '✓' : '' }}</span></td>
+                        <td class="col-check"><span class="box">{!! in_array('Tributary Error', $kerusakan) ? $checkImg : '' !!}</span></td>
                         <td class="col-text"><span class="text-red">Tributary Error</span></td>
                     </tr>
                     <tr>
-                        <td class="col-check"><span
-                                class="box">{{ in_array('Channel Error', $kerusakan) ? '✓' : '' }}</span></td>
+                        <td class="col-check"><span class="box">{!! in_array('Channel Error', $kerusakan) ? $checkImg : '' !!}</span></td>
                         <td class="col-text"><span class="text-red">Channel Error</span></td>
                     </tr>
                     <tr>
-                        <td class="col-check"><span
-                                class="box">{{ in_array('Port Error', $kerusakan) ? '✓' : '' }}</span></td>
+                        <td class="col-check"><span class="box">{!! in_array('Port Error', $kerusakan) ? $checkImg : '' !!}</span></td>
                         <td class="col-text"><span class="text-red">Port Error</span></td>
                     </tr>
                     <tr>
-                        <td class="col-check"><span
-                                class="box">{{ in_array('Tx Laser Faulty', $kerusakan) ? '✓' : '' }}</span></td>
+                        <td class="col-check"><span class="box">{!! in_array('Tx Laser Faulty', $kerusakan) ? $checkImg : '' !!}</span></td>
                         <td class="col-text"><span class="text-red">Tx Laser Faulty</span></td>
                     </tr>
                     <tr>
-                        <td class="col-check"><span
-                                class="box">{{ in_array('Rx Laser Faulty', $kerusakan) ? '✓' : '' }}</span></td>
+                        <td class="col-check"><span class="box">{!! in_array('Rx Laser Faulty', $kerusakan) ? $checkImg : '' !!}</span></td>
                         <td class="col-text"><span class="text-red">Rx Laser Faulty</span></td>
                     </tr>
                     <tr>
-                        <td class="col-check"><span
-                                class="box">{{ in_array('Physical Damage', $kerusakan) ? '✓' : '' }}</span></td>
+                        <td class="col-check"><span class="box">{!! in_array('Physical Damage', $kerusakan) ? $checkImg : '' !!}</span></td>
                         <td class="col-text"><span class="text-red">Physical Damage</span></td>
                     </tr>
                     <tr>
-                        <td class="col-check"><span
-                                class="box">{{ in_array('Miscelaneous', $kerusakan) ? '✓' : '' }}</span></td>
+                        <td class="col-check"><span class="box">{!! in_array('Miscelaneous', $kerusakan) ? $checkImg : '' !!}</span></td>
                         <td class="col-text"><span class="text-red">Miscelaneous</span></td>
                     </tr>
                 </table>
@@ -232,25 +236,19 @@
             <td style="width: 62%; padding-left: 5px;">
                 <table class="damage-table">
                     <tr>
-                        <td class="col-check"><span
-                                class="box">{{ in_array('Intermittent', $kerusakan) ? '✓' : '' }}</span></td>
+                        <td class="col-check"><span class="box">{!! in_array('Intermittent', $kerusakan) ? $checkImg : '' !!}</span></td>
                         <td class="col-text"><span class="text-red">Intermittent</span></td>
                     </tr>
                     <tr>
-                        <td class="col-check"><span
-                                class="box">{{ in_array('Rectifier faulty', $kerusakan) ? '✓' : '' }}</span></td>
-                        <td class="col-text"><span class="text-red">Rectifier/Inverter faulty (Input/Output
-                                Voltage/Current Fault)</span></td>
+                        <td class="col-check"><span class="box">{!! in_array('Rectifier faulty', $kerusakan) ? $checkImg : '' !!}</span></td>
+                        <td class="col-text"><span class="text-red">Rectifier/Inverter faulty (Input/Output Voltage/Current Fault)</span></td>
                     </tr>
                     <tr>
-                        <td class="col-check"><span
-                                class="box">{{ in_array('Charging switch', $kerusakan) ? '✓' : '' }}</span></td>
-                        <td class="col-text"><span class="text-red">Charging/ static switch (Pengisian/Switch
-                                Rusak)</span></td>
+                        <td class="col-check"><span class="box">{!! in_array('Charging switch', $kerusakan) ? $checkImg : '' !!}</span></td>
+                        <td class="col-text"><span class="text-red">Charging/ static switch (Pengisian/Switch Rusak)</span></td>
                     </tr>
                     <tr>
-                        <td class="col-check"><span
-                                class="box">{{ in_array('Battery faulty', $kerusakan) ? '✓' : '' }}</span></td>
+                        <td class="col-check"><span class="box">{!! in_array('Battery faulty', $kerusakan) ? $checkImg : '' !!}</span></td>
                         <td class="col-text"><span class="text-red">Battery faulty (Battery Rusak/Drop)</span></td>
                     </tr>
                 </table>
@@ -266,49 +264,40 @@
         </tr>
     </table>
 
-    <!-- TTD AREA -->
+    <!-- TTD AREA (TANDA TANGAN BASAH FISIK) -->
     <!-- Menggunakan CSS page-break-inside: avoid agar tidak terpotong setengah halaman -->
-    <table class="ttd-area" style="width: 100%; margin-top: 60px;">
-        
+    <table class="ttd-area" style="width: 100%; margin-top: 50px;">
         <!-- BARIS 1: JUDUL JABATAN -->
         <tr>
             <td style="width: 50%; vertical-align: top;">
                 <p style="margin: 0;">Engineer Sign,</p>
             </td>
             <td style="width: 50%; vertical-align: top;">
-                <p style="margin: 0;">Manager on Duty/Local Manager/Supervisor Sign,</p>
+                <p style="margin: 0;">Manager on Duty / Local Manager / Supervisor Sign,</p>
             </td>
         </tr>
 
-        <!-- BARIS 2: RUANG TANDA TANGAN (Gambar & Kosong) -->
+        <!-- BARIS 2: RUANG TANDA TANGAN BASAH (TINGGI 75px) -->
         <tr>
-            <td style="width: 50%; vertical-align: bottom; height: 100px;">
-                <div style="margin-top: 5px;">
-                    @php
-                        $ttdPath = file_exists(storage_path('app/private/' . $data->ttd_pemohon))
-                            ? storage_path('app/private/' . $data->ttd_pemohon)
-                            : public_path('storage/' . $data->ttd_pemohon);
-                    @endphp
-                    <img src="{{ $ttdPath }}"
-                        style="max-height: 90px; max-width: 250px; object-fit: contain; display: block; margin: 0 auto;">
-                </div>
+            <td style="width: 50%; vertical-align: bottom; height: 75px;">
+                <!-- Ruang tanda tangan basah Engineer -->
             </td>
             
-            <td style="width: 50%; vertical-align: bottom; height: 100px;">
+            <td style="width: 50%; vertical-align: bottom; height: 75px;">
+                <!-- Ruang tanda tangan basah Manager -->
             </td>
         </tr>
 
-        <!-- BARIS 3: NAMA -->
+        <!-- BARIS 3: NAMA JELAS -->
         <tr>
             <td style="width: 50%; vertical-align: bottom;">
-                <p style="margin: 0; margin-top: 5px; text-decoration: underline; font-weight: bold;">{{ $data->nama_pemohon }}</p>
+                <p style="margin: 0; margin-top: 5px; text-decoration: underline;">( {{ $data->nama_pemohon }} )</p>
             </td>
             
             <td style="width: 50%; vertical-align: bottom;">
-                <p style="margin: 0; margin-top: 5px; text-decoration: underline; font-weight: bold;">{{ $data->nama_manager }}</p>
+                <p style="margin: 0; margin-top: 5px; text-decoration: underline;">( {{ $data->nama_manager }} )</p>
             </td>
         </tr>
-        
     </table>
 
     <!-- HALAMAN 2: FOTO -->

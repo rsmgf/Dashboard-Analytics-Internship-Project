@@ -509,3 +509,118 @@ body.sidebar-collapsed .sidebar-logo img {
         font-size: 12px;
     }
 }
+
+/* =====================================================
+   BATCH ACTIONS & SELECTION PILLS
+===================================================== */
+.batch-action-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.batch-pill-group {
+    display: inline-flex;
+    align-items: center;
+    background: #f1f5f9;
+    padding: 3px;
+    border-radius: 9px;
+    border: 1px solid #e2e8f0;
+    gap: 3px;
+}
+
+.btn-pill-item {
+    background: transparent;
+    border: none;
+    color: #475569;
+    padding: 6px 13px;
+    border-radius: 7px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+}
+
+.btn-pill-item:hover {
+    background: #ffffff;
+    color: #0f172a;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.btn-pill-item:active {
+    transform: scale(0.98);
+}
+
+.btn-pill-item .icon-select-all {
+    color: #2563eb;
+    font-size: 14px;
+}
+
+.btn-pill-item .icon-select-today {
+    color: #059669;
+    font-size: 13.5px;
+}
+
+.btn-pill-item.btn-deselect {
+    color: #dc2626;
+}
+
+.btn-pill-item.btn-deselect:hover {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.btn-pill-item .icon-deselect {
+    color: #ef4444;
+    font-size: 13.5px;
+}
+
+.btn-batch-download-modern {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 16px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #0086FF, #005BD4);
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(0, 91, 212, 0.22);
+    transition: all 0.25s ease;
+    white-space: nowrap;
+    animation: popIn 0.25s ease-out;
+}
+
+.btn-batch-download-modern:hover {
+    background: linear-gradient(135deg, #0078E8, #0052C2);
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(0, 91, 212, 0.32);
+}
+
+.btn-batch-download-modern i {
+    font-size: 14px;
+}
+
+.btn-batch-download-modern .badge-count {
+    background: rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    padding: 1px 7px;
+    border-radius: 12px;
+    font-size: 11.5px;
+    font-weight: 700;
+    margin-left: 2px;
+}
+
+@keyframes popIn {
+    from { opacity: 0; transform: scale(0.92); }
+    to { opacity: 1; transform: scale(1); }
+}

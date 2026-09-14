@@ -27,4 +27,9 @@ class Pop extends Model
     {
         return $this->hasMany(Kwh::class);
     }
+
+    public function batteries()
+    {
+        return $this->hasMany(Battery::class);
+    }
 }

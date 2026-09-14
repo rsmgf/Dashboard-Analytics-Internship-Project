@@ -6,6 +6,7 @@
     <title>Tambah Baterai - PLN Icon Plus</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @vite([
         'resources/css/sidebar.css',
         'resources/css/battery-create.css'
@@ -21,111 +22,160 @@
 
             <div class="rectifier-content">
                 <div class="rectifier-page-header" style="border-bottom: none; margin-bottom: 20px;">
-                    <div class="rectifier-page-info">
-                        <a href="{{ url()->previous() }}" class="back-button" title="Kembali">
+                    <div class="rectifier-page-info" style="display: flex; align-items: center; gap: 12px;">
+                        <a href="{{ route('batteries.index', $pop->id) }}" class="back-button" title="Kembali ke Daftar Baterai">
                             <i class="bi bi-arrow-left"></i>
                         </a>
+                        <div>
+                            <x-breadcrumb :items="[
+                                ['label' => 'POP', 'route' => 'pops.index'],
+                                ['label' => $pop->nama_pop, 'route' => 'batteries.index', 'params' => ['pop' => $pop->id]],
+                                ['label' => 'Tambah Baterai'],
+                            ]" />
+                            <p style="font-size: 0.8rem; color: #64748b; margin: 2px 0 0;">Kode POP: <strong>{{ $pop->kode_pop }}</strong> &middot; {{ $pop->kota_kabupaten }}, {{ $pop->provinsi ?? 'Jambi' }}</p>
+                        </div>
                     </div>
                 </div>
 
-                <form action="#" method="POST" id="batteryForm" enctype="multipart/form-data">
+                {{-- Alert Error Validasi --}}
+                @if (isset($errors) && $errors->any())
+                    <div style="margin-bottom: 20px; background: #fee2e2; border: 1px solid #fca5a5; color: #b91c1c; padding: 12px 16px; border-radius: 8px;">
+                        <strong><i class="bi bi-exclamation-triangle-fill"></i> Terjadi Kesalahan:</strong>
+                        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 0.85rem;">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <form action="{{ route('batteries.store', $pop->id) }}" method="POST" id="batteryForm" enctype="multipart/form-data">
                     @csrf
 
+                    {{-- SECTION 1: GENERAL INFORMATION --}}
                     <div class="form-card">
-                        <h3 class="form-section-title">General Information</h3>
-                        <div class="form-grid-3">
+                        <h3 class="form-section-title">
+                            <i class="bi bi-info-circle-fill"></i> General Information
+                        </h3>
+                        <div class="form-grid-4">
                             <div class="form-group">
                                 <label for="pop">POP</label>
-                                <input type="text" id="pop" name="pop" class="form-control disabled-input" value="POP_1MBN10004" readonly>
+                                <input type="text" id="pop" class="form-control disabled-input" value="{{ $pop->kode_pop }} - {{ $pop->nama_pop }}" readonly>
                             </div>
 
                             <div class="form-group">
                                 <label for="building">Building <span class="required">*</span></label>
-                                <input type="text" id="building" name="building" class="form-control" placeholder="Masukkan building" required>
+                                <input type="text" id="building" name="building" class="form-control @error('building') is-invalid @enderror" value="{{ old('building', $pop->jenis_bangunan) }}" placeholder="Masukkan building" required>
+                                @error('building') <span class="text-danger" style="font-size: 0.75rem; color:#ef4444;">{{ $message }}</span> @enderror
                             </div>
 
                             <div class="form-group">
                                 <label for="pic">PIC <span class="required">*</span></label>
-                                <input type="text" id="pic" name="pic" class="form-control" placeholder="Masukkan PIC" required>
+                                <input type="text" id="pic" name="pic" class="form-control @error('pic') is-invalid @enderror" value="{{ old('pic', auth()->user()?->name ?? 'Teknisi') }}" placeholder="Masukkan PIC" required>
+                                @error('pic') <span class="text-danger" style="font-size: 0.75rem; color:#ef4444;">{{ $message }}</span> @enderror
                             </div>
 
                             <div class="form-group">
                                 <label for="type_pop">Type POP <span class="required">*</span></label>
-                                <input type="text" id="type_pop" name="type_pop" class="form-control" placeholder="Masukkan type POP" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="recti">Recti <span class="required">*</span></label>
-                                <input type="text" id="recti" name="recti" class="form-control" placeholder="Masukkan recti" required>
+                                <input type="text" id="type_pop" name="type_pop" class="form-control @error('type_pop') is-invalid @enderror" value="{{ old('type_pop', $pop->tipe_pop) }}" placeholder="Masukkan type POP" required>
+                                @error('type_pop') <span class="text-danger" style="font-size: 0.75rem; color:#ef4444;">{{ $message }}</span> @enderror
                             </div>
                         </div>
                     </div>
 
-                    <!-- Checklist Baterai dengan Desain Tabel Baris -->
+                    {{-- SECTION 2: CHECKLIST BATERAI --}}
                     <div class="form-card">
-                        <h3 class="form-section-title">Checklist Baterai</h3>
+                        <h3 class="form-section-title">
+                            <i class="bi bi-battery-charging"></i> Checklist Baterai
+                        </h3>
                         <div class="checklist-table-container">
                             <div class="checklist-row">
                                 <div class="checklist-label">Nomor Recti <span class="required">*</span></div>
                                 <div class="checklist-field">
-                                    <input type="text" id="nomor_recti" name="nomor_recti" class="table-input" placeholder="Masukkan nomor recti" required>
+                                    <select id="rectifier_id" name="rectifier_id" class="table-input @error('rectifier_id') is-invalid @enderror" required>
+                                        <option value="" disabled {{ old('rectifier_id') ? '' : 'selected' }}>Pilih Nomor Rectifier</option>
+                                        @forelse ($rectifiers as $r)
+                                            <option value="{{ $r->id }}" {{ old('rectifier_id') == $r->id ? 'selected' : '' }}>
+                                                {{ $r->nomor_recti }} ({{ $r->recti_label }}) - Beban: {{ $r->beban ? $r->beban . ' A' : '-' }}
+                                            </option>
+                                        @empty
+                                            <option value="" disabled>Belum ada Rectifier di POP ini</option>
+                                        @endforelse
+                                    </select>
+                                    @error('rectifier_id') <span class="text-danger" style="font-size: 0.75rem; color:#ef4444;">{{ $message }}</span> @enderror
                                 </div>
                             </div>
 
                             <div class="checklist-row">
                                 <div class="checklist-label">Nomor Bank <span class="required">*</span></div>
                                 <div class="checklist-field">
-                                    <input type="text" id="nomor_bank" name="nomor_bank" class="table-input" placeholder="Masukkan nomor bank" required>
+                                    <input type="text" id="nomor_bank" name="nomor_bank" class="table-input @error('nomor_bank') is-invalid @enderror" value="{{ old('nomor_bank', $suggestedBank ?? '') }}" placeholder="Contoh: {{ $pop->kode_pop }}_BANK01" required>
+                                    @error('nomor_bank') <span class="text-danger" style="font-size: 0.75rem; color:#ef4444;">{{ $message }}</span> @enderror
                                 </div>
                             </div>
 
                             <div class="checklist-row">
                                 <div class="checklist-label">Merk Battery <span class="required">*</span></div>
                                 <div class="checklist-field">
-                                    <select id="merk_battery" name="merk_battery" class="table-input" required>
-                                        <option value="" disabled selected>Pilih Merk</option>
-                                        <option value="Sacred Sun">Sacred Sun</option>
-                                        <option value="BSB">BSB</option>
-                                        <option value="Fortis Power">Fortis Power</option>
-                                        <option value="Monolite">Monolite</option>
-                                        <option value="Nagoya">Nagoya</option>
-                                        <option value="Narada">Narada</option>
-                                        <option value="Nippres">Nippres</option>
-                                        <option value="Sinergi">Sinergi</option>
-                                        <option value="Vision">Vision</option>
+                                    @php
+                                        $brands = ['Sacred Sun', 'BSB', 'Fortis Power', 'Monolite', 'Nagoya', 'Narada', 'Nippres', 'Sinergi', 'Vision', 'Shoto', 'Coslight', 'Leoch', 'Huawei', 'ZTE'];
+                                        $oldMerk = old('merk_battery');
+                                        $isCustomMerk = !empty($oldMerk) && !collect($brands)->contains(fn($b) => strcasecmp($b, $oldMerk) === 0);
+                                    @endphp
+                                    <select id="merk_battery" name="merk_battery" class="table-input @error('merk_battery') is-invalid @enderror" required onchange="handleMerkChange()">
+                                        <option value="" disabled {{ $oldMerk ? '' : 'selected' }}>Pilih Merk</option>
+                                        @foreach ($brands as $b)
+                                            <option value="{{ $b }}" {{ strcasecmp($oldMerk, $b) === 0 ? 'selected' : '' }}>{{ $b }}</option>
+                                        @endforeach
+                                        <option value="__custom__" {{ $isCustomMerk ? 'selected' : '' }}>+ Merk Lainnya (Custom)...</option>
                                     </select>
+                                    <input type="text" id="custom_merk_battery" class="table-input" style="{{ $isCustomMerk ? 'display: block;' : 'display: none;' }} margin-top: 8px;" value="{{ $isCustomMerk ? $oldMerk : '' }}" placeholder="Ketik nama merk baterai baru...">
+                                    @error('merk_battery') <span class="text-danger" style="font-size: 0.75rem; color:#ef4444;">{{ $message }}</span> @enderror
                                 </div>
                             </div>
 
                             <div class="checklist-row">
                                 <div class="checklist-label">Jenis Battery <span class="required">*</span></div>
                                 <div class="checklist-field">
-                                    <select id="jenis_battery" name="jenis_battery" class="table-input" required>
-                                        <option value="" disabled selected>Pilih Jenis</option>
-                                        <option value="Lithium">Lithium</option>
-                                        <option value="VRLA">VRLA</option>
+                                    <select id="jenis_battery" name="jenis_battery" class="table-input @error('jenis_battery') is-invalid @enderror" required>
+                                        <option value="" disabled {{ old('jenis_battery') ? '' : 'selected' }}>Pilih Jenis</option>
+                                        <option value="Lithium" {{ old('jenis_battery', 'Lithium') == 'Lithium' ? 'selected' : '' }}>Lithium</option>
+                                        <option value="VRLA" {{ old('jenis_battery') == 'VRLA' ? 'selected' : '' }}>VRLA</option>
                                     </select>
+                                    @error('jenis_battery') <span class="text-danger" style="font-size: 0.75rem; color:#ef4444;">{{ $message }}</span> @enderror
                                 </div>
                             </div>
 
+                            <!-- Tipe Battery diubah menjadi Dropdown -->
                             <div class="checklist-row">
                                 <div class="checklist-label">Tipe Battery <span class="required">*</span></div>
                                 <div class="checklist-field">
-                                    <input type="text" id="tipe_battery" name="tipe_battery" class="table-input" placeholder="Masukkan tipe battery" required>
+                                    <select id="tipe_battery" name="tipe_battery" class="table-input @error('tipe_battery') is-invalid @enderror" required onchange="handleTipeChange()">
+                                        <option value="" disabled selected>Pilih Tipe Battery</option>
+                                    </select>
+                                    <input type="text" id="custom_tipe_battery" class="table-input" style="display: none; margin-top: 8px;" placeholder="Ketik tipe baterai baru...">
+                                    @error('tipe_battery') <span class="text-danger" style="font-size: 0.75rem; color:#ef4444;">{{ $message }}</span> @enderror
                                 </div>
                             </div>
 
                             <div class="checklist-row">
                                 <div class="checklist-label">Tegangan (V) <span class="required">*</span></div>
                                 <div class="checklist-field">
-                                    <input type="number" id="tegangan" name="tegangan" class="table-input" min="0" step="0.01" placeholder="Masukkan tegangan" required>
+                                    <input type="number" id="tegangan" name="tegangan" class="table-input" min="0" step="0.01" value="{{ old('tegangan', 48) }}" placeholder="Masukkan tegangan (Contoh: 48)" required>
                                 </div>
                             </div>
 
                             <div class="checklist-row">
                                 <div class="checklist-label">Kapasitas Battery (AH) <span class="required">*</span></div>
                                 <div class="checklist-field">
-                                    <input type="number" id="kapasitas_battery" name="kapasitas_battery" class="table-input" min="0" step="0.01" placeholder="Masukkan kapasitas battery" required>
+                                    <select id="kapasitas_battery" name="kapasitas_battery" class="table-input @error('kapasitas_battery') is-invalid @enderror" required onchange="updateBatteryCalculation()">
+                                        <option value="" disabled {{ old('kapasitas_battery') ? '' : 'selected' }}>Pilih Kapasitas</option>
+                                        <option value="100" {{ old('kapasitas_battery', '100') == '100' ? 'selected' : '' }}>100 AH</option>
+                                        <option value="200" {{ old('kapasitas_battery') == '200' ? 'selected' : '' }}>200 AH</option>
+                                        <option value="50" {{ old('kapasitas_battery') == '50' ? 'selected' : '' }}>50 AH</option>
+                                        <option value="20" {{ old('kapasitas_battery') == '20' ? 'selected' : '' }}>20 AH</option>
+                                    </select>
+                                    @error('kapasitas_battery') <span class="text-danger" style="font-size: 0.75rem; color:#ef4444;">{{ $message }}</span> @enderror
                                 </div>
                             </div>
 
@@ -136,26 +186,26 @@
                                     
                                     <!-- Lithium (1 Input) -->
                                     <div id="lithiumUjiWrapper" class="uji-wrapper" style="display: none;">
-                                        <input type="number" id="kapasitas_uji_1" name="kapasitas_uji[]" class="table-input" min="0" step="0.01" placeholder="Masukkan kapasitas uji">
+                                        <input type="text" id="kapasitas_uji_1" name="kapasitas_uji" class="table-input" value="{{ old('kapasitas_uji') }}" placeholder="Masukkan Kapasitas Uji">
                                     </div>
 
                                     <!-- VRLA (4 Input 2x2 Grid) -->
-                                    <div id="vrlaUjiWrapper" class="uji-grid-4" style="display: none;">
+                                    <div id="vrlaUjiWrapper" class="uji-grid-4" style="display: none; width: 100%;">
                                         <div class="uji-sub-item">
                                             <span class="sub-label">Battery 1</span>
-                                            <input type="number" name="kapasitas_uji[]" class="table-input vrla-input" min="0" step="0.01" placeholder="Kapasitas 1">
-                                        </div>
-                                        <div class="uji-sub-item">
-                                            <span class="sub-label">Battery 3</span>
-                                            <input type="number" name="kapasitas_uji[]" class="table-input vrla-input" min="0" step="0.01" placeholder="Kapasitas 3">
+                                            <input type="text" id="vrla_1" name="vrla_1" class="table-input vrla-input" value="{{ old('vrla_1') }}" placeholder="Contoh: 25,00">
                                         </div>
                                         <div class="uji-sub-item">
                                             <span class="sub-label">Battery 2</span>
-                                            <input type="number" name="kapasitas_uji[]" class="table-input vrla-input" min="0" step="0.01" placeholder="Kapasitas 2">
+                                            <input type="text" id="vrla_2" name="vrla_2" class="table-input vrla-input" value="{{ old('vrla_2') }}" placeholder="Contoh: 25,00">
+                                        </div>
+                                        <div class="uji-sub-item">
+                                            <span class="sub-label">Battery 3</span>
+                                            <input type="text" id="vrla_3" name="vrla_3" class="table-input vrla-input" value="{{ old('vrla_3') }}" placeholder="Contoh: 25,00">
                                         </div>
                                         <div class="uji-sub-item">
                                             <span class="sub-label">Battery 4</span>
-                                            <input type="number" name="kapasitas_uji[]" class="table-input vrla-input" min="0" step="0.01" placeholder="Kapasitas 4">
+                                            <input type="text" id="vrla_4" name="vrla_4" class="table-input vrla-input" value="{{ old('vrla_4') }}" placeholder="Contoh: 25,00">
                                         </div>
                                     </div>
                                 </div>
@@ -164,33 +214,40 @@
                             <div class="checklist-row">
                                 <div class="checklist-label">Kapasitas Battery % <span class="required">*</span></div>
                                 <div class="checklist-field">
-                                    <input type="text" id="kapasitas_battery_persen" name="kapasitas_battery_persen" class="table-input auto-field" readonly tabindex="-1" placeholder="Dihitung otomatis oleh sistem">
+                                    <div style="position: relative; display: flex; align-items: center; width: 100%;">
+                                        <input type="text" id="kapasitas_battery_persen" name="kapasitas_battery_persen" class="table-input auto-field" readonly tabindex="-1" placeholder="Dihitung otomatis oleh sistem" value="{{ old('kapasitas_battery_persen') }}" style="padding-right: 32px;">
+                                        <span style="position: absolute; right: 12px; font-weight: 600; color: #64748b; pointer-events: none;">%</span>
+                                    </div>
+                                    <input type="hidden" name="performa_baterai" id="performa_baterai" value="{{ old('performa_baterai') }}">
                                 </div>
                             </div>
                         </div>
                     </div>
 
+                    {{-- SECTION 3: UJI BATERAI --}}
                     <div class="form-card">
-                        <h3 class="form-section-title">Uji Baterai</h3>
+                        <h3 class="form-section-title">
+                            <i class="bi bi-speedometer2"></i> Uji Baterai
+                        </h3>
                         <div class="form-grid-1">
                             <div class="form-group">
                                 <label for="tanggal_uji_terakhir">Tanggal Uji Terakhir</label>
-                                <input type="date" id="tanggal_uji_terakhir" name="tanggal_uji_terakhir" class="form-control">
+                                <input type="date" id="tanggal_uji_terakhir" name="tanggal_uji_terakhir" class="form-control" value="{{ old('tanggal_uji_terakhir') }}">
                             </div>
 
                             <div class="form-group">
                                 <label for="tanggal_penggantian">Tanggal Penggantian <span class="required">*</span></label>
-                                <input type="date" id="tanggal_penggantian" name="tanggal_penggantian" class="form-control" required>
+                                <input type="date" id="tanggal_penggantian" name="tanggal_penggantian" class="form-control" value="{{ old('tanggal_penggantian') }}" required>
                             </div>
 
                             <div class="form-group">
                                 <label>Status Uji Baterai</label>
-                                <input type="hidden" name="status_uji" id="status_uji" value="">
+                                <input type="hidden" name="status_uji" id="status_uji" value="{{ old('status_uji', 'BLM UJI BATT') }}">
 
                                 <div class="status-display-wrapper">
                                     <div id="statusDisplay" class="form-control status-readonly-box" aria-readonly="true">
                                         <span id="statusDot" class="status-dot"></span>
-                                        <strong id="statusText">-</strong>
+                                        <strong id="statusText">BLM UJI BATT</strong>
                                         <span class="status-source">Otomatis dari sistem</span>
                                     </div>
                                 </div>
@@ -198,34 +255,42 @@
                         </div>
                     </div>
 
+                    {{-- SECTION 4: PHOTO BATTERY --}}
                     <div class="form-card">
-                        <h3 class="form-section-title">Photo Battery</h3>
-                        <div class="form-group">
-                            <label>Upload foto kondisi Battery di lokasi</label>
-                            <div class="upload-container">
-                                <div class="upload-dropzone" id="dropzone">
-                                    <i class="bi bi-cloud-arrow-up upload-icon"></i>
-                                    <span class="upload-text">Masukkan file disini</span>
-                                    <label for="photo_battery" class="btn-browse">Browse</label>
-                                    <input type="file" id="photo_battery" name="photo_battery" accept="image/jpeg,image/png,image/jpg" hidden>
+                        <h3 class="form-section-title">
+                            <i class="bi bi-camera-fill"></i> Photo Battery
+                        </h3>
+                        <p style="font-size:0.8rem; color:#64748b; margin-top:-8px; margin-bottom:16px;">
+                            Upload foto kondisi Battery di lokasi
+                        </p>
+
+                        <div class="rform-photo-grid">
+                            <div class="rform-drop-zone" id="dropZone" onclick="document.getElementById('photo_battery').click()">
+                                <div class="rform-drop-icon">
+                                    <i class="bi bi-cloud-arrow-up-fill"></i>
                                 </div>
-                                <div class="preview-container">
-                                    <span class="preview-title">Preview foto</span>
-                                    <div class="preview-box">
-                                        <img id="previewImage" src="" alt="Preview" style="display: none;">
-                                        <div id="noPreviewText" class="no-preview">
-                                            <i class="bi bi-image" style="font-size: 2rem; color: #cbd5e1;"></i>
-                                            <span>Belum ada foto yang dipilih</span>
-                                        </div>
+                                <div class="rform-drop-text">Masukkan file disini</div>
+                                <button type="button" class="rform-browse-btn">Browse</button>
+                                <div class="rform-drop-hint">Format: JPG, JPEG, PNG • Maks. ukuran: 10 MB</div>
+                                <input type="file" id="photo_battery" name="photo_battery" accept=".jpg,.jpeg,.png"
+                                    style="display:none;" onchange="previewFoto(this)">
+                            </div>
+
+                            <div class="rform-photo-preview">
+                                <span class="rform-preview-label">Preview foto</span>
+                                <div class="rform-preview-box">
+                                    <img id="fotoPreview" src="" alt="" style="display:none;">
+                                    <div class="rform-preview-empty" id="fotoEmpty">
+                                        <i class="bi bi-image"></i>
+                                        <span>Belum ada foto yang dipilih</span>
                                     </div>
                                 </div>
                             </div>
-                            <small class="upload-info">Format: JPG, JPEG, PNG + Maks, ukuran : 10 MB</small>
                         </div>
 
                         <div class="form-group" style="margin-top: 20px;">
-                            <label for="keterangan_gambar">Tuliskan keterangan gambar</label>
-                            <input type="text" id="keterangan_gambar" name="keterangan_gambar" class="form-control" placeholder="Masukkan keterangan gambar">
+                            <label for="keterangan_gambar" style="font-weight: 500; font-size: 0.84rem; color: #475569; display: block; margin-bottom: 6px;">Keterangan Gambar</label>
+                            <input type="text" id="keterangan_gambar" name="keterangan_gambar" class="form-control" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; font-family: 'Poppins', sans-serif; font-size: 0.88rem;" placeholder="Contoh: Kondisi baterai bank 01 aktif normal di lokasi POP" value="{{ old('keterangan_gambar') }}">
                         </div>
                     </div>
 
@@ -239,26 +304,130 @@
     </div>
 
     <script>
+        const tipeMap = {
+            'Sacred Sun': ['SSIFP48100B', 'FT48-100', 'FCP-1000', 'FCP-500', 'FCP-300', 'FTB12-100'],
+            'Narada': ['48NPFC100', 'NES48100', '6-GFM-100', '6-GFM-150', '6-GFM-200'],
+            'Shoto': ['SDA10-48100', '6-FMX-100', '6-FMX-50', '6-FMX-200'],
+            'Coslight': ['48V100AH', 'GFM-100C'],
+            'Vision': ['CT12-100X', 'V-LFP48100'],
+            'Leoch': ['LP12-100', 'LFeLi-48100'],
+            'Huawei': ['ESM-48100A1', 'ESM-48100B1'],
+            'ZTE': ['ZXDC48', 'ZXDC48 FB100'],
+            'BSB': ['Solar 12V 100Ah', 'Power 12V 150Ah'],
+            'Fortis Power': ['FP-48100', 'FP-4850'],
+            'Monolite': ['12V 100Ah', '12V 150Ah'],
+            'Nagoya': ['NG48-100', 'NG12-100'],
+            'Nippres': ['NP12-100', 'NP48-100'],
+            'Sinergi': ['SN48-100', 'SN12-100'],
+        };
+
+        const oldTipe = "{{ old('tipe_battery') }}";
+
+        function handleMerkChange() {
+            const merkSelect = document.getElementById('merk_battery');
+            const customMerkInput = document.getElementById('custom_merk_battery');
+            const tipeSelect = document.getElementById('tipe_battery');
+            const customTipeInput = document.getElementById('custom_tipe_battery');
+
+            if (merkSelect.value === '__custom__') {
+                customMerkInput.style.display = 'block';
+                customMerkInput.required = true;
+            } else {
+                customMerkInput.style.display = 'none';
+                customMerkInput.required = false;
+            }
+
+            // Update pilihan Tipe Baterai
+            tipeSelect.innerHTML = '<option value="" disabled selected>Pilih Tipe Battery</option>';
+            const selectedBrand = merkSelect.value;
+            if (!selectedBrand || selectedBrand === '__custom__') {
+                if (selectedBrand === '__custom__') {
+                    const customOpt = document.createElement('option');
+                    customOpt.value = '__custom__';
+                    customOpt.textContent = '+ Tipe Lainnya (Custom)...';
+                    customOpt.selected = true;
+                    tipeSelect.appendChild(customOpt);
+                    handleTipeChange();
+                }
+                return;
+            }
+
+            let availableTypes = tipeMap[selectedBrand];
+            if (!availableTypes) {
+                const foundKey = Object.keys(tipeMap).find(k => k.toLowerCase() === selectedBrand.toLowerCase());
+                if (foundKey) {
+                    availableTypes = tipeMap[foundKey];
+                }
+            }
+            availableTypes = availableTypes || [];
+
+            let typeMatched = false;
+            availableTypes.forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t;
+                opt.textContent = t;
+                if (oldTipe && oldTipe.toLowerCase().trim() === t.toLowerCase().trim()) {
+                    opt.selected = true;
+                    typeMatched = true;
+                }
+                tipeSelect.appendChild(opt);
+            });
+
+            // Opsi custom tipe
+            const customOpt = document.createElement('option');
+            customOpt.value = '__custom__';
+            customOpt.textContent = '+ Tipe Lainnya (Custom)...';
+            if (oldTipe && !typeMatched) {
+                customOpt.selected = true;
+            }
+            tipeSelect.appendChild(customOpt);
+
+            handleTipeChange();
+        }
+
+        function handleTipeChange() {
+            const tipeSelect = document.getElementById('tipe_battery');
+            const customTipeInput = document.getElementById('custom_tipe_battery');
+
+            if (tipeSelect.value === '__custom__') {
+                customTipeInput.style.display = 'block';
+                customTipeInput.required = true;
+                if (oldTipe && !tipeMap[document.getElementById('merk_battery').value]?.includes(oldTipe)) {
+                    customTipeInput.value = oldTipe;
+                }
+            } else {
+                customTipeInput.style.display = 'none';
+                customTipeInput.required = false;
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             const form = document.getElementById('batteryForm');
             const jenisBattery = document.getElementById('jenis_battery');
             const kapasitasBattery = document.getElementById('kapasitas_battery');
             const kapasitasPersen = document.getElementById('kapasitas_battery_persen');
+            const performaHidden = document.getElementById('performa_baterai');
             const lithiumWrapper = document.getElementById('lithiumUjiWrapper');
             const vrlaWrapper = document.getElementById('vrlaUjiWrapper');
             const defaultUjiText = document.getElementById('defaultUjiText');
             
+            const tglUjiEl = document.getElementById('tanggal_uji_terakhir');
             const statusUji = document.getElementById('status_uji');
             const statusDisplay = document.getElementById('statusDisplay');
             const statusText = document.getElementById('statusText');
             const statusDot = document.getElementById('statusDot');
 
-            jenisBattery.addEventListener('change', function () {
-                if (this.value === 'Lithium') {
+            // Inisialisasi dropdown Merk & Tipe
+            if (document.getElementById('merk_battery').value) {
+                handleMerkChange();
+            }
+
+            function toggleJenisBattery(val) {
+                if (val === 'Lithium') {
                     defaultUjiText.style.display = 'none';
                     lithiumWrapper.style.display = 'block';
                     vrlaWrapper.style.display = 'none';
-                } else if (this.value === 'VRLA') {
+                } else if (val === 'VRLA') {
                     defaultUjiText.style.display = 'none';
                     lithiumWrapper.style.display = 'none';
                     vrlaWrapper.style.display = 'grid';
@@ -267,113 +436,200 @@
                     lithiumWrapper.style.display = 'none';
                     vrlaWrapper.style.display = 'none';
                 }
-            });
-
-            function hitungPersentase(nilaiBattery, nilaiUji) {
-                if (!nilaiBattery || nilaiBattery <= 0 || nilaiUji === '' || nilaiUji === null || isNaN(nilaiUji)) {
-                    return null;
-                }
-                return (nilaiUji / nilaiBattery) * 100;
             }
 
-            function updateStatus(persentase) {
+            jenisBattery.addEventListener('change', function () {
+                toggleJenisBattery(this.value);
+                updateBatteryCalculation();
+            });
+
+            if (jenisBattery.value) {
+                toggleJenisBattery(jenisBattery.value);
+            }
+
+            function updateStatusBadge(persentase) {
                 statusDisplay.classList.remove('status-excellent', 'status-good', 'status-warning', 'status-danger');
                 statusDot.classList.remove('status-dot-excellent', 'status-dot-good', 'status-dot-warning', 'status-dot-danger');
 
                 if (persentase === null) {
-                    statusText.textContent = '-';
-                    statusUji.value = '';
+                    updateStatusFromDate();
                     return;
                 }
 
-                if (persentase >= 80) {
-                    statusText.textContent = 'EXCELLENT';
-                    statusUji.value = 'excellent';
-                    statusDisplay.classList.add('status-excellent');
-                    statusDot.classList.add('status-dot-excellent');
-                } else if (persentase >= 60) {
-                    statusText.textContent = 'GOOD';
-                    statusUji.value = 'good';
-                    statusDisplay.classList.add('status-good');
-                    statusDot.classList.add('status-dot-good');
-                } else if (persentase >= 40) {
-                    statusText.textContent = 'WARNING';
-                    statusUji.value = 'warning';
+                if (persentase >= 90) {
+                    performaHidden.value = '1-EXCELLENT';
+                } else if (persentase >= 75) {
+                    performaHidden.value = '2-GOOD ENOUGH';
+                } else if (persentase >= 50) {
+                    performaHidden.value = '3-WARNING';
+                } else {
+                    performaHidden.value = '4-ALERT';
+                }
+            }
+
+            function updateStatusFromDate() {
+                statusDisplay.classList.remove('status-excellent', 'status-good', 'status-warning', 'status-danger');
+                statusDot.classList.remove('status-dot-excellent', 'status-dot-good', 'status-dot-warning', 'status-dot-danger');
+
+                if (!tglUjiEl.value) {
+                    statusText.textContent = 'BLM UJI BATT';
+                    statusUji.value = 'BLM UJI BATT';
                     statusDisplay.classList.add('status-warning');
                     statusDot.classList.add('status-dot-warning');
-                } else {
-                    statusText.textContent = 'POOR';
-                    statusUji.value = 'poor';
+                    return;
+                }
+
+                const tglUji = new Date(tglUjiEl.value);
+                const now = new Date();
+                const diffDays = Math.ceil(Math.abs(now - tglUji) / (1000 * 60 * 60 * 24));
+
+                if (diffDays >= 365) {
+                    statusText.textContent = 'JADWAL UJI BATT';
+                    statusUji.value = 'JADWAL UJI BATT';
                     statusDisplay.classList.add('status-danger');
                     statusDot.classList.add('status-dot-danger');
+                } else {
+                    statusText.textContent = 'SUDAH UJI BATT';
+                    statusUji.value = 'SUDAH UJI BATT';
+                    statusDisplay.classList.add('status-good');
+                    statusDot.classList.add('status-dot-good');
                 }
             }
 
             function updateBatteryCalculation() {
                 const nilaiBattery = parseFloat(kapasitasBattery.value);
-                let nilaiUjiPertama = null;
+                let nilaiUji = null;
 
                 if (jenisBattery.value === 'Lithium') {
                     const inputLithium = document.getElementById('kapasitas_uji_1');
-                    nilaiUjiPertama = parseFloat(inputLithium.value);
+                    const valRaw = inputLithium.value.replace(',', '.');
+                    nilaiUji = parseFloat(valRaw);
                 } else if (jenisBattery.value === 'VRLA') {
-                    const inputVrlaPertama = document.querySelector('.vrla-input');
-                    if (inputVrlaPertama) {
-                        nilaiUjiPertama = parseFloat(inputVrlaPertama.value);
+                    const vrlaInputs = document.querySelectorAll('.vrla-input');
+                    let sum = 0, count = 0;
+                    vrlaInputs.forEach(inp => {
+                        const val = parseFloat(inp.value.replace(',', '.'));
+                        if (!isNaN(val) && val > 0) {
+                            sum += val;
+                            count++;
+                        }
+                    });
+                    if (count > 0) {
+                        nilaiUji = sum / count;
+                        document.getElementById('kapasitas_uji_1').value = nilaiUji.toFixed(2);
                     }
                 }
 
-                if (isNaN(nilaiBattery) || nilaiBattery <= 0 || isNaN(nilaiUjiPertama)) {
+                if (isNaN(nilaiBattery) || nilaiBattery <= 0 || isNaN(nilaiUji) || nilaiUji === null) {
                     kapasitasPersen.value = '';
-                    updateStatus(null);
+                    performaHidden.value = 'BLM UJI BATT';
+                    updateStatusBadge(null);
                     return;
                 }
 
-                const persentase = hitungPersentase(nilaiBattery, nilaiUjiPertama);
-                if (persentase === null) {
-                    kapasitasPersen.value = '';
-                } else {
-                    kapasitasPersen.value = persentase.toFixed(2) + '%';
-                }
-
-                updateStatus(persentase);
+                const persentase = (nilaiUji / nilaiBattery) * 100;
+                kapasitasPersen.value = persentase.toFixed(2);
+                updateStatusBadge(persentase);
             }
 
             kapasitasBattery.addEventListener('input', updateBatteryCalculation);
+            kapasitasBattery.addEventListener('change', updateBatteryCalculation);
             document.getElementById('kapasitas_uji_1').addEventListener('input', updateBatteryCalculation);
             document.querySelectorAll('.vrla-input').forEach(el => {
                 el.addEventListener('input', updateBatteryCalculation);
             });
+            tglUjiEl.addEventListener('change', updateStatusFromDate);
 
-            const photoInput = document.getElementById('photo_battery');
-            const previewImage = document.getElementById('previewImage');
-            const noPreviewText = document.getElementById('noPreviewText');
+            // Inisialisasi awal
+            updateBatteryCalculation();
+            updateStatusFromDate();
 
-            photoInput.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        previewImage.src = event.target.result;
-                        previewImage.style.display = 'block';
-                        noPreviewText.style.display = 'none';
+            // Photo preview handler
+            window.previewFoto = function(input) {
+                const file = input.files ? input.files[0] : null;
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = document.getElementById('fotoPreview');
+                    const empty = document.getElementById('fotoEmpty');
+                    if (img) {
+                        img.src = event.target.result;
+                        img.style.display = 'block';
                     }
-                    reader.readAsDataURL(file);
+                    if (empty) empty.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            };
+
+            const dropZone = document.getElementById('dropZone');
+            if (dropZone) {
+                dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.style.background = '#dbeafe'; });
+                dropZone.addEventListener('dragleave', () => { dropZone.style.background = ''; });
+                dropZone.addEventListener('drop', e => {
+                    e.preventDefault();
+                    dropZone.style.background = '';
+                    const file = e.dataTransfer.files[0];
+                    if (file) {
+                        document.getElementById('photo_battery').files = e.dataTransfer.files;
+                        previewFoto({ files: [file] });
+                    }
+                });
+            }
+
+            // Form Submit: Normalisasi koma -> titik & custom inputs
+            form.addEventListener('submit', function (e) {
+                const kapUji = document.getElementById('kapasitas_uji_1');
+                if (kapUji && kapUji.value) {
+                    kapUji.value = kapUji.value.replace(',', '.');
+                }
+                const kapBattery = document.getElementById('kapasitas_battery');
+                if (kapBattery && kapBattery.value) {
+                    kapBattery.value = kapBattery.value.replace(',', '.');
+                }
+                document.querySelectorAll('.vrla-input').forEach(inp => {
+                    if (inp && inp.value) {
+                        inp.value = inp.value.replace(',', '.');
+                    }
+                });
+
+                // Custom Merk
+                const merkSelect = document.getElementById('merk_battery');
+                const customMerkInput = document.getElementById('custom_merk_battery');
+                if (merkSelect.value === '__custom__' && customMerkInput.value.trim()) {
+                    const opt = document.createElement('option');
+                    opt.value = customMerkInput.value.trim();
+                    opt.selected = true;
+                    merkSelect.appendChild(opt);
+                }
+
+                // Custom Tipe
+                const tipeSelect = document.getElementById('tipe_battery');
+                const customTipeInput = document.getElementById('custom_tipe_battery');
+                if (tipeSelect.value === '__custom__' && customTipeInput.value.trim()) {
+                    const opt = document.createElement('option');
+                    opt.value = customTipeInput.value.trim();
+                    opt.selected = true;
+                    tipeSelect.appendChild(opt);
                 }
             });
 
+            // Reset handler
             form.addEventListener('reset', function () {
                 setTimeout(function () {
                     kapasitasPersen.value = '';
-                    statusUji.value = '';
-                    statusText.textContent = '-';
+                    statusUji.value = 'BLM UJI BATT';
+                    statusText.textContent = 'BLM UJI BATT';
                     defaultUjiText.style.display = 'block';
                     lithiumWrapper.style.display = 'none';
                     vrlaWrapper.style.display = 'none';
                     previewImage.style.display = 'none';
                     noPreviewText.style.display = 'flex';
+                    previewFileInfo.style.display = 'none';
+                    btnHapusFoto.style.display = 'none';
                     statusDisplay.classList.remove('status-excellent', 'status-good', 'status-warning', 'status-danger');
                     statusDot.classList.remove('status-dot-excellent', 'status-dot-good', 'status-dot-warning', 'status-dot-danger');
+                    statusDisplay.classList.add('status-warning');
+                    statusDot.classList.add('status-dot-warning');
                 }, 10);
             });
         });
