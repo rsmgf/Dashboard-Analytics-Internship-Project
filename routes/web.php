@@ -150,4 +150,36 @@ Route::middleware('auth')->group(function () {
     Route::middleware('permission:batteries.index.delete')->group(function () {
         Route::delete('/pops/{pop}/batteries/{id}', [BatteryController::class, 'destroy'])->name('batteries.destroy');
     });
+
+    route::get('genset-create', function () {
+        return view('pop.genset.genset-create');
+    })->name('genset.create');
+    
+    route::get('genset-detail', function () {
+        return view('pop.genset.genset-detail');
+    })->name('genset.detail');
+
+    route::get('genset-edit', function () {
+        return view('pop.genset.genset-edit');
+    })->name('genset.edit');
+
+    route::get('genset-card', function () {
+        return view('pop.genset.genset-card');
+    })->name('genset.card');
+
+    route::get('ac-card', function () {
+        return view('pop.ac.ac-card');
+    })->name('ac.card');
+
+    route::get('ac-create', function () {
+        return view('pop.ac.ac-create');
+    })->name('ac.create');
+
+    route::get('ac-detail', function () {
+        return view('pop.ac.ac-detail');
+    })->name('ac.detail');
+
+    route::get('ac-edit', function () {
+        return view('pop.ac.ac-edit');
+    })->name('ac.edit');
 });

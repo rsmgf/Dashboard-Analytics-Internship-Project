@@ -146,6 +146,7 @@
                                 </div>
                             </div>
 
+                            <!-- Tipe Battery diubah menjadi Dropdown -->
                             <div class="checklist-row">
                                 <div class="checklist-label">Tipe Battery <span class="required">*</span></div>
                                 <div class="checklist-field">
@@ -185,11 +186,11 @@
                                     
                                     <!-- Lithium (1 Input) -->
                                     <div id="lithiumUjiWrapper" class="uji-wrapper" style="display: none;">
-                                        <input type="text" id="kapasitas_uji_1" name="kapasitas_uji" class="table-input" value="{{ old('kapasitas_uji') }}" placeholder="Contoh: 91,67">
+                                        <input type="text" id="kapasitas_uji_1" name="kapasitas_uji" class="table-input" value="{{ old('kapasitas_uji') }}" placeholder="Masukkan Kapasitas Uji">
                                     </div>
 
                                     <!-- VRLA (4 Input 2x2 Grid) -->
-                                    <div id="vrlaUjiWrapper" class="uji-grid-4" style="display: none;">
+                                    <div id="vrlaUjiWrapper" class="uji-grid-4" style="display: none; width: 100%;">
                                         <div class="uji-sub-item">
                                             <span class="sub-label">Battery 1</span>
                                             <input type="text" id="vrla_1" name="vrla_1" class="table-input vrla-input" value="{{ old('vrla_1') }}" placeholder="Contoh: 25,00">

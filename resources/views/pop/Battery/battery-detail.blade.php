@@ -288,6 +288,9 @@
                                         <span class="field-value">{{ $battery->tanggal_penggantian ? $battery->tanggal_penggantian->format('d/m/Y') : '-' }}</span>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
 
                                 <div class="checklist-row">
                                     <div class="checklist-label">Status Uji Baterai</div>
