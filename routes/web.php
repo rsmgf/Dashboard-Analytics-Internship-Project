@@ -165,4 +165,16 @@ Route::middleware('auth')->group(function () {
     route::get('ac-card', function () {
         return view('pop.ac.ac-card');
     })->name('ac.card');
+
+    route::get('ac-create', function () {
+        return view('pop.ac.ac-create');
+    })->name('ac.create');
+
+    route::get('ac-detail', function () {
+        return view('pop.ac.ac-detail');
+    })->name('ac.detail');
+
+    route::get('ac-edit', function () {
+        return view('pop.ac.ac-edit');
+    })->name('ac.edit');
 });
