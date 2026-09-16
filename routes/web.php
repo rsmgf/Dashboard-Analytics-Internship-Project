@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\MenuManagementController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BatteryController;
+use App\Http\Controllers\GensetController;
 use App\Http\Controllers\KwhController;
 use App\Http\Controllers\PopController;
 use App\Http\Controllers\ProfileController;
@@ -158,21 +159,24 @@ Route::middleware('auth')->group(function () {
         Route::delete('/pops/{pop}/batteries/{id}', [BatteryController::class, 'destroy'])->name('batteries.destroy');
     });
 
-    route::get('genset-create', function () {
-        return view('pop.genset.genset-create');
-    })->name('genset.create');
-    
-    route::get('genset-detail', function () {
-        return view('pop.genset.genset-detail');
-    })->name('genset.detail');
+    // --- GENSETS ---
+    Route::get('/pops/{pop}/gensets', [GensetController::class, 'index'])->name('gensets.index');
 
-    route::get('genset-edit', function () {
-        return view('pop.genset.genset-edit');
-    })->name('genset.edit');
+    Route::middleware('permission:gensets.index.create')->group(function () {
+        Route::get('/pops/{pop}/gensets/create', [GensetController::class, 'create'])->name('gensets.create');
+        Route::post('/pops/{pop}/gensets', [GensetController::class, 'store'])->name('gensets.store');
+    });
 
-    route::get('genset-card', function () {
-        return view('pop.genset.genset-card');
-    })->name('genset.card');
+    Route::get('/pops/{pop}/gensets/{id}', [GensetController::class, 'show'])->name('gensets.show');
+
+    Route::middleware('permission:gensets.index.update')->group(function () {
+        Route::get('/pops/{pop}/gensets/{id}/edit', [GensetController::class, 'edit'])->name('gensets.edit');
+        Route::put('/pops/{pop}/gensets/{id}', [GensetController::class, 'update'])->name('gensets.update');
+    });
+
+    Route::middleware('permission:gensets.index.delete')->group(function () {
+        Route::delete('/pops/{pop}/gensets/{id}', [GensetController::class, 'destroy'])->name('gensets.destroy');
+    });
 
     route::get('ac-card', function () {
         return view('pop.ac.ac-card');
