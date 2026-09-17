@@ -189,7 +189,7 @@
                                         <input type="text" id="kapasitas_uji_1" name="kapasitas_uji" class="table-input" value="{{ old('kapasitas_uji') }}" placeholder="Masukkan Kapasitas Uji">
                                     </div>
 
-                                    <!-- VRLA (4 Input 2x2 Grid) -->
+                                    <!-- VRLA (4 Input) -->
                                     <div id="vrlaUjiWrapper" class="uji-grid-4" style="display: none; width: 100%;">
                                         <div class="uji-sub-item">
                                             <span class="sub-label">Battery 1</span>

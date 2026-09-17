@@ -87,7 +87,7 @@ class MenuSeeder extends Seeder
 
         $genset = Menu::create([
             'name'       => 'Genset',
-            'route'      => null,   // Akses via halaman POP, bukan sidebar langsung
+            'route'      => 'gensets.index',
             'icon'       => 'bi bi-cpu-fill',
             'order'      => 5,
             'parent_id'  => $pop->id,
@@ -96,7 +96,7 @@ class MenuSeeder extends Seeder
 
         $ac = Menu::create([
             'name'       => 'AC',
-            'route'      => null,
+            'route'      => 'acs.index',
             'icon'       => 'bi bi-fan',
             'order'      => 4,
             'parent_id'  => $pop->id,

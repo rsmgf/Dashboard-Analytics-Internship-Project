@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class GensetController extends Controller
 {
-    // ─── 1. List Genset milik sebuah POP ──────────────────────────────────────
+
     public function index($pop_id)
     {
         $pop     = Pop::findOrFail($pop_id);
@@ -24,7 +24,7 @@ class GensetController extends Controller
         return view('pop.Genset.Genset-card', compact('pop', 'gensets'));
     }
 
-    // ─── 2. Form Tambah Genset ─────────────────────────────────────────────────
+
     public function create($pop_id)
     {
         $pop = Pop::findOrFail($pop_id);
@@ -32,13 +32,13 @@ class GensetController extends Controller
         return view('pop.Genset.Genset-Create', compact('pop'));
     }
 
-    // ─── 3. Simpan Genset Baru ─────────────────────────────────────────────────
+
     public function store(StoreGensetRequest $request, $pop_id)
     {
         $pop       = Pop::findOrFail($pop_id);
         $validated = $request->validated();
 
-        // Resolve field "Others" → simpan ke kolom yang sama
+
         $merkGenset = $validated['merk_genset'] === 'Others'
             ? ($validated['merk_genset_others'] ?? $validated['merk_genset'])
             : $validated['merk_genset'];
@@ -51,7 +51,6 @@ class GensetController extends Controller
             ? ($validated['tipe_engine_others'] ?? $validated['tipe_engine'])
             : $validated['tipe_engine'];
 
-        // Auto-generate nomor genset
         $existingCount  = Genset::where('pop_id', $pop->id)->count();
         $nomorGenset    = $pop->kode_pop . '_GEN' . str_pad($existingCount + 1, 2, '0', STR_PAD_LEFT);
 
