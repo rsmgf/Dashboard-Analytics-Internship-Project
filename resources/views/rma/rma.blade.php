@@ -86,7 +86,7 @@
                         </div>
                     </div>
 
-                    <!-- SEARCH & FILTER CONTROLS -->
+                    
                     <div class="table-controls">
                         <div class="search-wrapper">
                             <input type="text" placeholder="Cari No. RMA">

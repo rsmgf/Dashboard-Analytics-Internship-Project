@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AccessManagementController;
 use App\Http\Controllers\Admin\MenuManagementController;
 use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\AcController;
 use App\Http\Controllers\BatteryController;
 use App\Http\Controllers\GensetController;
 use App\Http\Controllers\KwhController;
@@ -171,19 +172,22 @@ Route::middleware('auth')->group(function () {
         Route::delete('/pops/{pop}/gensets/{id}', [GensetController::class, 'destroy'])->name('gensets.destroy');
     });
 
-    route::get('ac-card', function () {
-        return view('pop.ac.ac-card');
-    })->name('ac.card');
+    // --- ACS ---
+    Route::get('/pops/{pop}/ac', [AcController::class, 'index'])->name('acs.index');
 
-    route::get('ac-create', function () {
-        return view('pop.ac.ac-create');
-    })->name('ac.create');
+    Route::middleware('permission:acs.index.create')->group(function () {
+        Route::get('/pops/{pop}/ac/create', [AcController::class, 'create'])->name('acs.create');
+        Route::post('/pops/{pop}/ac', [AcController::class, 'store'])->name('acs.store');
+    });
 
-    route::get('ac-detail', function () {
-        return view('pop.ac.ac-detail');
-    })->name('ac.detail');
+    Route::get('/pops/{pop}/ac/{id}', [AcController::class, 'show'])->name('acs.show');
 
-    route::get('ac-edit', function () {
-        return view('pop.ac.ac-edit');
-    })->name('ac.edit');
+    Route::middleware('permission:acs.index.update')->group(function () {
+        Route::get('/pops/{pop}/ac/{id}/edit', [AcController::class, 'edit'])->name('acs.edit');
+        Route::put('/pops/{pop}/ac/{id}', [AcController::class, 'update'])->name('acs.update');
+    });
+
+    Route::middleware('permission:acs.index.delete')->group(function () {
+        Route::delete('/pops/{pop}/ac/{id}', [AcController::class, 'destroy'])->name('acs.destroy');
+    });
 });
