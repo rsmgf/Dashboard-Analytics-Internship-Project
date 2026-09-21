@@ -77,20 +77,29 @@ class MenuSeeder extends Seeder
         ]);
 
         $battery = Menu::create([
-            'name' => 'Battery',
-            'route' => 'batteries.index',
-            'icon' => 'bi bi-battery-full',
-            'order' => 3,
-            'parent_id' => $pop->id,
+            'name'       => 'Battery',
+            'route'      => 'batteries.index',
+            'icon'       => 'bi bi-battery-full',
+            'order'      => 3,
+            'parent_id'  => $pop->id,
+            'is_sidebar' => false,
+        ]);
+
+        $genset = Menu::create([
+            'name'       => 'Genset',
+            'route'      => 'gensets.index',
+            'icon'       => 'bi bi-cpu-fill',
+            'order'      => 5,
+            'parent_id'  => $pop->id,
             'is_sidebar' => false,
         ]);
 
         $ac = Menu::create([
-            'name' => 'AC',
-            'route' => null,
-            'icon' => 'bi bi-fan',
-            'order' => 4,
-            'parent_id' => $pop->id,
+            'name'       => 'AC',
+            'route'      => 'acs.index',
+            'icon'       => 'bi bi-fan',
+            'order'      => 4,
+            'parent_id'  => $pop->id,
             'is_sidebar' => false,
         ]);
 
@@ -116,6 +125,7 @@ class MenuSeeder extends Seeder
         $rectifier->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id]);
         $kwh->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id]);
         $battery->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id]);
+        $genset->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id]);
         $ac->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id]);
         $rma->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id]);   // semua role
         $usermanagement->roles()->sync([$superAdmin->id]);   // hanya admin

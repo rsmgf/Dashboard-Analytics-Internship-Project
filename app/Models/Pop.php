@@ -32,4 +32,14 @@ class Pop extends Model
     {
         return $this->hasMany(Battery::class);
     }
+
+    public function gensets()
+    {
+        return $this->hasMany(Genset::class);
+    }
+
+    public function acs()
+    {
+        return $this->hasMany(Ac::class);
+    }
 }

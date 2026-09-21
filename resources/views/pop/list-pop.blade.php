@@ -112,8 +112,8 @@
                             <option value="Rectifier"
                                 {{ request('filter', 'Rectifier') == 'Rectifier' ? 'selected' : '' }}>Rectifier</option>
                             <option value="kWh" {{ request('filter') == 'kWh' ? 'selected' : '' }}>kWh</option>
-                            <option value="Battery" {{ request('filter') == 'Battery' ? 'selected' : '' }}>Battery
-                            </option>
+                            <option value="Battery" {{ request('filter') == 'Battery' ? 'selected' : '' }}>Battery</option>
+                            <option value="Genset" {{ request('filter') == 'Genset' ? 'selected' : '' }}>Genset</option>
                             <option value="AC" {{ request('filter') == 'AC' ? 'selected' : '' }}>AC</option>
                         </select>
                     </div>
@@ -210,14 +210,17 @@
                 case 'Rectifier':
                     targetUrl = `/pops/${idPOP}/rectifiers`;
                     break;
-                case 'AC':
-                    targetUrl = `/pops/${idPOP}/ac`;
+                case 'kWh':
+                    targetUrl = `/pops/${idPOP}/kwh`;
                     break;
                 case 'Battery':
                     targetUrl = `/pops/${idPOP}/batteries`;
                     break;
-                case 'kWh':
-                    targetUrl = `/pops/${idPOP}/kwh`;
+                case 'Genset':
+                    targetUrl = `/pops/${idPOP}/gensets`;
+                    break;
+                case 'AC':
+                    targetUrl = `/pops/${idPOP}/ac`;
                     break;
                 default:
                     targetUrl = `/pops/${idPOP}/rectifiers`;

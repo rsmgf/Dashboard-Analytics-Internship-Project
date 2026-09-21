@@ -559,7 +559,7 @@ input[type="date"]:focus {
     }
 }
 
-/* Rectifier-style Photo Dropzone */
+
 .rform-photo-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;

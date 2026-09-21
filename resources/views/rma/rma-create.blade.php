@@ -165,7 +165,7 @@
                                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 22px; border-bottom: 1px solid #f1f5f9; padding-bottom: 14px;">
                                     <h2 style="margin: 0; font-size: 1.25rem;">Return Material Authorization (RMA)</h2>
                                     
-                                    <!-- Tombol Gunakan Data Terakhir + Bulatan (?) Tooltip -->
+                                    
                                     <div style="display: flex; align-items: center; gap: 6px;">
                                         <button type="button" id="btnUseLastData" class="btn-use-last"
                                             style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; padding: 6px 13px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: 0.2s;">
@@ -463,7 +463,7 @@
             const btnSubmitNext = document.getElementById('btnSubmitNext');
             const btnUseLastData = document.getElementById('btnUseLastData');
 
-            // 0. FITUR GUNAKAN DATA TERAKHIR
+            // GUNAKAN DATA TERAKHIR
             const CACHE_KEY = 'rma_header_cache_v3';
             const headerFields = ['so_po', 'tanggal', 'lokasi_asal', 'nama_pemohon', 'nama_manager', 'customer_name'];
 
