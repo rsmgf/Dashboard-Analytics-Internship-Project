@@ -94,11 +94,21 @@ class MenuSeeder extends Seeder
             'is_sidebar' => false,
         ]);
 
+        $dashboardFilter = Menu::create([
+            'name' => 'Dashboard Filter POP', 
+            'route' => 'dashboard.filter',
+            'parent_id' => null,
+            'icon' => 'bi bi-sliders',
+            'order' => 0,
+            'is_sidebar' => false,
+        ]);
+
 
 
         $karyawan = Role::where('name', 'karyawan')->first();
         $teknisi = Role::where('name', 'teknisi')->first();
         $superAdmin = Role::where('name', 'super_admin')->first();
+        $manajer = Role::where('name', 'manajer')->first();
 
         // sesuaikan siapa boleh lihat menu apa
         $dashboard->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id]); // semua role
@@ -110,6 +120,7 @@ class MenuSeeder extends Seeder
         $rma->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id]);   // semua role
         $usermanagement->roles()->sync([$superAdmin->id]);   // hanya admin
         $accountConfig->roles()->sync([$superAdmin->id]);
-        $AccessManagement->roles()->sync([$superAdmin->id]); // hanya admin
+        $AccessManagement->roles()->sync([$superAdmin->id]);
+        $dashboardFilter->roles()->sync([$manajer->id, $superAdmin->id]);
     }
 }
