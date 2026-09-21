@@ -103,8 +103,7 @@
                             {{-- Nama Alias --}}
                             <div class="rform-row rform-row-2">
                                 <div class="rform-group">
-                                    <label class="rform-label">Nama Alias Rectifier <span class="rform-required">*</span>
-                                        <small style="font-weight:400; color:#94a3b8;">(tampil di card)</small>
+                                    <label class="rform-label">Nomor Recti<span class="rform-required">*</span>
                                     </label>
                                     <input type="text" name="nama_alias" class="rform-input {{ $errors->has('nama_alias') ? 'is-invalid' : '' }}"
                                         value="{{ old('nama_alias') }}" placeholder="Contoh: Rectifier Utama 1">

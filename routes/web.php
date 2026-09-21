@@ -59,6 +59,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard/pop/{pop}/summary', [DashboardController::class, 'popSummary'])->name('dashboard.popSummary');
     });
 
+    Route::middleware('permission:dashboard.filter.read')->group(function () {
+        Route::get('/dashboard/filter-options', [DashboardController::class, 'filterOptions'])->name('dashboard.filterOptions');
+        Route::get('/dashboard/filter-pop', [DashboardController::class, 'filterPop'])->name('dashboard.filterPop');
+    });
+
     // --- FORM & RIWAYAT RMA ---
     Route::middleware('permission:rma.read')->group(function () {
         Route::get('/rma', [RmaController::class, 'index'])->name('rma');

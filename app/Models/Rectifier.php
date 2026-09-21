@@ -131,21 +131,30 @@ class Rectifier extends Model
     public function getKelengkapanFormAttribute(): array
     {
         $terisi = 0;
+        $belum_diisi = [];
 
         foreach (static::$kolomKelengkapan as $kolom) {
             $nilai = $this->{$kolom};
             if ($nilai !== null && $nilai !== '') {
                 $terisi++;
+            } else {
+                $belum_diisi[] = ucwords(str_replace('_', ' ', $kolom));
             }
         }
 
         $totalKolomStatis = count(static::$kolomKelengkapan);
         $totalSlot = (int) $this->kapasitas_slot;
         $jumlahModulTerisi = min($this->modules()->count(), $totalSlot); // cap, jaga-jaga modul lebih banyak dari slot
+        
+        $slotKosong = $totalSlot - $jumlahModulTerisi;
+        if ($slotKosong > 0) {
+            $belum_diisi[] = $slotKosong . ' Modul Slot';
+        }
 
         return [
             'terisi' => $terisi + $jumlahModulTerisi,
             'total' => $totalKolomStatis + $totalSlot,
+            'belum_diisi' => $belum_diisi,
         ];
     }
 

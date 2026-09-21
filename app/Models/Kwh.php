@@ -185,9 +185,13 @@ class Kwh extends Model
     public function getKelengkapanFormAttribute(): array
     {
         $terisi = 0;
+        $belum_diisi = [];
+
         foreach (static::$kolomKelengkapanSelalu as $kolom) {
             if ($this->{$kolom} !== null && $this->{$kolom} !== '') {
                 $terisi++;
+            } else {
+                $belum_diisi[] = ucwords(str_replace('_', ' ', $kolom));
             }
         }
 
@@ -198,11 +202,13 @@ class Kwh extends Model
             foreach (static::$kolomKelengkapanKhusus3Phasa as $kolom) {
                 if ($this->{$kolom} !== null && $this->{$kolom} !== '') {
                     $terisi++;
+                } else {
+                    $belum_diisi[] = ucwords(str_replace('_', ' ', $kolom));
                 }
             }
         }
 
-        return ['terisi' => $terisi, 'total' => $total];
+        return ['terisi' => $terisi, 'total' => $total, 'belum_diisi' => $belum_diisi];
     }
 
     public function getPersenKelengkapanAttribute(): float
