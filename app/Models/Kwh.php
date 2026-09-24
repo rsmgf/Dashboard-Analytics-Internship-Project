@@ -157,5 +157,74 @@ class Kwh extends Model
         }
         return "{$kodePop}_KWH01";
     }
-}
 
+    protected static array $kolomKelengkapanSelalu = [
+        'building',
+        'pic',
+        'type_pop',
+        'id_customer_pln',
+        'tanggal_pemeriksaan',
+        'mcb_utama',
+        'jumlah_phasa',
+        'keberadaan_arrester',
+        'merk_type_arrester',
+        'teg_rn',
+        'arus_r',
+        'teg_ng',
+        'warna_r',
+        'warna_s',
+        'warna_t',
+        'warna_n',
+        'warna_g',
+        'ukuran_r',
+        'ukuran_s',
+        'ukuran_t',
+        'ukuran_n',
+        'ukuran_g',
+    ];
+
+    protected static array $kolomKelengkapanKhusus3Phasa = [
+        'teg_sn',
+        'arus_s',
+        'teg_tn',
+        'arus_t',
+        'teg_rs',
+        'teg_st',
+        'teg_rt',
+    ];
+
+    public function getKelengkapanFormAttribute(): array
+    {
+        $terisi = 0;
+        $belum_diisi = [];
+
+        foreach (static::$kolomKelengkapanSelalu as $kolom) {
+            if ($this->{$kolom} !== null && $this->{$kolom} !== '') {
+                $terisi++;
+            } else {
+                $belum_diisi[] = ucwords(str_replace('_', ' ', $kolom));
+            }
+        }
+
+        $total = count(static::$kolomKelengkapanSelalu);
+
+        if ($this->jumlah_phasa === '3 Phasa') {
+            $total += count(static::$kolomKelengkapanKhusus3Phasa);
+            foreach (static::$kolomKelengkapanKhusus3Phasa as $kolom) {
+                if ($this->{$kolom} !== null && $this->{$kolom} !== '') {
+                    $terisi++;
+                } else {
+                    $belum_diisi[] = ucwords(str_replace('_', ' ', $kolom));
+                }
+            }
+        }
+
+        return ['terisi' => $terisi, 'total' => $total, 'belum_diisi' => $belum_diisi];
+    }
+
+    public function getPersenKelengkapanAttribute(): float
+    {
+        $k = $this->kelengkapan_form;
+        return $k['total'] > 0 ? round(($k['terisi'] / $k['total']) * 100, 2) : 0;
+    }
+}

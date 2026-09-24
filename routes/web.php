@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AccessManagementController;
 use App\Http\Controllers\Admin\MenuManagementController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\AcController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BatteryController;
 use App\Http\Controllers\GensetController;
 use App\Http\Controllers\KwhController;
@@ -51,6 +52,17 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->group(function
 
 // --- AUTHENTICATED ROUTES ---
 Route::middleware('auth')->group(function () {
+
+    Route::middleware('auth')->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard/search-pop', [DashboardController::class, 'searchPop'])->name('dashboard.searchPop');
+        Route::get('/dashboard/pop/{pop}/summary', [DashboardController::class, 'popSummary'])->name('dashboard.popSummary');
+    });
+
+    Route::middleware('permission:dashboard.filter.read')->group(function () {
+        Route::get('/dashboard/filter-options', [DashboardController::class, 'filterOptions'])->name('dashboard.filterOptions');
+        Route::get('/dashboard/filter-pop', [DashboardController::class, 'filterPop'])->name('dashboard.filterPop');
+    });
 
     // --- FORM & RIWAYAT RMA ---
     Route::middleware('permission:rma.read')->group(function () {

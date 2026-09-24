@@ -74,7 +74,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="bentuk_fisik">Bentuk Fisik <span class="required">*</span></label>
+                                <label for="bentuk_fisik">Building <span class="required">*</span></label>
                                 <input type="text" id="bentuk_fisik" name="bentuk_fisik" class="form-control @error('bentuk_fisik') is-invalid @enderror"
                                     placeholder="Masukkan bentuk fisik" value="{{ old('bentuk_fisik') }}" required>
                                 @error('bentuk_fisik')<div class="invalid-feedback" style="color:#ef4444;font-size:0.8rem;">{{ $message }}</div>@enderror

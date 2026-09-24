@@ -102,8 +102,12 @@
                             {{-- Nama Alias (auto-generate, hanya info) --}}
                             <div class="rform-row rform-row-2">
                                 <div class="rform-group">
+<<<<<<< HEAD
                                     <label class="rform-label">Nomor Rectifier
                                         <small style="font-weight:400; color:#94a3b8;">(auto-generate saat disimpan)</small>
+=======
+                                    <label class="rform-label">Nomor Recti<span class="rform-required">*</span>
+>>>>>>> 585f14e916dd7a366d0aaa56e258774f004e072e
                                     </label>
                                     <input type="text" class="rform-input" value="{{ $pop->kode_pop }}_RECT**" readonly
                                         style="color:#94a3b8; font-style:italic;">
