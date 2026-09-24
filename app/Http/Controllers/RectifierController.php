@@ -39,10 +39,14 @@ class RectifierController extends Controller
                 $fotoPath = $request->file('foto_rectifier')->store('rectifiers', 'public');
             }
 
+            // Auto-generate nama_alias: KODE_POP_RECT01, RECT02, dst.
+            $existingCount = Rectifier::where('pop_id', $pop->id)->count();
+            $namaAlias = $pop->kode_pop . '_RECT' . str_pad($existingCount + 1, 2, '0', STR_PAD_LEFT);
+
             // A. Simpan Master Rectifier
             $rectifier = Rectifier::create([
                 'pop_id'               => $pop->id,
-                'nama_alias'           => $validated['nama_alias'],
+                'nama_alias'           => $namaAlias,
                 'deskripsi'            => $validated['deskripsi'] ?? null,
                 'tanggal_pemeriksaan'  => $validated['tanggal_pemeriksaan'] ?? null,
                 'pic'                  => $validated['pic'] ?? null,
@@ -147,9 +151,8 @@ class RectifierController extends Controller
                 $fotoPath = $request->file('foto_rectifier')->store('rectifiers', 'public');
             }
 
-            // A. Update Master Rectifier (semua field)
+            // A. Update Master Rectifier (nama_alias tidak diubah — auto-generate saat create)
             $rectifier->update([
-                'nama_alias'            => $validated['nama_alias'],
                 'deskripsi'             => $validated['deskripsi'] ?? null,
                 'tanggal_pemeriksaan'   => $validated['tanggal_pemeriksaan'] ?? null,
                 'pic'                   => $validated['pic'] ?? null,

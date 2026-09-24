@@ -29,17 +29,15 @@
                         <i class="bi bi-arrow-left"></i>
                     </a>
                     <div class="rform-header-text">
-                        <x-breadcrumb :items="[
-                            ['label' => 'POP', 'route' => 'pops.index'],
-                            [
-                                'label' => $pop->nama_pop . ': kWh',
-                                'route' => 'kwh.card',
-                                'params' => ['pop' => $pop->id],
-                            ],
-                            ['label' => 'Tambah kWh'],
-                        ]" />
-                        <p class="rform-page-sub">Kode POP: <strong>{{ $pop->kode_pop }}</strong> &middot;
-                            {{ $pop->kota_kabupaten }}, {{ $pop->provinsi ?? 'Jambi' }}</p>
+                            <x-breadcrumb :items="[
+                                ['label' => 'POP', 'route' => 'pops.index'],
+                                [
+                                    'label' => $pop->nama_pop_display . ': kWh',
+                                    'route' => 'kwh.card',
+                                    'params' => ['pop' => $pop->id],
+                                ],
+                                ['label' => 'Tambah kWh'],
+                            ]" />
                     </div>
                 </div>
 
@@ -70,14 +68,13 @@
                                     <div class="rform-group">
                                         <label class="rform-label">POP</label>
                                         <input type="text" class="rform-input"
-                                            value="{{ $pop->kode_pop }} - {{ $pop->nama_pop }}" readonly>
+                                            value="{{ $pop->nama_pop_display }}" readonly>
                                     </div>
 
                                     <div class="rform-group">
-                                        <label class="rform-label">Building <span
-                                                class="rform-required">*</span></label>
-                                        <input type="text" name="building" class="rform-input"
-                                            value="{{ old('building') }}" placeholder="Contoh: POP-SB" required>
+                                        <label class="rform-label">Building / Jenis Bangunan</label>
+                                        <input type="text" class="rform-input"
+                                            value="{{ $pop->jenis_bangunan ?? '-' }}" readonly>
                                     </div>
                                 </div>
 
@@ -90,10 +87,9 @@
                                     </div>
 
                                     <div class="rform-group">
-                                        <label class="rform-label">Type POP <span
-                                                class="rform-required">*</span></label>
-                                        <input type="text" name="type_pop" class="rform-input"
-                                            value="{{ old('type_pop') }}" placeholder="Contoh: POP-SB" required>
+                                        <label class="rform-label">Type POP</label>
+                                        <input type="text" class="rform-input"
+                                            value="{{ $pop->tipe_pop ?? '-' }}" readonly>
                                     </div>
                                 </div>
 

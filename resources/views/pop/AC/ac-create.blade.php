@@ -21,10 +21,15 @@
 
             <div class="ac-content">
                 <div class="ac-page-header">
-                    <div class="ac-page-info">
-                        <a href="{{ route('acs.index', $pop->id) }}" class="back-button" title="Kembali">
+                    <div class="ac-page-info" style="display: flex; align-items: center; gap: 12px;">
+                        <a href="{{ route('acs.index', $pop->id) }}" class="back-button" title="Kembali ke List AC">
                             <i class="bi bi-arrow-left"></i>
                         </a>
+                        <x-breadcrumb :items="[
+                            ['label' => 'POP', 'route' => 'pops.index'],
+                            ['label' => $pop->nama_pop_display . ': AC', 'route' => 'acs.index', 'params' => ['pop' => $pop->id]],
+                            ['label' => 'Tambah AC'],
+                        ]" />
                     </div>
                 </div>
 
@@ -47,7 +52,7 @@
                         <div class="form-grid-3">
                             <div class="form-group">
                                 <label for="pop">POP</label>
-                                <input type="text" id="pop" class="form-control disabled-input" value="{{ $pop->kode_pop }}" readonly>
+                                <input type="text" id="pop" class="form-control disabled-input" value="{{ $pop->nama_pop_display }}" readonly>
                             </div>
                             <div class="form-group">
                                 <label for="kota">Kota / Kabupaten</label>
@@ -166,34 +171,43 @@
 
                     <!-- Photo AC -->
                     <div class="form-card">
-                        <h3 class="form-section-title">Photo Air Conditioner</h3>
-                        <div class="form-group">
-                            <label>Upload foto kondisi AC di lokasi</label>
-                            <div class="upload-container">
-                                <div class="upload-dropzone" id="dropzoneAC">
-                                    <i class="bi bi-cloud-arrow-up upload-icon"></i>
-                                    <span class="upload-text">Drag &amp; drop file disini atau</span>
-                                    <label for="photo_ac" class="btn-browse">Browse</label>
-                                    <input type="file" id="photo_ac" name="photo_ac" accept="image/jpeg,image/png,image/jpg" hidden>
+                        <h3 class="form-section-title">
+                            <i class="bi bi-camera-fill"></i> Photo Air Conditioner
+                        </h3>
+                        <p style="font-size:0.8rem; color:#64748b; margin-top:-8px; margin-bottom:16px;">
+                            Upload foto kondisi AC di lokasi
+                        </p>
+
+                        <div class="rform-photo-grid">
+                            <div class="rform-drop-zone" id="dropZone" onclick="document.getElementById('photo_ac').click()">
+                                <div class="rform-drop-icon">
+                                    <i class="bi bi-cloud-arrow-up-fill"></i>
                                 </div>
-                                <div class="preview-container">
-                                    <span class="preview-title">Preview foto</span>
-                                    <div class="preview-box">
-                                        <img id="previewAC" src="" alt="Preview AC" style="display: none;">
-                                        <div id="noPreviewAC" class="no-preview">
-                                            <i class="bi bi-image"></i>
-                                            <span>Belum ada foto yang dipilih</span>
-                                        </div>
+                                <div class="rform-drop-text" id="dropText">Masukkan file disini</div>
+                                <button type="button" class="rform-browse-btn">Browse</button>
+                                <div class="rform-drop-hint">Format: JPG, JPEG, PNG • Maks. ukuran: 10 MB</div>
+                                <input type="file" id="photo_ac" name="photo_ac" accept=".jpg,.jpeg,.png"
+                                    style="display:none;" onchange="previewFotoAC(this)">
+                            </div>
+
+                            <div class="rform-photo-preview">
+                                <span class="rform-preview-label">Preview foto</span>
+                                <div class="rform-preview-box">
+                                    <img id="fotoPreview" src="" alt="Preview AC" style="display:none;">
+                                    <div class="rform-preview-empty" id="fotoEmpty">
+                                        <i class="bi bi-image"></i>
+                                        <span>Belum ada foto yang dipilih</span>
                                     </div>
                                 </div>
                             </div>
-                            <small class="upload-info">Format: JPG, JPEG, PNG + Maks. ukuran: 10 MB</small>
-                            @error('photo_ac')<div style="color:#ef4444;font-size:0.8rem;margin-top:4px;">{{ $message }}</div>@enderror
                         </div>
-                        <div class="form-group" style="margin-top: 15px;">
-                            <label for="keterangan_gambar_ac">Tuliskan keterangan gambar</label>
+                        @error('photo_ac')<div style="color:#ef4444;font-size:0.8rem;margin-top:4px;">{{ $message }}</div>@enderror
+
+                        <div class="form-group" style="margin-top: 20px;">
+                            <label for="keterangan_gambar_ac" style="font-weight: 500; font-size: 0.84rem; color: #475569; display: block; margin-bottom: 6px;">Keterangan Gambar</label>
                             <input type="text" id="keterangan_gambar_ac" name="keterangan_gambar_ac"
-                                class="form-control" placeholder="Masukkan keterangan gambar"
+                                class="form-control" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; font-family: 'Poppins', sans-serif; font-size: 0.88rem;"
+                                placeholder="Masukkan keterangan gambar"
                                 value="{{ old('keterangan_gambar_ac') }}">
                         </div>
                     </div>
@@ -261,29 +275,52 @@
                 }
             }
 
-            // Image preview
-            const photoAC    = document.getElementById('photo_ac');
-            const previewAC  = document.getElementById('previewAC');
-            const noPreview  = document.getElementById('noPreviewAC');
-            photoAC.addEventListener('change', function (e) {
-                const file = e.target.files[0];
+            // Photo preview handler
+            window.previewFotoAC = function (input) {
+                const file = input.files ? input.files[0] : null;
                 if (!file) return;
                 const reader = new FileReader();
-                reader.onload = function (ev) {
-                    previewAC.src = ev.target.result;
-                    previewAC.style.display = 'block';
-                    noPreview.style.display = 'none';
+                reader.onload = function (event) {
+                    const img = document.getElementById('fotoPreview');
+                    const empty = document.getElementById('fotoEmpty');
+                    if (img) {
+                        img.src = event.target.result;
+                        img.style.display = 'block';
+                    }
+                    if (empty) empty.style.display = 'none';
+                    const dropText = document.getElementById('dropText');
+                    if (dropText) dropText.textContent = 'Klik untuk ganti file';
                 };
                 reader.readAsDataURL(file);
-            });
+            };
+
+            const dropZone = document.getElementById('dropZone');
+            if (dropZone) {
+                dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.style.background = '#dbeafe'; });
+                dropZone.addEventListener('dragleave', () => { dropZone.style.background = ''; });
+                dropZone.addEventListener('drop', e => {
+                    e.preventDefault();
+                    dropZone.style.background = '';
+                    const file = e.dataTransfer.files[0];
+                    if (file) {
+                        document.getElementById('photo_ac').files = e.dataTransfer.files;
+                        previewFotoAC({ files: [file] });
+                    }
+                });
+            }
 
             // Reset button
             document.getElementById('acForm').addEventListener('reset', function () {
                 setTimeout(function () {
-                    previewAC.src = ''; previewAC.style.display = 'none'; noPreview.style.display = 'flex';
+                    const img = document.getElementById('fotoPreview');
+                    const empty = document.getElementById('fotoEmpty');
+                    if (img) { img.src = ''; img.style.display = 'none'; }
+                    if (empty) { empty.style.display = 'flex'; }
+                    const dropText = document.getElementById('dropText');
+                    if (dropText) dropText.textContent = 'Masukkan file disini';
                     ['jenis_freon_others', 'merk_ac_others', 'type_ac_others'].forEach(id => {
                         const el = document.getElementById(id);
-                        el.style.display = 'none'; el.required = false;
+                        if (el) { el.style.display = 'none'; el.required = false; }
                     });
                     document.getElementById('statusDot').style.background = '#94a3b8';
                     document.getElementById('statusText').textContent = '-';

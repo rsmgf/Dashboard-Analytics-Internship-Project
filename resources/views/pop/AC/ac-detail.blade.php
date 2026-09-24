@@ -10,6 +10,7 @@
         'resources/css/sidebar.css',
         'resources/css/ac-detail.css'
     ])
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="app-container">
@@ -21,10 +22,15 @@
 
             <div class="ac-content">
                 <div class="detail-page-header">
-                    <div class="ac-page-info">
-                        <a href="{{ route('acs.index', $pop->id) }}" class="back-button" title="Kembali">
+                    <div class="ac-page-info" style="display: flex; align-items: center; gap: 12px;">
+                        <a href="{{ route('acs.index', $pop->id) }}" class="back-button" title="Kembali ke List AC">
                             <i class="bi bi-arrow-left"></i>
                         </a>
+                        <x-breadcrumb :items="[
+                            ['label' => 'POP', 'route' => 'pops.index'],
+                            ['label' => $pop->nama_pop_display . ': AC', 'route' => 'acs.index', 'params' => ['pop' => $pop->id]],
+                            ['label' => $ac->nomor_ac],
+                        ]" />
                     </div>
                     <div>
                         @can('acs.index.update')
@@ -35,12 +41,20 @@
                     </div>
                 </div>
 
-                @if (session('success'))
-                    <div style="margin-bottom: 16px; padding: 12px 16px; background: #d1fae5; border-left: 4px solid #10b981; border-radius: 8px; color: #065f46; font-size: 0.875rem;">
-                        <i class="bi bi-check-circle-fill" style="margin-right: 6px;"></i>
-                        {{ session('success') }}
-                    </div>
-                @endif
+                {{-- Alert Banner Last Update --}}
+                <div class="alert-info-custom">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                    <span>
+                        Terakhir diperbarui:
+                        <strong>
+                            @if($ac->diupdateOleh)
+                                {{ $ac->diupdateOleh->name }} &middot; {{ $ac->updated_at->translatedFormat('d F Y, H:i') }} WIB
+                            @else
+                                {{ $ac->updated_at ? $ac->updated_at->translatedFormat('d F Y, H:i') . ' WIB' : 'Belum ada data pembaruan' }}
+                            @endif
+                        </strong>
+                    </span>
+                </div>
 
                 <div class="detail-container">
 
@@ -50,7 +64,7 @@
                         <div class="detail-grid-3">
                             <div class="detail-item">
                                 <span class="detail-label">POP</span>
-                                <span class="detail-value">{{ $pop->kode_pop }}</span>
+                                <span class="detail-value">{{ $pop->nama_pop_display }}</span>
                             </div>
                             <div class="detail-item">
                                 <span class="detail-label">Kota / Kabupaten</span>
@@ -123,7 +137,9 @@
                             <h3 class="form-section-title">Photo Air Conditioner</h3>
                             <div class="detail-photo-box">
                                 @if ($ac->photo_ac)
-                                    <img src="{{ asset('storage/' . $ac->photo_ac) }}" alt="Foto Kondisi AC" id="detailPhoto">
+                                    <img src="{{ asset('storage/' . $ac->photo_ac) }}" alt="Foto Kondisi AC" id="detailPhoto"
+                                         onclick="Swal.fire({ title: '{{ addslashes($ac->keterangan_gambar_ac ?? 'Foto AC') }}', imageUrl: this.src, imageAlt: 'Foto AC', showCloseButton: true, showConfirmButton: false, width: 'auto', customClass: { popup: 'swal-popup-custom' } })"
+                                         title="Klik untuk melihat ukuran penuh">
                                 @else
                                     <div id="noDetailPhoto" class="no-preview">
                                         <i class="bi bi-image" style="font-size: 2.5rem; color: #94a3b8;"></i>
@@ -132,7 +148,7 @@
                                 @endif
                             </div>
                             @if ($ac->keterangan_gambar_ac)
-                            <div class="detail-item" style="padding: 12px 16px; border-top: 1px solid #f1f5f9;">
+                            <div class="detail-item mt-3">
                                 <span class="detail-label">Keterangan Gambar</span>
                                 <span class="detail-value">{{ $ac->keterangan_gambar_ac }}</span>
                             </div>
@@ -140,14 +156,6 @@
                         </div>
 
                     </div>
-
-                    <!-- Update Info -->
-                    @if ($ac->diupdateOleh)
-                    <div style="padding: 12px 16px; background: #f8fafc; border-radius: 8px; font-size: 0.8rem; color: #64748b; display:flex; align-items:center; gap:8px; margin-top: 16px;">
-                        <i class="bi bi-clock-history"></i>
-                        <span>Terakhir diupdate oleh <strong>{{ $ac->diupdateOleh->name }}</strong> pada {{ $ac->updated_at->format('d M Y, H:i') }}</span>
-                    </div>
-                    @endif
 
                 </div>
             </div>

@@ -140,7 +140,7 @@
                                     <td>{{ $pop->provinsi ?? 'Jambi' }}</td>
                                     <td>{{ $pop->kota_kabupaten }}</td>
                                     <td>{{ $pop->kode_pop }}</td>
-                                    <td>{{ $pop->nama_pop }}</td>
+                                    <td>{{ $pop->nama_pop_display }}</td>
                                     <td>{{ $pop->jenis_bangunan }}</td>
                                     <td>{{ $pop->tipe_pop ?? 'POP-SB' }}</td>
                                     <td style="text-align: center;">

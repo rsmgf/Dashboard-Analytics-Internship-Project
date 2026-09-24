@@ -29,10 +29,10 @@
                     <div>
                         <x-breadcrumb :items="[
                             ['label' => 'POP', 'route' => 'pops.index'],
-                            ['label' => $pop->nama_pop, 'route' => 'batteries.index', 'params' => ['pop' => $pop->id]],
-                            ['label' => 'Edit Baterai (' . $battery->nomor_bank . ')'],
+                            ['label' => $pop->nama_pop_display . ': Battery', 'route' => 'batteries.index', 'params' => ['pop' => $pop->id]],
+                            ['label' => $battery->nomor_bank, 'route' => 'batteries.show', 'params' => [$pop->id, $battery->id]],
+                            ['label' => 'Edit Baterai'],
                         ]" />
-                        <p style="font-size: 0.8rem; color: #64748b; margin: 2px 0 0;">Kode POP: <strong>{{ $pop->kode_pop }}</strong> &middot; {{ $pop->kota_kabupaten }}, {{ $pop->provinsi ?? 'Jambi' }}</p>
                     </div>
                 </div>
 
@@ -60,13 +60,12 @@
                         <div class="form-grid-4">
                             <div class="form-group">
                                 <label>POP</label>
-                                <input type="text" class="form-control disabled-input" value="{{ $pop->kode_pop }} - {{ $pop->nama_pop }}" disabled>
+                                <input type="text" class="form-control disabled-input" value="{{ $pop->nama_pop_display }}" disabled>
                             </div>
 
                             <div class="form-group">
-                                <label>Building <span class="required">*</span></label>
-                                <input type="text" class="form-control @error('building') is-invalid @enderror" name="building" value="{{ old('building', $battery->building) }}" placeholder="Masukkan building" required>
-                                @error('building') <span class="text-danger" style="font-size: 0.75rem; color:#ef4444;">{{ $message }}</span> @enderror
+                                <label>Building / Jenis Bangunan</label>
+                                <input type="text" class="form-control disabled-input" value="{{ $pop->jenis_bangunan ?? '-' }}" disabled>
                             </div>
 
                             <div class="form-group">
@@ -76,9 +75,8 @@
                             </div>
 
                             <div class="form-group">
-                                <label>Type POP <span class="required">*</span></label>
-                                <input type="text" class="form-control @error('type_pop') is-invalid @enderror" name="type_pop" value="{{ old('type_pop', $battery->type_pop) }}" placeholder="Masukkan type POP" required>
-                                @error('type_pop') <span class="text-danger" style="font-size: 0.75rem; color:#ef4444;">{{ $message }}</span> @enderror
+                                <label>Type POP</label>
+                                <input type="text" class="form-control disabled-input" value="{{ $pop->tipe_pop ?? '-' }}" disabled>
                             </div>
                         </div>
                     </div>
@@ -97,7 +95,7 @@
                                         <option value="" disabled>Pilih Nomor Rectifier</option>
                                         @forelse ($rectifiers as $r)
                                             <option value="{{ $r->id }}" {{ old('rectifier_id', $battery->rectifier_id) == $r->id ? 'selected' : '' }}>
-                                                {{ $r->nomor_recti }} ({{ $r->recti_label }}) - Beban: {{ $r->beban ? $r->beban . ' A' : '-' }}
+                                                {{ $r->recti_label }} - Beban: {{ $r->beban ? $r->beban . ' A' : '-' }}
                                             </option>
                                         @empty
                                             <option value="" disabled>Belum ada Rectifier di POP ini</option>
@@ -301,11 +299,9 @@
                         </div>
                     </div>
 
-                    <div class="form-actions" style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
-                        <a href="{{ route('batteries.show', [$pop->id, $battery->id]) }}" class="btn-reset" style="height: 42px; padding: 0 24px; border: none; border-radius: 8px; background: #64748b; color: #ffffff; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">Batal</a>
-                        <button type="submit" class="btn-submit" style="height: 42px; padding: 0 28px; border-radius: 8px; background: #0070d8; color: #ffffff; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border: none;">
-                            <i class="bi bi-floppy"></i> Simpan Perubahan
-                        </button>
+                    <div class="form-actions">
+                        <a href="{{ route('batteries.show', [$pop->id, $battery->id]) }}" class="btn-reset" style="display: inline-flex; align-items: center; justify-content: center; text-decoration: none;">Batal</a>
+                        <button type="submit" class="btn-submit">Simpan Perubahan</button>
                     </div>
                 </form>
             </div>

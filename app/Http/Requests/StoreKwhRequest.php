@@ -22,9 +22,7 @@ class StoreKwhRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'building' => ['required', 'string', 'max:100'],
             'pic' => ['required', 'string', 'max:100'],
-            'type_pop' => ['required', 'string', 'max:50'],
             'id_customer_pln' => ['required', 'string', 'max:50'],
             'tanggal_pemeriksaan' => ['required', 'date'],
 

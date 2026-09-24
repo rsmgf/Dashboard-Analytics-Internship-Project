@@ -10,6 +10,7 @@
         'resources/css/sidebar.css',
         'resources/css/genset-create.css'
     ])
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="app-container">
@@ -21,10 +22,15 @@
 
             <div class="rectifier-content">
                 <div class="rectifier-page-header" style="border-bottom: none; margin-bottom: 20px;">
-                    <div class="rectifier-page-info">
-                        <a href="{{ route('gensets.index', $pop->id) }}" class="back-button" title="Kembali">
+                    <div class="rectifier-page-info" style="display: flex; align-items: center; gap: 12px;">
+                        <a href="{{ route('gensets.index', $pop->id) }}" class="back-button" title="Kembali ke List Genset">
                             <i class="bi bi-arrow-left"></i>
                         </a>
+                        <x-breadcrumb :items="[
+                            ['label' => 'POP', 'route' => 'pops.index'],
+                            ['label' => $pop->nama_pop_display . ': Genset', 'route' => 'gensets.index', 'params' => ['pop' => $pop->id]],
+                            ['label' => 'Tambah Genset'],
+                        ]" />
                     </div>
                 </div>
 
@@ -47,7 +53,7 @@
                         <div class="form-grid-3">
                             <div class="form-group">
                                 <label for="pop">POP</label>
-                                <input type="text" id="pop" class="form-control disabled-input" value="{{ $pop->kode_pop }}" readonly>
+                                <input type="text" id="pop" class="form-control disabled-input" value="{{ $pop->nama_pop_display }}" readonly>
                             </div>
 
                             <div class="form-group">
@@ -196,71 +202,68 @@
                         </div>
                     </div>
 
-                    <!-- Photo Genset -->
-                    <div class="form-card">
-                        <h3 class="form-section-title">Photo Genset</h3>
-                        <div class="form-group">
-                            <label>Upload foto kondisi Genset di lokasi</label>
-                            <div class="upload-container">
-                                <div class="upload-dropzone" id="dropzoneGenset">
-                                    <i class="bi bi-cloud-arrow-up upload-icon"></i>
-                                    <span class="upload-text">Masukkan file disini</span>
-                                    <label for="photo_genset" class="btn-browse">Browse</label>
+                    <!-- Photo Genset & Photo Engine (Side-by-side) -->
+                    <div class="form-grid-2" style="margin-bottom: 20px;">
+                        <!-- Photo Genset -->
+                        <div class="form-card" style="margin-bottom: 0;">
+                            <h3 class="form-section-title">Photo Genset</h3>
+                            <div class="photo-compact-card">
+                                <label style="font-size: 0.84rem; font-weight: 500; color: #334155;">Foto kondisi Genset di lokasi</label>
+                                <div class="photo-compact-preview" id="previewBoxGenset" onclick="document.getElementById('photo_genset').click()">
+                                    <div id="noPreviewGenset" class="photo-compact-empty">
+                                        <i class="bi bi-image"></i>
+                                        <span>Belum ada foto yang dipilih</span>
+                                        <small style="color: #94a3b8; font-size: 0.72rem;">Klik atau seret file ke sini</small>
+                                    </div>
+                                    <img id="imgGenset" src="" alt="Preview Genset" class="photo-compact-img" style="display: none;">
+                                </div>
+                                <div class="photo-compact-actions">
+                                    <label for="photo_genset" class="btn-compact-browse" id="btnBrowseGenset">
+                                        <i class="bi bi-camera-fill" id="btnIconGenset"></i>
+                                        <span id="btnTextGenset">Pilih Foto</span>
+                                    </label>
                                     <input type="file" id="photo_genset" name="photo_genset" accept="image/jpeg,image/png,image/jpg" hidden>
+                                    <small class="upload-info">Format: JPG, JPEG, PNG (Maks. 10 MB)</small>
                                 </div>
-                                <div class="preview-container">
-                                    <span class="preview-title">Preview foto</span>
-                                    <div class="preview-box">
-                                        <img id="previewGenset" src="" alt="Preview Genset" style="display: none;">
-                                        <div id="noPreviewGenset" class="no-preview">
-                                            <i class="bi bi-image" style="font-size: 2rem; color: #cbd5e1;"></i>
-                                            <span>Belum ada foto yang dipilih</span>
-                                        </div>
-                                    </div>
-                                </div>
+                                @error('photo_genset')<div style="color:#ef4444;font-size:0.8rem;margin-top:4px;">{{ $message }}</div>@enderror
                             </div>
-                            <small class="upload-info">Format: JPG, JPEG, PNG + Maks. ukuran: 10 MB</small>
-                            @error('photo_genset')<div style="color:#ef4444;font-size:0.8rem;margin-top:4px;">{{ $message }}</div>@enderror
+                            <div class="form-group" style="margin-top: 15px;">
+                                <label for="keterangan_gambar_genset">Keterangan Foto</label>
+                                <input type="text" id="keterangan_gambar_genset" name="keterangan_gambar_genset"
+                                    class="form-control" placeholder="Masukkan keterangan gambar"
+                                    value="{{ old('keterangan_gambar_genset') }}">
+                            </div>
                         </div>
-                        <div class="form-group" style="margin-top: 15px;">
-                            <label for="keterangan_gambar_genset">Tuliskan keterangan gambar</label>
-                            <input type="text" id="keterangan_gambar_genset" name="keterangan_gambar_genset"
-                                class="form-control" placeholder="Masukkan keterangan gambar"
-                                value="{{ old('keterangan_gambar_genset') }}">
-                        </div>
-                    </div>
 
-                    <!-- Photo Engine -->
-                    <div class="form-card">
-                        <h3 class="form-section-title">Photo Engine</h3>
-                        <div class="form-group">
-                            <label>Upload foto kondisi Engine di lokasi</label>
-                            <div class="upload-container">
-                                <div class="upload-dropzone" id="dropzoneEngine">
-                                    <i class="bi bi-cloud-arrow-up upload-icon"></i>
-                                    <span class="upload-text">Masukkan file disini</span>
-                                    <label for="photo_engine" class="btn-browse">Browse</label>
-                                    <input type="file" id="photo_engine" name="photo_engine" accept="image/jpeg,image/png,image/jpg" hidden>
-                                </div>
-                                <div class="preview-container">
-                                    <span class="preview-title">Preview foto</span>
-                                    <div class="preview-box">
-                                        <img id="previewEngine" src="" alt="Preview Engine" style="display: none;">
-                                        <div id="noPreviewEngine" class="no-preview">
-                                            <i class="bi bi-image" style="font-size: 2rem; color: #cbd5e1;"></i>
-                                            <span>Belum ada foto yang dipilih</span>
-                                        </div>
+                        <!-- Photo Engine -->
+                        <div class="form-card" style="margin-bottom: 0;">
+                            <h3 class="form-section-title">Photo Engine</h3>
+                            <div class="photo-compact-card">
+                                <label style="font-size: 0.84rem; font-weight: 500; color: #334155;">Foto kondisi Engine di lokasi</label>
+                                <div class="photo-compact-preview" id="previewBoxEngine" onclick="document.getElementById('photo_engine').click()">
+                                    <div id="noPreviewEngine" class="photo-compact-empty">
+                                        <i class="bi bi-image"></i>
+                                        <span>Belum ada foto yang dipilih</span>
+                                        <small style="color: #94a3b8; font-size: 0.72rem;">Klik atau seret file ke sini</small>
                                     </div>
+                                    <img id="imgEngine" src="" alt="Preview Engine" class="photo-compact-img" style="display: none;">
                                 </div>
+                                <div class="photo-compact-actions">
+                                    <label for="photo_engine" class="btn-compact-browse" id="btnBrowseEngine">
+                                        <i class="bi bi-camera-fill" id="btnIconEngine"></i>
+                                        <span id="btnTextEngine">Pilih Foto</span>
+                                    </label>
+                                    <input type="file" id="photo_engine" name="photo_engine" accept="image/jpeg,image/png,image/jpg" hidden>
+                                    <small class="upload-info">Format: JPG, JPEG, PNG (Maks. 10 MB)</small>
+                                </div>
+                                @error('photo_engine')<div style="color:#ef4444;font-size:0.8rem;margin-top:4px;">{{ $message }}</div>@enderror
                             </div>
-                            <small class="upload-info">Format: JPG, JPEG, PNG + Maks. ukuran: 10 MB</small>
-                            @error('photo_engine')<div style="color:#ef4444;font-size:0.8rem;margin-top:4px;">{{ $message }}</div>@enderror
-                        </div>
-                        <div class="form-group" style="margin-top: 15px;">
-                            <label for="keterangan_gambar_engine">Tuliskan keterangan gambar</label>
-                            <input type="text" id="keterangan_gambar_engine" name="keterangan_gambar_engine"
-                                class="form-control" placeholder="Masukkan keterangan gambar"
-                                value="{{ old('keterangan_gambar_engine') }}">
+                            <div class="form-group" style="margin-top: 15px;">
+                                <label for="keterangan_gambar_engine">Keterangan Foto</label>
+                                <input type="text" id="keterangan_gambar_engine" name="keterangan_gambar_engine"
+                                    class="form-control" placeholder="Masukkan keterangan gambar"
+                                    value="{{ old('keterangan_gambar_engine') }}">
+                            </div>
                         </div>
                     </div>
 
@@ -403,27 +406,87 @@
                 }
             }
 
-            // Image Previews
-            function setupImagePreview(inputId, previewImgId, noPreviewId) {
+            // Setup compact photo upload & drag-and-drop helper
+            function setupCompactUpload(inputId, previewBoxId, imgId, noPreviewId, btnTextId, btnIconId) {
                 const input      = document.getElementById(inputId);
-                const previewImg = document.getElementById(previewImgId);
+                const previewBox = document.getElementById(previewBoxId);
+                const img        = document.getElementById(imgId);
                 const noPreview  = document.getElementById(noPreviewId);
-                input.addEventListener('change', function (e) {
-                    const file = e.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = function (event) {
-                            previewImg.src = event.target.result;
-                            previewImg.style.display = 'block';
-                            noPreview.style.display = 'none';
-                        };
-                        reader.readAsDataURL(file);
+                const btnText    = document.getElementById(btnTextId);
+                const btnIcon    = document.getElementById(btnIconId);
+
+                function handleFile(file) {
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        img.src = e.target.result;
+                        img.style.display = 'block';
+                        noPreview.style.display = 'none';
+                        btnText.textContent = 'Ganti Foto';
+                        btnIcon.className = 'bi bi-arrow-repeat';
+                    };
+                    reader.readAsDataURL(file);
+                }
+
+                input.addEventListener('change', function(e) {
+                    handleFile(e.target.files[0]);
+                });
+
+                ['dragenter', 'dragover'].forEach(name => {
+                    previewBox.addEventListener(name, (e) => {
+                        e.preventDefault();
+                        previewBox.classList.add('dragover');
+                    });
+                });
+                ['dragleave', 'drop'].forEach(name => {
+                    previewBox.addEventListener(name, (e) => {
+                        e.preventDefault();
+                        previewBox.classList.remove('dragover');
+                    });
+                });
+                previewBox.addEventListener('drop', (e) => {
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0) {
+                        input.files = files;
+                        handleFile(files[0]);
                     }
                 });
             }
-            setupImagePreview('photo_genset', 'previewGenset', 'noPreviewGenset');
-            setupImagePreview('photo_engine', 'previewEngine', 'noPreviewEngine');
+
+            setupCompactUpload('photo_genset', 'previewBoxGenset', 'imgGenset', 'noPreviewGenset', 'btnTextGenset', 'btnIconGenset');
+            setupCompactUpload('photo_engine', 'previewBoxEngine', 'imgEngine', 'noPreviewEngine', 'btnTextEngine', 'btnIconEngine');
+
+            // Reset button
+            document.getElementById('gensetForm').addEventListener('reset', function () {
+                setTimeout(function () {
+                    ['Genset', 'Engine'].forEach(type => {
+                        const img = document.getElementById('img' + type);
+                        const noPrev = document.getElementById('noPreview' + type);
+                        const btnText = document.getElementById('btnText' + type);
+                        const btnIcon = document.getElementById('btnIcon' + type);
+                        if (img) { img.src = ''; img.style.display = 'none'; }
+                        if (noPrev) noPrev.style.display = 'flex';
+                        if (btnText) btnText.textContent = 'Pilih Foto';
+                        if (btnIcon) btnIcon.className = 'bi bi-camera-fill';
+                    });
+                }, 10);
+            });
         });
+
+        function openPhotoModal(src, title) {
+            if (!src) return;
+            Swal.fire({
+                title: title || 'Foto',
+                imageUrl: src,
+                imageAlt: title || 'Foto',
+                showCloseButton: true,
+                showConfirmButton: false,
+                width: 'auto',
+                customClass: {
+                    popup: 'swal-popup-custom'
+                }
+            });
+        }
     </script>
 </body>
 </html>

@@ -17,8 +17,7 @@ class UpdateRectifierRequest extends FormRequest
         $rectifierId = $this->route('id');
 
         return [
-            // Informasi dasar
-            'nama_alias'              => 'required|string|max:255',
+            // Informasi dasar (nama_alias auto-generate, tidak bisa diubah)
             'deskripsi'               => 'nullable|string',
             'tanggal_pemeriksaan'     => 'nullable|date',
             'pic'                     => 'nullable|string|max:255',

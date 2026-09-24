@@ -93,12 +93,8 @@
 
                         <x-breadcrumb :items="[
                             ['label' => 'POP', 'route' => 'pops.index'],
-                            ['label' => $pop->nama_pop]
+                            ['label' => $pop->nama_pop_display . ': Baterai']
                         ]" />
-
-                        <span class="rectifier-pop-sub">
-                            Kode: <strong>{{ $pop->kode_pop }}</strong> &middot; {{ $pop->kota_kabupaten }}, {{ $pop->provinsi ?? 'Jambi' }} &mdash; {{ $batteries->count() }} Baterai
-                        </span>
 
                     </div>
 
@@ -114,37 +110,23 @@
 
             </div>
 
-            {{-- Flash Message Success --}}
-            @if (session('success'))
-                <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil!',
-                            text: "{{ session('success') }}",
-                            timer: 3000,
-                            showConfirmButton: false,
-                        });
-                    });
-                </script>
-            @endif
-
             {{-- ==================================================
                 BATTERY SECTIONS GROUPED BY RECTIFIER
             ================================================== --}}
-            @forelse ($groupedBatteries as $nomorRecti => $batteryGroup)
+            @forelse ($groupedBatteries as $rectifierId => $batteryGroup)
                 @php
-                    $stats = $rectifierBackupStats[$nomorRecti] ?? null;
+                    $stats = $rectifierBackupStats[$rectifierId] ?? null;
                     $badgeClass = $stats['badge_class'] ?? 'status-warning';
                     $performaText = $stats['performa_backup'] ?? 'BLM UJI BATT';
                     $backupJam = $stats['backup_time'] !== null ? $stats['backup_time'] . ' Jam' : '-';
+                    $rectifierLabel = $stats['rectifier']->nama_alias ?? ('RECT-' . str_pad($loop->iteration, 2, '0', STR_PAD_LEFT));
                 @endphp
 
                 <div class="rectifier-section">
 
                     <div class="rectifier-header">
                         <div class="rectifier-title">
-                            Rectifier : {{ $nomorRecti }}
+                            Rectifier : {{ $rectifierLabel }}
                         </div>
                         <div class="backup-time {{ $badgeClass }}">
                             Performance Backup Time : {{ $backupJam }} ({{ $performaText }})
@@ -269,7 +251,7 @@
                 <div class="empty-battery">
                     <i class="bi bi-battery"></i>
                     <h3>Belum Ada Data Baterai</h3>
-                    <p>Silakan tambahkan data baterai untuk POP <strong>{{ $pop->nama_pop }}</strong> menggunakan tombol <strong>Tambah Baterai</strong> di kanan atas.</p>
+                    <p>Silakan tambahkan data baterai untuk POP <strong>{{ $pop->nama_pop_display }}</strong> menggunakan tombol <strong>Tambah Baterai</strong> di kanan atas.</p>
                 </div>
             @endforelse
 

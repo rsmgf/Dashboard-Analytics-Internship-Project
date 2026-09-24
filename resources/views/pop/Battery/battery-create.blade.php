@@ -29,10 +29,9 @@
                         <div>
                             <x-breadcrumb :items="[
                                 ['label' => 'POP', 'route' => 'pops.index'],
-                                ['label' => $pop->nama_pop, 'route' => 'batteries.index', 'params' => ['pop' => $pop->id]],
+                                ['label' => $pop->nama_pop_display . ': Battery', 'route' => 'batteries.index', 'params' => ['pop' => $pop->id]],
                                 ['label' => 'Tambah Baterai'],
                             ]" />
-                            <p style="font-size: 0.8rem; color: #64748b; margin: 2px 0 0;">Kode POP: <strong>{{ $pop->kode_pop }}</strong> &middot; {{ $pop->kota_kabupaten }}, {{ $pop->provinsi ?? 'Jambi' }}</p>
                         </div>
                     </div>
                 </div>
@@ -60,13 +59,12 @@
                         <div class="form-grid-4">
                             <div class="form-group">
                                 <label for="pop">POP</label>
-                                <input type="text" id="pop" class="form-control disabled-input" value="{{ $pop->kode_pop }} - {{ $pop->nama_pop }}" readonly>
+                                <input type="text" id="pop" class="form-control disabled-input" value="{{ $pop->nama_pop_display }}" readonly>
                             </div>
 
                             <div class="form-group">
-                                <label for="building">Building <span class="required">*</span></label>
-                                <input type="text" id="building" name="building" class="form-control @error('building') is-invalid @enderror" value="{{ old('building', $pop->jenis_bangunan) }}" placeholder="Masukkan building" required>
-                                @error('building') <span class="text-danger" style="font-size: 0.75rem; color:#ef4444;">{{ $message }}</span> @enderror
+                                <label for="building">Building / Jenis Bangunan</label>
+                                <input type="text" id="building" class="form-control disabled-input" value="{{ $pop->jenis_bangunan ?? '-' }}" readonly>
                             </div>
 
                             <div class="form-group">
@@ -76,9 +74,8 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="type_pop">Type POP <span class="required">*</span></label>
-                                <input type="text" id="type_pop" name="type_pop" class="form-control @error('type_pop') is-invalid @enderror" value="{{ old('type_pop', $pop->tipe_pop) }}" placeholder="Masukkan type POP" required>
-                                @error('type_pop') <span class="text-danger" style="font-size: 0.75rem; color:#ef4444;">{{ $message }}</span> @enderror
+                                <label for="type_pop">Type POP</label>
+                                <input type="text" id="type_pop" class="form-control disabled-input" value="{{ $pop->tipe_pop ?? '-' }}" readonly>
                             </div>
                         </div>
                     </div>
@@ -96,7 +93,7 @@
                                         <option value="" disabled {{ old('rectifier_id') ? '' : 'selected' }}>Pilih Nomor Rectifier</option>
                                         @forelse ($rectifiers as $r)
                                             <option value="{{ $r->id }}" {{ old('rectifier_id') == $r->id ? 'selected' : '' }}>
-                                                {{ $r->nomor_recti }} ({{ $r->recti_label }}) - Beban: {{ $r->beban ? $r->beban . ' A' : '-' }}
+                                                {{ $r->recti_label }} - Beban: {{ $r->beban ? $r->beban . ' A' : '-' }}
                                             </option>
                                         @empty
                                             <option value="" disabled>Belum ada Rectifier di POP ini</option>

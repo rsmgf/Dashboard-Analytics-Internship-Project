@@ -33,15 +33,13 @@
                         <x-breadcrumb :items="[
                             ['label' => 'POP', 'route' => 'pops.index'],
                             [
-                                'label' => $pop->nama_pop . ': kWh',
+                                'label' => $pop->nama_pop_display . ': kWh',
                                 'route' => 'kwh.card',
                                 'params' => ['pop' => $pop->id],
                             ],
-                            ['label' => $kwh->building, 'route' => 'kwh.detail', 'params' => [$pop->id, $kwh->id]],
+                            ['label' => $kwh->nama_alias, 'route' => 'kwh.detail', 'params' => [$pop->id, $kwh->id]],
                             ['label' => 'Edit kWh'],
                         ]" />
-                        <p class="rform-page-sub">Kode POP: <strong>{{ $pop->kode_pop }}</strong> &middot;
-                            {{ $pop->kota_kabupaten }}, {{ $pop->provinsi ?? 'Jambi' }}</p>
                     </div>
                 </div>
 
@@ -62,114 +60,105 @@
                     @csrf
                     @method('PUT')
 
-                    <div class="rform-section">
-                        <div class="rform-section-header">
-                            <span class="rform-section-step">1</span>
-                            General Information
-                        </div>
-                        <div class="rform-section-body">
-                            <div class="rform-row rform-row-3">
-                                <div class="rform-group">
-                                    <label class="rform-label">POP</label>
-                                    <input type="text" class="rform-input"
-                                        value="{{ $pop->kode_pop }} - {{ $pop->nama_pop }}" readonly>
+                    <div class="rform-two-col">
+                        <div class="rform-section">
+                            <div class="rform-section-header">
+                                <span class="rform-section-step">1</span>
+                                General Information
+                            </div>
+                            <div class="rform-section-body">
+                                <div class="rform-row rform-row-2">
+                                    <div class="rform-group">
+                                        <label class="rform-label">POP</label>
+                                        <input type="text" class="rform-input"
+                                            value="{{ $pop->nama_pop_display }}" readonly>
+                                    </div>
+
+                                    <div class="rform-group">
+                                        <label class="rform-label">Building / Jenis Bangunan</label>
+                                        <input type="text" class="rform-input"
+                                            value="{{ $pop->jenis_bangunan ?? '-' }}" readonly>
+                                    </div>
                                 </div>
 
-                                <div class="rform-group">
-                                    <label class="rform-label">Building <span class="rform-required">*</span></label>
-                                    <input type="text" name="building" class="rform-input"
-                                        value="{{ old('building', $kwh->building) }}" required>
+                                <div class="rform-row rform-row-2">
+                                    <div class="rform-group">
+                                        <label class="rform-label">PIC / Petugas <span class="rform-required">*</span></label>
+                                        <input type="text" name="pic" class="rform-input"
+                                            value="{{ old('pic', $kwh->pic) }}" required>
+                                    </div>
+
+                                    <div class="rform-group">
+                                        <label class="rform-label">Type POP</label>
+                                        <input type="text" class="rform-input"
+                                            value="{{ $pop->tipe_pop ?? '-' }}" readonly>
+                                    </div>
                                 </div>
 
-                                <div class="rform-group">
-                                    <label class="rform-label">PIC / Petugas <span
-                                            class="rform-required">*</span></label>
-                                    <input type="text" name="pic" class="rform-input"
-                                        value="{{ old('pic', $kwh->pic) }}" required>
+                                <div class="rform-row rform-row-2">
+                                    <div class="rform-group">
+                                        <label class="rform-label">ID Customer (PLN) <span class="rform-required">*</span></label>
+                                        <input type="text" name="id_customer_pln" class="rform-input"
+                                            value="{{ old('id_customer_pln', $kwh->id_customer_pln) }}" required>
+                                    </div>
+
+                                    <div class="rform-group">
+                                        <label class="rform-label">Tanggal Pemeriksaan <span class="rform-required">*</span></label>
+                                        <input type="date" name="tanggal_pemeriksaan" class="rform-input"
+                                            value="{{ old('tanggal_pemeriksaan', $kwh->tanggal_pemeriksaan->format('Y-m-d')) }}"
+                                            required>
+                                    </div>
                                 </div>
                             </div>
-
-                            <div class="rform-row rform-row-3">
-                                <div class="rform-group">
-                                    <label class="rform-label">Type POP <span class="rform-required">*</span></label>
-                                    <input type="text" name="type_pop" class="rform-input"
-                                        value="{{ old('type_pop', $kwh->type_pop) }}" required>
-                                </div>
-
-                                <div class="rform-group">
-                                    <label class="rform-label">ID Customer (PLN) <span
-                                            class="rform-required">*</span></label>
-                                    <input type="text" name="id_customer_pln" class="rform-input"
-                                        value="{{ old('id_customer_pln', $kwh->id_customer_pln) }}" required>
-                                </div>
-
-                                <div class="rform-group">
-                                    <label class="rform-label">Tanggal Pemeriksaan <span
-                                            class="rform-required">*</span></label>
-                                    <input type="date" name="tanggal_pemeriksaan" class="rform-input"
-                                        value="{{ old('tanggal_pemeriksaan', $kwh->tanggal_pemeriksaan->format('Y-m-d')) }}"
-                                        required>
-                                </div>
-                            </div>
                         </div>
-                    </div>
 
-                    <div class="rform-section">
-                        <div class="rform-section-header">
-                            <span class="rform-section-step">2</span>
-                            Spesifikasi Panel kWh Meter
-                        </div>
-                        <div class="rform-section-body">
-                            <div class="rform-row rform-row-4">
-                                <div class="rform-group">
-                                    <label class="rform-label">Daya (PS GI) <span
-                                            class="rform-required">*</span></label>
-                                    <input type="text" name="daya_ps_gi" class="rform-input"
-                                        value="{{ old('daya_ps_gi', $kwh->daya_ps_gi) }}" readonly required>
-                                </div>
-
-                                <div class="rform-group">
-                                    <label class="rform-label">MCB Utama <span class="rform-required">*</span></label>
-                                    <input type="text" name="mcb_utama" class="rform-input"
-                                        value="{{ old('mcb_utama', $kwh->mcb_utama) }}" required>
-                                </div>
-
-                                <div class="rform-group">
-                                    <label class="rform-label">Jumlah Phasa <span
-                                            class="rform-required">*</span></label>
-                                    <select name="jumlah_phasa" class="rform-select" required>
-                                        <option value="3 Phasa" @selected(old('jumlah_phasa', $kwh->jumlah_phasa) == '3 Phasa')>3 Phasa</option>
-                                        <option value="1 Phasa" @selected(old('jumlah_phasa', $kwh->jumlah_phasa) == '1 Phasa')>1 Phasa</option>
-                                    </select>
-                                </div>
-
-                                <div class="rform-group">
-                                    <label class="rform-label">Keberadaan Arrester <span
-                                            class="rform-required">*</span></label>
-                                    <select name="keberadaan_arrester" class="rform-select" required>
-                                        <option value="ADA" @selected(old('keberadaan_arrester', $kwh->keberadaan_arrester) == 'ADA')>ADA (Terpasang)</option>
-                                        <option value="TIDAK ADA" @selected(old('keberadaan_arrester', $kwh->keberadaan_arrester) == 'TIDAK ADA')>TIDAK ADA</option>
-                                    </select>
-                                </div>
+                        <div class="rform-section">
+                            <div class="rform-section-header">
+                                <span class="rform-section-step">2</span>
+                                Spesifikasi Panel kWh Meter
                             </div>
+                            <div class="rform-section-body">
+                                <div class="rform-row rform-row-2">
+                                    <div class="rform-group">
+                                        <label class="rform-label">MCB Utama <span class="rform-required">*</span></label>
+                                        <input type="text" id="mcbUtama" name="mcb_utama" class="rform-input decimal-input"
+                                            value="{{ str_replace('.', ',', old('mcb_utama', $kwh->mcb_utama)) }}"
+                                            placeholder="Cukup masukkan angka MCB" required>
+                                    </div>
 
-                            <div class="rform-row rform-row-2">
-                                <div class="rform-group">
-                                    <label class="rform-label">Merk / Type Arrester</label>
-                                    <input type="text" name="merk_type_arrester" class="rform-input"
-                                        value="{{ old('merk_type_arrester', $kwh->merk_type_arrester) }}">
+                                    <div class="rform-group">
+                                        <label class="rform-label">Jumlah Phasa <span class="rform-required">*</span></label>
+                                        <select id="jumlahPhasa" name="jumlah_phasa" class="rform-select" required>
+                                            <option value="3 Phasa" @selected(old('jumlah_phasa', $kwh->jumlah_phasa) == '3 Phasa')>3 Phasa</option>
+                                            <option value="1 Phasa" @selected(old('jumlah_phasa', $kwh->jumlah_phasa) == '1 Phasa')>1 Phasa</option>
+                                        </select>
+                                    </div>
                                 </div>
 
-                                <div class="rform-group">
-                                    <label class="rform-label">Status Kelistrikan <span
-                                            class="rform-required">*</span></label>
-                                    <select name="status_kelistrikan" class="rform-select" required>
-                                        <option value="OK / Memadai" @selected(old('status_kelistrikan', $kwh->status_kelistrikan) == 'OK / Memadai')>OK / Memadai</option>
-                                        <option value="Perlu Perbaikan" @selected(old('status_kelistrikan', $kwh->status_kelistrikan) == 'Perlu Perbaikan')>Perlu Perbaikan
-                                        </option>
-                                        <option value="Kritis" @selected(old('status_kelistrikan', $kwh->status_kelistrikan) == 'Kritis')>Kritis / Tidak Standar
-                                        </option>
-                                    </select>
+                                <div class="rform-row rform-row-2">
+                                    <div class="rform-group">
+                                        <label class="rform-label">Keberadaan Arrester <span class="rform-required">*</span></label>
+                                        <select name="keberadaan_arrester" class="rform-select" required>
+                                            <option value="ADA" @selected(old('keberadaan_arrester', $kwh->keberadaan_arrester) == 'ADA')>ADA (Terpasang)</option>
+                                            <option value="TIDAK ADA" @selected(old('keberadaan_arrester', $kwh->keberadaan_arrester) == 'TIDAK ADA')>TIDAK ADA</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="rform-group">
+                                        <label class="rform-label">Merk / Type Arrester</label>
+                                        <input type="text" name="merk_type_arrester" class="rform-input"
+                                            value="{{ old('merk_type_arrester', $kwh->merk_type_arrester) }}"
+                                            placeholder="Contoh: OBO / OBO Bettermann V20">
+                                    </div>
+                                </div>
+
+                                <div class="rform-row rform-row-1">
+                                    <div class="rform-group">
+                                        <label class="rform-label">Daya Listrik (PS GI) <span class="rform-required">*</span></label>
+                                        <input type="text" id="dayaPsGi" class="rform-input"
+                                            value="{{ $kwh->daya_ps_gi ? number_format($kwh->daya_ps_gi, 0, ',', '.') . ' VA' : '' }}"
+                                            placeholder="Berdasarkan phasa dan MCB yang telah diinput" readonly>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -192,7 +181,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
+                                        <tr class="phasa-row" data-phasa="always">
                                             <td><strong>R - N</strong></td>
                                             <td>
                                                 <div class="input-with-unit"><input type="text" name="teg_rn"
@@ -208,72 +197,72 @@
                                                         required><span class="unit-text">A</span></div>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr class="phasa-row" data-phasa="3-only">
                                             <td><strong>S - N</strong></td>
                                             <td>
                                                 <div class="input-with-unit"><input type="text" name="teg_sn"
                                                         class="rform-input decimal-input"
                                                         value="{{ str_replace('.', ',', old('teg_sn', $kwh->teg_sn) ?? '') }}"
-                                                        required><span class="unit-text">Vac</span></div>
+                                                        ><span class="unit-text">Vac</span></div>
                                             </td>
                                             <td><strong>S</strong></td>
                                             <td>
-                                                <div class="input-with-unit"><input type="text" name="arus_s"
-                                                        class="rform-input decimal-input"
+                                                <div class="input-with-unit"><input type="text" id="arusS"
+                                                        name="arus_s" class="rform-input decimal-input"
                                                         value="{{ str_replace('.', ',', old('arus_s', $kwh->arus_s) ?? '') }}"
-                                                        required><span class="unit-text">A</span></div>
+                                                        ><span class="unit-text">A</span></div>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr class="phasa-row" data-phasa="3-only">
                                             <td><strong>T - N</strong></td>
                                             <td>
                                                 <div class="input-with-unit"><input type="text" name="teg_tn"
                                                         class="rform-input decimal-input"
                                                         value="{{ str_replace('.', ',', old('teg_tn', $kwh->teg_tn) ?? '') }}"
-                                                        required><span class="unit-text">Vac</span></div>
+                                                        ><span class="unit-text">Vac</span></div>
                                             </td>
                                             <td><strong>T</strong></td>
                                             <td>
-                                                <div class="input-with-unit"><input type="text" name="arus_t"
-                                                        class="rform-input decimal-input"
+                                                <div class="input-with-unit"><input type="text" id="arusT"
+                                                        name="arus_t" class="rform-input decimal-input"
                                                         value="{{ str_replace('.', ',', old('arus_t', $kwh->arus_t) ?? '') }}"
-                                                        required><span class="unit-text">A</span></div>
+                                                        ><span class="unit-text">A</span></div>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr class="phasa-row" data-phasa="3-only">
                                             <td><strong>R - S</strong></td>
                                             <td>
                                                 <div class="input-with-unit"><input type="text" name="teg_rs"
                                                         class="rform-input decimal-input"
                                                         value="{{ str_replace('.', ',', old('teg_rs', $kwh->teg_rs) ?? '') }}"
-                                                        required><span class="unit-text">Vac</span></div>
+                                                        ><span class="unit-text">Vac</span></div>
                                             </td>
                                             <td class="kwh-empty-cell">&mdash;</td>
                                             <td class="kwh-empty-cell">&mdash;</td>
                                         </tr>
-                                        <tr>
+                                        <tr class="phasa-row" data-phasa="3-only">
                                             <td><strong>S - T</strong></td>
                                             <td>
                                                 <div class="input-with-unit"><input type="text" name="teg_st"
                                                         class="rform-input decimal-input"
                                                         value="{{ str_replace('.', ',', old('teg_st', $kwh->teg_st) ?? '') }}"
-                                                        required><span class="unit-text">Vac</span></div>
+                                                        ><span class="unit-text">Vac</span></div>
                                             </td>
                                             <td class="kwh-empty-cell">&mdash;</td>
                                             <td class="kwh-empty-cell">&mdash;</td>
                                         </tr>
-                                        <tr>
+                                        <tr class="phasa-row" data-phasa="3-only">
                                             <td><strong>R - T</strong></td>
                                             <td>
                                                 <div class="input-with-unit"><input type="text" name="teg_rt"
                                                         class="rform-input decimal-input"
                                                         value="{{ str_replace('.', ',', old('teg_rt', $kwh->teg_rt) ?? '') }}"
-                                                        required><span class="unit-text">Vac</span></div>
+                                                        ><span class="unit-text">Vac</span></div>
                                             </td>
                                             <td class="kwh-empty-cell">&mdash;</td>
                                             <td class="kwh-empty-cell">&mdash;</td>
                                         </tr>
-                                        <tr>
+                                        <tr class="phasa-row" data-phasa="always">
                                             <td><strong>N - G</strong></td>
                                             <td>
                                                 <div class="input-with-unit"><input type="text" name="teg_ng"
@@ -292,18 +281,18 @@
                                 <div class="rform-group">
                                     <label class="rform-label">Total Daya Terpakai (VA) <span
                                             class="rform-required">*</span></label>
-                                    <input type="text" name="total_daya_terpakai"
+                                    <input type="text" id="totalDayaTerpakai"
                                         class="rform-input decimal-input"
                                         value="{{ str_replace('.', ',', old('total_daya_terpakai', $kwh->total_daya_terpakai) ?? '') }}"
-                                        readonly required>
+                                        readonly>
                                 </div>
 
                                 <div class="rform-group">
                                     <label class="rform-label">Total Beban (A) <span
                                             class="rform-required">*</span></label>
-                                    <input type="text" name="total_beban" class="rform-input decimal-input"
+                                    <input type="text" id="totalBeban" class="rform-input decimal-input"
                                         value="{{ str_replace('.', ',', old('total_beban', $kwh->total_beban) ?? '') }}"
-                                        readonly required>
+                                        readonly>
                                 </div>
                             </div>
                         </div>
@@ -446,6 +435,96 @@
     </div>
 
     <script>
+        /* ========== PHASA TOGGLE ========== */
+        function togglePhasaRows() {
+            const phasa = document.getElementById('jumlahPhasa').value;
+            const rows = document.querySelectorAll('.phasa-row[data-phasa="3-only"]');
+
+            rows.forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                if (phasa === '1 Phasa') {
+                    row.style.display = 'none';
+                    inputs.forEach(input => {
+                        input.disabled = true;
+                        input.removeAttribute('required');
+                    });
+                } else {
+                    row.style.display = '';
+                    inputs.forEach(input => {
+                        input.disabled = false;
+                    });
+                }
+            });
+
+            hitungTotalDanBeban();
+            hitungDayaPsGi();
+        }
+
+        document.getElementById('jumlahPhasa').addEventListener('change', togglePhasaRows);
+        document.addEventListener('DOMContentLoaded', togglePhasaRows);
+
+        /* ========== HITUNG TOTAL ========== */
+        function parseDecimal(value) {
+            if (!value) return 0;
+            return parseFloat(String(value).replace(',', '.')) || 0;
+        }
+
+        function formatDecimal(value, decimals = 2) {
+            return value.toFixed(decimals).replace('.', ',');
+        }
+
+        function hitungTotalDanBeban() {
+            const arusR = parseDecimal(document.getElementById('arusR')?.value);
+            const arusS = parseDecimal(document.getElementById('arusS')?.value);
+            const arusT = parseDecimal(document.getElementById('arusT')?.value);
+            const phasa = document.getElementById('jumlahPhasa').value;
+
+            let totalDaya = 0;
+            if (phasa === '1 Phasa') {
+                totalDaya = arusR * 220;
+            } else {
+                const arusTerbesar = Math.max(arusR, arusS, arusT);
+                totalDaya = arusTerbesar * 380 * 0.75 * 1.73;
+            }
+
+            const totalBeban = arusR + arusS + arusT;
+
+            document.getElementById('totalDayaTerpakai').value = totalDaya > 0 ? formatDecimal(totalDaya) + ' VA' : '';
+            document.getElementById('totalBeban').value = totalBeban > 0 ? formatDecimal(totalBeban) + ' A' : '';
+        }
+
+        document.getElementById('arusR').addEventListener('input', hitungTotalDanBeban);
+        document.getElementById('arusS').addEventListener('input', hitungTotalDanBeban);
+        document.getElementById('arusT').addEventListener('input', hitungTotalDanBeban);
+        document.getElementById('jumlahPhasa').addEventListener('change', hitungTotalDanBeban);
+
+        /* ========== HITUNG DAYA PS GI ========== */
+        function hitungDayaPsGi() {
+            const mcb = parseDecimal(document.getElementById('mcbUtama').value);
+            const phasa = document.getElementById('jumlahPhasa').value;
+
+            let daya = 0;
+            if (phasa === '1 Phasa') {
+                daya = 220 * mcb;
+            } else if (phasa === '3 Phasa') {
+                daya = 3 * 220 * mcb;
+            }
+
+            daya = Math.round(daya);
+            document.getElementById('dayaPsGi').value = daya > 0 ? daya.toLocaleString('id-ID') + ' VA' : '';
+        }
+
+        document.getElementById('mcbUtama').addEventListener('input', hitungDayaPsGi);
+        document.getElementById('jumlahPhasa').addEventListener('change', hitungDayaPsGi);
+
+        /* ========== DECIMAL INPUT FILTER ========== */
+        document.querySelectorAll('.decimal-input').forEach(function(input) {
+            input.addEventListener('input', function() {
+                this.value = this.value.replace(/[^0-9.,\-]/g, '');
+            });
+        });
+
+        /* ========== SUBMIT WITH CONFIRMATION ========== */
         let photoEditCounter = {{ $kwh->photos->count() }};
 
         function previewDynamicPhotoEdit(input, idx) {

@@ -14,8 +14,7 @@ class StoreRectifierRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // Informasi dasar
-            'nama_alias'              => 'required|string|max:255',
+            // Informasi dasar (nama_alias auto-generate, tidak perlu diinput)
             'deskripsi'               => 'nullable|string',
             'tanggal_pemeriksaan'     => 'nullable|date',
             'pic'                     => 'nullable|string|max:255',

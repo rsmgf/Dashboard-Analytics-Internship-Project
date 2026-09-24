@@ -10,7 +10,7 @@ body {
 }
 
 .ac-content {
-    padding: 0 24px 40px;
+    padding: 24px;
     width: 100%;
 }
 
@@ -76,6 +76,7 @@ body {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
+    align-items: start;
 }
 
 .form-group {
@@ -307,5 +308,231 @@ select.form-control {
     .preview-box {
         width: 100%;
         height: 180px;
+    }
+}
+
+/* Compact Photo Upload (kWh Pattern) */
+.photo-compact-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.photo-compact-preview {
+    width: 100%;
+    max-width: 340px;
+    height: 180px;
+    background: #f8fafc;
+    border: 2px dashed #cbd5e1;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.photo-compact-preview:hover {
+    border-color: #0284c7;
+    background: #f0f9ff;
+}
+
+.photo-compact-preview.dragover {
+    border-color: #0284c7;
+    background: #e0f2fe;
+}
+
+.photo-compact-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: #94a3b8;
+    text-align: center;
+    padding: 12px;
+}
+
+.photo-compact-empty i {
+    font-size: 2.2rem;
+    color: #cbd5e1;
+}
+
+.photo-compact-empty span {
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.photo-compact-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    transition: transform 0.2s ease;
+}
+
+.photo-compact-img:hover {
+    transform: scale(1.02);
+}
+
+.photo-compact-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.btn-compact-browse {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: #f1f5f9;
+    color: #1e293b;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-compact-browse:hover {
+    background: #e2e8f0;
+    border-color: #94a3b8;
+    color: #0f172a;
+}
+
+/* =========================================================
+   PHOTO UPLOAD GRID (DROPZONE + PREVIEW - GAMBAR 3 FIGMA)
+========================================================= */
+.rform-photo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+.rform-drop-zone {
+    border: 2px dashed #93c5fd;
+    border-radius: 12px;
+    background: #f0f7ff;
+    padding: 36px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+}
+
+.rform-drop-zone:hover {
+    background: #e6f0fd;
+    border-color: #2563eb;
+}
+
+.rform-drop-icon {
+    font-size: 2.5rem;
+    color: #2563eb;
+    margin-bottom: 10px;
+    transition: transform 0.3s ease;
+}
+
+.rform-drop-zone:hover .rform-drop-icon {
+    transform: translateY(-4px);
+}
+
+.rform-drop-text {
+    font-size: 0.95rem;
+    color: #1e293b;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.rform-drop-hint {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin-top: 12px;
+}
+
+.rform-browse-btn {
+    display: inline-block;
+    padding: 8px 24px;
+    background: linear-gradient(135deg, #0086FF, #005BD4);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 91, 212, 0.2);
+}
+
+.rform-browse-btn:hover {
+    background: linear-gradient(135deg, #0078E8, #0052C2);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 12px -1px rgba(0, 91, 212, 0.3);
+}
+
+.rform-photo-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.rform-preview-label {
+    font-size: 0.85rem;
+    color: #475569;
+    font-weight: 600;
+    align-self: flex-start;
+}
+
+.rform-preview-box {
+    width: 100%;
+    height: 200px;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #f8fafc;
+    overflow: hidden;
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.04);
+}
+
+.rform-preview-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #f8fafc;
+}
+
+.rform-preview-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: #94a3b8;
+    font-size: 0.8rem;
+}
+
+.rform-preview-empty i {
+    font-size: 2.2rem;
+    color: #cbd5e1;
+}
+
+@media (max-width: 768px) {
+    .rform-photo-grid {
+        grid-template-columns: 1fr;
     }
 }

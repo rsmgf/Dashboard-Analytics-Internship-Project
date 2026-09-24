@@ -23,23 +23,15 @@
 
             <div class="genset-content">
                 <div class="genset-page-header">
-                    <div class="genset-page-left">
-                        <button class="genset-back-button" onclick="window.history.back()">
+                    <div class="genset-page-info" style="display: flex; align-items: center; gap: 12px;">
+                        <a href="{{ route('pops.index') }}" class="genset-back-button" title="Kembali ke List POP">
                             <i class="bi bi-arrow-left"></i>
-                        </button>
+                        </a>
                         <div class="genset-header-text">
-                            <div class="genset-breadcrumb">
-                                <span>POP</span>
-                                <i class="bi bi-chevron-right"></i>
-                                <strong>Genset</strong>
-                            </div>
-                            <span class="genset-page-subtitle">
-                                Kode: <strong>{{ $pop->kode_pop }}</strong>
-                                &nbsp;·&nbsp;
-                                {{ $pop->kota_kabupaten }}
-                                &nbsp;—&nbsp;
-                                {{ $gensets->count() }} Genset
-                            </span>
+                            <x-breadcrumb :items="[
+                                ['label' => 'POP', 'route' => 'pops.index'],
+                                ['label' => $pop->nama_pop_display . ': Genset'],
+                            ]" />
                         </div>
                     </div>
 
@@ -50,13 +42,6 @@
                     </a>
                     @endcan
                 </div>
-
-                @if (session('success'))
-                    <div class="alert alert-success" style="margin-bottom: 16px; padding: 12px 16px; background: #d1fae5; border-left: 4px solid #10b981; border-radius: 8px; color: #065f46; font-size: 0.875rem;">
-                        <i class="bi bi-check-circle-fill" style="margin-right: 6px;"></i>
-                        {{ session('success') }}
-                    </div>
-                @endif
 
                 @if ($gensets->isEmpty())
                     <div class="genset-empty-state" style="text-align: center; padding: 60px 20px; color: #94a3b8;">
@@ -127,7 +112,7 @@
                                 <div class="genset-card-footer">
                                     @can('gensets.index.delete')
                                     <button class="genset-delete-button"
-                                        onclick="confirmDelete({{ $genset->id }}, '{{ route('gensets.destroy', [$pop->id, $genset->id]) }}')">
+                                        onclick="confirmDelete('{{ route('gensets.destroy', [$pop->id, $genset->id]) }}', '{{ $genset->nomor_genset }}')">
                                         <i class="bi bi-trash3-fill"></i>
                                         Hapus
                                     </button>
@@ -145,32 +130,42 @@
         </main>
     </div>
 
-    <!-- Modal Konfirmasi Hapus -->
-    <div id="deleteModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center;">
-        <div style="background:#fff; border-radius:12px; padding:28px 32px; max-width:420px; width:90%; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.2);">
-            <i class="bi bi-exclamation-triangle-fill" style="font-size:2.5rem; color:#ef4444; display:block; margin-bottom:12px;"></i>
-            <h3 style="margin:0 0 8px; font-size:1.1rem; font-weight:600; color:#1e293b;">Hapus Genset?</h3>
-            <p style="margin:0 0 24px; color:#64748b; font-size:0.9rem;">Data genset ini akan dihapus secara permanen dan tidak dapat dikembalikan.</p>
-            <div style="display:flex; gap:12px; justify-content:center;">
-                <button onclick="closeDeleteModal()" style="padding:10px 24px; border:1px solid #e2e8f0; border-radius:8px; background:#fff; cursor:pointer; font-size:0.875rem; color:#64748b; font-weight:500;">Batal</button>
-                <form id="deleteForm" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" style="padding:10px 24px; border:none; border-radius:8px; background:#ef4444; color:#fff; cursor:pointer; font-size:0.875rem; font-weight:600;">Ya, Hapus</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        function confirmDelete(id, url) {
-            document.getElementById('deleteForm').action = url;
-            const modal = document.getElementById('deleteModal');
-            modal.style.display = 'flex';
-        }
+        function confirmDelete(url, gensetName) {
+            Swal.fire({
+                title: 'Hapus Genset?',
+                html: `Apakah Anda yakin ingin menghapus data <strong>"${gensetName}"</strong>?<br><small style="color: #64748b;">Data genset ini akan dihapus secara permanen dan tidak dapat dikembalikan.</small>`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: '<i class="bi bi-trash3-fill"></i> Ya, Hapus!',
+                cancelButtonText: 'Batal',
+                reverseButtons: true,
+                focusCancel: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = url;
 
-        function closeDeleteModal() {
-            document.getElementById('deleteModal').style.display = 'none';
+                    const csrfToken = document.createElement('input');
+                    csrfToken.type = 'hidden';
+                    csrfToken.name = '_token';
+                    csrfToken.value = '{{ csrf_token() }}';
+                    form.appendChild(csrfToken);
+
+                    const methodField = document.createElement('input');
+                    methodField.type = 'hidden';
+                    methodField.name = '_method';
+                    methodField.value = 'DELETE';
+                    form.appendChild(methodField);
+
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
         }
     </script>
 </body>

@@ -13,6 +13,7 @@
         'resources/css/sidebar.css',
         'resources/css/rectifier-detail.css'
     ])
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -39,14 +40,13 @@
                         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                             <x-breadcrumb :items="[
                                 ['label' => 'POP', 'route' => 'pops.index'],
-                                ['label' => $pop->nama_pop, 'route' => 'rectifiers.index', 'params' => ['pop' => $pop->id]],
+                                ['label' => $pop->nama_pop_display . ': Rectifier', 'route' => 'rectifiers.index', 'params' => ['pop' => $pop->id]],
                                 ['label' => $rectifier->nama_alias ?? ($rectifier->merk . ' - ' . $rectifier->type)],
                             ]" />
                             @if($rectifier->merk)
                                 <span class="device-badge">{{ $rectifier->merk }}</span>
                             @endif
                         </div>
-                        <span class="pop-sub-info">Kode POP: <strong>{{ $pop->kode_pop }}</strong> &middot; {{ $pop->kota_kabupaten }}, {{ $pop->provinsi }}</span>
                     </div>
                 </div>
 
@@ -184,17 +184,17 @@
                     <div class="photo-wrapper">
                         @if($rectifier->foto_rectifier)
                             <img src="{{ asset('storage/' . $rectifier->foto_rectifier) }}" alt="Photo Rectifier"
+                                 style="width:100%; height:auto; max-height:280px; object-fit:contain; border-radius:8px; cursor:pointer;"
+                                 onclick="openRectifierPhoto('{{ asset('storage/' . $rectifier->foto_rectifier) }}', 'Photo Rectifier')"
                                  onerror="this.style.display='none'; document.getElementById('photoPlaceholder').style.display='flex';">
                             <div id="photoPlaceholder" class="photo-placeholder" style="display:none;">
                                 <i class="bi bi-image"></i>
                                 <span>Foto Rectifier</span>
                             </div>
                         @else
-                            <img src="{{ asset('images/rectifier.png') }}" alt="Photo Rectifier"
-                                 onerror="this.style.display='none'; document.getElementById('photoPlaceholder').style.display='flex';">
-                            <div id="photoPlaceholder" class="photo-placeholder" style="display:none;">
+                            <div id="photoPlaceholder" class="photo-placeholder">
                                 <i class="bi bi-image"></i>
-                                <span>Foto Rectifier</span>
+                                <span>Belum ada foto</span>
                             </div>
                         @endif
                     </div>
@@ -272,7 +272,7 @@
                 <div class="checklist-header-box">
                     <div class="checklist-row">
                         <div class="checklist-label">POP</div>
-                        <div class="checklist-value">: {{ $pop->nama_pop }} ({{ $pop->kode_pop }})</div>
+                        <div class="checklist-value">: {{ $pop->nama_pop_display }}</div>
                         <div class="checklist-label">Tanggal</div>
                         <div class="checklist-value">: <strong>{{ $rectifier->tanggal_pemeriksaan ? \Carbon\Carbon::parse($rectifier->tanggal_pemeriksaan)->translatedFormat('d F Y') : ($rectifier->updated_at ? $rectifier->updated_at->translatedFormat('d F Y') : '-') }}</strong></div>
                     </div>
@@ -350,6 +350,18 @@ function copySerial() {
     } else {
         alert('Serial number: ' + serial);
     }
+}
+
+function openRectifierPhoto(src, title) {
+    if (!src) return;
+    Swal.fire({
+        title: title || 'Photo Rectifier',
+        imageUrl: src,
+        imageAlt: title || 'Photo Rectifier',
+        showCloseButton: true,
+        showConfirmButton: false,
+        width: 'auto',
+    });
 }
 </script>
 </body>

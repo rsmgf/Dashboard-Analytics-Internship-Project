@@ -32,12 +32,11 @@
                             <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                                 <x-breadcrumb :items="[
                                     ['label' => 'POP', 'route' => 'pops.index'],
-                                    ['label' => $pop->nama_pop, 'route' => 'batteries.index', 'params' => ['pop' => $pop->id]],
+                                    ['label' => $pop->nama_pop_display . ': Battery', 'route' => 'batteries.index', 'params' => ['pop' => $pop->id]],
                                     ['label' => $battery->nomor_bank],
                                 ]" />
                                 <span class="device-badge">{{ $battery->merk_battery }} &bull; {{ $battery->kapasitas_battery }} AH</span>
                             </div>
-                            <span class="pop-sub-info">Kode POP: <strong>{{ $pop->kode_pop }}</strong> &middot; {{ $pop->kota_kabupaten }}, {{ $pop->provinsi ?? 'Jambi' }}</span>
                         </div>
                     </div>
 
@@ -49,20 +48,20 @@
                     @endcan
                 </div>
 
-                {{-- Flash Message Success --}}
-                @if (session('success'))
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function () {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil!',
-                                text: "{{ session('success') }}",
-                                timer: 3000,
-                                showConfirmButton: false,
-                            });
-                        });
-                    </script>
-                @endif
+                {{-- Alert Banner Last Update --}}
+                <div class="alert-info-custom">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                    <span>
+                        Terakhir diperbarui:
+                        <strong>
+                            @if($battery->diupdateOleh)
+                                {{ $battery->diupdateOleh->name }} &middot; {{ $battery->updated_at->translatedFormat('d F Y, H:i') }} WIB
+                            @else
+                                {{ $battery->updated_at ? $battery->updated_at->translatedFormat('d F Y, H:i') . ' WIB' : 'Belum ada data pembaruan' }}
+                            @endif
+                        </strong>
+                    </span>
+                </div>
 
                 <div class="detail-container">
                     {{-- SECTION 1: GENERAL INFORMATION --}}
@@ -77,7 +76,7 @@
                                 </div>
                                 <div class="info-card-content">
                                     <span class="info-card-label">POP</span>
-                                    <span class="info-card-value">{{ $pop->kode_pop }} - {{ $pop->nama_pop }}</span>
+                                    <span class="info-card-value">{{ $pop->nama_pop_display }}</span>
                                 </div>
                             </div>
 
@@ -87,7 +86,7 @@
                                 </div>
                                 <div class="info-card-content">
                                     <span class="info-card-label">Building</span>
-                                    <span class="info-card-value">{{ $battery->building ?? $pop->jenis_bangunan }}</span>
+                                    <span class="info-card-value">{{ $pop->jenis_bangunan ?? '-' }}</span>
                                 </div>
                             </div>
 
@@ -107,7 +106,7 @@
                                 </div>
                                 <div class="info-card-content">
                                     <span class="info-card-label">Type POP</span>
-                                    <span class="info-card-value">{{ $battery->type_pop ?? $pop->tipe_pop }}</span>
+                                    <span class="info-card-value">{{ $pop->tipe_pop ?? '-' }}</span>
                                 </div>
                             </div>
 
@@ -117,7 +116,7 @@
                                 </div>
                                 <div class="info-card-content">
                                     <span class="info-card-label">Nomor Recti</span>
-                                    <span class="info-card-value">{{ $battery->nomor_recti }}{{ $battery->recti && $battery->recti !== $battery->nomor_recti ? ' (' . $battery->recti . ')' : '' }}</span>
+                                    <span class="info-card-value">{{ $battery->rectifier->nama_alias ?? '-' }}</span>
                                 </div>
                             </div>
                         </div>
@@ -288,9 +287,6 @@
                                         <span class="field-value">{{ $battery->tanggal_penggantian ? $battery->tanggal_penggantian->format('d/m/Y') : '-' }}</span>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
 
                                 <div class="checklist-row">
                                     <div class="checklist-label">Status Uji Baterai</div>
@@ -302,18 +298,6 @@
                                     </div>
                                 </div>
 
-                                <div class="checklist-row align-top">
-                                    <div class="checklist-label">Terakhir Diperbarui</div>
-                                    <div class="checklist-field">
-                                        <span class="field-colon">:</span>
-                                        <div class="field-value-column">
-                                            <span class="updated-user">{{ $battery->diupdateOleh?->name ?? 'Admin' }}</span>
-                                            <span class="updated-timestamp">
-                                                <i class="bi bi-clock-history"></i> {{ $battery->updated_at ? $battery->updated_at->format('d M Y, H.i') . ' WIB' : '-' }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
 

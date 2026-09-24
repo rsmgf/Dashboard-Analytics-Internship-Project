@@ -28,7 +28,7 @@ function showToast(type, message) {
         toast.style.opacity = '0';
         toast.style.transform = 'translateY(-16px)';
         setTimeout(() => toast.remove(), 400);
-    }, 7000);
+    }, 4000);
 }
 
 document.addEventListener('DOMContentLoaded', function() {

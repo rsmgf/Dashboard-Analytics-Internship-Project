@@ -30,11 +30,8 @@
                         <div class="rectifier-header-text">
                             <x-breadcrumb :items="[
                                 ['label' => 'POP', 'route' => 'pops.index'],
-                                ['label' => $pop->nama_pop . ': kWh'],
+                                ['label' => $pop->nama_pop_display . ': kWh'],
                             ]" />
-                            <span class="rectifier-pop-sub">Kode: <strong>{{ $pop->kode_pop }}</strong> &middot;
-                                {{ $pop->kota_kabupaten }}, {{ $pop->provinsi ?? 'Jambi' }} &mdash; {{ $kwhs->count() }}
-                                kWh</span>
                         </div>
                     </div>
 
@@ -56,14 +53,16 @@
                                 </div>
                                 <div class="checklist-title">
                                     <h3>Checklist kWh</h3>
-                                    <p>{{ $kwh->building }}</p>
+                                    <p>{{ $kwh->nama_alias }}</p>
                                 </div>
-                                <span class="rectifier-number">kWh #{{ $index + 1 }}</span>
+                                <span class="rectifier-number">
+                                    {{ $kwh->nama_alias ?? ('KWH_' . str_pad($index + 1, 2, '0', STR_PAD_LEFT)) }}
+                                </span>
                             </div>
 
                             <div class="rectifier-information">
                                 <div class="equipment-info"><span class="info-label">Type POP</span>
-                                    {{ $kwh->type_pop }}</div>
+                                    {{ $kwh->pop->tipe_pop ?? '-' }}</div>
                                 <div class="equipment-info"><span class="info-label">Phasa</span>
                                     {{ $kwh->jumlah_phasa }}</div>
                                 <div class="equipment-info serial"><span class="info-label">Daya Listrik</span>
@@ -97,7 +96,7 @@
 
                             <div class="rectifier-card-footer">
                                 <button type="button" class="btn-hapus"
-                                    onclick="hapusKwh({{ $kwh->id }}, '{{ $kwh->building }}')">
+                                    onclick="hapusKwh({{ $kwh->id }}, '{{ $kwh->nama_alias }}')">
                                     <i class="bi bi-trash3-fill"></i> Hapus
                                 </button>
                                 <a href="{{ route('kwh.detail', [$pop->id, $kwh->id]) }}" class="detail-button">
@@ -119,17 +118,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        @if (session('success'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Data kWH sudah berhasil kamu tambahkan!',
-                text: @json(session('success')),
-                confirmButtonColor: '#2563eb',
-                timer: 2500,
-                timerProgressBar: true
-            });
-        @endif
-
         const popId = {{ $pop->id }};
         const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').content;
         const kwhDestroyUrlTemplate = "{{ route('kwh.destroy', [$pop->id, '__ID__']) }}";
