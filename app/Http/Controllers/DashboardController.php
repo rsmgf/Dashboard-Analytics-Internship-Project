@@ -58,7 +58,10 @@ class DashboardController extends Controller
             ];
         })->values();
 
-        return view('dashboard.partials.pop-summary', compact('pop', 'rectifiers', 'kwhs', 'batteries', 'batteryGroups'));
+        $acs = $pop->acs()->get();
+        $gensets = $pop->gensets()->get();
+
+        return view('dashboard.partials.pop-summary', compact('pop', 'rectifiers', 'kwhs', 'batteries', 'batteryGroups', 'acs', 'gensets'));
     }
 
     // Isi dropdown Kota/Kabupaten di panel filter
