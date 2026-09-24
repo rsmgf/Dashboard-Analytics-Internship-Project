@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    @vite(['resources/css/sidebar.css', 'resources/css/dashboard.css', 'resources/css/card.css'])
+    @vite(['resources/css/sidebar.css', 'resources/css/dashboard.css', 'resources/css/card.css', 'resources/js/app.js'])
 </head>
 
 <body>
@@ -238,12 +238,15 @@
                 .then(res => res.text())
                 .then(html => {
                     resultBox.innerHTML = html;
+                    // Alpine v3 automatically observes DOM changes, so no manual init needed.
                     initCarousel('rectifierTrack', 'rectifierDots');
                     initCarousel('kwhTrack', 'kwhDots');
                     initCarousel('batteryOuterTrack', 'batteryOuterDots', '.rectifier-group-slide', 1);
                     document.querySelectorAll('.battery-inner-track').forEach(function(el) {
                         initCarousel(el.id, null, '.battery-bank-card');
                     });
+                    initCarousel('acTrack', 'acDots');
+                    initCarousel('gensetTrack', 'gensetDots');
                 })
                 .catch(() => {
                     resultBox.innerHTML = `<div class="dashboard-hint">Gagal memuat data POP.</div>`;

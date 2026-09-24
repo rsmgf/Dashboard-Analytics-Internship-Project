@@ -1,4 +1,6 @@
 
+import './export';
+import './donut-canvas';
 
 import Alpine from 'alpinejs';
 

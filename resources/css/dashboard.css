@@ -577,7 +577,8 @@
     overflow-x: hidden;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
-    padding: 0 4px;
+    padding: 24px 4px;
+    margin: -24px 0;
 }
 
 .dashboard-carousel-arrow {
@@ -674,6 +675,7 @@
 }
 
 .donut-device-card {
+    position: relative;
     flex: 0 0 calc(50% - 10px);
     scroll-snap-align: start;
     min-width: 300px;
@@ -681,21 +683,28 @@
     border: 1px solid #e2e8f0;
     border-radius: 14px;
     padding: 18px;
-    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.3s ease;
+}
+
+.donut-device-card.card-alert-blink::after {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: 14px;
+    pointer-events: none;
+    z-index: 1;
+    animation: card-alert-blink 1.5s infinite ease-in-out;
 }
 
 @keyframes card-alert-blink {
-    0% {
-        border-color: rgba(239, 68, 68, 0.3);
-        box-shadow: 0 0 0 0px rgba(239, 68, 68, 0);
-    }
-    50% {
-        border-color: rgba(239, 68, 68, 1);
-        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.3), 0 0 20px rgba(239, 68, 68, 0.5);
-    }
+
+    0%,
     100% {
-        border-color: rgba(239, 68, 68, 0.3);
-        box-shadow: 0 0 0 0px rgba(239, 68, 68, 0);
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+    }
+
+    50% {
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.55), 0 0 20px rgba(239, 68, 68, 0.45);
     }
 }
 
@@ -764,9 +773,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    /* conic-gradient for live view – overridden by canvas overlay for export */
     background: conic-gradient(var(--donut-color) calc(var(--donut-percent) * 3.6deg), var(--donut-track) 0deg);
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
     cursor: pointer;
+    overflow: hidden;
 }
 
 .donut-chart:hover {
@@ -780,15 +791,28 @@
     inset: 10px;
     background: #ffffff;
     border-radius: 50%;
+    z-index: 0;
+}
+
+/* Canvas overlay drawn by donut-canvas.js for export/print */
+.donut-canvas-overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
 }
 
 .donut-value {
     position: relative;
-    z-index: 1;
+    z-index: 2;
     font-size: 1.25rem;
     font-weight: 700;
     color: #1e293b;
 }
+
 
 .donut-caption {
     font-size: 0.78rem;
@@ -966,25 +990,47 @@
 }
 
 .uji-pill {
-    padding: 3px 10px;
-    border-radius: 999px;
-    font-size: 0.7rem;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.75rem;
     font-weight: 700;
+    border: 1px solid transparent;
 }
 
 .uji-sudah {
     background: #dcfce7;
     color: #15803d;
+    border-color: #15803d;
 }
 
 .uji-jadwal {
     background: #fee2e2;
     color: #b91c1c;
+    border-color: #b91c1c;
 }
 
 .uji-belum {
     background: #fef3c7;
     color: #b45309;
+    border-color: #b45309;
+}
+
+.pm-badge-success {
+    background: rgba(34, 197, 94, 0.2);
+    color: #15803d;
+    border: 1px solid rgba(34, 197, 94, 0.4);
+}
+
+.pm-badge-danger {
+    background: rgba(239, 68, 68, 0.2);
+    color: #b91c1c;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+.pm-badge-warning {
+    background: rgba(234, 179, 8, 0.2);
+    color: #a16207;
+    border: 1px solid rgba(234, 179, 8, 0.4);
 }
 
 .perf-text {
@@ -1206,4 +1252,152 @@
     .dashboard-module-cards {
         grid-template-columns: 1fr;
     }
+}
+
+/* ============ PRINT STYLES ============ */
+/* Print is now handled via iframe in export.js – minimal styles needed here */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    .print-area-active,
+    .print-area-active * {
+        visibility: visible;
+    }
+
+    .print-area-active {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: auto;
+    }
+
+    .export-menu-wrapper,
+    .export-dropdown,
+    .export-menu-btn,
+    .dashboard-carousel-arrow,
+    .dashboard-carousel-dots {
+        display: none !important;
+    }
+}
+
+.exporting-mode .dashboard-carousel-arrow,
+.exporting-mode .dashboard-carousel-dots,
+.exporting-mode .export-dropdown,
+.exporting-mode .export-menu-btn {
+    display: none !important;
+}
+
+/* ============ EXPORT DROPDOWN STYLES ============ */
+.export-menu-wrapper {
+    position: relative;
+}
+
+.export-menu-btn {
+    background: transparent;
+    border: none;
+    color: #64748b;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.export-menu-btn:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+.export-dropdown {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: #1e293b;
+    color: #f8fafc;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    min-width: 200px;
+    z-index: 50;
+    padding: 8px 0;
+    margin-top: 4px;
+}
+
+.export-dropdown a,
+.export-dropdown button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 10px 16px;
+    color: #f1f5f9;
+    font-size: 0.85rem;
+    text-decoration: none;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.export-dropdown a:hover,
+.export-dropdown button:hover {
+    background: #334155;
+}
+
+.export-dropdown-divider {
+    height: 1px;
+    background: #334155;
+    margin: 6px 0;
+}
+
+/* ============ DATA TABLE (ACCORDION) ============ */
+.data-table-wrapper {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    margin-top: 15px;
+    padding: 15px;
+    animation: slideDown 0.3s ease-out forwards;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.data-table-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.data-table-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    font-size: 0.8rem;
+}
+
+.dt-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.dt-label {
+    color: #64748b;
+    margin-bottom: 2px;
+}
+
+.dt-value {
+    color: #0f172a;
+    font-weight: 500;
 }

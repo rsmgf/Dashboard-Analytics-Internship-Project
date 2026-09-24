@@ -156,6 +156,32 @@ class Battery extends Model
         };
     }
 
+    public function getStatusUjiTextAttribute(): string
+    {
+        if (!$this->tanggal_uji_terakhir) {
+            return '-';
+        }
+
+        $nextUji = $this->pm_berikutnya;
+        $now = now();
+
+        if ($now->startOfDay()->greaterThan($nextUji->startOfDay())) {
+            $diffYears = (int) $nextUji->startOfDay()->diffInYears($now->startOfDay());
+            $diffDays = $nextUji->startOfDay()->copy()->addYears($diffYears)->diffInDays($now->startOfDay());
+            
+            $text = '(lewat ' . $diffYears . ' tahun dan ' . max(0, $diffDays) . ' hari)';
+            
+            return $text;
+        }
+
+        $diffYears = (int) $now->startOfDay()->diffInYears($nextUji->startOfDay());
+        $diffDays = $now->startOfDay()->copy()->addYears($diffYears)->diffInDays($nextUji->startOfDay());
+        
+        $text = '(dalam ' . $diffYears . ' tahun dan ' . max(0, $diffDays) . ' hari)';
+        
+        return $text;
+    }
+
     public function getPerformaLabelBersihAttribute(): string
     {
         return $this->performa_baterai ? preg_replace('/^\d+-/', '', $this->performa_baterai) : 'BLM UJI BATT';
