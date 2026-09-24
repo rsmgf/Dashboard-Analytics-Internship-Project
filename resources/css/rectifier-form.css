@@ -551,3 +551,97 @@ html, body {
     .rform-output-grid { grid-template-columns: 1fr; }
 }
 
+/* Compact Photo Upload Pattern */
+.photo-compact-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.photo-compact-preview {
+    width: 100%;
+    max-width: 340px;
+    height: 180px;
+    background: #f8fafc;
+    border: 2px dashed #cbd5e1;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.photo-compact-preview:hover {
+    border-color: #0086ff;
+    background: #f0f9ff;
+}
+
+.photo-compact-preview.dragover {
+    border-color: #0086ff;
+    background: #e0f2fe;
+}
+
+.photo-compact-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: #94a3b8;
+    text-align: center;
+    padding: 12px;
+}
+
+.photo-compact-empty i {
+    font-size: 2.2rem;
+    color: #cbd5e1;
+}
+
+.photo-compact-empty span {
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.photo-compact-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    transition: transform 0.2s ease;
+}
+
+.photo-compact-img:hover {
+    transform: scale(1.02);
+}
+
+.photo-compact-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.btn-compact-browse {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: #f1f5f9;
+    color: #1e293b;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-compact-browse:hover {
+    background: #e2e8f0;
+    border-color: #94a3b8;
+    color: #0f172a;
+}
+
+

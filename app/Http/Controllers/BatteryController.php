@@ -19,12 +19,12 @@ class BatteryController extends Controller
         $pop = Pop::findOrFail($pop_id);
         $batteries = Battery::where('pop_id', $pop->id)
             ->with(['rectifier', 'diupdateOleh'])
-            ->orderBy('nomor_recti')
+            ->orderBy('rectifier_id')
             ->orderBy('nomor_bank')
             ->get();
 
         $rectifiers = Rectifier::where('pop_id', $pop->id)->get();
-        $groupedBatteries = $batteries->groupBy('nomor_recti');
+        $groupedBatteries = $batteries->groupBy('rectifier_id');
 
         $rectifierBackupStats = [];
         foreach ($groupedBatteries as $nomorRecti => $group) {
@@ -56,7 +56,7 @@ class BatteryController extends Controller
                 }
             }
 
-            $rectifierBackupStats[$nomorRecti] = [
+            $rectifierBackupStats[$rectifierId] = [
                 'rectifier'       => $matchingRectifier,
                 'total_uji'       => $totalKapasitasUji,
                 'beban'           => $beban,
@@ -98,9 +98,9 @@ class BatteryController extends Controller
         // Rectifier dipilih via ID integer dari dropdown
         $rectifierId       = (int) $validated['rectifier_id'];
         $matchingRectifier = Rectifier::where('pop_id', $pop->id)->find($rectifierId);
-        $nomorRecti        = $matchingRectifier
+        $nomorRecti = $matchingRectifier
             ? $this->generateNomorRecti($pop, $rectifierId)
-            : 'UNKNOWN';
+            : null;
 
         // Hitung persentase kapasitas & performa baterai
         $kapasitasBattery = (float) $validated['kapasitas_battery'];
@@ -148,11 +148,7 @@ class BatteryController extends Controller
         Battery::create([
             'pop_id'                   => $pop->id,
             'rectifier_id'             => $matchingRectifier?->id,
-            'building'                 => $validated['building'],
             'pic'                      => $validated['pic'],
-            'type_pop'                 => $validated['type_pop'],
-            'recti'                    => $nomorRecti,
-            'nomor_recti'              => $nomorRecti,
             'nomor_bank'               => $validated['nomor_bank'],
             'merk_battery'             => $validated['merk_battery'],
             'tipe_battery'             => $validated['tipe_battery'],
@@ -231,9 +227,9 @@ class BatteryController extends Controller
         // Rectifier dipilih via ID integer dari dropdown
         $rectifierId       = (int) $validated['rectifier_id'];
         $matchingRectifier = Rectifier::where('pop_id', $pop->id)->find($rectifierId);
-        $nomorRecti        = $matchingRectifier
+        $nomorRecti = $matchingRectifier
             ? $this->generateNomorRecti($pop, $rectifierId)
-            : $battery->nomor_recti;
+            : null;
 
         $kapasitasBattery = (float) $validated['kapasitas_battery'];
         $kapasitasUji     = isset($validated['kapasitas_uji']) && $validated['kapasitas_uji'] !== ''
@@ -273,11 +269,7 @@ class BatteryController extends Controller
 
         $updateData = [
             'rectifier_id'             => $matchingRectifier?->id,
-            'building'                 => $validated['building'],
             'pic'                      => $validated['pic'],
-            'type_pop'                 => $validated['type_pop'],
-            'recti'                    => $nomorRecti,
-            'nomor_recti'              => $nomorRecti,
             'nomor_bank'               => $validated['nomor_bank'],
             'merk_battery'             => $validated['merk_battery'],
             'tipe_battery'             => $validated['tipe_battery'],

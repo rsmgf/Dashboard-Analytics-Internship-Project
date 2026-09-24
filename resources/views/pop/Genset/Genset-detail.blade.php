@@ -10,6 +10,7 @@
         'resources/css/sidebar.css',
         'resources/css/genset-detail.css'
     ])
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="app-container">
@@ -21,10 +22,15 @@
 
             <div class="rectifier-content">
                 <div class="detail-page-header">
-                    <div class="rectifier-page-info">
-                        <a href="{{ route('gensets.index', $pop->id) }}" class="back-button" title="Kembali">
+                    <div class="rectifier-page-info" style="display: flex; align-items: center; gap: 12px;">
+                        <a href="{{ route('gensets.index', $pop->id) }}" class="back-button" title="Kembali ke List Genset">
                             <i class="bi bi-arrow-left"></i>
                         </a>
+                        <x-breadcrumb :items="[
+                            ['label' => 'POP', 'route' => 'pops.index'],
+                            ['label' => $pop->nama_pop_display . ': Genset', 'route' => 'gensets.index', 'params' => ['pop' => $pop->id]],
+                            ['label' => $genset->nomor_genset],
+                        ]" />
                     </div>
                     <div class="page-action-buttons">
                         @can('gensets.index.update')
@@ -35,12 +41,20 @@
                     </div>
                 </div>
 
-                @if (session('success'))
-                    <div style="margin-bottom: 16px; padding: 12px 16px; background: #d1fae5; border-left: 4px solid #10b981; border-radius: 8px; color: #065f46; font-size: 0.875rem;">
-                        <i class="bi bi-check-circle-fill" style="margin-right: 6px;"></i>
-                        {{ session('success') }}
-                    </div>
-                @endif
+                {{-- Alert Banner Last Update --}}
+                <div class="alert-info-custom">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                    <span>
+                        Terakhir diperbarui:
+                        <strong>
+                            @if($genset->diupdateOleh)
+                                {{ $genset->diupdateOleh->name }} &middot; {{ $genset->updated_at->translatedFormat('d F Y, H:i') }} WIB
+                            @else
+                                {{ $genset->updated_at ? $genset->updated_at->translatedFormat('d F Y, H:i') . ' WIB' : 'Belum ada data pembaruan' }}
+                            @endif
+                        </strong>
+                    </span>
+                </div>
 
                 <div class="detail-container">
                     <!-- General Information -->
@@ -49,7 +63,7 @@
                         <div class="detail-grid-3">
                             <div class="detail-item">
                                 <span class="detail-label">POP</span>
-                                <span class="detail-value">{{ $pop->kode_pop }}</span>
+                                <span class="detail-value">{{ $pop->nama_pop_display }}</span>
                             </div>
                             <div class="detail-item">
                                 <span class="detail-label">Kota / Kabupaten</span>
@@ -143,7 +157,10 @@
                             <h3 class="form-section-title">Photo Genset</h3>
                             <div class="preview-box-large">
                                 @if ($genset->photo_genset)
-                                    <img src="{{ asset('storage/' . $genset->photo_genset) }}" alt="Foto Genset">
+                                    <img src="{{ asset('storage/' . $genset->photo_genset) }}" alt="Foto Genset"
+                                         style="width:100%; height:auto; max-height:220px; object-fit:contain; border-radius:8px; cursor:pointer;"
+                                         title="Klik untuk melihat ukuran penuh"
+                                         onclick="openPhotoLightbox('{{ asset('storage/' . $genset->photo_genset) }}', '{{ addslashes($genset->keterangan_gambar_genset ?? 'Foto Genset') }}')">
                                 @else
                                     <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:200px; color:#94a3b8;">
                                         <i class="bi bi-image" style="font-size:2.5rem;"></i>
@@ -164,7 +181,10 @@
                             <h3 class="form-section-title">Photo Engine</h3>
                             <div class="preview-box-large">
                                 @if ($genset->photo_engine)
-                                    <img src="{{ asset('storage/' . $genset->photo_engine) }}" alt="Foto Engine">
+                                    <img src="{{ asset('storage/' . $genset->photo_engine) }}" alt="Foto Engine"
+                                         style="width:100%; height:auto; max-height:220px; object-fit:contain; border-radius:8px; cursor:pointer;"
+                                         title="Klik untuk melihat ukuran penuh"
+                                         onclick="openPhotoLightbox('{{ asset('storage/' . $genset->photo_engine) }}', '{{ addslashes($genset->keterangan_gambar_engine ?? 'Foto Engine') }}')">
                                 @else
                                     <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:200px; color:#94a3b8;">
                                         <i class="bi bi-image" style="font-size:2.5rem;"></i>
@@ -181,16 +201,26 @@
                         </div>
                     </div>
 
-                    <!-- Update Info -->
-                    @if ($genset->diupdateOleh)
-                    <div style="padding: 12px 16px; background: #f8fafc; border-radius: 8px; font-size: 0.8rem; color: #64748b; display:flex; align-items:center; gap:8px;">
-                        <i class="bi bi-clock-history"></i>
-                        <span>Terakhir diupdate oleh <strong>{{ $genset->diupdateOleh->name }}</strong> pada {{ $genset->updated_at->format('d M Y, H:i') }}</span>
-                    </div>
-                    @endif
                 </div>
             </div>
         </main>
     </div>
+
+    <script>
+    function openPhotoLightbox(src, caption) {
+        if (!src) return;
+        Swal.fire({
+            title: caption || 'Foto Genset',
+            imageUrl: src,
+            imageAlt: caption,
+            showCloseButton: true,
+            showConfirmButton: false,
+            width: 'auto',
+            customClass: {
+                popup: 'swal-popup-custom'
+            }
+        });
+    }
+    </script>
 </body>
 </html>

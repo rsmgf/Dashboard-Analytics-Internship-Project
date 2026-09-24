@@ -76,7 +76,7 @@
                     <div class="add-pop-header-text">
                         <x-breadcrumb :items="[
                             ['label' => 'POP', 'route' => 'pops.index'],
-                            ['label' => 'Edit POP (' . $pop->nama_pop . ')'],
+                            ['label' => 'Edit POP (' . $pop->nama_pop_display . ')'],
                         ]" />
                         <p class="add-pop-subheading">Kode POP: <strong>{{ $pop->kode_pop }}</strong> &middot; {{ $pop->kota_kabupaten }}, {{ $pop->provinsi }}</p>
                     </div>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Card Rectifier - {{ $pop->nama_pop }} - PLN Icon Plus</title>
+    <title>Card Rectifier - {{ $pop->nama_pop_display }} - PLN Icon Plus</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
@@ -31,14 +31,10 @@
                         <a href="{{ route('pops.index') }}" class="back-button" title="Kembali ke List POP">
                             <i class="bi bi-arrow-left"></i>
                         </a>
-                        <div class="rectifier-header-text">
-                            <x-breadcrumb :items="[
-                                ['label' => 'POP', 'route' => 'pops.index'],
-                                ['label' => $pop->nama_pop]
-                            ]" />
-                            <span class="rectifier-pop-sub">Kode: <strong>{{ $pop->kode_pop }}</strong> &middot; {{ $pop->kota_kabupaten }}, {{ $pop->provinsi }} &mdash;
-                                {{ $rectifiers->count() }} Rectifier</span>
-                        </div>
+                        <x-breadcrumb :items="[
+                            ['label' => 'POP', 'route' => 'pops.index'],
+                            ['label' => $pop->nama_pop_display]
+                        ]" />
                     </div>
 
                     @can('rectifiers.index.create')
@@ -64,7 +60,7 @@
                                 </div>
 
                                 <span class="rectifier-number">
-                                    Rectifier #{{ $loop->iteration }}
+                                    {{ $rectifier->nama_alias ?? ('RECT-' . str_pad($loop->iteration, 2, '0', STR_PAD_LEFT)) }}
                                 </span>
                             </div>
 
@@ -175,26 +171,6 @@
     {{-- SweetAlert2 JS --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        @if (session('success'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil!',
-                text: "{{ session('success') }}",
-                showConfirmButton: false,
-                timer: 2500,
-                timerProgressBar: true
-            });
-        @endif
-
-        @if (session('error'))
-            Swal.fire({
-                icon: 'error',
-                title: 'Gagal!',
-                text: "{{ session('error') }}",
-                confirmButtonColor: '#ef4444'
-            });
-        @endif
-
         function hapusRectifier(deleteUrl, rectifierName) {
             Swal.fire({
                 title: 'Hapus Rectifier?',

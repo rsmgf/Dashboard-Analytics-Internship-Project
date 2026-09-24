@@ -37,10 +37,10 @@
                 <div class="rform-header-text">
                     <x-breadcrumb :items="[
                         ['label' => 'POP', 'route' => 'pops.index'],
-                        ['label' => $pop->nama_pop, 'route' => 'rectifiers.index', 'params' => ['pop' => $pop->id]],
-                        ['label' => 'Edit Rectifier (' . ($rectifier->nama_alias ?? $rectifier->merk) . ')'],
+                        ['label' => $pop->nama_pop_display . ': Rectifier', 'route' => 'rectifiers.index', 'params' => ['pop' => $pop->id]],
+                        ['label' => $rectifier->nama_alias ?? ($rectifier->merk . ' - ' . $rectifier->type), 'route' => 'rectifiers.show', 'params' => [$pop->id, $rectifier->id]],
+                        ['label' => 'Edit Rectifier'],
                     ]" />
-                    <p class="rform-page-sub">Kode POP: <strong>{{ $pop->kode_pop }}</strong> &middot; {{ $pop->kota_kabupaten }}, {{ $pop->provinsi }}</p>
                 </div>
             </div>
 
@@ -83,7 +83,7 @@
 
                             <div class="rform-group">
                                 <label class="rform-label">POP</label>
-                                <input type="text" class="rform-input" value="{{ $pop->kode_pop }}" readonly>
+                                <input type="text" class="rform-input" value="{{ $pop->nama_pop_display }}" readonly>
                             </div>
 
                             <div class="rform-group">
@@ -107,16 +107,15 @@
 
                         </div>
 
-                        {{-- Nama Alias (digunakan sebagai judul card) --}}
+                        {{-- Nama Alias (auto-generate, read-only di edit) --}}
                         <div class="rform-row rform-row-2">
                             <div class="rform-group">
-                                <label class="rform-label">Nama Alias Rectifier <span class="rform-required">*</span>
-                                    <small style="font-weight:400; color:#94a3b8;">(tampil di card)</small>
+                                <label class="rform-label">Nomor Rectifier
+                                    <small style="font-weight:400; color:#94a3b8;">(auto-generate, tidak bisa diubah)</small>
                                 </label>
-                                <input type="text" name="nama_alias" class="rform-input {{ $errors->has('nama_alias') ? 'is-invalid' : '' }}"
-                                       value="{{ old('nama_alias', $rectifier->nama_alias) }}"
-                                       placeholder="Contoh: Rectifier Utama 1">
-                                @error('nama_alias') <span class="rform-error">{{ $message }}</span> @enderror
+                                <input type="text" class="rform-input"
+                                       value="{{ $rectifier->nama_alias }}" readonly
+                                       style="color:#94a3b8;">
                             </div>
                             <div class="rform-group">
                                 <label class="rform-label">Deskripsi</label>
@@ -263,9 +262,9 @@
                                 <div class="rform-drop-icon">
                                     <i class="bi bi-cloud-arrow-up-fill"></i>
                                 </div>
-                                <div class="rform-drop-text">{{ $rectifier->foto_rectifier ? 'Klik untuk ganti foto' : 'Masukkan file disini' }}</div>
+                                <div class="rform-drop-text" id="dropText">{{ $rectifier->foto_rectifier ? 'Klik untuk ganti foto' : 'Masukkan file disini' }}</div>
                                 <button type="button" class="rform-browse-btn">Browse</button>
-                                <div class="rform-drop-hint">Format: JPG, JPEG, PNG • Maks. ukuran: 10 MB</div>
+                                <div class="rform-drop-hint">Format: JPG, JPEG, PNG &bull; Maks. ukuran: 10 MB</div>
                                 <input type="file" id="fotoInput" name="foto_rectifier" accept=".jpg,.jpeg,.png"
                                        style="display:none;" onchange="previewFoto(this)">
                             </div>
@@ -283,6 +282,7 @@
                                 </div>
                             </div>
                         </div>
+                        @error('foto_rectifier')<div style="color:#ef4444;font-size:0.8rem;margin-top:4px;">{{ $message }}</div>@enderror
                     </div>
                 </div>
 
@@ -656,29 +656,47 @@
 
     // ---- Photo preview ----
     function previewFoto(input) {
-        const file = input.files[0];
+        const file = input.files ? input.files[0] : null;
         if (!file) return;
         const reader = new FileReader();
         reader.onload = function (e) {
-            document.getElementById('fotoPreview').src = e.target.result;
-            document.getElementById('fotoPreview').style.display = 'block';
-            document.getElementById('fotoEmpty').style.display = 'none';
+            const img = document.getElementById('fotoPreview');
+            const empty = document.getElementById('fotoEmpty');
+            const btnText = document.getElementById('btnBrowseText');
+            const btnIcon = document.getElementById('btnBrowseIcon');
+            if (img) {
+                img.src = e.target.result;
+                img.style.display = 'block';
+            }
+            if (empty) empty.style.display = 'none';
+            if (btnText) btnText.textContent = 'Ganti Foto';
+            if (btnIcon) btnIcon.className = 'bi bi-arrow-repeat';
         };
         reader.readAsDataURL(file);
     }
 
     // Drag & drop support
-    const dropZone = document.getElementById('dropZone');
-    if (dropZone) {
-        dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.style.background = '#dbeafe'; });
-        dropZone.addEventListener('dragleave', () => { dropZone.style.background = ''; });
-        dropZone.addEventListener('drop', e => {
+    const previewBox = document.getElementById('previewBoxRectifier');
+    if (previewBox) {
+        ['dragenter', 'dragover'].forEach(name => {
+            previewBox.addEventListener(name, (e) => {
+                e.preventDefault();
+                previewBox.classList.add('dragover');
+            });
+        });
+        ['dragleave', 'drop'].forEach(name => {
+            previewBox.addEventListener(name, (e) => {
+                e.preventDefault();
+                previewBox.classList.remove('dragover');
+            });
+        });
+        previewBox.addEventListener('drop', e => {
             e.preventDefault();
-            dropZone.style.background = '';
-            const file = e.dataTransfer.files[0];
-            if (file) {
-                document.getElementById('fotoInput').files = e.dataTransfer.files;
-                previewFoto({ files: [file] });
+            previewBox.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                document.getElementById('fotoInput').files = files;
+                previewFoto({ files: files });
             }
         });
     }
@@ -687,8 +705,14 @@
     function resetForm() {
         document.getElementById('rectifierForm').reset();
         document.getElementById('moduleContainer').innerHTML = '';
-        document.getElementById('fotoPreview').style.display = 'none';
-        document.getElementById('fotoEmpty').style.display = 'flex';
+        const img = document.getElementById('fotoPreview');
+        const empty = document.getElementById('fotoEmpty');
+        const btnText = document.getElementById('btnBrowseText');
+        const btnIcon = document.getElementById('btnBrowseIcon');
+        if (img) { img.src = ''; img.style.display = 'none'; }
+        if (empty) empty.style.display = 'flex';
+        if (btnText) btnText.textContent = 'Pilih Foto';
+        if (btnIcon) btnIcon.className = 'bi bi-camera-fill';
         updateSlotStatusBadge();
         updateJumlahModul();
     }

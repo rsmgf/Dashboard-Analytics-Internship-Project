@@ -25,9 +25,7 @@ class UpdateBatteryRequest extends FormRequest
     {
         return [
             // General Information
-            'building'                 => ['required', 'string', 'max:255'],
             'pic'                      => ['required', 'string', 'max:255'],
-            'type_pop'                 => ['required', 'string', 'max:255'],
 
             // Checklist Baterai
             'rectifier_id'             => ['required', 'integer', 'min:1'],
@@ -43,7 +41,6 @@ class UpdateBatteryRequest extends FormRequest
             'vrla_4'                   => ['nullable', 'string', 'max:20'],
             'kapasitas_battery_persen' => ['nullable', 'numeric', 'min:0'],
             'performa_baterai'         => ['nullable', 'string', 'max:255'],
-            'recti'                    => ['nullable', 'string', 'max:255'],
             'tegangan'                 => ['nullable', 'numeric', 'min:0'],
             'photo_battery'            => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:10240'],
             'keterangan_gambar'        => ['nullable', 'string', 'max:255'],
@@ -58,9 +55,7 @@ class UpdateBatteryRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'building.required'          => 'Building wajib diisi.',
             'pic.required'               => 'PIC wajib diisi.',
-            'type_pop.required'          => 'Type POP wajib diisi.',
             'rectifier_id.required'      => 'Nomor Rectifier wajib dipilih.',
             'rectifier_id.integer'       => 'Rectifier tidak valid.',
             'nomor_bank.required'        => 'Nomor Bank Baterai wajib diisi.',

@@ -34,17 +34,15 @@
                                 <x-breadcrumb :items="[
                                     ['label' => 'POP', 'route' => 'pops.index'],
                                     [
-                                        'label' => $pop->nama_pop . ': kWh',
+                                        'label' => $pop->nama_pop_display . ': kWh',
                                         'route' => 'kwh.card',
                                         'params' => ['pop' => $pop->id],
                                     ],
-                                    ['label' => $kwh->building],
+                                    ['label' => $kwh->nama_alias],
                                 ]" />
                                 <span class="device-badge">{{ $kwh->jumlah_phasa }} &bull;
                                     {{ $kwh->daya_ps_gi_formatted }}</span>
                             </div>
-                            <span class="pop-sub-info">Kode POP: <strong>{{ $pop->kode_pop }}</strong> &middot;
-                                {{ $pop->kota_kabupaten }}, {{ $pop->provinsi ?? 'Jambi' }}</span>
                         </div>
                     </div>
 
@@ -57,8 +55,14 @@
                 <div class="alert-info-custom">
                     <i class="bi bi-exclamation-circle-fill"></i>
                     <span>
-                        Terakhir diperbarui oleh: <strong>{{ $kwh->diupdateOleh->name ?? '-' }} &middot;
-                            {{ $kwh->updated_at->translatedFormat('d F Y, H:i') }} WIB</strong>
+                        Terakhir diperbarui:
+                        <strong>
+                            @if($kwh->diupdateOleh)
+                                {{ $kwh->diupdateOleh->name }} &middot; {{ $kwh->updated_at->translatedFormat('d F Y, H:i') }} WIB
+                            @else
+                                {{ $kwh->updated_at ? $kwh->updated_at->translatedFormat('d F Y, H:i') . ' WIB' : 'Belum ada data pembaruan' }}
+                            @endif
+                        </strong>
                     </span>
                 </div>
 
@@ -70,7 +74,7 @@
                     <div class="general-grid">
                         <div class="general-item">
                             <span class="general-label">POP</span>
-                            <span class="general-value">{{ $pop->nama_pop }} ({{ $pop->kode_pop }})</span>
+                            <span class="general-value">{{ $pop->nama_pop_display }}</span>
                         </div>
 
                         <div class="general-item">
@@ -80,13 +84,13 @@
                         </div>
 
                         <div class="general-item">
-                            <span class="general-label">Building</span>
-                            <span class="general-value">{{ $kwh->building }}</span>
+                            <span class="general-label">Building / Jenis Bangunan</span>
+                            <span class="general-value">{{ $pop->jenis_bangunan ?? '-' }}</span>
                         </div>
 
                         <div class="general-item">
                             <span class="general-label">Type POP</span>
-                            <span class="general-value">{{ $kwh->type_pop }}</span>
+                            <span class="general-value">{{ $pop->tipe_pop ?? '-' }}</span>
                         </div>
 
                         <div class="general-item">
@@ -137,13 +141,14 @@
                                                     <th style="width: 25%;">Nilai</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                             <tbody>
                                                 <tr>
                                                     <td><strong>R - N</strong></td>
                                                     <td><code>{{ $kwh->teg_rn }} Vac</code></td>
                                                     <td><strong>R</strong></td>
                                                     <td><code>{{ $kwh->arus_r }} A</code></td>
                                                 </tr>
+                                                @if ($kwh->jumlah_phasa === '3 Phasa')
                                                 <tr>
                                                     <td><strong>S - N</strong></td>
                                                     <td><code>{{ $kwh->teg_sn }} Vac</code></td>
@@ -174,6 +179,7 @@
                                                     <td><span style="color: #94a3b8;">&mdash;</span></td>
                                                     <td><span style="color: #94a3b8;">&mdash;</span></td>
                                                 </tr>
+                                                @endif
                                                 <tr>
                                                     <td><strong>N - G</strong></td>
                                                     <td><code>{{ $kwh->teg_ng }} Vac</code></td>
@@ -284,46 +290,21 @@
         </main>
     </div>
 
-    <div id="imageLightboxModal" class="kwh-lightbox-modal" onclick="closeKwhLightbox(event)">
-        <div class="kwh-lightbox-wrapper">
-            <button type="button" class="kwh-lightbox-close" onclick="closeKwhLightboxDirect()" title="Tutup">
-                <i class="bi bi-x-lg"></i>
-            </button>
-            <img id="lightboxImg" class="kwh-lightbox-img" src="" alt="Preview Foto HD">
-            <div id="lightboxCaption" class="kwh-lightbox-caption"></div>
-        </div>
-    </div>
-
     <script>
         function openKwhLightbox(src, caption) {
-            const modal = document.getElementById('imageLightboxModal');
-            const img = document.getElementById('lightboxImg');
-            const cap = document.getElementById('lightboxCaption');
-            if (modal && img) {
-                img.src = src;
-                if (cap) cap.innerText = caption || 'Bukti Foto kWh';
-                modal.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            }
+            Swal.fire({
+                title: caption || 'Foto Dokumentasi kWh',
+                imageUrl: src,
+                imageAlt: caption || 'Foto kWh',
+                showCloseButton: true,
+                showConfirmButton: false,
+                width: 'auto',
+                customClass: {
+                    popup: 'swal-popup-custom'
+                }
+            });
         }
-
-        function closeKwhLightbox(e) {
-            if (e.target.id === 'imageLightboxModal') closeKwhLightboxDirect();
-        }
-
-        function closeKwhLightboxDirect() {
-            const modal = document.getElementById('imageLightboxModal');
-            if (modal) {
-                modal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        }
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeKwhLightboxDirect();
-        });
     </script>
-
 </body>
 
 </html>

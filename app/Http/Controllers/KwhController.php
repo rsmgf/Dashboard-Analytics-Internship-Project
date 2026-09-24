@@ -50,9 +50,7 @@ class KwhController extends Controller
         try {
             $kwh = Kwh::create([
                 'pop_id' => $pop->id,
-                'building' => $validated['building'],
                 'pic' => $validated['pic'],
-                'type_pop' => $validated['type_pop'],
                 'id_customer_pln' => $validated['id_customer_pln'],
                 'tanggal_pemeriksaan' => $validated['tanggal_pemeriksaan'],
                 'daya_ps_gi' => $dayaPsGi,
@@ -150,9 +148,7 @@ class KwhController extends Controller
         DB::beginTransaction();
         try {
             $kwh->update([
-                'building' => $validated['building'],
                 'pic' => $validated['pic'],
-                'type_pop' => $validated['type_pop'],
                 'id_customer_pln' => $validated['id_customer_pln'],
                 'tanggal_pemeriksaan' => $validated['tanggal_pemeriksaan'],
                 'daya_ps_gi' => $dayaPsGi,

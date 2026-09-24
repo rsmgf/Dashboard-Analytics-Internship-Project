@@ -11,9 +11,7 @@ class Kwh extends Model
 
     protected $fillable = [
         'pop_id',
-        'building',
         'pic',
-        'type_pop',
         'id_customer_pln',
         'tanggal_pemeriksaan',
         'daya_ps_gi',
@@ -146,4 +144,18 @@ class Kwh extends Model
             default => 'bi-x-octagon-fill',
         };
     }
+
+    public function getNamaAliasAttribute(): string
+    {
+        $kodePop = $this->pop ? $this->pop->kode_pop : 'POP';
+        if ($this->exists && $this->pop_id) {
+            $index = static::where('pop_id', $this->pop_id)
+                ->where('id', '<=', $this->id)
+                ->count();
+            $num = str_pad((string)($index ?: 1), 2, '0', STR_PAD_LEFT);
+            return "{$kodePop}_KWH{$num}";
+        }
+        return "{$kodePop}_KWH01";
+    }
 }
+

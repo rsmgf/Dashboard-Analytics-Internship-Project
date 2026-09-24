@@ -12,11 +12,7 @@ class Battery extends Model
     protected $fillable = [
         'pop_id',
         'rectifier_id',
-        'building',
         'pic',
-        'type_pop',
-        'recti',
-        'nomor_recti',
         'nomor_bank',
         'merk_battery',
         'tipe_battery',
