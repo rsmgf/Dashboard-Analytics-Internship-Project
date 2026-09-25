@@ -60,7 +60,7 @@
                     <div class="rform-two-col">
                         <div class="rform-section">
                             <div class="rform-section-header">
-                                <span class="rform-section-step">1</span>
+                                <i class="bi bi-info-circle-fill" style="color:#2563eb; margin-right:8px;"></i>
                                 General Information
                             </div>
                             <div class="rform-section-body">
@@ -72,18 +72,20 @@
                                     </div>
 
                                     <div class="rform-group">
-                                        <label class="rform-label">Building / Jenis Bangunan</label>
+                                        <label class="rform-label">Nomor kWh
+                                            <small style="font-weight:400; color:#94a3b8;">(auto-generate)</small>
+                                        </label>
                                         <input type="text" class="rform-input"
-                                            value="{{ $pop->jenis_bangunan ?? '-' }}" readonly>
+                                            value="{{ $suggestedNomorKwh ?? ($pop->kode_pop . '_KWH01') }}" readonly
+                                            style="background:#f1f5f9; color:#64748b; cursor:not-allowed;">
                                     </div>
                                 </div>
 
                                 <div class="rform-row rform-row-2">
                                     <div class="rform-group">
-                                        <label class="rform-label">PIC / Petugas <span
-                                                class="rform-required">*</span></label>
-                                        <input type="text" name="pic" class="rform-input"
-                                            value="{{ old('pic') }}" placeholder="Masukkan nama PIC" required>
+                                        <label class="rform-label">Building / Jenis Bangunan</label>
+                                        <input type="text" class="rform-input"
+                                            value="{{ $pop->jenis_bangunan ?? '-' }}" readonly>
                                     </div>
 
                                     <div class="rform-group">
@@ -95,11 +97,10 @@
 
                                 <div class="rform-row rform-row-2">
                                     <div class="rform-group">
-                                        <label class="rform-label">ID Customer (PLN) <span
+                                        <label class="rform-label">PIC / Petugas <span
                                                 class="rform-required">*</span></label>
-                                        <input type="text" name="id_customer_pln" class="rform-input"
-                                            value="{{ old('id_customer_pln') }}" placeholder="Masukkan ID Customer PLN"
-                                            required>
+                                        <input type="text" name="pic" class="rform-input"
+                                            value="{{ old('pic', Auth::user()->name ?? '') }}" placeholder="Masukkan nama PIC" required>
                                     </div>
 
                                     <div class="rform-group">
@@ -109,12 +110,20 @@
                                             value="{{ old('tanggal_pemeriksaan', date('Y-m-d')) }}" required>
                                     </div>
                                 </div>
+
+                                <div class="rform-row rform-row-1">
+                                    <div class="rform-group">
+                                        <label class="rform-label">ID Customer (PLN)</label>
+                                        <input type="text" name="id_customer_pln" class="rform-input"
+                                            value="{{ old('id_customer_pln') }}" placeholder="Masukkan ID Customer PLN">
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="rform-section">
                             <div class="rform-section-header">
-                                <span class="rform-section-step">2</span>
+                                <i class="bi bi-lightning-charge-fill" style="color:#2563eb; margin-right:8px;"></i>
                                 Spesifikasi Panel kWh Meter
                             </div>
                             <div class="rform-section-body">
@@ -170,7 +179,7 @@
 
                     <div class="rform-section">
                         <div class="rform-section-header">
-                            <span class="rform-section-step">3</span>
+                            <i class="bi bi-speedometer2" style="color:#2563eb; margin-right:8px;"></i>
                             Pengukuran Tegangan & Arus Phasa
                         </div>
                         <div class="rform-section-body">
@@ -301,7 +310,7 @@
 
                     <div class="rform-section">
                         <div class="rform-section-header">
-                            <span class="rform-section-step">4</span>
+                            <i class="bi bi-bezier2" style="color:#2563eb; margin-right:8px;"></i>
                             Spesifikasi Kabel Output kWh
                         </div>
                         <div class="rform-section-body">
@@ -361,7 +370,7 @@
 
                     <div class="rform-section">
                         <div class="rform-section-header" style="justify-content: space-between;">
-                            <div><span class="rform-section-step">5</span> Dokumentasi Foto kWh</div>
+                            <div><i class="bi bi-camera-fill" style="color:#2563eb; margin-right:8px;"></i> Dokumentasi Foto kWh</div>
                             <span id="kwhPhotoCountBadge" class="photo-count-badge"><i class="bi bi-images"></i>
                                 Total: 1 Foto</span>
                         </div>

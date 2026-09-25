@@ -38,9 +38,9 @@ class DashboardController extends Controller
     {
         $rectifiers = $pop->rectifiers()->with('modules')->get();
         $kwhs = $pop->kwhs()->get();
-        $batteries = $pop->batteries()->with('rectifier')->orderBy('nomor_recti')->orderBy('nomor_bank')->get();
+        $batteries = $pop->batteries()->with('rectifier')->orderBy('rectifier_id')->orderBy('nomor_bank')->get();
 
-        $batteryGroups = $batteries->groupBy('nomor_recti')->map(function ($group) use ($rectifiers) {
+        $batteryGroups = $batteries->groupBy('rectifier_id')->map(function ($group) use ($rectifiers) {
             $rectifierId = $group->first()->rectifier_id;
             $rectifier = $rectifierId ? $rectifiers->firstWhere('id', $rectifierId) : null;
 

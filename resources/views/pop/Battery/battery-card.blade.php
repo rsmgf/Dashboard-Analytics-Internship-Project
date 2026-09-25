@@ -119,7 +119,7 @@
                     $badgeClass = $stats['badge_class'] ?? 'status-warning';
                     $performaText = $stats['performa_backup'] ?? 'BLM UJI BATT';
                     $backupJam = $stats['backup_time'] !== null ? $stats['backup_time'] . ' Jam' : '-';
-                    $rectifierLabel = $stats['rectifier']->nama_alias ?? ('RECT-' . str_pad($loop->iteration, 2, '0', STR_PAD_LEFT));
+                    $rectifierLabel = $stats['rectifier']->nomor_recti ?? $stats['rectifier']->nama_alias ?? ('RECT-' . str_pad($loop->iteration, 2, '0', STR_PAD_LEFT));
                 @endphp
 
                 <div class="rectifier-section">

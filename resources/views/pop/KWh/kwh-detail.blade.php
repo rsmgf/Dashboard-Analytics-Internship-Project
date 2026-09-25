@@ -38,7 +38,7 @@
                                         'route' => 'kwh.card',
                                         'params' => ['pop' => $pop->id],
                                     ],
-                                    ['label' => $kwh->nama_alias],
+                                    ['label' => $kwh->nomor_kwh ?? $kwh->nama_alias],
                                 ]" />
                                 <span class="device-badge">{{ $kwh->jumlah_phasa }} &bull;
                                     {{ $kwh->daya_ps_gi_formatted }}</span>
@@ -72,6 +72,11 @@
                     </div>
 
                     <div class="general-grid">
+                        <div class="general-item">
+                            <span class="general-label">Nomor kWh</span>
+                            <span class="general-value" style="font-weight:600; color:#2563eb;">{{ $kwh->nomor_kwh ?? $kwh->nama_alias }}</span>
+                        </div>
+
                         <div class="general-item">
                             <span class="general-label">POP</span>
                             <span class="general-value">{{ $pop->nama_pop_display }}</span>

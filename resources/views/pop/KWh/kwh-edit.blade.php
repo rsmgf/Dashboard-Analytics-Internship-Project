@@ -37,7 +37,7 @@
                                 'route' => 'kwh.card',
                                 'params' => ['pop' => $pop->id],
                             ],
-                            ['label' => $kwh->nama_alias, 'route' => 'kwh.detail', 'params' => [$pop->id, $kwh->id]],
+                            ['label' => $kwh->nomor_kwh ?? $kwh->nama_alias, 'route' => 'kwh.detail', 'params' => [$pop->id, $kwh->id]],
                             ['label' => 'Edit kWh'],
                         ]" />
                     </div>
@@ -63,7 +63,7 @@
                     <div class="rform-two-col">
                         <div class="rform-section">
                             <div class="rform-section-header">
-                                <span class="rform-section-step">1</span>
+                                <i class="bi bi-info-circle-fill" style="color:#2563eb; margin-right:8px;"></i>
                                 General Information
                             </div>
                             <div class="rform-section-body">
@@ -75,17 +75,20 @@
                                     </div>
 
                                     <div class="rform-group">
-                                        <label class="rform-label">Building / Jenis Bangunan</label>
+                                        <label class="rform-label">Nomor kWh
+                                            <small style="font-weight:400; color:#94a3b8;">(auto-generate)</small>
+                                        </label>
                                         <input type="text" class="rform-input"
-                                            value="{{ $pop->jenis_bangunan ?? '-' }}" readonly>
+                                            value="{{ $kwh->nomor_kwh ?? $kwh->nama_alias }}" readonly
+                                            style="background:#f1f5f9; color:#64748b; cursor:not-allowed;">
                                     </div>
                                 </div>
 
                                 <div class="rform-row rform-row-2">
                                     <div class="rform-group">
-                                        <label class="rform-label">PIC / Petugas <span class="rform-required">*</span></label>
-                                        <input type="text" name="pic" class="rform-input"
-                                            value="{{ old('pic', $kwh->pic) }}" required>
+                                        <label class="rform-label">Building / Jenis Bangunan</label>
+                                        <input type="text" class="rform-input"
+                                            value="{{ $pop->jenis_bangunan ?? '-' }}" readonly>
                                     </div>
 
                                     <div class="rform-group">
@@ -97,9 +100,9 @@
 
                                 <div class="rform-row rform-row-2">
                                     <div class="rform-group">
-                                        <label class="rform-label">ID Customer (PLN) <span class="rform-required">*</span></label>
-                                        <input type="text" name="id_customer_pln" class="rform-input"
-                                            value="{{ old('id_customer_pln', $kwh->id_customer_pln) }}" required>
+                                        <label class="rform-label">PIC / Petugas <span class="rform-required">*</span></label>
+                                        <input type="text" name="pic" class="rform-input"
+                                            value="{{ old('pic', $kwh->pic) }}" required>
                                     </div>
 
                                     <div class="rform-group">
@@ -109,12 +112,20 @@
                                             required>
                                     </div>
                                 </div>
+
+                                <div class="rform-row rform-row-1">
+                                    <div class="rform-group">
+                                        <label class="rform-label">ID Customer (PLN) <span class="rform-required">*</span></label>
+                                        <input type="text" name="id_customer_pln" class="rform-input"
+                                            value="{{ old('id_customer_pln', $kwh->id_customer_pln) }}" required>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="rform-section">
                             <div class="rform-section-header">
-                                <span class="rform-section-step">2</span>
+                                <i class="bi bi-lightning-charge-fill" style="color:#2563eb; margin-right:8px;"></i>
                                 Spesifikasi Panel kWh Meter
                             </div>
                             <div class="rform-section-body">
@@ -166,7 +177,7 @@
 
                     <div class="rform-section">
                         <div class="rform-section-header">
-                            <span class="rform-section-step">3</span>
+                            <i class="bi bi-speedometer2" style="color:#2563eb; margin-right:8px;"></i>
                             Pengukuran Tegangan & Arus Phasa
                         </div>
                         <div class="rform-section-body">
@@ -300,7 +311,7 @@
 
                     <div class="rform-section">
                         <div class="rform-section-header">
-                            <span class="rform-section-step">4</span>
+                            <i class="bi bi-bezier2" style="color:#2563eb; margin-right:8px;"></i>
                             Spesifikasi Kabel Output kWh
                         </div>
                         <div class="rform-section-body">
@@ -350,7 +361,7 @@
 
                     <div class="rform-section">
                         <div class="rform-section-header" style="justify-content: space-between;">
-                            <div><span class="rform-section-step">5</span> Dokumentasi Foto kWh</div>
+                            <div><i class="bi bi-camera-fill" style="color:#2563eb; margin-right:8px;"></i> Dokumentasi Foto kWh</div>
                             <span id="kwhEditPhotoCountBadge" class="photo-count-badge">
                                 <i class="bi bi-images"></i> Total: {{ $kwh->photos->count() }} Foto
                             </span>

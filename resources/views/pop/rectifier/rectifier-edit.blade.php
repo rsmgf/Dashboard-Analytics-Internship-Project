@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Rectifier - {{ $rectifier->nama_alias }} - PLN Icon Plus</title>
+    <title>Edit Rectifier - {{ $rectifier->nomor_recti }} - PLN Icon Plus</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -27,7 +27,6 @@
 
             <div class="rform-content">
 
-<<<<<<< HEAD
             {{-- HEADER BAR: Back + Breadcrumb As Title --}}
             <div class="rform-header-bar">
                 <a href="{{ route('rectifiers.show', [$pop->id, $rectifier->id]) }}" class="rform-back" title="Kembali ke Detail Rectifier">
@@ -37,9 +36,10 @@
                     <x-breadcrumb :items="[
                         ['label' => 'POP', 'route' => 'pops.index'],
                         ['label' => $pop->nama_pop_display . ': Rectifier', 'route' => 'rectifiers.index', 'params' => ['pop' => $pop->id]],
-                        ['label' => $rectifier->nama_alias ?? ($rectifier->merk . ' - ' . $rectifier->type), 'route' => 'rectifiers.show', 'params' => [$pop->id, $rectifier->id]],
+                        ['label' => $rectifier->nomor_recti ?? ($rectifier->merk . ' - ' . $rectifier->type), 'route' => 'rectifiers.show', 'params' => [$pop->id, $rectifier->id]],
                         ['label' => 'Edit Rectifier'],
                     ]" />
+                    <p class="rform-page-sub">Kode POP: <strong>{{ $pop->kode_pop }}</strong> &middot; {{ $pop->kota_kabupaten }}, {{ $pop->provinsi }}</p>
                 </div>
             </div>
 
@@ -59,59 +59,23 @@
                                 <li>{{ $err }}</li>
                             @endforeach
                         </ul>
-=======
-                {{-- HEADER BAR: Back + Breadcrumb As Title --}}
-                <div class="rform-header-bar">
-                    <a href="{{ route('rectifiers.show', [$pop->id, $rectifier->id]) }}" class="rform-back"
-                        title="Kembali ke Detail Rectifier">
-                        <i class="bi bi-arrow-left"></i>
-                    </a>
-                    <div class="rform-header-text">
-                        <x-breadcrumb :items="[
-                            ['label' => 'POP', 'route' => 'pops.index'],
-                            ['label' => $pop->nama_pop, 'route' => 'rectifiers.index', 'params' => ['pop' => $pop->id]],
-                            ['label' => 'Edit Rectifier (' . ($rectifier->nama_alias ?? $rectifier->merk) . ')'],
-                        ]" />
-                        <p class="rform-page-sub">Kode POP: <strong>{{ $pop->kode_pop }}</strong> &middot;
-                            {{ $pop->kota_kabupaten }}, {{ $pop->provinsi }}</p>
->>>>>>> 585f14e916dd7a366d0aaa56e258774f004e072e
                     </div>
                 </div>
+            @endif
 
-                {{-- Flash --}}
-                @if (session('error'))
-                    <div class="rform-flash error">
-                        <i class="bi bi-exclamation-triangle-fill"></i>
-                        {{ session('error') }}
-                    </div>
-                @endif
-                @if ($errors->any())
-                    <div class="rform-flash error">
-                        <div>
-                            <strong><i class="bi bi-exclamation-triangle-fill"></i> Periksa kembali:</strong>
-                            <ul style="margin:4px 0 0 16px; padding:0;">
-                                @foreach ($errors->all() as $err)
-                                    <li>{{ $err }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </div>
-                @endif
+            <form id="rectifierForm" method="POST"
+                action="{{ route('rectifiers.update', [$pop->id, $rectifier->id]) }}" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
 
-                <form id="rectifierForm" method="POST"
-                    action="{{ route('rectifiers.update', [$pop->id, $rectifier->id]) }}" enctype="multipart/form-data">
-                    @csrf
-                    @method('PUT')
-
-                    {{-- ===============================================
-                     SECTION 1 — Information Rectifier (Header)
-                ================================================ --}}
-<<<<<<< HEAD
+                {{-- ===============================================
+                 SECTION 1 — Information Rectifier (Header)
+            ================================================ --}}
                 <div class="rform-section">
                     <div class="rform-section-header">
-                    <span class="rform-section-step">1</span>
-                    Information Rectifier
-                </div>
+                        <i class="bi bi-info-circle-fill" style="color:#2563eb; margin-right:8px;"></i>
+                        Information Rectifier
+                    </div>
                     <div class="rform-section-body">
                         <div class="rform-row rform-row-4">
 
@@ -139,88 +103,34 @@
                                 @error('pic') <span class="rform-error">{{ $message }}</span> @enderror
                             </div>
 
-=======
-                    <div class="rform-section">
-                        <div class="rform-section-header">
-                            <span class="rform-section-step">1</span>
-                            Information Rectifier
->>>>>>> 585f14e916dd7a366d0aaa56e258774f004e072e
                         </div>
-                        <div class="rform-section-body">
-                            <div class="rform-row rform-row-4">
 
-                                <div class="rform-group">
-                                    <label class="rform-label">POP</label>
-                                    <input type="text" class="rform-input" value="{{ $pop->kode_pop }}" readonly>
-                                </div>
-
-                                <div class="rform-group">
-                                    <label class="rform-label">Type POP</label>
-                                    <input type="text" class="rform-input" value="{{ $pop->tipe_pop ?? '' }}"
-                                        readonly>
-                                </div>
-
-                                <div class="rform-group">
-                                    <label class="rform-label">Tanggal Pemeriksaan <span
-                                            class="rform-required">*</span></label>
-                                    <input type="date" name="tanggal_pemeriksaan" class="rform-input"
-                                        value="{{ old('tanggal_pemeriksaan', $rectifier->tanggal_pemeriksaan ? \Carbon\Carbon::parse($rectifier->tanggal_pemeriksaan)->format('Y-m-d') : '') }}">
-                                </div>
-
-                                <div class="rform-group">
-                                    <label class="rform-label">PIC <span class="rform-required">*</span></label>
-                                    <input type="text" name="pic"
-                                        class="rform-input {{ $errors->has('pic') ? 'is-invalid' : '' }}"
-                                        value="{{ old('pic', $rectifier->pic) }}" placeholder="Nama penanggung jawab">
-                                    @error('pic')
-                                        <span class="rform-error">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-<<<<<<< HEAD
-                        {{-- Nama Alias (auto-generate, read-only di edit) --}}
+                        {{-- Nomor Recti (auto-generate, read-only di edit) --}}
                         <div class="rform-row rform-row-2">
                             <div class="rform-group">
-                                <label class="rform-label">Nomor Rectifier
+                                <label class="rform-label">Nomor Recti
                                     <small style="font-weight:400; color:#94a3b8;">(auto-generate, tidak bisa diubah)</small>
                                 </label>
                                 <input type="text" class="rform-input"
-                                       value="{{ $rectifier->nama_alias }}" readonly
-                                       style="color:#94a3b8;">
-=======
->>>>>>> 585f14e916dd7a366d0aaa56e258774f004e072e
+                                       value="{{ $rectifier->nomor_recti }}" readonly
+                                       style="background:#f1f5f9; color:#64748b; cursor:not-allowed;">
                             </div>
-
-                            {{-- Nama Alias (digunakan sebagai judul card) --}}
-                            <div class="rform-row rform-row-2">
-                                <div class="rform-group">
-                                    <label class="rform-label">Nomor Recti <span
-                                            class="rform-required">*</span>
-                                    </label>
-                                    <input type="text" name="nama_alias"
-                                        class="rform-input {{ $errors->has('nama_alias') ? 'is-invalid' : '' }}"
-                                        value="{{ old('nama_alias', $rectifier->nama_alias) }}"
-                                        placeholder="Contoh: Rectifier Utama 1">
-                                    @error('nama_alias')
-                                        <span class="rform-error">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <div class="rform-group">
-                                    <label class="rform-label">Deskripsi</label>
-                                    <input type="text" name="deskripsi" class="rform-input"
-                                        value="{{ old('deskripsi', $rectifier->deskripsi) }}"
-                                        placeholder="Keterangan tambahan (opsional)">
-                                </div>
+                            <div class="rform-group">
+                                <label class="rform-label">Deskripsi</label>
+                                <input type="text" name="deskripsi" class="rform-input"
+                                       value="{{ old('deskripsi', $rectifier->deskripsi) }}"
+                                       placeholder="Keterangan tambahan (opsional)">
                             </div>
                         </div>
                     </div>
+                </div>
 
                     {{-- ===============================================
                      SECTION 2 — Detail Teknis Rectifier
                 ================================================ --}}
                     <div class="rform-section">
                         <div class="rform-section-header">
-                            <span class="rform-section-step">2</span>
+                            <i class="bi bi-cpu-fill" style="color:#2563eb; margin-right:8px;"></i>
                             Detail Teknis Rectifier
                         </div>
                         <div class="rform-section-body">
@@ -366,7 +276,7 @@
                 ================================================ --}}
                     <div class="rform-section">
                         <div class="rform-section-header">
-                            <span class="rform-section-step">3</span>
+                            <i class="bi bi-camera-fill" style="color:#2563eb; margin-right:8px;"></i>
                             Foto Rectifier
                             <span class="rform-section-sub">Upload foto baru untuk mengganti foto yang ada</span>
                         </div>
@@ -377,7 +287,7 @@
                                     <div class="rform-drop-icon">
                                         <i class="bi bi-cloud-arrow-up-fill"></i>
                                     </div>
-                                    <div class="rform-drop-text">
+                                    <div class="rform-drop-text" id="dropText">
                                         {{ $rectifier->foto_rectifier ? 'Klik untuk ganti foto' : 'Masukkan file disini' }}
                                     </div>
                                     <button type="button" class="rform-browse-btn">Browse</button>
@@ -385,15 +295,6 @@
                                     <input type="file" id="fotoInput" name="foto_rectifier"
                                         accept=".jpg,.jpeg,.png" style="display:none;" onchange="previewFoto(this)">
                                 </div>
-<<<<<<< HEAD
-                                <div class="rform-drop-text" id="dropText">{{ $rectifier->foto_rectifier ? 'Klik untuk ganti foto' : 'Masukkan file disini' }}</div>
-                                <button type="button" class="rform-browse-btn">Browse</button>
-                                <div class="rform-drop-hint">Format: JPG, JPEG, PNG &bull; Maks. ukuran: 10 MB</div>
-                                <input type="file" id="fotoInput" name="foto_rectifier" accept=".jpg,.jpeg,.png"
-                                       style="display:none;" onchange="previewFoto(this)">
-                            </div>
-=======
->>>>>>> 585f14e916dd7a366d0aaa56e258774f004e072e
 
                                 <div class="rform-photo-preview">
                                     <span
@@ -425,8 +326,8 @@
                     <div class="rform-section">
                         <div class="rform-section-header"
                             style="display: flex; justify-content: space-between; align-items: center;">
-                            <div style="display:flex;align-items:center;gap:10px;">
-                                <span class="rform-section-step">4</span>
+                            <div style="display:flex;align-items:center;gap:8px;">
+                                <i class="bi bi-grid-3x3-gap-fill" style="color:#2563eb; margin-right:4px;"></i>
                                 Serial Number (Modul)
                                 <span id="slotStatusBadge" class="rform-section-sub">Terpasang:
                                     {{ $rectifier->modules->count() }} dari {{ $rectifier->kapasitas_slot }} slot
@@ -475,7 +376,7 @@
                 ================================================ --}}
                     <div class="rform-section">
                         <div class="rform-section-header">
-                            <span class="rform-section-step">5</span>
+                            <i class="bi bi-toggles2" style="color:#2563eb; margin-right:8px;"></i>
                             Output (MCB)
                             <span class="rform-section-sub">Opsional — dapat diisi secara bertahap</span>
                         </div>
@@ -844,89 +745,6 @@
             reader.readAsDataURL(file);
         }
 
-<<<<<<< HEAD
-    // ---- Photo preview ----
-    function previewFoto(input) {
-        const file = input.files ? input.files[0] : null;
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            const img = document.getElementById('fotoPreview');
-            const empty = document.getElementById('fotoEmpty');
-            const btnText = document.getElementById('btnBrowseText');
-            const btnIcon = document.getElementById('btnBrowseIcon');
-            if (img) {
-                img.src = e.target.result;
-                img.style.display = 'block';
-            }
-            if (empty) empty.style.display = 'none';
-            if (btnText) btnText.textContent = 'Ganti Foto';
-            if (btnIcon) btnIcon.className = 'bi bi-arrow-repeat';
-        };
-        reader.readAsDataURL(file);
-    }
-
-    // Drag & drop support
-    const previewBox = document.getElementById('previewBoxRectifier');
-    if (previewBox) {
-        ['dragenter', 'dragover'].forEach(name => {
-            previewBox.addEventListener(name, (e) => {
-                e.preventDefault();
-                previewBox.classList.add('dragover');
-            });
-        });
-        ['dragleave', 'drop'].forEach(name => {
-            previewBox.addEventListener(name, (e) => {
-                e.preventDefault();
-                previewBox.classList.remove('dragover');
-            });
-        });
-        previewBox.addEventListener('drop', e => {
-            e.preventDefault();
-            previewBox.classList.remove('dragover');
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                document.getElementById('fotoInput').files = files;
-                previewFoto({ files: files });
-            }
-        });
-    }
-
-    // ---- Reset ----
-    function resetForm() {
-        document.getElementById('rectifierForm').reset();
-        document.getElementById('moduleContainer').innerHTML = '';
-        const img = document.getElementById('fotoPreview');
-        const empty = document.getElementById('fotoEmpty');
-        const btnText = document.getElementById('btnBrowseText');
-        const btnIcon = document.getElementById('btnBrowseIcon');
-        if (img) { img.src = ''; img.style.display = 'none'; }
-        if (empty) empty.style.display = 'flex';
-        if (btnText) btnText.textContent = 'Pilih Foto';
-        if (btnIcon) btnIcon.className = 'bi bi-camera-fill';
-        updateSlotStatusBadge();
-        updateJumlahModul();
-    }
-
-    // ---- Konfirmasi Simpan Perubahan ----
-    function konfirmasiSimpan() {
-        Swal.fire({
-            icon: 'question',
-            title: 'Simpan Perubahan?',
-            text: 'Pastikan semua data sudah benar sebelum menyimpan.',
-            showCancelButton: true,
-            confirmButtonColor: '#2563eb',
-            cancelButtonColor: '#64748b',
-            confirmButtonText: '<i class="bi bi-check-lg"></i> Ya, Simpan',
-            cancelButtonText: 'Batal',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                document.getElementById('rectifierForm').submit();
-            }
-        });
-    }
-</script>
-=======
         // Drag & drop support
         const dropZone = document.getElementById('dropZone');
         if (dropZone) {
@@ -978,7 +796,6 @@
             });
         }
     </script>
->>>>>>> 585f14e916dd7a366d0aaa56e258774f004e072e
 </body>
 
 </html>
