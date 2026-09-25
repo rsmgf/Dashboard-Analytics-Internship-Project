@@ -1,9 +1,9 @@
 :root {
     --sidebar-bg: #0968ad;
-    --sidebar-hover: rgba(255, 255, 255, 0.10);
-    --sidebar-active: rgba(255, 255, 255, 0.20);
-    --sidebar-width: 280px;
-    --sidebar-collapsed: 80px;
+    --sidebar-hover: rgba(255, 255, 255, 0.08);
+    --sidebar-active: rgba(255, 255, 255, 0.15);
+    --sidebar-width: 250px;
+    --sidebar-collapsed: 72px;
     --topbar-height: 70px;
     --sidebar-text: rgba(255, 255, 255, 0.85);
     --sidebar-muted: rgba(255, 255, 255, 0.65);
@@ -53,14 +53,23 @@ button.sidebar-menu {
     height: 100vh;
     background: var(--sidebar-bg);
     z-index: 1000;
-    overflow-x: hidden;
-    overflow-y: auto;
-    scrollbar-width: none;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
     box-shadow: 4px 0 12px rgba(0, 0, 0, 0.05);
     transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.sidebar::-webkit-scrollbar {
+.sidebar-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-wrapper::-webkit-scrollbar {
     display: none;
 }
 
@@ -75,7 +84,7 @@ button.sidebar-menu {
 }
 
 .sidebar-logo img {
-    width: 120px;
+    width: 110px;
     height: auto;
     object-fit: contain;
     transition: width 0.3s ease, opacity 0.3s ease;
@@ -91,31 +100,31 @@ button.sidebar-menu {
 }
 
 .section-title {
-    padding-left: 29px;
-    margin-bottom: 13px;
+    padding-left: 24px;
+    margin-bottom: 8px;
     color: var(--sidebar-muted);
-    font-size: 14px;
+    font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.7px;
+    letter-spacing: 0.5px;
     white-space: nowrap;
     transition: opacity 0.2s ease, height 0.2s ease, margin 0.2s ease;
 }
 
 .sidebar-menu {
-    width: calc(100% - 16px);
-    min-height: 52px;
+    width: calc(100% - 20px);
+    min-height: 42px;
     display: flex;
     align-items: center;
-    gap: 16px;
-    margin: 4px 8px;
-    padding: 13px 16px;
+    gap: 12px;
+    margin: 4px 10px;
+    padding: 10px 14px;
     color: var(--sidebar-text);
     background: transparent;
-    border-radius: 10px;
-    border-left: 4px solid transparent;
+    border-radius: 8px;
+    border-left: 3px solid transparent;
     text-decoration: none;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
     white-space: nowrap;
     cursor: pointer;
@@ -123,14 +132,13 @@ button.sidebar-menu {
 }
 
 .sidebar-menu>i:first-child {
-    width: 28px;
-    min-width: 28px;
+    width: 20px;
+    min-width: 20px;
     flex-shrink: 0;
-    /* FIX: icon tidak ikut mengecil saat teks kepanjangan */
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 22px;
+    font-size: 18px;
     text-align: center;
 }
 
@@ -208,7 +216,7 @@ button.sidebar-menu {
     background: var(--sidebar-active);
     color: #ffffff;
     font-weight: 600;
-    border-left: 4px solid #ffffff;
+    border-left: 3px solid #ffffff;
 }
 
 .sidebar-dropdown {
@@ -218,7 +226,7 @@ button.sidebar-menu {
 }
 
 .sidebar-dropdown>i:first-child {
-    font-size: 22px;
+    font-size: 18px;
 }
 
 .dropdown-arrow {
@@ -251,17 +259,17 @@ button.sidebar-menu {
 
 .sidebar-submenu-item {
     width: calc(100% - 4px);
-    min-height: 42px;
+    min-height: 38px;
     display: flex;
     align-items: center;
     gap: 10px;
     margin: 2px 0 2px 2px;
-    padding: 9px 12px;
+    padding: 8px 12px;
     color: rgba(255, 255, 255, 0.80);
     background: transparent;
-    border-radius: 7px;
+    border-radius: 6px;
     text-decoration: none;
-    font-size: 13px;
+    font-size: 12.5px;
     font-weight: 500;
     white-space: nowrap;
     transition: background 0.2s ease, color 0.2s ease;
@@ -279,13 +287,12 @@ button.sidebar-menu {
 }
 
 .sidebar-submenu-item i {
-    width: 22px;
-    min-width: 22px;
+    width: 20px;
+    min-width: 20px;
     flex-shrink: 0;
-    /* FIX: konsisten dengan icon parent */
     display: flex;
     justify-content: center;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .sidebar-submenu-item span {
@@ -402,7 +409,7 @@ body.sidebar-collapsed .sidebar-menu {
     width: calc(100% - 16px);
     justify-content: center;
     gap: 0;
-    padding: 13px 0;
+    padding: 10px 0;
     border-left: none;
 }
 
@@ -422,6 +429,27 @@ body.sidebar-collapsed .sidebar-submenu {
 
 body.sidebar-collapsed .dropdown-arrow {
     display: none;
+}
+
+/* FOOTER LOGOUT */
+.sidebar-footer {
+    padding: 12px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--sidebar-bg);
+}
+
+.logout-btn {
+    width: calc(100% - 20px);
+    color: var(--sidebar-muted);
+}
+
+.logout-btn:hover {
+    color: #ef4444; /* Soft red for logout hover */
+    background: rgba(239, 68, 68, 0.1);
+}
+
+body.sidebar-collapsed .logout-btn {
+    width: calc(100% - 16px);
 }
 
 /* OVERLAY — backdrop gelap di belakang sidebar saat mobile */

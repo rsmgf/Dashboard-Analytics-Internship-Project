@@ -11,8 +11,6 @@
             <i class="bi bi-list"></i>
         </button>
         <div x-show="open" style="display:none;" class="export-dropdown">
-            <button @click="printArea('pop-summary-page'); open = false"><i class="bi bi-printer" style="margin-right:8px;"></i> Print Summary</button>
-            <div class="export-dropdown-divider"></div>
             <button @click="exportImage('pop-summary-page', 'png', 'POP_{{ $pop->kode_pop }}'); open = false"><i class="bi bi-image" style="margin-right:8px;"></i> Download PNG</button>
             <button @click="exportImage('pop-summary-page', 'jpeg', 'POP_{{ $pop->kode_pop }}'); open = false"><i class="bi bi-image-fill" style="margin-right:8px;"></i> Download JPEG</button>
             <button @click="exportPDF('pop-summary-page', 'POP_{{ $pop->kode_pop }}'); open = false"><i class="bi bi-file-pdf" style="margin-right:8px;"></i> Download PDF</button>
@@ -34,8 +32,7 @@
         <div x-data="{ open: false }" class="export-menu-wrapper">
             <button @click="open = !open" @click.away="open = false" class="export-menu-btn"><i class="bi bi-list"></i></button>
             <div x-show="open" style="display:none;" class="export-dropdown">
-                <button @click="printArea('section-rectifier'); open = false"><i class="bi bi-printer" style="margin-right:8px;"></i> Print Section</button>
-                <div class="export-dropdown-divider"></div>
+                
                 <button @click="exportImage('section-rectifier', 'png', 'Rectifier_{{ $pop->kode_pop }}'); open = false"><i class="bi bi-image" style="margin-right:8px;"></i> Download PNG</button>
                 <button @click="exportImage('section-rectifier', 'jpeg', 'Rectifier_{{ $pop->kode_pop }}'); open = false"><i class="bi bi-image-fill" style="margin-right:8px;"></i> Download JPEG</button>
                 <button @click="exportPDF('section-rectifier', 'Rectifier_{{ $pop->kode_pop }}'); open = false"><i class="bi bi-file-pdf" style="margin-right:8px;"></i> Download PDF</button>
@@ -171,8 +168,7 @@
         <div x-data="{ open: false }" class="export-menu-wrapper">
             <button @click="open = !open" @click.away="open = false" class="export-menu-btn"><i class="bi bi-list"></i></button>
             <div x-show="open" style="display:none;" class="export-dropdown">
-                <button @click="printArea('section-kwh'); open = false"><i class="bi bi-printer" style="margin-right:8px;"></i> Print Section</button>
-                <div class="export-dropdown-divider"></div>
+                
                 <button @click="exportImage('section-kwh', 'png', 'kWh_{{ $pop->kode_pop }}'); open = false"><i class="bi bi-image" style="margin-right:8px;"></i> Download PNG</button>
                 <button @click="exportImage('section-kwh', 'jpeg', 'kWh_{{ $pop->kode_pop }}'); open = false"><i class="bi bi-image-fill" style="margin-right:8px;"></i> Download JPEG</button>
                 <button @click="exportPDF('section-kwh', 'kWh_{{ $pop->kode_pop }}'); open = false"><i class="bi bi-file-pdf" style="margin-right:8px;"></i> Download PDF</button>
@@ -219,14 +215,14 @@
                         <div class="donut-device-header" style="justify-content:space-between;">
                             <div style="display:flex; align-items:center; gap:10px;">
                                 <div class="donut-device-icon"><i class="bi bi-lightning-charge"></i></div>
-                                <span class="donut-device-number">{{ $kwh->building ?? '-' }}</span>
+                                <span class="donut-device-number">{{ $kwh->nomor_kwh ?? '-' }}</span>
                             </div>
                             <div x-data="{ open: false }" class="export-menu-wrapper">
                                 <button @click="open = !open" @click.away="open = false" class="export-menu-btn"><i class="bi bi-list"></i></button>
                                 <div x-show="open" style="display:none;" class="export-dropdown">
-                                    <button @click="exportImage('{{ $cardId }}', 'png', 'kWh_{{ $kwh->building ?? $kwh->id }}'); open = false"><i class="bi bi-image" style="margin-right:8px;"></i> Download PNG</button>
-                                    <button @click="exportImage('{{ $cardId }}', 'jpeg', 'kWh_{{ $kwh->building ?? $kwh->id }}'); open = false"><i class="bi bi-image-fill" style="margin-right:8px;"></i> Download JPEG</button>
-                                    <button @click="exportPDF('{{ $cardId }}', 'kWh_{{ $kwh->building ?? $kwh->id }}'); open = false"><i class="bi bi-file-pdf" style="margin-right:8px;"></i> Download PDF</button>
+                                    <button @click="exportImage('{{ $cardId }}', 'png', 'kWh_{{ $kwh->nomor_kwh ?? $kwh->id }}'); open = false"><i class="bi bi-image" style="margin-right:8px;"></i> Download PNG</button>
+                                    <button @click="exportImage('{{ $cardId }}', 'jpeg', 'kWh_{{ $kwh->nomor_kwh ?? $kwh->id }}'); open = false"><i class="bi bi-image-fill" style="margin-right:8px;"></i> Download JPEG</button>
+                                    <button @click="exportPDF('{{ $cardId }}', 'kWh_{{ $kwh->nomor_kwh ?? $kwh->id }}'); open = false"><i class="bi bi-file-pdf" style="margin-right:8px;"></i> Download PDF</button>
                                     <div class="export-dropdown-divider"></div>
                                     <button @click="showTable = !showTable; open = false"><i class="bi bi-table" style="margin-right:8px;"></i> <span x-text="showTable ? 'Sembunyikan Tabel' : 'Lihat Data Tabel'"></span></button>
                                 </div>
@@ -269,7 +265,7 @@
                         <div x-show="showTable" style="display:none;" class="data-table-wrapper">
                             <span class="data-table-title"><i class="bi bi-table" style="margin-right:6px;"></i>Detail Data kWh</span>
                             <div class="data-table-grid">
-                                <div class="dt-item"><span class="dt-label">Building</span><span class="dt-value">{{ $kwh->building ?? '-' }}</span></div>
+                                <div class="dt-item"><span class="dt-label">Nomor KWH</span><span class="dt-value">{{ $kwh->nomor_kwh ?? '-' }}</span></div>
                                 <div class="dt-item"><span class="dt-label">Daya Listrik (VA)</span><span class="dt-value">{{ $kwh->daya_ps_gi_formatted ?? '-' }}</span></div>
                                 <div class="dt-item"><span class="dt-label">Total Daya Terpakai</span><span class="dt-value">{{ $kwh->total_daya_terpakai_formatted }}</span></div>
                                 <div class="dt-item"><span class="dt-label">Persentase Utilisasi</span><span class="dt-value">{{ round($utilisasiPersen) }}%</span></div>
@@ -312,8 +308,7 @@
         <div x-data="{ open: false }" class="export-menu-wrapper">
             <button @click="open = !open" @click.away="open = false" class="export-menu-btn"><i class="bi bi-list"></i></button>
             <div x-show="open" style="display:none;" class="export-dropdown">
-                <button @click="printArea('section-battery'); open = false"><i class="bi bi-printer" style="margin-right:8px;"></i> Print Section</button>
-                <div class="export-dropdown-divider"></div>
+                
                 <button @click="exportImage('section-battery', 'png', 'Battery_{{ $pop->kode_pop }}'); open = false"><i class="bi bi-image" style="margin-right:8px;"></i> Download PNG</button>
                 <button @click="exportImage('section-battery', 'jpeg', 'Battery_{{ $pop->kode_pop }}'); open = false"><i class="bi bi-image-fill" style="margin-right:8px;"></i> Download JPEG</button>
                 <button @click="exportPDF('section-battery', 'Battery_{{ $pop->kode_pop }}'); open = false"><i class="bi bi-file-pdf" style="margin-right:8px;"></i> Download PDF</button>
@@ -336,7 +331,7 @@
                         <div class="rectifier-group-line">
                             <div class="rectifier-group-line-left">
                                 <span class="dashboard-module-badge">Rectifier #{{ $groupIndex + 1 }}</span>
-                                <span class="rectifier-group-sn">{{ $group['banks']->first()->nomor_recti ?? '-' }}</span>
+                                <span class="rectifier-group-sn">{{ $group['banks']->first()->rectifier->nomor_recti ?? '-' }}</span>
                             </div>
                             <div class="rectifier-group-line-right">
                                 <div class="backup-time-badge {{ $group['performa_class'] }}">
@@ -513,8 +508,7 @@
         <div x-data="{ open: false }" class="export-menu-wrapper">
             <button @click="open = !open" @click.away="open = false" class="export-menu-btn"><i class="bi bi-list"></i></button>
             <div x-show="open" style="display:none;" class="export-dropdown">
-                <button @click="printArea('section-ac'); open = false"><i class="bi bi-printer" style="margin-right:8px;"></i> Print Section</button>
-                <div class="export-dropdown-divider"></div>
+                
                 <button @click="exportImage('section-ac', 'png', 'AC_{{ $pop->kode_pop }}'); open = false"><i class="bi bi-image" style="margin-right:8px;"></i> Download PNG</button>
                 <button @click="exportImage('section-ac', 'jpeg', 'AC_{{ $pop->kode_pop }}'); open = false"><i class="bi bi-image-fill" style="margin-right:8px;"></i> Download JPEG</button>
                 <button @click="exportPDF('section-ac', 'AC_{{ $pop->kode_pop }}'); open = false"><i class="bi bi-file-pdf" style="margin-right:8px;"></i> Download PDF</button>
@@ -648,8 +642,7 @@
         <div x-data="{ open: false }" class="export-menu-wrapper">
             <button @click="open = !open" @click.away="open = false" class="export-menu-btn"><i class="bi bi-list"></i></button>
             <div x-show="open" style="display:none;" class="export-dropdown">
-                <button @click="printArea('section-genset'); open = false"><i class="bi bi-printer" style="margin-right:8px;"></i> Print Section</button>
-                <div class="export-dropdown-divider"></div>
+                
                 <button @click="exportImage('section-genset', 'png', 'Genset_{{ $pop->kode_pop }}'); open = false"><i class="bi bi-image" style="margin-right:8px;"></i> Download PNG</button>
                 <button @click="exportImage('section-genset', 'jpeg', 'Genset_{{ $pop->kode_pop }}'); open = false"><i class="bi bi-image-fill" style="margin-right:8px;"></i> Download JPEG</button>
                 <button @click="exportPDF('section-genset', 'Genset_{{ $pop->kode_pop }}'); open = false"><i class="bi bi-file-pdf" style="margin-right:8px;"></i> Download PDF</button>

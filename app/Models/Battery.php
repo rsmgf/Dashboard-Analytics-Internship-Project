@@ -67,9 +67,7 @@ class Battery extends Model
 
     protected static array $kolomKelengkapanSelalu = [
         'rectifier_id',
-        'building',
         'pic',
-        'type_pop',
         'nomor_bank',
         'merk_battery',
         'tipe_battery',
