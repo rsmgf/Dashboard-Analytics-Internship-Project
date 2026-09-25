@@ -47,11 +47,6 @@
                     <div class="genset-empty-state" style="text-align: center; padding: 60px 20px; color: #94a3b8;">
                         <i class="bi bi-cpu" style="font-size: 3rem; display: block; margin-bottom: 12px;"></i>
                         <p style="font-size: 1rem; font-weight: 500;">Belum ada data Genset untuk POP ini.</p>
-                        @can('gensets.index.create')
-                        <a href="{{ route('gensets.create', $pop->id) }}" class="genset-add-button" style="display: inline-flex; margin-top: 16px;">
-                            <i class="bi bi-plus-lg"></i> Tambah Genset Pertama
-                        </a>
-                        @endcan
                     </div>
                 @else
                     <div class="genset-grid">

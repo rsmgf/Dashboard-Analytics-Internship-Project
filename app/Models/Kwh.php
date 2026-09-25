@@ -11,6 +11,7 @@ class Kwh extends Model
 
     protected $fillable = [
         'pop_id',
+        'nomor_kwh',
         'pic',
         'id_customer_pln',
         'tanggal_pemeriksaan',
@@ -145,8 +146,11 @@ class Kwh extends Model
         };
     }
 
-    public function getNamaAliasAttribute(): string
+    public function getNomorKwhAttribute($value): ?string
     {
+        if ($value) {
+            return $value;
+        }
         $kodePop = $this->pop ? $this->pop->kode_pop : 'POP';
         if ($this->exists && $this->pop_id) {
             $index = static::where('pop_id', $this->pop_id)
@@ -158,10 +162,14 @@ class Kwh extends Model
         return "{$kodePop}_KWH01";
     }
 
+    public function getNamaAliasAttribute(): string
+    {
+        return $this->nomor_kwh;
+    }
+
     protected static array $kolomKelengkapanSelalu = [
-        'building',
+        'nomor_kwh',
         'pic',
-        'type_pop',
         'id_customer_pln',
         'tanggal_pemeriksaan',
         'mcb_utama',

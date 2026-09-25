@@ -12,6 +12,7 @@ class Rectifier extends Model
 
     protected $fillable = [
         'pop_id',
+        'nomor_recti',
         'nama_alias',
         'deskripsi',
         'tanggal_pemeriksaan',
@@ -31,7 +32,7 @@ class Rectifier extends Model
     ];
 
     protected static array $kolomKelengkapan = [
-        'nama_alias',
+        'nomor_recti',
         'deskripsi',
         'tanggal_pemeriksaan',
         'pic',
@@ -156,6 +157,16 @@ class Rectifier extends Model
             'total' => $totalKolomStatis + $totalSlot,
             'belum_diisi' => $belum_diisi,
         ];
+    }
+
+    public function getNamaAliasAttribute(): ?string
+    {
+        return $this->nomor_recti;
+    }
+
+    public function setNamaAliasAttribute($value): void
+    {
+        $this->attributes['nomor_recti'] = $value;
     }
 
     public function getPersenKelengkapanAttribute(): float

@@ -41,7 +41,7 @@
                             <x-breadcrumb :items="[
                                 ['label' => 'POP', 'route' => 'pops.index'],
                                 ['label' => $pop->nama_pop_display . ': Rectifier', 'route' => 'rectifiers.index', 'params' => ['pop' => $pop->id]],
-                                ['label' => $rectifier->nama_alias ?? ($rectifier->merk . ' - ' . $rectifier->type)],
+                                ['label' => $rectifier->nomor_recti ?? ($rectifier->merk . ' - ' . $rectifier->type)],
                             ]" />
                             @if($rectifier->merk)
                                 <span class="device-badge">{{ $rectifier->merk }}</span>
@@ -285,7 +285,7 @@
                     </div>
                 </div>
 
-                <div class="checklist-section-title">{{ $rectifier->nama_alias ?? ($rectifier->merk . ' - ' . $rectifier->type) }}</div>
+                <div class="checklist-section-title">{{ $rectifier->nomor_recti ?? ($rectifier->merk . ' - ' . $rectifier->type) }}</div>
 
                 <div class="spec-table-wrapper">
                     <table class="spec-table">

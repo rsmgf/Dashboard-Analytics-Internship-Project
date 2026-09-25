@@ -47,11 +47,6 @@
                     <div style="text-align: center; padding: 60px 20px; color: #94a3b8;">
                         <i class="bi bi-snow" style="font-size: 3rem; display: block; margin-bottom: 12px;"></i>
                         <p style="font-size: 1rem; font-weight: 500;">Belum ada data AC untuk POP ini.</p>
-                        @can('acs.index.create')
-                        <a href="{{ route('acs.create', $pop->id) }}" class="ac-add-button" style="display: inline-flex; margin-top: 16px;">
-                            <i class="bi bi-plus-lg"></i> Tambah AC Pertama
-                        </a>
-                        @endcan
                     </div>
                 @else
                     <div class="ac-grid">

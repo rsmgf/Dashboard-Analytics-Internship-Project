@@ -116,7 +116,7 @@
                                 </div>
                                 <div class="info-card-content">
                                     <span class="info-card-label">Nomor Recti</span>
-                                    <span class="info-card-value">{{ $battery->rectifier->nama_alias ?? '-' }}</span>
+                                    <span class="info-card-value">{{ $battery->rectifier->nomor_recti ?? $battery->rectifier->nama_alias ?? '-' }}</span>
                                 </div>
                             </div>
                         </div>

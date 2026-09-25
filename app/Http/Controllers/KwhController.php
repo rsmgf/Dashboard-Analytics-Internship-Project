@@ -24,7 +24,9 @@ class KwhController extends Controller
     public function create($pop_id)
     {
         $pop = Pop::findOrFail($pop_id);
-        return view('pop.kwh.kwh-create', compact('pop'));
+        $count = Kwh::where('pop_id', $pop->id)->count();
+        $suggestedNomorKwh = $pop->kode_pop . '_KWH' . str_pad($count + 1, 2, '0', STR_PAD_LEFT);
+        return view('pop.kwh.kwh-create', compact('pop', 'suggestedNomorKwh'));
     }
 
     // 3. Simpan kWh baru beserta foto-fotonya
@@ -46,10 +48,14 @@ class KwhController extends Controller
         );
         $hitung = Kwh::hitungStatus($totalDayaTerpakai, $dayaPsGi);
 
+        $existingCount = Kwh::where('pop_id', $pop->id)->count();
+        $nomorKwh = $pop->kode_pop . '_KWH' . str_pad($existingCount + 1, 2, '0', STR_PAD_LEFT);
+
         DB::beginTransaction();
         try {
             $kwh = Kwh::create([
                 'pop_id' => $pop->id,
+                'nomor_kwh' => $nomorKwh,
                 'pic' => $validated['pic'],
                 'id_customer_pln' => $validated['id_customer_pln'],
                 'tanggal_pemeriksaan' => $validated['tanggal_pemeriksaan'],

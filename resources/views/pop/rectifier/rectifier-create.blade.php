@@ -69,7 +69,7 @@
                     ================================================ --}}
                     <div class="rform-section">
                         <div class="rform-section-header">
-                            <span class="rform-section-step">1</span>
+                            <i class="bi bi-info-circle-fill" style="color:#2563eb; margin-right:8px;"></i>
                             Information Rectifier
                         </div>
                         <div class="rform-section-body">
@@ -99,18 +99,14 @@
 
                             </div>
 
-                            {{-- Nama Alias (auto-generate, hanya info) --}}
+                            {{-- Nomor Recti (auto-generate, read-only) --}}
                             <div class="rform-row rform-row-2">
                                 <div class="rform-group">
-<<<<<<< HEAD
-                                    <label class="rform-label">Nomor Rectifier
-                                        <small style="font-weight:400; color:#94a3b8;">(auto-generate saat disimpan)</small>
-=======
-                                    <label class="rform-label">Nomor Recti<span class="rform-required">*</span>
->>>>>>> 585f14e916dd7a366d0aaa56e258774f004e072e
+                                    <label class="rform-label">Nomor Recti
+                                        <small style="font-weight:400; color:#94a3b8;">(auto-generate)</small>
                                     </label>
-                                    <input type="text" class="rform-input" value="{{ $pop->kode_pop }}_RECT**" readonly
-                                        style="color:#94a3b8; font-style:italic;">
+                                    <input type="text" class="rform-input" value="{{ $suggestedNomorRecti ?? ($pop->kode_pop . '_RECT01') }}" readonly
+                                        style="background:#f1f5f9; color:#64748b; cursor:not-allowed;">
                                 </div>
                                 <div class="rform-group">
                                     <label class="rform-label">Deskripsi</label>
@@ -126,7 +122,7 @@
                     ================================================ --}}
                     <div class="rform-section">
                         <div class="rform-section-header">
-                            <span class="rform-section-step">2</span>
+                            <i class="bi bi-cpu-fill" style="color:#2563eb; margin-right:8px;"></i>
                             Detail Teknis Rectifier
                         </div>
                         <div class="rform-section-body">
@@ -238,7 +234,7 @@
                     ================================================ --}}
                     <div class="rform-section">
                         <div class="rform-section-header">
-                            <span class="rform-section-step">3</span>
+                            <i class="bi bi-camera-fill" style="color:#2563eb; margin-right:8px;"></i>
                             Foto Rectifier
                             <span class="rform-section-sub">Upload foto kondisi rectifier di lokasi</span>
                         </div>
@@ -275,8 +271,8 @@
                     ================================================ --}}
                     <div class="rform-section">
                         <div class="rform-section-header" style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <span class="rform-section-step">4</span>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <i class="bi bi-grid-3x3-gap-fill" style="color:#2563eb; margin-right:4px;"></i>
                                 Serial Number (Modul)
                                 <span id="slotStatusBadge" class="rform-section-sub">Tentukan Jumlah Slot Modul di atas terlebih dahulu</span>
                             </div>
@@ -316,7 +312,7 @@
                     ================================================ --}}
                     <div class="rform-section">
                         <div class="rform-section-header">
-                            <span class="rform-section-step">5</span>
+                            <i class="bi bi-toggles2" style="color:#2563eb; margin-right:8px;"></i>
                             Output (MCB)
                             <span class="rform-section-sub">Opsional — dapat diisi secara bertahap</span>
                         </div>

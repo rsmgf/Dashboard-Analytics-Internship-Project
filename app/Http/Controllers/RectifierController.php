@@ -39,14 +39,14 @@ class RectifierController extends Controller
                 $fotoPath = $request->file('foto_rectifier')->store('rectifiers', 'public');
             }
 
-            // Auto-generate nama_alias: KODE_POP_RECT01, RECT02, dst.
+            // Auto-generate nomor_recti: KODE_POP_RECT01, RECT02, dst.
             $existingCount = Rectifier::where('pop_id', $pop->id)->count();
-            $namaAlias = $pop->kode_pop . '_RECT' . str_pad($existingCount + 1, 2, '0', STR_PAD_LEFT);
+            $nomorRecti = $pop->kode_pop . '_RECT' . str_pad($existingCount + 1, 2, '0', STR_PAD_LEFT);
 
             // A. Simpan Master Rectifier
             $rectifier = Rectifier::create([
                 'pop_id'               => $pop->id,
-                'nama_alias'           => $namaAlias,
+                'nomor_recti'          => $nomorRecti,
                 'deskripsi'            => $validated['deskripsi'] ?? null,
                 'tanggal_pemeriksaan'  => $validated['tanggal_pemeriksaan'] ?? null,
                 'pic'                  => $validated['pic'] ?? null,
@@ -118,7 +118,9 @@ class RectifierController extends Controller
     public function create($pop_id)
     {
         $pop = Pop::findOrFail($pop_id);
-        return view('pop.rectifier.rectifier-create', compact('pop'));
+        $count = Rectifier::where('pop_id', $pop->id)->count();
+        $suggestedNomorRecti = $pop->kode_pop . '_RECT' . str_pad($count + 1, 2, '0', STR_PAD_LEFT);
+        return view('pop.rectifier.rectifier-create', compact('pop', 'suggestedNomorRecti'));
     }
 
     // 3c. Tampilkan form edit Rectifier

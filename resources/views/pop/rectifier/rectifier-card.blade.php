@@ -56,11 +56,11 @@
 
                                 <div class="checklist-title">
                                     <h3>Checklist Rectifier</h3>
-                                    <p>{{ $rectifier->nama_alias ?? 'Data Rectifier' }}</p>
+                                    <p>{{ $rectifier->nomor_recti ?? 'Data Rectifier' }}</p>
                                 </div>
 
                                 <span class="rectifier-number">
-                                    {{ $rectifier->nama_alias ?? ('RECT-' . str_pad($loop->iteration, 2, '0', STR_PAD_LEFT)) }}
+                                    {{ $rectifier->nomor_recti ?? ('RECT-' . str_pad($loop->iteration, 2, '0', STR_PAD_LEFT)) }}
                                 </span>
                             </div>
 
@@ -147,7 +147,7 @@
                             <div class="rectifier-card-footer">
                                 @can('rectifiers.index.delete')
                                     <button type="button" class="btn-hapus"
-                                        onclick="hapusRectifier('{{ route('rectifiers.destroy', [$pop->id, $rectifier->id]) }}', '{{ addslashes($rectifier->nama_alias ?? ($rectifier->merk . ' - ' . $rectifier->type)) }}')">
+                                        onclick="hapusRectifier('{{ route('rectifiers.destroy', [$pop->id, $rectifier->id]) }}', '{{ addslashes($rectifier->nomor_recti ?? ($rectifier->merk . ' - ' . $rectifier->type)) }}')">
                                         <i class="bi bi-trash3-fill"></i> Hapus
                                     </button>
                                 @endcan

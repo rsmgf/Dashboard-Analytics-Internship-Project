@@ -53,10 +53,10 @@
                                 </div>
                                 <div class="checklist-title">
                                     <h3>Checklist kWh</h3>
-                                    <p>{{ $kwh->nama_alias }}</p>
+                                    <p>{{ $kwh->nomor_kwh ?? $kwh->nama_alias }}</p>
                                 </div>
                                 <span class="rectifier-number">
-                                    {{ $kwh->nama_alias ?? ('KWH_' . str_pad($index + 1, 2, '0', STR_PAD_LEFT)) }}
+                                    {{ $kwh->nomor_kwh ?? $kwh->nama_alias ?? ('KWH_' . str_pad($index + 1, 2, '0', STR_PAD_LEFT)) }}
                                 </span>
                             </div>
 
@@ -96,7 +96,7 @@
 
                             <div class="rectifier-card-footer">
                                 <button type="button" class="btn-hapus"
-                                    onclick="hapusKwh({{ $kwh->id }}, '{{ $kwh->nama_alias }}')">
+                                    onclick="hapusKwh({{ $kwh->id }}, '{{ $kwh->nomor_kwh ?? $kwh->nama_alias }}')">
                                     <i class="bi bi-trash3-fill"></i> Hapus
                                 </button>
                                 <a href="{{ route('kwh.detail', [$pop->id, $kwh->id]) }}" class="detail-button">
