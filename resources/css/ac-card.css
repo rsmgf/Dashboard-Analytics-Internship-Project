@@ -211,8 +211,10 @@
 .ac-info-row {
     font-size: 0.8rem;
     color: #334155;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    align-items: baseline;
+    column-gap: 0;
 }
 
 .ac-info-row span {
@@ -232,6 +234,8 @@
     content: ':';
     font-weight: 500;
     color: #64748b;
+    margin-right: 6px;
+    flex-shrink: 0;
 }
 
 .ac-meta {

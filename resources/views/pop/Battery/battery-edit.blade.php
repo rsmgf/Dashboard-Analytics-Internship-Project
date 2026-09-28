@@ -108,7 +108,9 @@
                             <div class="checklist-row">
                                 <div class="checklist-label">Nomor Bank <span class="required">*</span></div>
                                 <div class="checklist-field">
-                                    <input type="text" class="table-input @error('nomor_bank') is-invalid @enderror" name="nomor_bank" value="{{ old('nomor_bank', $battery->nomor_bank) }}" placeholder="Masukkan nomor bank" required>
+                                    <input type="text" class="table-input @error('nomor_bank') is-invalid @enderror" name="nomor_bank"
+                                        value="{{ old('nomor_bank', $battery->nomor_bank) }}" placeholder="Masukkan nomor bank" readonly
+                                        style="background:#f1f5f9; color:#475569; font-weight:600; cursor:not-allowed;" required>
                                     @error('nomor_bank') <span class="text-danger" style="font-size: 0.75rem; color:#ef4444;">{{ $message }}</span> @enderror
                                 </div>
                             </div>

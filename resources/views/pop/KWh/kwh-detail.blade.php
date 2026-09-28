@@ -280,7 +280,7 @@
                     <div class="photo-grid">
                         @forelse ($kwh->photos as $photo)
                             <div class="photo-item"
-                                onclick="openKwhLightbox(this.querySelector('img').src, '{{ $photo->keterangan }}')">
+                                onclick="openKwhLightbox({{ $loop->index }})">
                                 <img src="{{ asset('storage/' . $photo->path) }}" alt="{{ $photo->keterangan }}"
                                     onerror="this.src='https://placehold.co/400x300/f1f5f9/94a3b8?text={{ urlencode($photo->keterangan) }}'">
                                 <span>{{ $photo->keterangan }}</span>
@@ -295,20 +295,103 @@
         </main>
     </div>
 
+    <!-- Lightbox Gallery Modal -->
+    <div id="kwhLightboxModal" class="kwh-lightbox-modal" onclick="handleLightboxBackdropClick(event)">
+        <div class="kwh-lightbox-wrapper">
+            <button type="button" class="kwh-lightbox-close" onclick="closeKwhLightbox()" title="Tutup (Esc)">
+                <i class="bi bi-x-lg"></i>
+            </button>
+
+            @if($kwh->photos->count() > 1)
+                <button type="button" class="kwh-lightbox-nav kwh-lightbox-prev" onclick="prevLightboxPhoto(event)" title="Sebelumnya (Panah Kiri)">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+            @endif
+
+            <img id="kwhLightboxImg" class="kwh-lightbox-img" src="" alt="Foto Dokumentasi kWh">
+
+            @if($kwh->photos->count() > 1)
+                <button type="button" class="kwh-lightbox-nav kwh-lightbox-next" onclick="nextLightboxPhoto(event)" title="Selanjutnya (Panah Kanan)">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+            @endif
+
+            <div id="kwhLightboxCaption" class="kwh-lightbox-caption"></div>
+        </div>
+    </div>
+
     <script>
-        function openKwhLightbox(src, caption) {
-            Swal.fire({
-                title: caption || 'Foto Dokumentasi kWh',
-                imageUrl: src,
-                imageAlt: caption || 'Foto kWh',
-                showCloseButton: true,
-                showConfirmButton: false,
-                width: 'auto',
-                customClass: {
-                    popup: 'swal-popup-custom'
-                }
-            });
+        const kwhPhotos = @json($kwh->photos->map(function($p) {
+            return [
+                'src' => asset('storage/' . $p->path),
+                'caption' => $p->keterangan
+            ];
+        }));
+
+        let currentPhotoIndex = 0;
+        const lightboxModal = document.getElementById('kwhLightboxModal');
+        const lightboxImg = document.getElementById('kwhLightboxImg');
+        const lightboxCaption = document.getElementById('kwhLightboxCaption');
+
+        function openKwhLightbox(indexOrSrc, fallbackCaption) {
+            if (!kwhPhotos || kwhPhotos.length === 0) return;
+
+            if (typeof indexOrSrc === 'number') {
+                currentPhotoIndex = (indexOrSrc + kwhPhotos.length) % kwhPhotos.length;
+            } else {
+                const foundIndex = kwhPhotos.findIndex(p => p.src === indexOrSrc);
+                currentPhotoIndex = foundIndex !== -1 ? foundIndex : 0;
+            }
+
+            updateLightboxContent();
+            lightboxModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
+
+        function closeKwhLightbox() {
+            lightboxModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function updateLightboxContent() {
+            const photo = kwhPhotos[currentPhotoIndex];
+            if (!photo) return;
+            lightboxImg.src = photo.src;
+            lightboxImg.alt = photo.caption || 'Foto kWh';
+            const counterText = kwhPhotos.length > 1 ? ` (${currentPhotoIndex + 1} / ${kwhPhotos.length})` : '';
+            lightboxCaption.textContent = (photo.caption || 'Foto Dokumentasi kWh') + counterText;
+        }
+
+        function nextLightboxPhoto(e) {
+            if (e) e.stopPropagation();
+            if (kwhPhotos.length <= 1) return;
+            currentPhotoIndex = (currentPhotoIndex + 1) % kwhPhotos.length;
+            updateLightboxContent();
+        }
+
+        function prevLightboxPhoto(e) {
+            if (e) e.stopPropagation();
+            if (kwhPhotos.length <= 1) return;
+            currentPhotoIndex = (currentPhotoIndex - 1 + kwhPhotos.length) % kwhPhotos.length;
+            updateLightboxContent();
+        }
+
+        function handleLightboxBackdropClick(e) {
+            if (e.target === lightboxModal || e.target.classList.contains('kwh-lightbox-wrapper')) {
+                closeKwhLightbox();
+            }
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (!lightboxModal || !lightboxModal.classList.contains('active')) return;
+            if (e.key === 'Escape') {
+                closeKwhLightbox();
+            } else if (e.key === 'ArrowRight') {
+                nextLightboxPhoto();
+            } else if (e.key === 'ArrowLeft') {
+                prevLightboxPhoto();
+            }
+        });
     </script>
 </body>
 

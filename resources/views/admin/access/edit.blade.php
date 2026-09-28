@@ -101,10 +101,9 @@
                         </table>
                     </div>
 
-                    <div style="margin-top: 16px; display:flex; justify-content:flex-end; gap:10px;">
-                        <a href="{{ route('admin.access.index') }}" class="btn-terapkan"
-                            style="text-decoration:none;">Batal</a>
-                        <button type="submit" class="btn-simpan-akses"><i class="bi bi-save"></i> Simpan</button>
+                    <div class="access-footer-actions">
+                        <a href="{{ route('admin.access.index') }}" class="btn-batal-akses">Batal</a>
+                        <button type="submit" class="btn-simpan-akses"><i class="bi bi-save"></i> Simpan Perubahan</button>
                     </div>
                 </form>
             </div>

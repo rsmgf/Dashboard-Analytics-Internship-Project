@@ -81,7 +81,28 @@ body{
 .search-container{
     display:flex;
     justify-content:flex-end;
+    align-items:center;
+    gap:15px;
     margin-bottom:22px;
+}
+
+.filter-box select{
+    height:42px;
+    padding:0 15px;
+    border-radius:10px;
+    border:1px solid #D6E4F0;
+    outline:none;
+    font-family:'Poppins',sans-serif;
+    color:#64748B;
+    background:#fff;
+    cursor:pointer;
+    font-size:13px;
+    transition:.25s ease;
+}
+
+.filter-box select:focus{
+    border-color:#007BFF;
+    box-shadow:0 0 0 4px rgba(0,123,255,.12);
 }
 
 .search-box{
@@ -128,6 +149,7 @@ body{
     background:#fff;
     border-radius:16px;
     overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
     box-shadow:0 10px 30px rgba(15,23,42,.08);
     border:1px solid #E2E8F0;
 }
@@ -560,14 +582,6 @@ body{
         padding:18px;
     }
 
-    .search-container{
-        justify-content:flex-start;
-    }
-
-    .search-box{
-        width:100%;
-    }
-
     .pagination-wrapper{
         flex-direction:column;
         align-items:flex-start;
@@ -575,47 +589,54 @@ body{
     }
 }
 
-@media(max-width:600px){
+@media(max-width:640px){
+
+    .role-page{
+        padding:14px 12px 32px;
+    }
 
     .role-title h1{
-        font-size:22px;
+        font-size:21px;
+    }
+
+    .search-container{
+        flex-direction:column;
+        align-items:stretch;
+        gap:10px;
+        margin-bottom:16px;
+    }
+
+    .filter-box,
+    .filter-box select,
+    .search-box{
+        width:100% !important;
     }
 
     .role-modal{
         width:100%;
+        max-width:calc(100vw - 32px);
+        max-height:calc(100vh - 40px);
+        margin:16px;
         border-radius:16px;
+        display:flex;
+        flex-direction:column;
     }
 
-    .modal-body,
+    .modal-body{
+        overflow-y:auto;
+        padding-left:18px;
+        padding-right:18px;
+    }
+
     .modal-header,
     .modal-footer{
         padding-left:18px;
         padding-right:18px;
     }
 
-    /* =====================================================
-   SIDEBAR DROPDOWN & SUBMENU
-===================================================== */
-.sidebar-submenu {
-    display: none; /* Sembunyikan submenu secara default */
-    flex-direction: column;
-    padding-left: 20px; /* Indentasi agar terlihat seperti anakan menu */
-    margin-top: 5px;
-}
-
-/* Class 'show' akan ditambahkan oleh JavaScript saat diklik */
-.sidebar-submenu.show {
-    display: flex; 
-}
-
-/* Animasi putar ikon panah (chevron) */
-.dropdown-arrow {
-    transition: transform 0.3s ease;
-    margin-left: auto; /* Mendorong panah ke ujung kanan */
-}
-
-/* Jika parent diklik, panah berputar 180 derajat */
-.sidebar-dropdown.open .dropdown-arrow {
-    transform: rotate(180deg);
-}
+    .btn-save{
+        width:100%;
+        text-align:center;
+        justify-content:center;
+    }
 }

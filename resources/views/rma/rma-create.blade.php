@@ -185,6 +185,15 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label for="judul_rma">Nama / Judul Dokumen <span style="font-weight:400; color:#64748b; font-size:12px;">(opsional)</span></label>
+                                    <input type="text" id="judul_rma" name="judul_rma" class="form-control"
+                                        placeholder="Contoh: RMA Router Cisco - POP Jakarta Pusat"
+                                        value="{{ old('judul_rma') }}"
+                                        maxlength="150">
+                                    <div class="field-description">Biarkan kosong untuk generate otomatis dari Merk + Lokasi</div>
+                                </div>
+
+                                <div class="form-group">
                                     <label for="so_po">No. IO.SP2K/SO/PO/ANDOP <span>*</span></label>
                                     <input type="text" id="so_po" name="so_po" class="form-control"
                                         placeholder="Masukkan nomor dokumen" required>

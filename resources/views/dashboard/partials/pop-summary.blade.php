@@ -83,14 +83,14 @@
                         <div class="donut-device-header" style="justify-content:space-between;">
                             <div style="display:flex; align-items:center; gap:10px;">
                                 <div class="donut-device-icon"><i class="bi bi-hdd-stack"></i></div>
-                                <span class="donut-device-number">{{ $rectifier->nama_alias ?? '-' }}</span>
+                                <span class="donut-device-number">{{ $rectifier->nomor_recti ?? $rectifier->nama_alias ?? '-' }}</span>
                             </div>
                             <div x-data="{ open: false }" class="export-menu-wrapper">
                                 <button @click="open = !open" @click.away="open = false" class="export-menu-btn"><i class="bi bi-list"></i></button>
                                 <div x-show="open" style="display:none;" class="export-dropdown">
-                                    <button @click="exportImage('{{ $cardId }}', 'png', 'Rectifier_{{ $rectifier->nama_alias ?? $rectifier->id }}'); open = false"><i class="bi bi-image" style="margin-right:8px;"></i> Download PNG</button>
-                                    <button @click="exportImage('{{ $cardId }}', 'jpeg', 'Rectifier_{{ $rectifier->nama_alias ?? $rectifier->id }}'); open = false"><i class="bi bi-image-fill" style="margin-right:8px;"></i> Download JPEG</button>
-                                    <button @click="exportPDF('{{ $cardId }}', 'Rectifier_{{ $rectifier->nama_alias ?? $rectifier->id }}'); open = false"><i class="bi bi-file-pdf" style="margin-right:8px;"></i> Download PDF</button>
+                                    <button @click="exportImage('{{ $cardId }}', 'png', 'Rectifier_{{ $rectifier->nomor_recti ?? $rectifier->nama_alias ?? $rectifier->id }}'); open = false"><i class="bi bi-image" style="margin-right:8px;"></i> Download PNG</button>
+                                    <button @click="exportImage('{{ $cardId }}', 'jpeg', 'Rectifier_{{ $rectifier->nomor_recti ?? $rectifier->nama_alias ?? $rectifier->id }}'); open = false"><i class="bi bi-image-fill" style="margin-right:8px;"></i> Download JPEG</button>
+                                    <button @click="exportPDF('{{ $cardId }}', 'Rectifier_{{ $rectifier->nomor_recti ?? $rectifier->nama_alias ?? $rectifier->id }}'); open = false"><i class="bi bi-file-pdf" style="margin-right:8px;"></i> Download PDF</button>
                                     <div class="export-dropdown-divider"></div>
                                     <button @click="showTable = !showTable; open = false"><i class="bi bi-table" style="margin-right:8px;"></i> <span x-text="showTable ? 'Sembunyikan Tabel' : 'Lihat Data Tabel'"></span></button>
                                 </div>
@@ -124,7 +124,7 @@
                         <div x-show="showTable" style="display:none;" class="data-table-wrapper">
                             <span class="data-table-title"><i class="bi bi-table" style="margin-right:6px;"></i>Detail Data Rectifier</span>
                             <div class="data-table-grid">
-                                <div class="dt-item"><span class="dt-label">Nomor Recti</span><span class="dt-value">{{ $rectifier->nama_alias ?? '-' }}</span></div>
+                                <div class="dt-item"><span class="dt-label">Nomor Recti</span><span class="dt-value">{{ $rectifier->nomor_recti ?? $rectifier->nama_alias ?? '-' }}</span></div>
                                 <div class="dt-item"><span class="dt-label">Kapasitas</span><span class="dt-value">{{ $rectifier->kapasitas_rectifier ?? '-' }} A</span></div>
                                 <div class="dt-item"><span class="dt-label">Beban</span><span class="dt-value">{{ $rectifier->beban ?? '-' }} A</span></div>
                                 <div class="dt-item"><span class="dt-label">Sisa Kapasitas</span><span class="dt-value">{{ (is_numeric($rectifier->kapasitas_rectifier) && is_numeric($rectifier->beban)) ? ($rectifier->kapasitas_rectifier - $rectifier->beban) . ' A' : '-' }}</span></div>
@@ -331,7 +331,7 @@
                         <div class="rectifier-group-line">
                             <div class="rectifier-group-line-left">
                                 <span class="dashboard-module-badge">Rectifier #{{ $groupIndex + 1 }}</span>
-                                <span class="rectifier-group-sn">{{ $group['banks']->first()->rectifier->nomor_recti ?? '-' }}</span>
+                                <span class="rectifier-group-sn">{{ $group['rectifier']?->nomor_recti ?? $group['banks']->first()?->rectifier?->nomor_recti ?? ('RECT_' . str_pad($groupIndex + 1, 2, '0', STR_PAD_LEFT)) }}</span>
                             </div>
                             <div class="rectifier-group-line-right">
                                 <div class="backup-time-badge {{ $group['performa_class'] }}">
