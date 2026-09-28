@@ -202,4 +202,8 @@ Route::middleware('auth')->group(function () {
     Route::middleware('permission:acs.index.delete')->group(function () {
         Route::delete('/pops/{pop}/ac/{id}', [AcController::class, 'destroy'])->name('acs.destroy');
     });
+
+Route::get('/notifications', function () {
+    return view('notifikasi');
+})->name('notifications.index');
 });

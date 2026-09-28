@@ -1,0 +1,273 @@
+/* ==========================================================================
+   RESET & DASAR
+   ========================================================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8fafc;
+    color: #1e293b;
+}
+
+.notif-page-wrapper {
+    padding: 32px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* ==========================================================================
+   HEADER BANNER NOTIFIKASI
+   ========================================================================== */
+.notification-header-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.btn-back-circle {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid #cbd5e1;
+    background-color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #334155;
+    font-size: 1.2rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.btn-back-circle:hover {
+    background-color: #f1f5f9;
+    border-color: #94a3b8;
+    color: #0f172a;
+    transform: translateX(-2px);
+}
+
+.notif-pill-banner {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: #e0f2fe;
+    border: 1px solid #bae6fd;
+    border-radius: 12px;
+    padding: 12px 20px;
+    color: #0369a1;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.notif-pill-banner i {
+    font-size: 1.25rem;
+}
+
+/* ==========================================================================
+   CARD UTAMA & TAB (FOLDER STYLE PRESISI)
+   ========================================================================== */
+.notification-panel-card {
+    background: #ffffff;
+    border: 1.5px solid #7dd3fc;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(2, 132, 199, 0.05);
+    overflow: hidden;
+}
+
+.notif-folder-header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    background-color: #f0f9ff;
+    border-bottom: 1.5px solid #7dd3fc;
+    padding: 0 16px 0 0;
+}
+
+.notif-tab-trapezoid {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    position: relative;
+    bottom: -1.5px; /* Menutupi garis bawah card */
+}
+
+.tab-btn {
+    border: 1.5px solid transparent;
+    border-bottom: none;
+    background: transparent;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #64748b;
+    padding: 12px 28px 10px 28px;
+    cursor: pointer;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+.tab-btn:hover:not(.active) {
+    color: #0284c7;
+    background-color: #e0f2fe;
+}
+
+/* Tab Aktif Menyatu Halus ke Isi Konten */
+.tab-btn.active {
+    background-color: #ffffff;
+    color: #0284c7;
+    font-weight: 700;
+    border-color: #7dd3fc;
+    border-bottom: 2px solid #ffffff; /* Buka penutup border dasar */
+}
+
+/* Kontrol Tab Pane */
+.notif-tab-pane {
+    display: none;
+}
+
+.notif-tab-pane.active {
+    display: block;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   DAFTAR ITEM NOTIFIKASI
+   ========================================================================== */
+.notif-panel-body {
+    padding: 16px 28px 24px 28px;
+}
+
+.notif-row {
+    display: flex;
+    align-items: center;
+    padding: 18px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+.notif-row:last-child {
+    border-bottom: none;
+}
+
+.notif-row:hover {
+    background-color: #f8fafc;
+    transform: translateX(4px);
+}
+
+/* Kotak Ikon & Titik Merah */
+.notif-icon-col {
+    position: relative;
+    margin-right: 18px;
+    flex-shrink: 0;
+}
+
+.notif-icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+}
+
+/* Warna Varian Ikon */
+.bg-icon-red { background-color: #fee2e2; color: #dc2626; }
+.bg-icon-orange { background-color: #fef3c7; color: #d97706; }
+.bg-icon-blue { background-color: #e0f2fe; color: #0284c7; }
+.bg-icon-purple { background-color: #f3e8ff; color: #7c3aed; }
+
+/* Dot Status Belum Dibaca */
+.has-dot::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 11px;
+    height: 11px;
+    background-color: #ef4444;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+}
+
+/* Teks Judul & Deskripsi */
+.notif-text-col {
+    flex: 1;
+    min-width: 0;
+}
+
+.notif-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0284c7;
+    margin-bottom: 3px;
+}
+
+.notif-subtitle {
+    font-size: 0.85rem;
+    color: #64748b;
+    line-height: 1.4;
+}
+
+.notif-subtitle strong {
+    color: #1e293b;
+    font-weight: 600;
+}
+
+/* Kolom Kanan */
+.notif-info-col {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-left: 20px;
+    flex-shrink: 0;
+}
+
+/* Badge Status */
+.badge-status {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 4px 12px;
+    border-radius: 6px;
+    min-width: 96px;
+    text-align: center;
+    display: inline-block;
+}
+
+.badge-warning { background-color: #fffbeb; color: #d97706; border: 1px solid #fcd34d; }
+.badge-alert { background-color: #fef2f2; color: #dc2626; border: 1px solid #fca5a5; }
+.badge-belum-uji { background-color: #f0fdf4; color: #16a34a; border: 1px solid #86efac; }
+.badge-jadwal-uji { background-color: #f0f9ff; color: #0284c7; border: 1px solid #7dd3fc; }
+
+/* Jam & Panah */
+.notif-time {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #0369a1;
+    white-space: nowrap;
+}
+
+.notif-arrow {
+    font-size: 1.15rem;
+    color: #94a3b8;
+    transition: all 0.2s ease;
+}
+
+.notif-row:hover .notif-arrow {
+    color: #0284c7;
+    transform: translateX(3px);
+}
