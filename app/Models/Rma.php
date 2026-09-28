@@ -14,4 +14,10 @@ class Rma extends Model
     {
         return $this->hasMany(RmaMaterial::class);
     }
+
+    // User pembuat RMA
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

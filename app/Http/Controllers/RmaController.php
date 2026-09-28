@@ -4,26 +4,49 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreRmaRequest;
 use App\Models\Rma;
+use App\Models\RmaMaterial;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class RmaController extends Controller
 {
     public function index(Request $request)
     {
-        $search = $request->query('search');
-        $sort = $request->query('sort', 'id');
-        $direction = strtolower($request->query('direction')) === 'desc' ? 'desc' : 'asc';
+        $user = auth()->user();
+        $isSuperAdminOrManager = $user && ($user->hasRole(['super_admin', 'manajer']) || $user->role === 'super_admin' || $user->role === 'manajer');
 
-        $query = Rma::with('materials')
+        $search    = $request->query('search');
+        $sort      = $request->query('sort', 'id');
+        $direction = strtolower($request->query('direction')) === 'desc' ? 'desc' : 'asc';
+        // Filter khusus Super Admin/Manager: 'semua' (default) atau 'milik_saya'
+        $tampil    = $request->query('tampil', 'semua');
+
+        $query = Rma::with(['materials', 'user'])
+            ->when(!$isSuperAdminOrManager, function ($q) use ($user) {
+                // Teknisi/Karyawan hanya melihat RMA miliknya
+                $q->where(function ($sub) use ($user) {
+                    $sub->where('user_id', $user->id)
+                        ->orWhere('nama_pemohon', $user->name);
+                });
+            })
+            ->when($isSuperAdminOrManager && $tampil === 'milik_saya', function ($q) use ($user) {
+                // Super Admin memilih filter "Milik Saya"
+                $q->where(function ($sub) use ($user) {
+                    $sub->where('user_id', $user->id)
+                        ->orWhere('nama_pemohon', $user->name);
+                });
+            })
             ->when($search, function ($q, $search) {
                 $q->where(function ($sub) use ($search) {
-                    $sub->where('so_po', 'like', "%{$search}%")
-                        ->orWhere('lokasi_asal', 'like', "%{$search}%");
+                    $sub->where('judul_rma', 'like', "%{$search}%")
+                        ->orWhere('so_po', 'like', "%{$search}%")
+                        ->orWhere('lokasi_asal', 'like', "%{$search}%")
+                        ->orWhere('nama_pemohon', 'like', "%{$search}%")
+                        ->orWhere('merk', 'like', "%{$search}%");
                 });
             });
 
-        // Jika sort tanggal dipilih, urutkan berdasarkan kolom tanggal DAN jam pembuatan (created_at)
         if ($sort === 'tanggal') {
             $query->orderBy('tanggal', $direction)->orderBy('created_at', $direction);
         } else {
@@ -32,7 +55,7 @@ class RmaController extends Controller
 
         $rmas = $query->paginate(8)->withQueryString();
 
-        return view('rma.rma', compact('rmas', 'sort', 'direction'));
+        return view('rma.rma', compact('rmas', 'sort', 'direction', 'isSuperAdminOrManager', 'tampil'));
     }
 
     public function create()
@@ -56,8 +79,14 @@ class RmaController extends Controller
             ? $request->file('ttd_pemohon')->store('signatures', 'local')
             : null;
 
+        $judulRma = !empty($validatedData['judul_rma'])
+            ? trim($validatedData['judul_rma'])
+            : ('RMA ' . ($validatedData['merk'] ?? 'Device') . ' - ' . ($validatedData['lokasi_asal'] ?? 'POP'));
+
         // 2. Simpan data utama
         $rma = Rma::create([
+            'judul_rma'         => $judulRma,
+            'user_id'           => auth()->id(),
             'nama_pemohon'      => $validatedData['nama_pemohon'],
             'nama_manager'      => $validatedData['nama_manager'],
             'is_material_rusak' => $validatedData['is_material_rusak'],
@@ -98,6 +127,137 @@ class RmaController extends Controller
         // Fallback: stream PDF langsung
         $pdf = Pdf::loadView('pdf.rma', compact('data'));
         return $pdf->stream($this->formatRmaPdfFilename($data));
+    }
+
+    public function edit($id)
+    {
+        $user = auth()->user();
+        $rma  = Rma::with('materials')->findOrFail($id);
+
+        $isSuperAdminOrManager = $user && ($user->hasRole(['super_admin', 'manajer']) || in_array($user->role, ['super_admin', 'manajer']));
+
+        // Teknisi hanya bisa edit miliknya sendiri
+        if (!$isSuperAdminOrManager && $rma->user_id && $rma->user_id !== $user->id) {
+            abort(403, 'Anda tidak memiliki izin untuk mengedit RMA ini.');
+        }
+
+        $managers = Rma::select('nama_manager')
+            ->whereNotNull('nama_manager')
+            ->where('nama_manager', '!=', '')
+            ->distinct()
+            ->orderBy('nama_manager')
+            ->pluck('nama_manager');
+
+        return view('rma.rma-edit', compact('rma', 'managers'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $user = auth()->user();
+        $rma  = Rma::with('materials')->findOrFail($id);
+
+        $isSuperAdminOrManager = $user && ($user->hasRole(['super_admin', 'manajer']) || in_array($user->role, ['super_admin', 'manajer']));
+
+        // Teknisi hanya bisa update miliknya sendiri
+        if (!$isSuperAdminOrManager && $rma->user_id && $rma->user_id !== $user->id) {
+            abort(403, 'Anda tidak memiliki izin untuk mengubah RMA ini.');
+        }
+
+        $request->validate([
+            'judul_rma'         => 'nullable|string|max:255',
+            'nama_pemohon'      => 'required|string|max:255',
+            'nama_manager'      => 'required|string|max:255',
+            'is_material_rusak' => 'required|boolean',
+            'so_po'             => 'required|string|max:255',
+            'valuation_type'    => 'required|in:ex-project,dismantle,rusak-L,rusak-TL',
+            'tanggal'           => 'required|date',
+            'lokasi_asal'       => 'required|string|max:255',
+            'merk'              => 'required|string|max:255',
+            'type'              => 'required|string|max:255',
+            'material_number'   => 'nullable|string|max:255',
+            'description'       => 'required|string',
+            'kerusakan'         => 'nullable|array',
+            'alasan'            => 'nullable|string',
+            'serial_number'     => 'required|string|max:255',
+            'foto_material_baru.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'hapus_foto'        => 'nullable|array',
+        ]);
+
+        $judulRma = !empty($request->judul_rma)
+            ? trim($request->judul_rma)
+            : ('RMA ' . ($request->merk ?? 'Device') . ' - ' . ($request->lokasi_asal ?? 'POP'));
+
+        $rma->update([
+            'judul_rma'         => $judulRma,
+            'nama_pemohon'      => $request->nama_pemohon,
+            'nama_manager'      => $request->nama_manager,
+            'is_material_rusak' => $request->is_material_rusak,
+            'so_po'             => $request->so_po,
+            'valuation_type'    => $request->valuation_type,
+            'tanggal'           => $request->tanggal,
+            'lokasi_asal'       => $request->lokasi_asal,
+            'merk'              => $request->merk,
+            'type'              => $request->type,
+            'material_number'   => $request->material_number,
+            'description'       => $request->description,
+            'kerusakan'         => $request->kerusakan,
+            'alasan'            => $request->alasan,
+        ]);
+
+        // Hapus foto yang dipilih untuk dihapus
+        if ($request->has('hapus_foto')) {
+            foreach ($request->hapus_foto as $materialId) {
+                $material = RmaMaterial::find($materialId);
+                if ($material && $material->rma_id === $rma->id) {
+                    Storage::disk('public')->delete($material->foto_path);
+                    $material->delete();
+                }
+            }
+        }
+
+        // Tambah foto baru jika ada
+        if ($request->hasFile('foto_material_baru')) {
+            foreach ($request->file('foto_material_baru') as $file) {
+                $path = $file->store('material_images', 'public');
+                $rma->materials()->create([
+                    'serial_number' => $request->serial_number,
+                    'foto_path'     => $path,
+                ]);
+            }
+        }
+
+        // Update serial_number di semua material
+        $rma->materials()->update(['serial_number' => $request->serial_number]);
+
+        return redirect()->route('rma')->with('success', 'Data RMA berhasil diperbarui!');
+    }
+
+    public function destroy($id)
+    {
+        $user = auth()->user();
+        $rma  = Rma::with('materials')->findOrFail($id);
+
+        $isSuperAdminOrManager = $user && ($user->hasRole(['super_admin', 'manajer']) || in_array($user->role, ['super_admin', 'manajer']));
+
+        // Teknisi hanya bisa hapus miliknya sendiri
+        if (!$isSuperAdminOrManager) {
+            $isOwner = ($rma->user_id && $rma->user_id === $user->id)
+                    || (!$rma->user_id && $rma->nama_pemohon === $user->name);
+            if (!$isOwner) {
+                if (request()->expectsJson()) {
+                    return response()->json(['message' => 'Anda tidak memiliki izin untuk menghapus RMA ini.'], 403);
+                }
+                abort(403, 'Anda tidak memiliki izin untuk menghapus RMA ini.');
+            }
+        }
+
+        foreach ($rma->materials as $material) {
+            Storage::disk('public')->delete($material->foto_path);
+        }
+        $rma->materials()->delete();
+        $rma->delete();
+
+        return redirect()->route('rma')->with('success', 'Data RMA berhasil dihapus.');
     }
 
     public function generatePdf($id)

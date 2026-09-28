@@ -490,6 +490,11 @@ body.sidebar-collapsed .logout-btn {
 /* RESPONSIVE — MOBILE */
 @media (max-width: 768px) {
 
+    /* Kunci scroll body saat sidebar terbuka di mobile */
+    body.sidebar-open {
+        overflow: hidden;
+    }
+
     /* Sidebar selalu tersembunyi secara default di mobile */
     .sidebar {
         transform: translateX(-100%);
@@ -516,6 +521,50 @@ body.sidebar-collapsed .logout-btn {
     body.sidebar-collapsed .sidebar {
         transform: translateX(-100%);
         width: var(--sidebar-width) !important;
+    }
+
+    /* Topbar mobile */
+    .topbar {
+        padding: 0 16px !important;
+    }
+
+    .user-profile span {
+        max-width: 130px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 480px) {
+    .topbar {
+        padding: 0 12px !important;
+    }
+
+    .user-profile {
+        gap: 8px;
+    }
+
+    .user-profile span {
+        max-width: 90px;
+        font-size: 13px;
+    }
+
+    #toast-container {
+        width: calc(100% - 24px);
+    }
+
+    .toast-item {
+        min-width: 0;
+        width: 100%;
+        font-size: 0.8rem;
+        padding: 12px 14px;
+    }
+}
+
+@media (max-width: 360px) {
+    .user-profile span {
+        display: none;
     }
 }
 

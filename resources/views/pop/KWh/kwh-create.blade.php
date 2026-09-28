@@ -115,7 +115,8 @@
                                     <div class="rform-group">
                                         <label class="rform-label">ID Customer (PLN)</label>
                                         <input type="text" name="id_customer_pln" class="rform-input"
-                                            value="{{ old('id_customer_pln') }}" placeholder="Masukkan ID Customer PLN">
+                                            value="{{ old('id_customer_pln') }}" placeholder="Masukkan ID Customer PLN"
+                                            required>
                                     </div>
                                 </div>
                             </div>

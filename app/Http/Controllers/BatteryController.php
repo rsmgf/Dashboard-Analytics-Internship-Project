@@ -79,14 +79,24 @@ class BatteryController extends Controller
         $rectifiers = Rectifier::where('pop_id', $pop->id)
             ->orderBy('created_at')->orderBy('id')->get()->values()
             ->map(function ($r, $index) use ($pop) {
-                $r->recti_label = $pop->kode_pop . '_RECT' . str_pad($index + 1, 2, '0', STR_PAD_LEFT);
+                $r->recti_label = $r->nomor_recti ?? ($pop->kode_pop . '_RECT' . str_pad($index + 1, 2, '0', STR_PAD_LEFT));
                 return $r;
             });
 
-        $existingCount = Battery::where('pop_id', $pop->id)->count();
-        $suggestedBank = $pop->kode_pop . '_BANK' . str_pad($existingCount + 1, 2, '0', STR_PAD_LEFT);
+        // Hitung nomor bank berikutnya per masing-masing rectifier
+        $rectifierBankCounts = [];
+        foreach ($rectifiers as $r) {
+            $bankCountForThisRect = Battery::where('pop_id', $pop->id)
+                ->where('rectifier_id', $r->id)
+                ->count();
+            $rectifierBankCounts[$r->id] = $pop->kode_pop . '_BANK' . str_pad($bankCountForThisRect + 1, 2, '0', STR_PAD_LEFT);
+        }
 
-        return view('pop.Battery.battery-create', compact('pop', 'rectifiers', 'suggestedBank'));
+        $suggestedBank = !empty($rectifierBankCounts)
+            ? reset($rectifierBankCounts)
+            : ($pop->kode_pop . '_BANK01');
+
+        return view('pop.Battery.battery-create', compact('pop', 'rectifiers', 'suggestedBank', 'rectifierBankCounts'));
     }
 
     // 3. Menyimpan Data Baterai Baru
@@ -98,9 +108,12 @@ class BatteryController extends Controller
         // Rectifier dipilih via ID integer dari dropdown
         $rectifierId       = (int) $validated['rectifier_id'];
         $matchingRectifier = Rectifier::where('pop_id', $pop->id)->find($rectifierId);
-        $nomorRecti = $matchingRectifier
-            ? $this->generateNomorRecti($pop, $rectifierId)
-            : null;
+
+        // Hitung nomor_bank secara otomatis per rectifier yang dipilih
+        $bankCountForThisRect = Battery::where('pop_id', $pop->id)
+            ->where('rectifier_id', $rectifierId)
+            ->count();
+        $nomorBank = $pop->kode_pop . '_BANK' . str_pad($bankCountForThisRect + 1, 2, '0', STR_PAD_LEFT);
 
         // Hitung persentase kapasitas & performa baterai
         $kapasitasBattery = (float) $validated['kapasitas_battery'];
@@ -149,7 +162,7 @@ class BatteryController extends Controller
             'pop_id'                   => $pop->id,
             'rectifier_id'             => $matchingRectifier?->id,
             'pic'                      => $validated['pic'],
-            'nomor_bank'               => $validated['nomor_bank'],
+            'nomor_bank'               => $nomorBank,
             'merk_battery'             => $validated['merk_battery'],
             'tipe_battery'             => $validated['tipe_battery'],
             'tegangan'                 => isset($validated['tegangan']) ? (float)$validated['tegangan'] : 48,
