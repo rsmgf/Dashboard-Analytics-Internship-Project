@@ -1,6 +1,10 @@
 <aside class="sidebar" id="sidebar">
 
-    {{-- LOGO --}}
+    {{-- HEADER SIDEBAR (dengan tombol tutup mobile) --}}
+    <button type="button" class="sidebar-close-btn" id="sidebarCloseBtn" title="Tutup Sidebar">
+        <i class="bi bi-x"></i>
+    </button>
+
     <div class="sidebar-logo">
         <img src="{{ asset('images/logo-iconplus.png') }}" alt="PLN Icon Plus">
     </div>
@@ -13,7 +17,9 @@
             @foreach ($menus ?? [] as $menu)
                 @if ($menu->children->isNotEmpty())
                     @php
-                        $isChildActive = $menu->children->contains(fn($c) => $c->route && request()->routeIs($c->route));
+                        $isChildActive = $menu->children->contains(
+                            fn($c) => $c->route && request()->routeIs($c->route),
+                        );
                     @endphp
 
                     {{-- PARENT DENGAN CHILD → toggle dropdown, bukan link --}}

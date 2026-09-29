@@ -2,6 +2,10 @@
     box-sizing: border-box;
 }
 
+:root {
+    --glow-pad: 18px;
+}
+
 .dashboard-content {
     width: 100%;
     min-height: calc(100vh - 70px);
@@ -22,7 +26,7 @@
     }
 }
 
-/* ============ WELCOME + SEARCH ============ */
+/* ============ 2. WELCOME + SEARCH + FILTER ============ */
 .dashboard-welcome {
     display: flex;
     align-items: flex-start;
@@ -47,6 +51,13 @@
     margin: 0;
     font-size: 0.85rem;
     color: #64748b;
+}
+
+.dashboard-welcome-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
 }
 
 .dashboard-search-wrapper {
@@ -155,274 +166,6 @@
     text-align: center;
     font-size: 0.8rem;
     color: #94a3b8;
-}
-
-/* ============ SUMMARY CARDS ============ */
-.dashboard-summary-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 16px;
-    margin-bottom: 20px;
-}
-
-.dashboard-summary-card {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 16px 18px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-}
-
-.dashboard-summary-icon {
-    width: 44px;
-    height: 44px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 10px;
-    font-size: 1.2rem;
-    color: #ffffff;
-}
-
-.dashboard-summary-icon.icon-rectifier {
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-}
-
-.dashboard-summary-icon.icon-kwh {
-    background: linear-gradient(135deg, #22c55e, #16a34a);
-}
-
-.dashboard-summary-icon.icon-battery {
-    background: linear-gradient(135deg, #f97316, #ea580c);
-}
-
-.dashboard-summary-icon.icon-ac {
-    background: linear-gradient(135deg, #06b6d4, #0891b2);
-}
-
-.dashboard-summary-label {
-    display: block;
-    font-size: 0.75rem;
-    color: #64748b;
-    font-weight: 500;
-}
-
-.dashboard-summary-value {
-    display: block;
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: #1e293b;
-}
-
-/* ============ HINT ============ */
-.dashboard-hint {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: #eff6ff;
-    border: 1px solid #bfdbfe;
-    color: #1e40af;
-    font-size: 0.82rem;
-    padding: 12px 16px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-}
-
-.dashboard-loading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 40px;
-    color: #64748b;
-    font-size: 0.9rem;
-}
-
-.spin {
-    animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-/* ============ POP SUMMARY HEADER ============ */
-.pop-summary-header {
-    margin-bottom: 20px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid #e2e8f0;
-}
-
-.pop-summary-header h2 {
-    margin: 0 0 4px;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #1e293b;
-}
-
-.pop-summary-header span {
-    font-size: 0.82rem;
-    color: #64748b;
-}
-
-.pop-summary-header span strong {
-    color: #1e293b;
-}
-
-/* ============ MODULE SECTION ============ */
-.dashboard-module-section {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 14px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-}
-
-.dashboard-module-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    margin-bottom: 16px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid #f1f5f9;
-}
-
-.dashboard-module-icon {
-    width: 42px;
-    height: 42px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 10px;
-    background: #eff6ff;
-    color: #2563eb;
-    font-size: 1.15rem;
-}
-
-.dashboard-module-header h3 {
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 700;
-    color: #1e293b;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.dashboard-module-header p {
-    margin: 3px 0 0;
-    font-size: 0.8rem;
-    color: #64748b;
-}
-
-.dashboard-module-badge {
-    font-size: 0.68rem;
-    font-weight: 600;
-    color: #2563eb;
-    background: #eff6ff;
-    border: 1px solid #bfdbfe;
-    padding: 2px 9px;
-    border-radius: 999px;
-}
-
-/* ============ DEVICE CARDS ============ */
-.dashboard-module-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 14px;
-}
-
-.dashboard-device-card {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 14px 16px;
-    transition: all 0.2s ease;
-}
-
-.dashboard-device-card:hover {
-    border-color: #93c5fd;
-    background: #f0f9ff;
-}
-
-.dashboard-device-icon {
-    width: 38px;
-    height: 38px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    color: #2563eb;
-    font-size: 1rem;
-}
-
-.dashboard-device-info {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.dashboard-device-info strong {
-    font-size: 0.9rem;
-    color: #1e293b;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.dashboard-device-stats {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.dashboard-device-stats>div {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.78rem;
-    color: #475569;
-}
-
-.dashboard-stat-label {
-    color: #94a3b8;
-    font-weight: 500;
-    min-width: 110px;
-    flex-shrink: 0;
-}
-
-.dashboard-device-empty {
-    grid-column: 1 / -1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 30px;
-    color: #94a3b8;
-    font-size: 0.85rem;
-    background: #f8fafc;
-    border: 1px dashed #cbd5e1;
-    border-radius: 10px;
 }
 
 .dashboard-filter-btn {
@@ -566,9 +309,310 @@
     color: #94a3b8;
 }
 
-/* ============ DEVICE CARD v2 — DONUT STYLE ============ */
+/* ============ 3. SUMMARY CARDS, HINT, LOADING ============ */
+.dashboard-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.dashboard-summary-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px 18px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+.dashboard-summary-icon {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-size: 1.2rem;
+    color: #ffffff;
+}
+
+.dashboard-summary-icon.icon-rectifier {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.dashboard-summary-icon.icon-kwh {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+.dashboard-summary-icon.icon-battery {
+    background: linear-gradient(135deg, #f97316, #ea580c);
+}
+
+.dashboard-summary-icon.icon-ac {
+    background: linear-gradient(135deg, #06b6d4, #0891b2);
+}
+
+.dashboard-summary-label {
+    display: block;
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.dashboard-summary-value {
+    display: block;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.dashboard-hint {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #1e40af;
+    font-size: 0.82rem;
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.dashboard-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 40px;
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.spin {
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ============ 4. HEADER HASIL POP & MODULE SECTION ============ */
+.pop-summary-header {
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.pop-summary-header h2 {
+    margin: 0 0 4px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.pop-summary-header span {
+    font-size: 0.82rem;
+    color: #64748b;
+}
+
+.pop-summary-header span strong {
+    color: #1e293b;
+}
+
+.dashboard-module-section {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+.dashboard-module-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.dashboard-module-header-battery {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #f1f5f9;
+    flex-wrap: wrap;
+}
+
+.dashboard-module-header-battery .header-left {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+.dashboard-module-header-battery .header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85rem;
+    color: #334155;
+    white-space: nowrap;
+    padding-top: 4px;
+}
+
+.dashboard-module-icon {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 1.15rem;
+}
+
+.dashboard-module-header h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dashboard-module-header p {
+    margin: 3px 0 0;
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+.dashboard-module-badge {
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: #2563eb;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    padding: 2px 9px;
+    border-radius: 999px;
+}
+
+/* ============ 5. DEVICE CARD (VERSI LIST) ============ */
+.dashboard-module-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 14px;
+}
+
+.dashboard-device-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 14px 16px;
+    transition: all 0.2s ease;
+}
+
+.dashboard-device-card:hover {
+    border-color: #93c5fd;
+    background: #f0f9ff;
+}
+
+.dashboard-device-icon {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    color: #2563eb;
+    font-size: 1rem;
+}
+
+.dashboard-device-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.dashboard-device-info strong {
+    font-size: 0.9rem;
+    color: #1e293b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dashboard-device-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.dashboard-device-stats>div {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
+    color: #475569;
+}
+
+.dashboard-stat-label {
+    color: #94a3b8;
+    font-weight: 500;
+    min-width: 110px;
+    flex-shrink: 0;
+}
+
+.dashboard-device-empty {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 30px;
+    color: #94a3b8;
+    font-size: 0.85rem;
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    border-radius: 10px;
+}
+
+/* ============ 6. CAROUSEL ============ */
 .dashboard-carousel-wrapper {
     position: relative;
+}
+
+/* Padding + margin negatif = glow tidak terpotong, lebar card tetap sama */
+.dashboard-carousel-track,
+.battery-inner-track {
+    padding: 22px var(--glow-pad);
+    margin: -22px calc(var(--glow-pad) * -1);
+    scroll-padding-inline: var(--glow-pad);
 }
 
 .dashboard-carousel-track {
@@ -577,8 +621,6 @@
     overflow-x: hidden;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
-    padding: 24px 4px;
-    margin: -24px 0;
 }
 
 .dashboard-carousel-arrow {
@@ -605,6 +647,10 @@
     background: #eff6ff;
 }
 
+.dashboard-carousel-arrow.hidden {
+    display: none;
+}
+
 .dashboard-carousel-arrow.arrow-left {
     left: -18px;
 }
@@ -613,20 +659,36 @@
     right: -18px;
 }
 
+.dashboard-carousel-arrow.small {
+    width: 30px;
+    height: 30px;
+    font-size: 0.85rem;
+}
+
 .dashboard-carousel-dots {
     display: flex;
     justify-content: center;
     gap: 6px;
     margin-top: 12px;
+    position: relative;
+    z-index: 6;
+    /* selalu di atas area track */
 }
 
 .dashboard-carousel-dot {
+    position: relative;
     width: 7px;
     height: 7px;
     border-radius: 50%;
     background: #cbd5e1;
     cursor: pointer;
     transition: all 0.2s ease;
+}
+
+.dashboard-carousel-dot::before {
+    content: "";
+    position: absolute;
+    inset: -8px -3px;
 }
 
 .dashboard-carousel-dot:hover {
@@ -639,41 +701,7 @@
     border-radius: 999px;
 }
 
-.backup-time-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 14px;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    border: 1px solid transparent;
-}
-
-.backup-time-badge.status-excellent {
-    background: rgba(34, 197, 94, 0.1);
-    color: #166534;
-    border-color: rgba(34, 197, 94, 0.3);
-}
-
-.backup-time-badge.status-good {
-    background: rgba(234, 179, 8, 0.1);
-    color: #854d0e;
-    border-color: rgba(234, 179, 8, 0.3);
-}
-
-.backup-time-badge.status-warning {
-    background: rgba(249, 115, 22, 0.1);
-    color: #c2410c;
-    border-color: rgba(249, 115, 22, 0.3);
-}
-
-.backup-time-badge.status-danger {
-    background: rgba(239, 68, 68, 0.1);
-    color: #991b1b;
-    border-color: rgba(239, 68, 68, 0.3);
-}
-
+/* ============ 7. DONUT CARD ============ */
 .donut-device-card {
     position: relative;
     flex: 0 0 calc(50% - 10px);
@@ -696,6 +724,11 @@
     animation: card-alert-blink 1.5s infinite ease-in-out;
 }
 
+.card-alert-blink {
+    animation: card-alert-blink 1.5s infinite ease-in-out;
+}
+
+/* glow maksimal ±14px, masih di dalam --glow-pad */
 @keyframes card-alert-blink {
 
     0%,
@@ -704,12 +737,8 @@
     }
 
     50% {
-        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.55), 0 0 20px rgba(239, 68, 68, 0.45);
+        box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.55), 0 0 12px rgba(239, 68, 68, 0.4);
     }
-}
-
-.card-alert-blink {
-    animation: card-alert-blink 1.5s infinite ease-in-out;
 }
 
 .donut-device-header {
@@ -747,6 +776,10 @@
     flex-wrap: wrap;
 }
 
+.donut-row .donut-item:not(.donut-item-with-info) {
+    flex: 1;
+}
+
 .donut-item {
     display: flex;
     flex-direction: column;
@@ -773,7 +806,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    /* conic-gradient for live view – overridden by canvas overlay for export */
+    /* conic-gradient untuk tampilan live; canvas overlay dipakai saat export */
     background: conic-gradient(var(--donut-color) calc(var(--donut-percent) * 3.6deg), var(--donut-track) 0deg);
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
     cursor: pointer;
@@ -794,7 +827,6 @@
     z-index: 0;
 }
 
-/* Canvas overlay drawn by donut-canvas.js for export/print */
 .donut-canvas-overlay {
     position: absolute;
     inset: 0;
@@ -812,7 +844,6 @@
     font-weight: 700;
     color: #1e293b;
 }
-
 
 .donut-caption {
     font-size: 0.78rem;
@@ -862,7 +893,6 @@
     max-width: 100%;
     min-width: 0;
 }
-
 
 .donut-side-info {
     display: flex;
@@ -914,47 +944,40 @@
     white-space: nowrap;
 }
 
-.donut-row .donut-item:not(.donut-item-with-info) {
-    flex: 1;
-}
-
-.dashboard-carousel-arrow.hidden {
-    display: none;
-}
-
-.dashboard-welcome-actions {
-    display: flex;
+/* ============ 8. BADGE & PILL ============ */
+.backup-time-badge {
+    display: inline-flex;
     align-items: center;
-    gap: 10px;
-    flex-shrink: 0;
-}
-
-.rectifier-group-slide {
-    flex: 0 0 100%;
-    scroll-snap-align: start;
-}
-
-.rectifier-group-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 14px;
-    flex-wrap: wrap;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 8px;
     font-size: 0.85rem;
-}
-
-.rectifier-group-sn {
     font-weight: 600;
-    color: #1e293b;
+    border: 1px solid transparent;
 }
 
-.rectifier-group-divider {
-    color: #cbd5e1;
+.backup-time-badge.status-excellent {
+    background: rgba(34, 197, 94, 0.1);
+    color: #166534;
+    border-color: rgba(34, 197, 94, 0.3);
 }
 
-.rectifier-group-backup {
-    color: #334155;
-    font-weight: 500;
+.backup-time-badge.status-good {
+    background: rgba(234, 179, 8, 0.1);
+    color: #854d0e;
+    border-color: rgba(234, 179, 8, 0.3);
+}
+
+.backup-time-badge.status-warning {
+    background: rgba(249, 115, 22, 0.1);
+    color: #c2410c;
+    border-color: rgba(249, 115, 22, 0.3);
+}
+
+.backup-time-badge.status-danger {
+    background: rgba(239, 68, 68, 0.1);
+    color: #991b1b;
+    border-color: rgba(239, 68, 68, 0.3);
 }
 
 .perf-pill {
@@ -1062,93 +1085,41 @@
     color: #94a3b8;
 }
 
-.battery-inner-wrapper {
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 14px;
+/* ============ 9. BATTERY & RECTIFIER GROUP ============ */
+.rectifier-group-slide,
+.battery-inner-wrapper,
+.battery-inner-track,
+.battery-bank-card {
+    min-width: 0;
+    max-width: 100%;
 }
 
-.battery-inner-wrapper .dashboard-carousel-arrow.small {
-    top: 200px;
+.rectifier-group-slide {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
 }
 
-.battery-inner-wrapper .dashboard-carousel-arrow.small.arrow-left {
-    left: 4px;
-}
-
-.battery-inner-wrapper .dashboard-carousel-arrow.small.arrow-right {
-    right: 4px;
-}
-
-.dashboard-carousel-arrow.small {
-    width: 30px;
-    height: 30px;
-    font-size: 0.85rem;
-}
-
-.battery-bank-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 14px;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-.battery-bank-label {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #1e293b;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.dashboard-module-header-battery {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 14px;
-    margin-bottom: 14px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid #f1f5f9;
-    flex-wrap: wrap;
-}
-
-.dashboard-module-header-battery .header-left {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-}
-
-.dashboard-module-header-battery .header-right {
+.rectifier-group-header {
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 0.85rem;
-    color: #334155;
-    white-space: nowrap;
-    padding-top: 4px;
-}
-
-.battery-bank-header-stacked {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
     margin-bottom: 14px;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
 }
 
-.battery-bank-chip {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    background: #eff6ff;
-    color: #2563eb;
-    border-radius: 8px;
-    font-size: 0.8rem;
+.rectifier-group-sn {
     font-weight: 600;
+    color: #1e293b;
+}
+
+.rectifier-group-divider {
+    color: #cbd5e1;
+}
+
+.rectifier-group-backup {
+    color: #334155;
+    font-weight: 500;
 }
 
 .rectifier-group-line {
@@ -1175,6 +1146,64 @@
     white-space: nowrap;
 }
 
+.battery-inner-wrapper {
+    position: relative;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 14px;
+}
+
+.battery-inner-wrapper .dashboard-carousel-arrow.small {
+    top: 200px;
+}
+
+.battery-inner-wrapper .dashboard-carousel-arrow.small.arrow-left {
+    left: 4px;
+}
+
+.battery-inner-wrapper .dashboard-carousel-arrow.small.arrow-right {
+    right: 4px;
+}
+
+.battery-bank-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.battery-bank-header-stacked {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.battery-bank-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.battery-bank-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: #eff6ff;
+    color: #2563eb;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* ============ 10. PM INFO ============ */
 .donut-item-info-col {
     display: flex;
     flex-direction: column;
@@ -1218,78 +1247,7 @@
     letter-spacing: 0.03em;
 }
 
-/* Halaman Responsive */
-@media (max-width: 480px) {
-    .donut-item-with-info {
-        flex-direction: column;
-    }
-
-    .donut-side-info {
-        width: 100%;
-        justify-content: center;
-    }
-}
-
-@media (max-width: 1024px) {
-    .dashboard-summary-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-}
-
-@media (max-width: 768px) {
-    .dashboard-welcome {
-        flex-direction: column;
-    }
-
-    .dashboard-search-wrapper {
-        width: 100%;
-    }
-
-    .dashboard-summary-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .dashboard-module-cards {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* ============ PRINT STYLES ============ */
-/* Print is now handled via iframe in export.js – minimal styles needed here */
-@media print {
-    body * {
-        visibility: hidden;
-    }
-
-    .print-area-active,
-    .print-area-active * {
-        visibility: visible;
-    }
-
-    .print-area-active {
-        position: fixed;
-        inset: 0;
-        width: 100%;
-        height: auto;
-    }
-
-    .export-menu-wrapper,
-    .export-dropdown,
-    .export-menu-btn,
-    .dashboard-carousel-arrow,
-    .dashboard-carousel-dots {
-        display: none !important;
-    }
-}
-
-.exporting-mode .dashboard-carousel-arrow,
-.exporting-mode .dashboard-carousel-dots,
-.exporting-mode .export-dropdown,
-.exporting-mode .export-menu-btn {
-    display: none !important;
-}
-
-/* ============ EXPORT DROPDOWN STYLES ============ */
+/* ============ 11. EXPORT DROPDOWN & DATA TABLE ============ */
 .export-menu-wrapper {
     position: relative;
 }
@@ -1350,7 +1308,6 @@
     margin: 6px 0;
 }
 
-/* ============ DATA TABLE (ACCORDION) ============ */
 .data-table-wrapper {
     background: #f8fafc;
     border: 1px solid #e2e8f0;
@@ -1400,4 +1357,750 @@
 .dt-value {
     color: #0f172a;
     font-weight: 500;
+}
+
+/* =====================================================
+   12. RESPONSIVE
+   Catatan: aturan isi card (donut, pm-info, pill, header
+   battery) memakai awalan #popSummaryResult supaya menang
+   dari card.css yang di-load setelah file ini.
+   ===================================================== */
+
+/* ---------- TABLET & DI BAWAHNYA (≤ 1024px) ---------- */
+@media (max-width: 1024px) {
+
+    /* layout halaman */
+    .dashboard-content {
+        padding: 20px;
+    }
+
+    .dashboard-welcome {
+        padding: 20px 22px;
+        gap: 16px;
+    }
+
+    .dashboard-summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dashboard-module-section {
+        padding: 16px;
+    }
+
+    .dashboard-module-cards {
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    }
+
+    .dashboard-carousel-track {
+        gap: 14px;
+    }
+
+    .battery-inner-wrapper .dashboard-carousel-arrow.small {
+        top: 50%;
+    }
+
+    /* isi card: 1 card per layar, tetap horizontal */
+    #popSummaryResult .donut-device-card {
+        flex: 0 0 100%;
+        min-width: 0;
+        padding: 16px;
+    }
+
+    #popSummaryResult .battery-bank-card {
+        flex: 0 0 100%;
+        min-width: 0;
+        width: 100%;
+    }
+
+    #popSummaryResult .donut-row {
+        flex-wrap: nowrap;
+        gap: 14px;
+    }
+
+    #popSummaryResult .donut-chart {
+        width: 104px;
+        height: 104px;
+    }
+
+    #popSummaryResult .donut-chart::before {
+        inset: 9px;
+    }
+
+    #popSummaryResult .donut-value {
+        font-size: 1.05rem;
+    }
+}
+
+/* ---------- TABLET SAJA (769px – 1024px): arrow di gutter ---------- */
+@media (min-width: 769px) and (max-width: 1024px) {
+
+    .dashboard-carousel-wrapper {
+        padding-inline: 32px;
+    }
+
+    .battery-inner-wrapper {
+        padding: 12px 32px;
+    }
+
+    .dashboard-carousel-arrow {
+        width: 30px;
+        height: 30px;
+        font-size: 0.9rem;
+    }
+
+    .dashboard-carousel-arrow.arrow-left {
+        left: 0;
+    }
+
+    .dashboard-carousel-arrow.arrow-right {
+        right: 0;
+    }
+
+    .battery-inner-wrapper .dashboard-carousel-arrow.small {
+        width: 28px;
+        height: 28px;
+    }
+
+    .battery-inner-wrapper .dashboard-carousel-arrow.small.arrow-left {
+        left: 2px;
+    }
+
+    .battery-inner-wrapper .dashboard-carousel-arrow.small.arrow-right {
+        right: 2px;
+    }
+}
+
+/* ---------- MOBILE (≤ 768px): layout halaman ---------- */
+@media (max-width: 768px) {
+
+    :root {
+        --glow-pad: 12px;
+    }
+
+    /* welcome, search, filter */
+    .dashboard-content {
+        padding: 14px;
+    }
+
+    .dashboard-welcome {
+        flex-direction: column;
+        padding: 16px;
+        gap: 12px;
+        border-radius: 12px;
+        margin-bottom: 14px;
+    }
+
+    .dashboard-welcome h1 {
+        font-size: 1.05rem;
+    }
+
+    .dashboard-welcome p {
+        font-size: 0.76rem;
+        line-height: 1.5;
+    }
+
+    .dashboard-welcome-actions {
+        width: 100%;
+    }
+
+    .dashboard-search-wrapper {
+        width: 100%;
+        flex: 1 1 auto;
+    }
+
+    .dashboard-search-box input {
+        padding: 9px 36px 9px 12px;
+        font-size: 0.8rem;
+    }
+
+    .dashboard-filter-btn {
+        width: 38px;
+        height: 38px;
+    }
+
+    .dashboard-filter-panel {
+        padding: 12px;
+        margin-bottom: 14px;
+    }
+
+    .dashboard-filter-row {
+        gap: 10px;
+    }
+
+    .dashboard-filter-field {
+        flex: 1 1 calc(50% - 5px);
+        min-width: 0;
+    }
+
+    .dashboard-filter-field select {
+        font-size: 0.78rem;
+        padding: 8px 10px;
+    }
+
+    .dashboard-filter-apply {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .dashboard-filter-pop-item {
+        padding: 10px 12px;
+    }
+
+    .dashboard-filter-pop-info strong {
+        font-size: 0.8rem;
+    }
+
+    .dashboard-filter-pop-info span {
+        font-size: 0.7rem;
+    }
+
+    /* summary */
+    .dashboard-summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin-bottom: 14px;
+    }
+
+    .dashboard-summary-card {
+        padding: 12px;
+        gap: 10px;
+        border-radius: 10px;
+    }
+
+    .dashboard-summary-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+        border-radius: 8px;
+    }
+
+    .dashboard-summary-label {
+        font-size: 0.66rem;
+    }
+
+    .dashboard-summary-value {
+        font-size: 0.88rem;
+    }
+
+    .dashboard-hint {
+        font-size: 0.74rem;
+        padding: 10px 12px;
+        margin-bottom: 14px;
+    }
+
+    /* header hasil POP & module */
+    .pop-summary-header {
+        margin-bottom: 14px;
+        padding-bottom: 10px;
+    }
+
+    .pop-summary-header h2 {
+        font-size: 0.95rem;
+    }
+
+    .pop-summary-header span {
+        font-size: 0.74rem;
+    }
+
+    .dashboard-module-section {
+        padding: 12px;
+        border-radius: 12px;
+        margin-bottom: 14px;
+    }
+
+    .dashboard-module-header,
+    .dashboard-module-header-battery {
+        gap: 10px;
+        margin-bottom: 12px;
+        padding-bottom: 10px;
+    }
+
+    .dashboard-module-header-battery {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .dashboard-module-header-battery .header-left {
+        gap: 10px;
+    }
+
+    .dashboard-module-header-battery .header-right {
+        flex-wrap: wrap;
+        white-space: normal;
+        font-size: 0.75rem;
+        padding-top: 0;
+    }
+
+    .dashboard-module-icon {
+        width: 34px;
+        height: 34px;
+        font-size: 0.95rem;
+        border-radius: 8px;
+    }
+
+    .dashboard-module-header h3 {
+        font-size: 0.88rem;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    .dashboard-module-header p {
+        font-size: 0.72rem;
+    }
+
+    .dashboard-module-badge {
+        font-size: 0.62rem;
+        padding: 2px 7px;
+    }
+
+    /* device card versi list */
+    .dashboard-module-cards {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 10px;
+    }
+
+    .dashboard-device-card {
+        padding: 12px;
+        gap: 10px;
+    }
+
+    .dashboard-device-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+    }
+
+    .dashboard-device-info strong {
+        font-size: 0.82rem;
+    }
+
+    .dashboard-device-stats>div {
+        font-size: 0.72rem;
+    }
+
+    .dashboard-stat-label {
+        min-width: 84px;
+    }
+
+    /* carousel: swipe */
+    .dashboard-carousel-track,
+    .battery-inner-track {
+        gap: 12px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        overscroll-behavior-x: contain;
+    }
+
+    .dashboard-carousel-track::-webkit-scrollbar,
+    .battery-inner-track::-webkit-scrollbar {
+        display: none;
+    }
+
+    .battery-inner-track {
+        gap: 8px;
+        scroll-snap-type: x mandatory;
+    }
+
+    .battery-inner-track>* {
+        scroll-snap-align: start;
+    }
+
+    /* track rectifier (luar) tidak bisa di-swipe; digeser via arrow/dots */
+    #batteryOuterTrack {
+        overflow-x: hidden;
+    }
+
+    .dashboard-carousel-dots {
+        margin-top: 8px;
+    }
+
+    .dashboard-carousel-dot {
+        width: 6px;
+        height: 6px;
+    }
+
+    .dashboard-carousel-dot.active {
+        width: 16px;
+    }
+
+    /* arrow: disembunyikan, kecuali untuk battery (carousel bersarang) */
+    .dashboard-carousel-arrow {
+        display: none;
+    }
+
+    /* arrow rectifier (luar): pojok kanan atas */
+    #batteryOuterArrowLeft:not(.hidden),
+    #batteryOuterArrowRight:not(.hidden) {
+        display: flex;
+        top: 2px;
+        transform: none;
+        width: 26px;
+        height: 26px;
+        font-size: 0.8rem;
+    }
+
+    #batteryOuterArrowLeft {
+        left: auto;
+        right: 34px;
+    }
+
+    #batteryOuterArrowRight {
+        right: 2px;
+    }
+
+    #batteryOuterTrack .rectifier-group-header {
+        padding-right: 66px;
+    }
+
+    /* arrow bank (dalam): di sisi kiri-kanan */
+    .battery-inner-wrapper {
+        padding: 12px;
+        border-radius: 10px;
+    }
+
+    /* semua arrow disembunyikan di mobile (device biasa: swipe + dots) */
+    .dashboard-carousel-arrow {
+        display: none;
+    }
+
+    /* KECUALI arrow antar-rectifier di battery */
+    #batteryOuterArrowLeft:not(.hidden),
+    #batteryOuterArrowRight:not(.hidden) {
+        display: flex;
+        top: 2px;
+        transform: none;
+        width: 26px;
+        height: 26px;
+        font-size: 0.8rem;
+        z-index: 8;
+    }
+
+    #batteryOuterArrowLeft {
+        left: auto;
+        right: 34px;
+    }
+
+    #batteryOuterArrowRight {
+        right: 2px;
+    }
+
+    /* sisakan ruang di header rectifier agar tidak tertimpa arrow */
+    #batteryOuterTrack .rectifier-group-header {
+        padding-right: 66px;
+    }
+
+    .battery-bank-header,
+    .battery-bank-header-stacked {
+        gap: 6px;
+        margin-bottom: 8px;
+    }
+
+    /* data table accordion & export */
+    .data-table-wrapper {
+        padding: 10px;
+        margin-top: 10px;
+    }
+
+    .data-table-title {
+        font-size: 0.8rem;
+    }
+
+    .data-table-grid {
+        gap: 8px;
+        font-size: 0.72rem;
+    }
+
+    .export-dropdown {
+        min-width: 170px;
+    }
+
+    .export-dropdown a,
+    .export-dropdown button {
+        padding: 9px 12px;
+        font-size: 0.78rem;
+    }
+
+    /* ---- ISI CARD (ukuran & font) ---- */
+    #popSummaryResult .donut-device-card {
+        padding: 8px 8px 10px;
+        border-radius: 12px;
+    }
+
+    #popSummaryResult .donut-device-header {
+        gap: 8px;
+        margin-bottom: 8px;
+    }
+
+    #popSummaryResult .donut-device-icon {
+        width: 28px;
+        height: 28px;
+        font-size: 0.85rem;
+        border-radius: 7px;
+    }
+
+    #popSummaryResult .donut-device-number {
+        font-size: 0.68rem;
+    }
+
+    #popSummaryResult .donut-row {
+        flex-wrap: nowrap;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 6px;
+        margin-bottom: 8px;
+    }
+
+    #popSummaryResult .donut-item,
+    #popSummaryResult .donut-chart-group {
+        min-height: 0;
+        min-width: 0;
+        gap: 5px;
+    }
+
+    #popSummaryResult .donut-chart {
+        width: 62px;
+        height: 62px;
+    }
+
+    #popSummaryResult .donut-chart::before {
+        inset: 6px;
+    }
+
+    #popSummaryResult .donut-chart:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    #popSummaryResult .donut-value {
+        font-size: 0.68rem;
+    }
+
+    #popSummaryResult .donut-caption,
+    #popSummaryResult .donut-caption strong {
+        font-size: 0.56rem;
+        line-height: 1.25;
+    }
+
+    #popSummaryResult .donut-caption {
+        min-height: 0;
+    }
+
+    #popSummaryResult .donut-item-with-info {
+        flex-direction: row !important;
+        align-items: center;
+        gap: 6px;
+        flex: 1.4 1 0;
+    }
+
+    #popSummaryResult .donut-side-info {
+        width: auto;
+        max-width: 84px;
+        padding: 5px 6px;
+        gap: 4px;
+        border-radius: 8px;
+    }
+
+    #popSummaryResult .donut-side-icon {
+        width: 24px;
+        height: 24px;
+        font-size: 0.75rem;
+        border-radius: 6px;
+    }
+
+    #popSummaryResult .donut-side-label {
+        font-size: 0.5rem;
+    }
+
+    #popSummaryResult .donut-side-value {
+        font-size: 0.58rem;
+    }
+
+    /* kolom info baterai (pill uji, tanggal) */
+    #popSummaryResult .donut-item-info-col {
+        flex: 0 1 auto;
+        min-width: 0;
+        gap: 6px;
+        align-items: flex-start;
+    }
+
+    #popSummaryResult .pm-info {
+        gap: 4px;
+        max-width: none;
+        font-size: 0.56rem;
+    }
+
+    #popSummaryResult .pm-info i {
+        font-size: 0.85rem;
+    }
+
+    #popSummaryResult .pm-label {
+        font-size: 0.5rem;
+        letter-spacing: 0;
+    }
+
+    #popSummaryResult .pm-info strong {
+        font-size: 0.62rem;
+        margin-top: 0;
+    }
+
+    #popSummaryResult .pm-info small,
+    #popSummaryResult .pm-info span:not(.pm-label) {
+        font-size: 0.52rem;
+        line-height: 1.3;
+    }
+
+    /* header rectifier & battery */
+    #popSummaryResult .rectifier-group-header,
+    #popSummaryResult .rectifier-group-line {
+        font-size: 0.66rem;
+        gap: 6px 8px;
+        margin-bottom: 10px;
+    }
+
+    #popSummaryResult .rectifier-group-line {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    #popSummaryResult .rectifier-group-line-left {
+        flex-wrap: wrap;
+    }
+
+    #popSummaryResult .rectifier-group-line-right {
+        white-space: normal;
+        font-size: 0.66rem;
+        gap: 6px;
+    }
+
+    #popSummaryResult .battery-bank-label {
+        font-size: 0.72rem;
+    }
+
+    #popSummaryResult .battery-bank-chip {
+        font-size: 0.62rem;
+        padding: 3px 8px;
+    }
+
+    /* badge & pill */
+    #popSummaryResult .perf-pill {
+        font-size: 0.54rem;
+        padding: 2px 6px;
+    }
+
+    #popSummaryResult .uji-pill {
+        font-size: 0.54rem;
+        padding: 2px 6px;
+        white-space: nowrap;
+    }
+
+    #popSummaryResult .backup-time-badge {
+        font-size: 0.6rem;
+        padding: 3px 7px;
+        gap: 4px;
+    }
+
+    #popSummaryResult .donut-detail-btn {
+        padding: 7px;
+        font-size: 0.68rem;
+        gap: 6px;
+        border-radius: 7px;
+    }
+}
+
+/* ---------- HP KECIL (≤ 480px) ---------- */
+@media (max-width: 480px) {
+    .dashboard-content {
+        padding: 12px;
+    }
+
+    .dashboard-filter-field {
+        flex: 1 1 100%;
+    }
+
+    #popSummaryResult .donut-chart {
+        width: 54px;
+        height: 54px;
+    }
+
+    #popSummaryResult .donut-chart::before {
+        inset: 5px;
+    }
+
+    #popSummaryResult .donut-value {
+        font-size: 0.62rem;
+    }
+
+    #popSummaryResult .donut-side-info {
+        max-width: 74px;
+    }
+
+    /* hemat ruang */
+    #popSummaryResult .donut-side-icon,
+    #popSummaryResult .pm-info i {
+        display: none;
+    }
+}
+
+/* ---------- HP SANGAT KECIL (≤ 360px) ---------- */
+@media (max-width: 360px) {
+    .dashboard-summary-value {
+        font-size: 0.8rem;
+    }
+
+    #popSummaryResult .donut-chart {
+        width: 48px;
+        height: 48px;
+    }
+
+    #popSummaryResult .donut-chart::before {
+        inset: 4px;
+    }
+
+    #popSummaryResult .donut-value {
+        font-size: 0.56rem;
+    }
+
+    #popSummaryResult .donut-side-info {
+        max-width: 66px;
+    }
+
+    #popSummaryResult .donut-side-value {
+        font-size: 0.54rem;
+    }
+}
+
+/* ============ PRINT & EXPORT ============ */
+/* Print ditangani via iframe di export.js — style minimal saja di sini */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    .print-area-active,
+    .print-area-active * {
+        visibility: visible;
+    }
+
+    .print-area-active {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: auto;
+    }
+
+    .export-menu-wrapper,
+    .export-dropdown,
+    .export-menu-btn,
+    .dashboard-carousel-arrow,
+    .dashboard-carousel-dots {
+        display: none !important;
+    }
+}
+
+.exporting-mode .dashboard-carousel-arrow,
+.exporting-mode .dashboard-carousel-dots,
+.exporting-mode .export-dropdown,
+.exporting-mode .export-menu-btn {
+    display: none !important;
 }

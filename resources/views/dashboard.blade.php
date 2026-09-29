@@ -259,6 +259,13 @@
             }
         });
 
+        function getCardStep(track, cardSelector) {
+            const first = track.querySelector(cardSelector);
+            if (!first) return 0;
+            const gap = parseFloat(getComputedStyle(track).columnGap) || 20;
+            return first.offsetWidth + gap;
+        }
+
         function initCarousel(trackId, dotsId, cardSelector = '.donut-device-card', visibleCount = 2) {
             const track = document.getElementById(trackId);
             if (!track) return;
@@ -266,17 +273,29 @@
             const cards = track.querySelectorAll(cardSelector);
             if (cards.length === 0) return;
 
-            const cardWidth = cards[0].offsetWidth + 20;
+            // 1 card per layar di tablet & mobile
+            if (visibleCount === 2 && window.innerWidth <= 1024) visibleCount = 1;
+
             const totalPositions = Math.max(1, cards.length - visibleCount + 1);
 
             carouselState[trackId] = {
                 page: 0,
                 totalPages: totalPositions,
-                cardWidth,
-                dotsId
+                cardWidth: getCardStep(track, cardSelector),
+                cardSelector,
+                dotsId,
+                lockUntil: 0
             };
 
-            const dotsContainer = dotsId ? document.getElementById(dotsId) : null;
+            // pakai container dots yang ada; kalau id diberikan tapi belum ada, dibuat otomatis
+            let dotsContainer = dotsId ? document.getElementById(dotsId) : null;
+            if (dotsId && !dotsContainer) {
+                dotsContainer = document.createElement('div');
+                dotsContainer.id = dotsId;
+                dotsContainer.className = 'dashboard-carousel-dots';
+                track.insertAdjacentElement('afterend', dotsContainer);
+            }
+
             if (dotsContainer) {
                 dotsContainer.innerHTML = '';
                 if (totalPositions > 1) {
@@ -287,6 +306,28 @@
                         dotsContainer.appendChild(dot);
                     }
                 }
+            }
+
+            // sinkronkan dots saat user swipe (abaikan event scroll dari animasi klik)
+            if (!track.dataset.swipeBound) {
+                track.dataset.swipeBound = '1';
+                let ticking = false;
+                track.addEventListener('scroll', function() {
+                    if (ticking) return;
+                    ticking = true;
+                    requestAnimationFrame(() => {
+                        const s = carouselState[trackId];
+                        if (s && Date.now() > s.lockUntil && s.cardWidth) {
+                            const p = Math.round(track.scrollLeft / s.cardWidth);
+                            s.page = Math.max(0, Math.min(p, s.totalPages - 1));
+                            updateDots(trackId, s.dotsId);
+                            updateArrows(trackId);
+                        }
+                        ticking = false;
+                    });
+                }, {
+                    passive: true
+                });
             }
 
             updateArrows(trackId);
@@ -321,14 +362,18 @@
             const state = carouselState[trackId];
             if (!track || !state) return;
 
+            // hitung ulang lebar card (aman setelah resize / rotate layar)
+            state.cardWidth = getCardStep(track, state.cardSelector) || state.cardWidth;
+
             page = Math.max(0, Math.min(page, state.totalPages - 1));
             state.page = page;
+            state.lockUntil = Date.now() + 700; // biarkan animasi selesai tanpa ditimpa
 
             track.scrollTo({
                 left: page * state.cardWidth,
                 behavior: 'smooth'
-            }); // geser 1 kartu
-            updateDots(trackId, dotsId);
+            });
+            updateDots(trackId, state.dotsId || dotsId);
             updateArrows(trackId);
         }
 
