@@ -460,12 +460,21 @@ select.table-input, select.form-control {
     background: #cbd5e1;
 }
 
+.status-readonly-box.status-excellent,
+.status-readonly-box.status-good,
+.status-readonly-box.status-warning,
+.status-readonly-box.status-danger {
+    background: #f1f5f9 !important;
+    border-color: #e2e8f0 !important;
+    color: #334155 !important;
+}
+
 .status-excellent { background: #f0fdf4 !important; border-color: #bbf7d0 !important; color: #15803d !important; }
-.status-dot-excellent { background: #22c55e !important; }
-.status-good { background: #fefce8 !important; border-color: #fde68a !important; color: #a16207 !important; }
-.status-dot-good { background: #eab308 !important; }
+.status-dot-excellent { background: #16a34a !important; }
+.status-good { background: #f0fdf4 !important; border-color: #bbf7d0 !important; color: #15803d !important; }
+.status-dot-good { background: #16a34a !important; }
 .status-warning { background: #fff7ed !important; border-color: #fed7aa !important; color: #c2410c !important; }
-.status-dot-warning { background: #f97316 !important; }
+.status-dot-warning { background: #f59e0b !important; }
 .status-danger { background: #fef2f2 !important; border-color: #fecaca !important; color: #b91c1c !important; }
 .status-dot-danger { background: #ef4444 !important; }
 

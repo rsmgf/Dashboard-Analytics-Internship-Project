@@ -77,6 +77,15 @@ Route::middleware('auth')->group(function () {
         Route::post('/rma', [RmaController::class, 'store'])->name('rma.store');
     });
 
+    Route::middleware('permission:rma.update')->group(function () {
+        Route::get('/rma/{id}/edit', [RmaController::class, 'edit'])->name('rma.edit');
+        Route::put('/rma/{id}', [RmaController::class, 'update'])->name('rma.update');
+    });
+
+    Route::middleware('permission:rma.delete')->group(function () {
+        Route::delete('/rma/{id}', [RmaController::class, 'destroy'])->name('rma.destroy');
+    });
+
     // --- POP: VIEW (Semua role, cukup login) ---
     Route::get('/pops', [PopController::class, 'index'])->name('pops.index');
 
@@ -202,4 +211,8 @@ Route::middleware('auth')->group(function () {
     Route::middleware('permission:acs.index.delete')->group(function () {
         Route::delete('/pops/{pop}/ac/{id}', [AcController::class, 'destroy'])->name('acs.destroy');
     });
+
+Route::get('/notifications', function () {
+    return view('notifikasi');
+})->name('notifications.index');
 });

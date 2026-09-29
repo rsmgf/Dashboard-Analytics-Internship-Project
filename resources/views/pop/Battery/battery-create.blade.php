@@ -106,7 +106,10 @@
                             <div class="checklist-row">
                                 <div class="checklist-label">Nomor Bank <span class="required">*</span></div>
                                 <div class="checklist-field">
-                                    <input type="text" id="nomor_bank" name="nomor_bank" class="table-input @error('nomor_bank') is-invalid @enderror" value="{{ old('nomor_bank', $suggestedBank ?? '') }}" placeholder="Contoh: {{ $pop->kode_pop }}_BANK01" required>
+                                    <input type="text" id="nomor_bank" name="nomor_bank" class="table-input @error('nomor_bank') is-invalid @enderror"
+                                        value="{{ old('nomor_bank', $suggestedBank ?? '') }}"
+                                        placeholder="Contoh: {{ $pop->kode_pop }}_BANK01" readonly
+                                        style="background:#f1f5f9; color:#475569; font-weight:600; cursor:not-allowed;" required>
                                     @error('nomor_bank') <span class="text-danger" style="font-size: 0.75rem; color:#ef4444;">{{ $message }}</span> @enderror
                                 </div>
                             </div>
@@ -413,6 +416,25 @@
             const statusDisplay = document.getElementById('statusDisplay');
             const statusText = document.getElementById('statusText');
             const statusDot = document.getElementById('statusDot');
+
+            // Hitung nomor bank otomatis sesuai Rectifier yang dipilih
+            const rectifierBankCounts = @json($rectifierBankCounts ?? []);
+            const rectifierSelect = document.getElementById('rectifier_id');
+            const nomorBankInput = document.getElementById('nomor_bank');
+
+            function updateNomorBank() {
+                const selectedRectId = rectifierSelect.value;
+                if (selectedRectId && rectifierBankCounts[selectedRectId]) {
+                    nomorBankInput.value = rectifierBankCounts[selectedRectId];
+                }
+            }
+
+            if (rectifierSelect) {
+                rectifierSelect.addEventListener('change', updateNomorBank);
+                if (rectifierSelect.value) {
+                    updateNomorBank();
+                }
+            }
 
             // Inisialisasi dropdown Merk & Tipe
             if (document.getElementById('merk_battery').value) {

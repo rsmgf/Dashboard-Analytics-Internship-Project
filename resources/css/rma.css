@@ -405,17 +405,57 @@ textarea.form-control {
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
     .rma-layout {
-        padding: 16px;
+        padding: 14px 12px 40px;
     }
     
     .form-card {
-        padding: 20px 16px;
+        padding: 18px 14px;
+        border-radius: 10px;
+    }
+
+    .form-card h2 {
+        font-size: 17px;
+        margin-bottom: 16px;
+    }
+
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+    .radio-group {
+        gap: 10px 16px;
     }
 
     .checker-grid {
         grid-template-columns: 1fr;
+    }
+
+    .upload-dropzone {
+        padding: 24px 14px;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+        align-items: stretch !important;
+        gap: 12px;
+    }
+
+    .form-actions > div {
+        width: 100% !important;
+        display: flex;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+    }
+
+    .form-actions button,
+    .form-actions a {
+        width: 100% !important;
+        justify-content: center !important;
+        text-align: center;
+        padding: 11px 16px;
     }
 }
 

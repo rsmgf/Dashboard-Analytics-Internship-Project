@@ -44,7 +44,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const sidebarToggle = document.getElementById('sidebarToggle');
     const sidebarIcon   = document.getElementById('sidebarToggleIcon');
-    const overlay       = document.getElementById('sidebarOverlay');
+    let overlay         = document.getElementById('sidebarOverlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'sidebarOverlay';
+        overlay.className = 'sidebar-overlay';
+        document.body.appendChild(overlay);
+    }
     function isMobile() { return window.innerWidth <= 768; }
     function closeMobileSidebar() {
         document.body.classList.remove('sidebar-open');

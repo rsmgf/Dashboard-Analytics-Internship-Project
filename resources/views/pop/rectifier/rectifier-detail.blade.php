@@ -73,102 +73,125 @@
                 </span>
             </div>
 
-            <div class="detail-top-grid">
-                <div class="detail-left-column">
-                    {{-- Card Information Rectifier --}}
-                    <div class="detail-card information-card">
-                        <div class="detail-card-title">
-                            <i class="bi bi-info-circle-fill"></i> Information Rectifier
-                        </div>
+            {{-- Card Information Rectifier: full-width, icon-box style --}}
+            <div class="detail-card information-card">
+                <div class="detail-card-title">
+                    <i class="bi bi-info-circle-fill"></i> Information Rectifier
+                </div>
 
-                        <div class="information-grid">
-                            <div class="information-left">
-                                <div class="info-row">
-                                    <span class="info-label">Merk</span>
-                                    <span class="info-value">{{ $rectifier->merk ?? '-' }}</span>
-                                </div>
-
-                                <div class="info-row">
-                                    <span class="info-label">Type</span>
-                                    <span class="info-value">{{ $rectifier->type ?? '-' }}</span>
-                                </div>
-
-                                <div class="info-row">
-                                    <span class="info-label">Type POP</span>
-                                    <span class="info-value">{{ $pop->tipe_pop ?? '-' }}</span>
-                                </div>
-
-                                <div class="serial-box">
-                                    <span class="serial-label">Serial Number (SN)</span>
-                                    <div class="serial-value">
-                                        <span id="snRectifier">{{ $rectifier->sn_rectifier ?? '-' }}</span>
-                                        @if($rectifier->sn_rectifier)
-                                            <button type="button" onclick="copySerial()" title="Copy Serial Number">
-                                                <i class="bi bi-clipboard"></i>
-                                            </button>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="information-right">
-                                <div class="info-small-row">
-                                    <span class="info-label">Jumlah Modul Terpasang</span>
-                                    <span class="info-value">
-                                        {{ $rectifier->modules->count() }} Modul <small style="color: #64748b; font-weight: 500;">(dari {{ $rectifier->kapasitas_slot ?? '-' }} slot)</small>
-                                    </span>
-                                </div>
-
-                                <div class="info-small-row">
-                                    <span class="info-label">Kapasitas / Module</span>
-                                    <span class="info-value">
-                                        @if($rectifier->modules->isNotEmpty() && $rectifier->modules->first()->kapasitas_ampere)
-                                            {{ $rectifier->modules->first()->kapasitas_ampere }}
-                                        @elseif($rectifier->kapasitas_rectifier)
-                                            {{ $rectifier->kapasitas_rectifier }}
-                                        @else
-                                            -
-                                        @endif
-                                    </span>
-                                </div>
-
-                                <div class="info-small-row">
-                                    <span class="info-label">Building</span>
-                                    <span class="info-value">{{ $pop->jenis_bangunan ?? '-' }}</span>
-                                </div>
-
-                                <div class="info-small-row">
-                                    <span class="info-label">Couple</span>
-                                    <span class="info-value">{{ $rectifier->couple ?? '-' }}</span>
-                                </div>
-
-                                <div class="info-small-row">
-                                    <span class="info-label">Utilisasi</span>
-                                    <span class="info-value">{{ $rectifier->utilisasi ? $rectifier->utilisasi . '%' : '-' }}</span>
-                                </div>
-                            </div>
+                <div class="info-box-grid">
+                    <div class="info-box">
+                        <div class="info-box-icon"><i class="bi bi-award-fill"></i></div>
+                        <div class="info-box-text">
+                            <span class="info-box-label">Merk</span>
+                            <span class="info-box-value">{{ $rectifier->merk ?? '-' }}</span>
                         </div>
                     </div>
 
-                    {{-- Card Serial Number Module --}}
-                    <div class="detail-card module-card">
-                        <div class="section-heading">
-                            <span><i class="bi bi-cpu-fill"></i> Serial Number Module</span>
-                            <small>{{ $rectifier->modules->count() }} dari {{ $rectifier->kapasitas_slot ?? '?' }} module terpasang</small>
+                    <div class="info-box">
+                        <div class="info-box-icon"><i class="bi bi-box-seam-fill"></i></div>
+                        <div class="info-box-text">
+                            <span class="info-box-label">Type</span>
+                            <span class="info-box-value">{{ $rectifier->type ?? '-' }}</span>
                         </div>
+                    </div>
 
-                        <div class="module-table">
-                            @forelse($rectifier->modules as $module)
-                                <div class="module-row">
-                                    <div><strong>Module {{ $loop->iteration }}</strong></div>
-                                    <div><code>{{ $module->sn_modul ?? '-' }}</code></div>
-                                </div>
-                            @empty
-                                <div style="text-align:center; color:#64748b; padding:16px; font-size: 0.8rem;">
-                                    Belum ada data module terpasang.
-                                </div>
-                            @endforelse
+                    <div class="info-box">
+                        <div class="info-box-icon"><i class="bi bi-tag-fill"></i></div>
+                        <div class="info-box-text">
+                            <span class="info-box-label">Type POP</span>
+                            <span class="info-box-value">{{ $pop->tipe_pop ?? '-' }}</span>
                         </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-icon"><i class="bi bi-building-fill"></i></div>
+                        <div class="info-box-text">
+                            <span class="info-box-label">Building</span>
+                            <span class="info-box-value">{{ $pop->jenis_bangunan ?? '-' }}</span>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-icon"><i class="bi bi-cpu-fill"></i></div>
+                        <div class="info-box-text">
+                            <span class="info-box-label">Jumlah Modul Terpasang</span>
+                            <span class="info-box-value">
+                                {{ $rectifier->modules->count() }} Modul <small style="color: #64748b; font-weight: 500;">(dari {{ $rectifier->kapasitas_slot ?? '-' }} slot)</small>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-icon"><i class="bi bi-lightning-charge-fill"></i></div>
+                        <div class="info-box-text">
+                            <span class="info-box-label">Kapasitas / Module</span>
+                            <span class="info-box-value">
+                                @if($rectifier->modules->isNotEmpty() && $rectifier->modules->first()->kapasitas_ampere)
+                                    {{ $rectifier->modules->first()->kapasitas_ampere }}
+                                @elseif($rectifier->kapasitas_rectifier)
+                                    {{ $rectifier->kapasitas_rectifier }}
+                                @else
+                                    -
+                                @endif
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-icon"><i class="bi bi-link-45deg"></i></div>
+                        <div class="info-box-text">
+                            <span class="info-box-label">Couple</span>
+                            <span class="info-box-value">{{ $rectifier->couple ?? '-' }}</span>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-icon"><i class="bi bi-graph-up"></i></div>
+                        <div class="info-box-text">
+                            <span class="info-box-label">Utilisasi</span>
+                            <span class="info-box-value">{{ $rectifier->utilisasi ? $rectifier->utilisasi . '%' : '-' }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="serial-box">
+                    <div class="info-box">
+                        <div class="info-box-icon"><i class="bi bi-upc-scan"></i></div>
+                        <div class="info-box-text">
+                            <span class="info-box-label serial-label">Serial Number (SN)</span>
+                            <div class="serial-value">
+                                <span id="snRectifier">{{ $rectifier->sn_rectifier ?? '-' }}</span>
+                            </div>
+                        </div>
+                        @if($rectifier->sn_rectifier)
+                            <button type="button" onclick="copySerial()" title="Copy Serial Number">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-bottom-grid">
+                {{-- Card Serial Number Module --}}
+                <div class="detail-card module-card">
+                    <div class="section-heading">
+                        <span><i class="bi bi-cpu-fill"></i> Serial Number Module</span>
+                        <small>{{ $rectifier->modules->count() }} dari {{ $rectifier->kapasitas_slot ?? '?' }} module terpasang</small>
+                    </div>
+
+                    <div class="module-table">
+                        @forelse($rectifier->modules as $module)
+                            <div class="module-row">
+                                <div><strong>Module {{ $loop->iteration }}</strong></div>
+                                <div><code>{{ $module->sn_modul ?? '-' }}</code></div>
+                            </div>
+                        @empty
+                            <div style="text-align:center; color:#64748b; padding:16px; font-size: 0.8rem;">
+                                Belum ada data module terpasang.
+                            </div>
+                        @endforelse
                     </div>
                 </div>
 
@@ -341,14 +364,38 @@
 </div>
 
 <script>
+const serialToast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 2200,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer);
+        toast.addEventListener('mouseleave', Swal.resumeTimer);
+    }
+});
+
 function copySerial() {
     const serial = document.getElementById('snRectifier').textContent.trim();
     if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(serial)
-            .then(() => alert('Serial number berhasil disalin: ' + serial))
-            .catch(() => alert('Serial number: ' + serial));
+            .then(() => serialToast.fire({
+                icon: 'success',
+                title: 'Serial number disalin',
+                text: serial,
+            }))
+            .catch(() => serialToast.fire({
+                icon: 'error',
+                title: 'Gagal menyalin otomatis',
+                text: serial,
+            }));
     } else {
-        alert('Serial number: ' + serial);
+        serialToast.fire({
+            icon: 'info',
+            title: 'Serial number',
+            text: serial,
+        });
     }
 }
 

@@ -76,10 +76,10 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="bentuk_fisik">Bentuk Fisik <span class="required">*</span></label>
-                                <input type="text" id="bentuk_fisik" name="bentuk_fisik" class="form-control @error('bentuk_fisik') is-invalid @enderror"
-                                    placeholder="Masukkan bentuk fisik" value="{{ old('bentuk_fisik', $genset->bentuk_fisik) }}" required>
-                                @error('bentuk_fisik')<div style="color:#ef4444;font-size:0.8rem;">{{ $message }}</div>@enderror
+                                <label for="bentuk_fisik">Building / Jenis Bangunan</label>
+                                <input type="text" id="bentuk_fisik" name="bentuk_fisik" class="form-control"
+                                    value="{{ old('bentuk_fisik', $genset->bentuk_fisik ?? $pop->jenis_bangunan ?? '-') }}" readonly
+                                    style="background:#f1f5f9; color:#475569; font-weight:500; cursor:not-allowed;">
                             </div>
                         </div>
                     </div>
@@ -233,19 +233,19 @@
                                 <label style="font-size: 0.84rem; font-weight: 500; color: #334155;">Foto kondisi fisik Genset di lokasi</label>
                                 <div class="photo-compact-preview" id="previewBoxGenset" onclick="document.getElementById('photo_genset').click()">
                                     @if ($genset->photo_genset)
-                                        <div id="noPreviewGenset" class="photo-compact-empty" style="display: none;">
+                                        <div id="noPreviewGenset" class="photo-compact-empty photo-compact-hidden">
                                             <i class="bi bi-image"></i>
                                             <span>Belum ada foto yang dipilih</span>
-                                            <small style="color: #94a3b8; font-size: 0.72rem;">Klik atau seret file ke sini</small>
+                                            <small>Klik atau seret file ke sini</small>
                                         </div>
-                                        <img id="imgGenset" src="{{ asset('storage/' . $genset->photo_genset) }}" alt="Preview Genset" class="photo-compact-img" style="display: block;">
+                                        <img id="imgGenset" src="{{ asset('storage/' . $genset->photo_genset) }}" alt="Preview Genset" class="photo-compact-img">
                                     @else
                                         <div id="noPreviewGenset" class="photo-compact-empty">
                                             <i class="bi bi-image"></i>
                                             <span>Belum ada foto yang dipilih</span>
-                                            <small style="color: #94a3b8; font-size: 0.72rem;">Klik atau seret file ke sini</small>
+                                            <small>Klik atau seret file ke sini</small>
                                         </div>
-                                        <img id="imgGenset" src="" alt="Preview Genset" class="photo-compact-img" style="display: none;">
+                                        <img id="imgGenset" src="" alt="Preview Genset" class="photo-compact-img photo-compact-hidden">
                                     @endif
                                 </div>
                                 <div class="photo-compact-actions">
@@ -273,19 +273,19 @@
                                 <label style="font-size: 0.84rem; font-weight: 500; color: #334155;">Foto kondisi Engine di lokasi</label>
                                 <div class="photo-compact-preview" id="previewBoxEngine" onclick="document.getElementById('photo_engine').click()">
                                     @if ($genset->photo_engine)
-                                        <div id="noPreviewEngine" class="photo-compact-empty" style="display: none;">
+                                        <div id="noPreviewEngine" class="photo-compact-empty photo-compact-hidden">
                                             <i class="bi bi-image"></i>
                                             <span>Belum ada foto yang dipilih</span>
-                                            <small style="color: #94a3b8; font-size: 0.72rem;">Klik atau seret file ke sini</small>
+                                            <small>Klik atau seret file ke sini</small>
                                         </div>
-                                        <img id="imgEngine" src="{{ asset('storage/' . $genset->photo_engine) }}" alt="Preview Engine" class="photo-compact-img" style="display: block;">
+                                        <img id="imgEngine" src="{{ asset('storage/' . $genset->photo_engine) }}" alt="Preview Engine" class="photo-compact-img">
                                     @else
                                         <div id="noPreviewEngine" class="photo-compact-empty">
                                             <i class="bi bi-image"></i>
                                             <span>Belum ada foto yang dipilih</span>
-                                            <small style="color: #94a3b8; font-size: 0.72rem;">Klik atau seret file ke sini</small>
+                                            <small>Klik atau seret file ke sini</small>
                                         </div>
-                                        <img id="imgEngine" src="" alt="Preview Engine" class="photo-compact-img" style="display: none;">
+                                        <img id="imgEngine" src="" alt="Preview Engine" class="photo-compact-img photo-compact-hidden">
                                     @endif
                                 </div>
                                 <div class="photo-compact-actions">
@@ -465,8 +465,8 @@
                     const reader = new FileReader();
                     reader.onload = function (e) {
                         img.src = e.target.result;
-                        img.style.display = 'block';
-                        if (noPrev) noPrev.style.display = 'none';
+                        img.classList.remove('photo-compact-hidden');
+                        if (noPrev) noPrev.classList.add('photo-compact-hidden');
                         if (btnText) btnText.textContent = 'Ganti Foto';
                         if (btnIcon) btnIcon.className = 'bi bi-arrow-repeat';
                     };
