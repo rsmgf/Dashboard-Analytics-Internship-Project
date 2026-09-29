@@ -13,7 +13,6 @@ class Rectifier extends Model
     protected $fillable = [
         'pop_id',
         'nomor_recti',
-        'nama_alias',
         'deskripsi',
         'tanggal_pemeriksaan',
         'pic',

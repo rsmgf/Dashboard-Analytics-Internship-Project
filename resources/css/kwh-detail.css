@@ -646,6 +646,55 @@ a {
     transform: scale(1.1);
 }
 
+.kwh-lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.kwh-lightbox-nav:hover {
+    background: rgba(255, 255, 255, 0.38);
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
+}
+
+.kwh-lightbox-prev {
+    left: -65px;
+}
+
+.kwh-lightbox-next {
+    right: -65px;
+}
+
+@media (max-width: 768px) {
+    .kwh-lightbox-prev {
+        left: 10px;
+    }
+    .kwh-lightbox-next {
+        right: 10px;
+    }
+    .kwh-lightbox-nav {
+        width: 38px;
+        height: 38px;
+        font-size: 1.1rem;
+        background: rgba(15, 23, 42, 0.65);
+    }
+}
+
 /* =========================================================
    RESPONSIVE
 ========================================================= */

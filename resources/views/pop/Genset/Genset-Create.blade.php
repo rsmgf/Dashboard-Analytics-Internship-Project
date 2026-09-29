@@ -74,10 +74,10 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="bentuk_fisik">Building <span class="required">*</span></label>
-                                <input type="text" id="bentuk_fisik" name="bentuk_fisik" class="form-control @error('bentuk_fisik') is-invalid @enderror"
-                                    placeholder="Masukkan bentuk fisik" value="{{ old('bentuk_fisik') }}" required>
-                                @error('bentuk_fisik')<div class="invalid-feedback" style="color:#ef4444;font-size:0.8rem;">{{ $message }}</div>@enderror
+                                <label for="bentuk_fisik">Building / Jenis Bangunan</label>
+                                <input type="text" id="bentuk_fisik" name="bentuk_fisik" class="form-control"
+                                    value="{{ old('bentuk_fisik', $pop->jenis_bangunan ?? '-') }}" readonly
+                                    style="background:#f1f5f9; color:#475569; font-weight:500; cursor:not-allowed;">
                             </div>
                         </div>
                     </div>
@@ -213,17 +213,17 @@
                                     <div id="noPreviewGenset" class="photo-compact-empty">
                                         <i class="bi bi-image"></i>
                                         <span>Belum ada foto yang dipilih</span>
-                                        <small style="color: #94a3b8; font-size: 0.72rem;">Klik atau seret file ke sini</small>
+                                        <small>Klik atau seret file ke sini</small>
                                     </div>
-                                    <img id="imgGenset" src="" alt="Preview Genset" class="photo-compact-img" style="display: none;">
+                                    <img id="imgGenset" src="" alt="Preview Genset" class="photo-compact-img photo-compact-hidden">
                                 </div>
-                                <div class="photo-compact-actions">
-                                    <label for="photo_genset" class="btn-compact-browse" id="btnBrowseGenset">
+                                <div class="photo-compact-actions" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; margin-top: 16px; width: 100%;">
+                                    <label for="photo_genset" class="btn-compact-browse" id="btnBrowseGenset" style="cursor: pointer; margin: 0;">
                                         <i class="bi bi-camera-fill" id="btnIconGenset"></i>
                                         <span id="btnTextGenset">Pilih Foto</span>
                                     </label>
                                     <input type="file" id="photo_genset" name="photo_genset" accept="image/jpeg,image/png,image/jpg" hidden>
-                                    <small class="upload-info">Format: JPG, JPEG, PNG (Maks. 10 MB)</small>
+                                    <small class="upload-info" style="color: #64748b; font-size: 0.75rem; text-align: center;">Format: JPG, JPEG, PNG (Maks. 2 MB)</small>
                                 </div>
                                 @error('photo_genset')<div style="color:#ef4444;font-size:0.8rem;margin-top:4px;">{{ $message }}</div>@enderror
                             </div>
@@ -244,17 +244,17 @@
                                     <div id="noPreviewEngine" class="photo-compact-empty">
                                         <i class="bi bi-image"></i>
                                         <span>Belum ada foto yang dipilih</span>
-                                        <small style="color: #94a3b8; font-size: 0.72rem;">Klik atau seret file ke sini</small>
+                                        <small>Klik atau seret file ke sini</small>
                                     </div>
-                                    <img id="imgEngine" src="" alt="Preview Engine" class="photo-compact-img" style="display: none;">
+                                    <img id="imgEngine" src="" alt="Preview Engine" class="photo-compact-img photo-compact-hidden">
                                 </div>
-                                <div class="photo-compact-actions">
-                                    <label for="photo_engine" class="btn-compact-browse" id="btnBrowseEngine">
+                                <div class="photo-compact-actions" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; margin-top: 16px; width: 100%;">
+                                    <label for="photo_engine" class="btn-compact-browse" id="btnBrowseEngine" style="cursor: pointer; margin: 0;">
                                         <i class="bi bi-camera-fill" id="btnIconEngine"></i>
                                         <span id="btnTextEngine">Pilih Foto</span>
                                     </label>
                                     <input type="file" id="photo_engine" name="photo_engine" accept="image/jpeg,image/png,image/jpg" hidden>
-                                    <small class="upload-info">Format: JPG, JPEG, PNG (Maks. 10 MB)</small>
+                                    <small class="upload-info" style="color: #64748b; font-size: 0.75rem; text-align: center;">Format: JPG, JPEG, PNG (Maks. 2 MB)</small>
                                 </div>
                                 @error('photo_engine')<div style="color:#ef4444;font-size:0.8rem;margin-top:4px;">{{ $message }}</div>@enderror
                             </div>
@@ -420,8 +420,8 @@
                     const reader = new FileReader();
                     reader.onload = function(e) {
                         img.src = e.target.result;
-                        img.style.display = 'block';
-                        noPreview.style.display = 'none';
+                        img.classList.remove('photo-compact-hidden');
+                        noPreview.classList.add('photo-compact-hidden');
                         btnText.textContent = 'Ganti Foto';
                         btnIcon.className = 'bi bi-arrow-repeat';
                     };
@@ -464,8 +464,8 @@
                         const noPrev = document.getElementById('noPreview' + type);
                         const btnText = document.getElementById('btnText' + type);
                         const btnIcon = document.getElementById('btnIcon' + type);
-                        if (img) { img.src = ''; img.style.display = 'none'; }
-                        if (noPrev) noPrev.style.display = 'flex';
+                        if (img) { img.src = ''; img.classList.add('photo-compact-hidden'); }
+                        if (noPrev) noPrev.classList.remove('photo-compact-hidden');
                         if (btnText) btnText.textContent = 'Pilih Foto';
                         if (btnIcon) btnIcon.className = 'bi bi-camera-fill';
                     });

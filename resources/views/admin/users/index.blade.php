@@ -65,10 +65,9 @@
 
                 <form method="GET"
                     action="{{ route('admin.access.index') === request()->url() ? '' : request()->url() }}"
-                    id="filterForm" class="search-container" style="display: flex; gap: 15px; align-items: center;">
+                    id="filterForm" class="search-container">
                     <div class="filter-box">
-                        <select id="filterStatus" name="status"
-                            style="padding: 10px 15px; border-radius: 8px; border: 1px solid #E2E8F0; outline: none; font-family: 'Poppins', sans-serif; color: #64748B; cursor: pointer;">
+                        <select id="filterStatus" name="status">
                             <option value="all" @selected($status === 'all')>Semua Status</option>
                             <option value="active" @selected($status === 'active')>Aktif</option>
                             <option value="inactive" @selected($status === 'inactive')>Non-Aktif</option>

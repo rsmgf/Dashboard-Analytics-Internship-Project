@@ -190,48 +190,55 @@ body {
 
 .table-controls {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     margin-bottom: 20px;
     gap: 15px;
 }
 
-.search-wrapper,
-.filter-wrapper {
-    position: relative;
-}
-
 .search-wrapper {
-    width: 65%;
-}
-
-.filter-wrapper {
-    width: 25%;
-}
-
-.search-wrapper input,
-.filter-wrapper input {
+    position: relative;
     width: 100%;
-    padding: 10px 14px;
+    max-width: 400px;
+}
+
+.search-wrapper input {
+    width: 100%;
+    height: 42px;
+    padding: 0 42px 0 16px;
     border: 1px solid #d1d5db;
-    border-radius: 6px;
-    font-size: 14px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-family: 'Poppins', sans-serif;
     outline: none;
     color: #374151;
-    transition: border-color 0.2s ease;
+    transition: all 0.2s ease;
+    background: #ffffff;
 }
 
-.search-wrapper input:focus,
-.filter-wrapper input:focus {
+.search-wrapper input:focus {
     border-color: #2581ff;
+    box-shadow: 0 0 0 3px rgba(37, 129, 255, 0.15);
 }
 
-.search-wrapper i,
-.filter-wrapper i {
+.search-wrapper .search-btn {
     position: absolute;
-    right: 14px;
+    right: 8px;
     top: 50%;
     transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
     color: #9ca3af;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: color 0.2s ease;
+}
+
+.search-wrapper .search-btn:hover {
+    color: #2563eb;
 }
 
 /* =====================================================
@@ -246,7 +253,7 @@ body {
 
 .rma-table {
     width: 100%;
-    min-width: 950px;
+    min-width: 1150px;
     border-collapse: collapse;
     font-size: 13px;
     background: #ffffff;
@@ -296,67 +303,142 @@ body {
 /* =====================================================
    BUTTONS ACTION PADA TABEL
 ===================================================== */
+/* =====================================================
+   BUTTONS ACTION PADA TABEL
+===================================================== */
 .action-buttons {
-    display: inline-flex;
+    display: inline-flex !important;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 6px;
+    white-space: nowrap !important;
+    flex-wrap: nowrap !important;
 }
 
 .btn-lihat {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    height: 34px;
-    padding: 0 16px;
-    background: linear-gradient(135deg, #0086FF, #005BD4);
+    gap: 5px;
+    height: 32px;
+    padding: 0 12px;
+    background-color: #1E8AE2;
     color: #ffffff;
-    border: none;
-    border-radius: 8px;
+    border: 1px solid #1E8AE2;
+    border-radius: 6px;
     font-family: 'Poppins', sans-serif;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 500;
     cursor: pointer;
     text-decoration: none;
-    box-shadow: 0 2px 6px rgba(0, 91, 212, 0.18);
-    transition: all 0.25s ease;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+    flex-shrink: 0;
 }
 
 .btn-lihat:hover {
-    background: linear-gradient(135deg, #0078E8, #0052C2);
+    background-color: #166bb5;
+    border-color: #166bb5;
     color: #ffffff;
     transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(0, 91, 212, 0.28);
+    box-shadow: 0 4px 6px -1px rgba(30, 138, 226, 0.3);
 }
+
+.btn-lihat:active { transform: translateY(0); }
 
 .btn-cetak, .btn-download {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    height: 34px;
-    padding: 0 16px;
+    gap: 5px;
+    height: 32px;
+    padding: 0 12px;
     background-color: #ffffff;
     color: #334155;
     border: 1px solid #cbd5e1;
-    border-radius: 8px;
+    border-radius: 6px;
     font-family: 'Poppins', sans-serif;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 500;
     cursor: pointer;
     text-decoration: none;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-    transition: all 0.25s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    transition: all 0.2s ease;
+    flex-shrink: 0;
 }
 
 .btn-cetak:hover, .btn-download:hover {
     background-color: #f8fafc;
     border-color: #94a3b8;
-    color: #005BD4;
+    color: #0f172a;
     transform: translateY(-1px);
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
 }
+
+.btn-cetak:active, .btn-download:active { transform: translateY(0); }
+
+/* Button Edit — Kuning solid (Konsisten dengan List POP) */
+.btn-edit,
+.btn-edit-rma {
+    background-color: #EAB308;
+    color: #ffffff;
+    border: 1px solid #EAB308;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.btn-edit:hover,
+.btn-edit-rma:hover {
+    background-color: #CA8A04;
+    border-color: #CA8A04;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(234, 179, 8, 0.35);
+}
+
+.btn-edit:active,
+.btn-edit-rma:active { transform: translateY(0); }
+
+/* Button Hapus — Merah solid (Konsisten dengan List POP) */
+.btn-hapus,
+.btn-delete-rma {
+    background-color: #DC2626;
+    color: #ffffff;
+    border: 1px solid #DC2626;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.btn-hapus:hover,
+.btn-delete-rma:hover {
+    background-color: #991B1B;
+    border-color: #991B1B;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.35);
+}
+
+.btn-hapus:active,
+.btn-delete-rma:active { transform: translateY(0); }
 
 /* =====================================================
    PAGINATION
@@ -623,4 +705,110 @@ body.sidebar-collapsed .sidebar-logo img {
 @keyframes popIn {
     from { opacity: 0; transform: scale(0.92); }
     to { opacity: 1; transform: scale(1); }
+}
+
+/* =====================================================
+   RESPONSIVITAS
+===================================================== */
+.table-responsive {
+    -webkit-overflow-scrolling: touch;
+}
+
+.action-buttons {
+    white-space: nowrap;
+    flex-wrap: nowrap;
+}
+
+@media (max-width: 768px) {
+    .rma-page {
+        padding: 16px 14px 40px;
+    }
+
+    .page-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+    }
+
+    .page-title {
+        width: 100%;
+    }
+
+    .page-header .btn-tambah {
+        width: 100%;
+        justify-content: center;
+        padding: 11px 20px;
+        font-size: 13.5px;
+    }
+
+    .table-controls {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .table-controls .search-wrapper,
+    .table-controls .filter-wrapper {
+        width: 100%;
+    }
+
+    .history-header {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px;
+    }
+
+    .batch-action-toolbar {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .batch-pill-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        width: 100%;
+    }
+
+    .btn-pill-item {
+        flex: 1 1 auto;
+        justify-content: center;
+        padding: 7px 10px;
+        font-size: 11.5px;
+    }
+
+    .btn-batch-download-modern {
+        width: 100%;
+        justify-content: center;
+        padding: 9px 16px;
+    }
+
+    .pagination-footer {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+        align-items: center;
+    }
+
+    .alert-info-custom {
+        padding: 12px 14px;
+        font-size: 12.5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .rma-page {
+        padding: 12px 10px 32px;
+    }
+
+    .page-title h1 {
+        font-size: 19px;
+    }
+
+    .title-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 18px;
+    }
 }

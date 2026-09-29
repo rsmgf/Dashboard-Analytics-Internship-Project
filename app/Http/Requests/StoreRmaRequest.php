@@ -38,6 +38,7 @@ class StoreRmaRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'judul_rma'         => 'nullable|string|max:255',
             'nama_pemohon'      => 'required|string|max:255',
             'nama_manager'      => 'required|string|max:255',
             'is_material_rusak' => 'required|boolean',
