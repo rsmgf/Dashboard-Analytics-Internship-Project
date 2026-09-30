@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Detail Air Conditioner - PLN Icon Plus</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
@@ -21,24 +21,29 @@
             <x-topbar />
 
             <div class="ac-content">
-                <div class="detail-page-header">
-                    <div class="ac-page-info" style="display: flex; align-items: center; gap: 12px;">
-                        <a href="{{ route('acs.index', $pop->id) }}" class="back-button" title="Kembali ke List AC">
+                <div class="detail-header-bar">
+                    <div class="header-left-group">
+                        <a href="{{ route('acs.index', $pop->id) }}" class="detail-back" title="Kembali ke List AC" aria-label="Kembali ke List AC">
                             <i class="bi bi-arrow-left"></i>
                         </a>
-                        <x-breadcrumb :items="[
-                            ['label' => 'POP', 'route' => 'pops.index'],
-                            ['label' => $pop->nama_pop_display . ': AC', 'route' => 'acs.index', 'params' => ['pop' => $pop->id]],
-                            ['label' => $ac->nomor_ac],
-                        ]" />
+                        <div class="header-title-wrapper">
+                            <div class="title-with-badge">
+                                <x-breadcrumb :items="[
+                                    ['label' => 'POP', 'route' => 'pops.index'],
+                                    ['label' => $pop->nama_pop_display . ': AC', 'route' => 'acs.index', 'params' => ['pop' => $pop->id]],
+                                    ['label' => $ac->nomor_ac],
+                                ]" />
+                                <span class="device-badge">{{ $ac->merk_ac }} &bull; {{ $ac->pk }} PK</span>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        @can('acs.index.update')
-                        <a href="{{ route('acs.edit', [$pop->id, $ac->id]) }}" class="btn-edit-form">
-                            <i class="bi bi-pencil-fill"></i> Edit Form
-                        </a>
-                        @endcan
-                    </div>
+
+                    @can('acs.index.update')
+                    <a href="{{ route('acs.edit', [$pop->id, $ac->id]) }}" class="btn-edit">
+                        <i class="bi bi-pencil-fill"></i>
+                        Edit Form
+                    </a>
+                    @endcan
                 </div>
 
                 {{-- Alert Banner Last Update --}}
@@ -59,29 +64,43 @@
                 <div class="detail-container">
 
                     <!-- General Information -->
-                    <div class="form-card">
-                        <h3 class="form-section-title">General Information</h3>
-                        <div class="detail-grid-3">
-                            <div class="detail-item">
-                                <span class="detail-label">POP</span>
-                                <span class="detail-value">{{ $pop->nama_pop_display }}</span>
+                    <section class="detail-card information-card">
+                        <div class="detail-card-title">
+                            <i class="bi bi-info-circle-fill"></i> General Information
+                        </div>
+                        <div class="info-box-grid">
+                            <div class="info-box">
+                                <div class="info-box-icon"><i class="bi bi-geo-alt-fill"></i></div>
+                                <div class="info-box-text">
+                                    <span class="info-box-label">POP</span>
+                                    <span class="info-box-value">{{ $pop->nama_pop_display }}</span>
+                                </div>
                             </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Kota / Kabupaten</span>
-                                <span class="detail-value">{{ $pop->kota_kabupaten }}</span>
+                            <div class="info-box">
+                                <div class="info-box-icon"><i class="bi bi-pin-map-fill"></i></div>
+                                <div class="info-box-text">
+                                    <span class="info-box-label">Kota / Kabupaten</span>
+                                    <span class="info-box-value">{{ $pop->kota_kabupaten }}</span>
+                                </div>
                             </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Tipe POP</span>
-                                <span class="detail-value">{{ $pop->tipe_pop ?? '-' }}</span>
+                            <div class="info-box">
+                                <div class="info-box-icon"><i class="bi bi-tag-fill"></i></div>
+                                <div class="info-box-text">
+                                    <span class="info-box-label">Tipe POP</span>
+                                    <span class="info-box-value">{{ $pop->tipe_pop ?? '-' }}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </section>
 
                     <div class="detail-bottom-grid">
 
                         <!-- Checklist AC -->
-                        <div class="form-card mb-0">
-                            <h3 class="form-section-title">Checklist Air Conditioner</h3>
+                        <section class="detail-card">
+                            <div class="detail-card-title">
+                                <i class="bi bi-clipboard-check-fill"></i> Checklist Air Conditioner
+                            </div>
+                            <div class="detail-card-body">
                             <div class="checklist-table-container">
                                 <div class="checklist-row">
                                     <div class="checklist-label">Nomor AC</div>
@@ -130,15 +149,19 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                            </div>
+                        </section>
 
                         <!-- Photo AC -->
-                        <div class="form-card mb-0 photo-card-wrapper">
-                            <h3 class="form-section-title">Photo Air Conditioner</h3>
+                        <section class="detail-card photo-card-wrapper">
+                            <div class="detail-card-title">
+                                <i class="bi bi-camera-fill"></i> Photo Air Conditioner
+                            </div>
+                            <div class="detail-card-body">
                             <div class="detail-photo-box">
                                 @if ($ac->photo_ac)
                                     <img src="{{ asset('storage/' . $ac->photo_ac) }}" alt="Foto Kondisi AC" id="detailPhoto"
-                                         onclick="Swal.fire({ title: '{{ addslashes($ac->keterangan_gambar_ac ?? 'Foto AC') }}', imageUrl: this.src, imageAlt: 'Foto AC', showCloseButton: true, showConfirmButton: false, width: 'auto', customClass: { popup: 'swal-popup-custom' } })"
+                                         onclick="Swal.fire({ title: '{{ addslashes($ac->keterangan_gambar_ac ?? 'Foto AC') }}', imageUrl: this.src, imageAlt: 'Foto AC', showCloseButton: true, showConfirmButton: false, width: 'min(92vw, 900px)', heightAuto: false, customClass: { popup: 'swal-popup-custom' } })"
                                          title="Klik untuk melihat ukuran penuh">
                                 @else
                                     <div id="noDetailPhoto" class="no-preview">
@@ -153,7 +176,8 @@
                                 <span class="detail-value">{{ $ac->keterangan_gambar_ac }}</span>
                             </div>
                             @endif
-                        </div>
+                            </div>
+                        </section>
 
                     </div>
 

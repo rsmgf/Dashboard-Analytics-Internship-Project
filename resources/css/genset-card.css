@@ -1,32 +1,52 @@
+@import './type-scale.css';
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
 .genset-content {
     width: 100%;
+    max-width: 1800px;
+    margin-inline: auto;
     min-height: calc(100vh - 70px);
-    padding: 24px;
+    padding: clamp(14px, 2.5vw, 24px);
+    padding-bottom: max(clamp(20px, 3vw, 32px), env(safe-area-inset-bottom, 0px));
     background: #f8fafc;
 }
 
+/* ---- Header halaman ---- */
 .genset-page-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
     padding: 0 0 16px;
     border-bottom: 1px solid #e2e8f0;
     margin-bottom: 24px;
-    gap: 16px;
-    flex-wrap: wrap;
+    gap: 12px 16px;
     background: transparent;
 }
 
+.genset-page-info,
 .genset-page-left {
     display: flex;
     align-items: center;
     gap: 14px;
+    min-width: 0;
+    flex: 1 1 280px;
 }
 
+/* ---- Tombol kembali: sama dengan halaman Rectifier ---- */
 .genset-back-button {
-    width: 34px;
-    height: 34px;
-    border: 1px solid #d1d5db;
+    width: 38px;
+    height: 38px;
+    border: none;
     background: #f1f5f9;
     border-radius: 50%;
     color: #64748b;
@@ -35,7 +55,7 @@
     justify-content: center;
     font-size: 14px;
     text-decoration: none;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease;
     flex-shrink: 0;
     cursor: pointer;
 }
@@ -45,10 +65,21 @@
     color: #0f172a;
 }
 
+.genset-back-button:focus-visible,
+.genset-add-button:focus-visible,
+.genset-delete-button:focus-visible,
+.genset-detail-button:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.4);
+    outline-offset: 2px;
+    border-radius: 6px;
+}
+
 .genset-header-text {
     display: flex;
     flex-direction: column;
     gap: 3px;
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 .genset-breadcrumb {
@@ -85,6 +116,7 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
+    min-height: 42px;
     padding: 10px 20px;
     border: none;
     border-radius: 8px;
@@ -98,28 +130,29 @@
     cursor: pointer;
     box-shadow: 0 2px 6px rgba(0, 91, 212, 0.2);
     transition: all 0.25s ease;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .genset-add-button:hover {
     background: linear-gradient(135deg, #0078E8, #0052C2);
     color: #ffffff;
-    transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 91, 212, 0.3);
 }
 
+/* ---- Grid: kolom otomatis menyesuaikan lebar layar ---- */
 .genset-grid {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: 20px;
-    row-gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 400px), 1fr));
+    gap: 20px;
     padding-top: 6px;
 }
 
 .genset-card {
     position: relative;
     width: 100%;
-    height: 310px;
+    min-width: 0;
+    height: auto;
     min-height: 310px;
     background: #ffffff;
     border: 1px solid #e2e8f0;
@@ -128,13 +161,19 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    transition: all 0.2s ease;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-.genset-card:hover {
-    border-color: #b8c9dc;
-    box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
-    transform: translateY(-1px);
+@media (hover: hover) {
+    .genset-card:hover {
+        border-color: #b8c9dc;
+        box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        transform: translateY(-1px);
+    }
+
+    .genset-add-button:hover {
+        transform: translateY(-1px);
+    }
 }
 
 .genset-card-header {
@@ -156,16 +195,21 @@
     min-width: 0;
 }
 
+.card-title-text {
+    min-width: 0;
+}
+
 .genset-icon {
     width: 38px;
     height: 38px;
-    border-radius: 8px;
-    background: #eff6ff;
-    color: #2563eb;
+    border-radius: 10px;
+    /* warna sama dengan .device-icon.genset di dashboard */
+    background: #f5f3ff;
+    color: #7c3aed;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 17px;
+    font-size: var(--icon-title);
     flex-shrink: 0;
 }
 
@@ -191,14 +235,19 @@
 }
 
 .genset-badge {
+    flex-shrink: 0;
+    max-width: 45%;
     font-size: 10px;
     font-weight: 600;
-    padding: 2px 8px;
+    padding: 3px 8px;
     border-radius: 4px;
     letter-spacing: 0.5px;
     background: #f5f8ff;
     color: #2563eb;
     border: 1px solid #8eacff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .genset-information {
@@ -209,13 +258,15 @@
     border-bottom: 1px dashed #e2e8f0;
 }
 
+/* label : nilai — nilai panjang boleh turun baris */
 .genset-info-row {
     font-size: 0.82rem;
     color: #334155;
     display: grid;
-    grid-template-columns: 130px 1fr; 
-    align-items: center;
-    padding: 3px 0; 
+    grid-template-columns: 130px minmax(0, 1fr);
+    align-items: start;
+    padding: 3px 0;
+    overflow-wrap: anywhere;
 }
 
 .genset-info-row span {
@@ -227,69 +278,84 @@
     color: #1e293b;
     font-weight: 500;
     display: flex;
-    align-items: center;
-    gap: 12px; 
+    align-items: flex-start;
+    gap: 12px;
+    min-width: 0;
 }
 
 .genset-info-row strong::before {
     content: ':';
     font-weight: 500;
     color: #64748b;
+    flex-shrink: 0;
 }
 
 .genset-meta {
     display: flex;
     flex-direction: column;
-    gap: 3px;
-    padding: 6px 20px 0;
-    font-size: 0.7rem;
+    gap: 4px;
+    padding: 8px 20px 0;
+    font-size: 0.72rem;
     color: #64748b;
 }
 
 .genset-meta-item {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 7px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
 }
 
 .genset-meta-item i {
-    color: #2563eb;
+    color: #7c3aed;
     font-size: 13px;
+    line-height: 1.5;
+    flex-shrink: 0;
 }
 
 .genset-last-updated {
     font-size: 0.68rem;
+    line-height: 1.5;
     color: #94a3b8;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 6px;
     font-style: italic;
-    padding: 4px 20px 0;
+    padding: 6px 20px 0;
+    overflow-wrap: anywhere;
 }
 
 .genset-last-updated i {
     color: #94a3b8;
     font-size: 12px;
+    line-height: 1.5;
     flex-shrink: 0;
 }
 
+/* Jarak antara konten terakhir dan footer */
+.genset-card> :nth-last-child(2) {
+    margin-bottom: 14px;
+}
+
+/* Footer ikut alur (bukan absolute) agar tidak menimpa konten */
 .genset-card-footer {
-    position: absolute;
-    left: 20px;
-    right: 20px;
-    bottom: 14px;
+    position: relative;
+    margin-top: auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 14px 20px 16px;
     border-top: 1px solid #f1f5f9;
-    padding-top: 8px;
-    margin-top: auto;
 }
 
 .genset-delete-button {
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    min-height: 34px;
     padding: 5px 12px;
     background: #fef2f2;
     color: #dc2626;
@@ -300,6 +366,7 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .genset-delete-button:hover {
@@ -307,7 +374,6 @@
     color: #ffffff;
     border-color: #dc2626;
     box-shadow: 0 2px 6px rgba(220, 38, 38, 0.2);
-    transform: translateY(-1px);
 }
 
 .genset-detail-button {
@@ -318,6 +384,7 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    min-height: 34px;
     padding: 5px 2px;
     transition: all 0.2s ease;
     margin-left: auto;
@@ -339,64 +406,174 @@
     transform: translateX(3px);
 }
 
-@media (max-width: 1100px) {
-    .genset-grid {
-        grid-template-columns: 1fr;
+/* Popup hapus (SweetAlert2) */
+.swal-popup-custom {
+    font-family: 'Poppins', sans-serif;
+    border-radius: 16px !important;
+    width: min(92vw, 28rem) !important;
+    padding: 1.25rem 1rem 1.5rem !important;
+}
+
+.swal-title-custom {
+    font-size: 1.15rem !important;
+    font-weight: 700 !important;
+    color: #111827 !important;
+}
+
+.swal-html-custom {
+    font-size: 0.875rem !important;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.swal-btn-confirm,
+.swal-btn-cancel {
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 600 !important;
+    border-radius: 8px !important;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1024px) {
+    .genset-card {
+        min-height: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .genset-page-header {
+        margin-bottom: 18px;
+        padding-bottom: 14px;
     }
 
-    .genset-card {
-        height: 310px;
-        min-height: 310px;
+    .genset-add-button {
+        flex: 1 1 100%;
     }
 }
 
 @media (max-width: 600px) {
-    .genset-content {
-        padding: 12px 14px 20px;
-    }
-
-    .genset-page-header {
-        align-items: flex-start;
-        gap: 15px;
-    }
-
-    .genset-add-button {
-        padding: 9px 12px;
-    }
-
     .genset-grid {
-        grid-template-columns: 1fr;
-        row-gap: 15px;
-        padding-top: 10px;
-    }
-
-    .genset-card {
-        height: auto;
-        min-height: 280px;
-        padding-bottom: 50px;
+        gap: 14px;
+        padding-top: 4px;
     }
 
     .genset-card-header {
-        padding: 12px;
-        gap: 9px;
+        padding: 14px 16px 8px;
+        gap: 10px;
     }
 
     .genset-icon {
         width: 34px;
         height: 34px;
-        font-size: 15px;
     }
 
     .genset-information,
     .genset-meta,
     .genset-last-updated {
-        padding-left: 18px;
-        padding-right: 18px;
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .genset-info-row {
+        grid-template-columns: 104px minmax(0, 1fr);
     }
 
     .genset-card-footer {
-        left: 18px;
-        right: 18px;
-        bottom: 12px;
+        padding: 12px 16px 16px;
+    }
+
+    .genset-delete-button,
+    .genset-detail-button {
+        min-height: 40px;
+    }
+}
+
+@media (max-width: 360px) {
+    .genset-info-row {
+        grid-template-columns: 92px minmax(0, 1fr);
+    }
+
+    .genset-badge {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+}
+
+/* =========================================================
+   MOBILE: ukuran teks mengikuti type-scale.css
+   ========================================================= */
+@media (max-width: 600px) {
+    .genset-back-button {
+        width: 34px;
+        height: 34px;
+        font-size: 13px;
+    }
+
+    .genset-page-info {
+        gap: 10px;
+    }
+
+    /* Breadcrumb (komponen <x-breadcrumb>) */
+    .genset-header-text :is(nav, ol, ul, li, a, span, i, strong) {
+        font-size: var(--fs-xs) !important;
+        line-height: 1.4 !important;
+    }
+
+    .genset-header-text :is(nav, ol, ul) {
+        flex-wrap: wrap;
+    }
+
+    .genset-add-button {
+        min-height: 40px;
+        padding: 8px 16px;
+        font-size: var(--fs-sm);
+    }
+
+    .genset-title-wrapper h3 {
+        font-size: var(--fs-md);
+    }
+
+    .genset-title-wrapper span {
+        font-size: var(--fs-xs);
+    }
+
+    .genset-badge {
+        font-size: var(--fs-2xs);
+    }
+
+    .genset-info-row {
+        font-size: var(--fs-sm);
+    }
+
+    .genset-meta {
+        font-size: var(--fs-xs);
+    }
+
+    .genset-last-updated {
+        font-size: var(--fs-2xs);
+    }
+
+    .genset-delete-button {
+        font-size: var(--fs-xs);
+    }
+
+    .genset-detail-button {
+        font-size: var(--fs-sm);
+    }
+
+    .swal-title-custom {
+        font-size: var(--fs-lg) !important;
+    }
+
+    .swal-html-custom {
+        font-size: var(--fs-sm) !important;
     }
 }

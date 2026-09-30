@@ -561,7 +561,7 @@
         genset: {
             title: 'Genset',
             subtitle: 'Status Genset per POP',
-            icon: 'bi-lightning',
+            icon: 'bi-fuel-pump-fill',
             hasDeviceNumber: false,
             statuses: {
                 good: {

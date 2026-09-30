@@ -1,8 +1,16 @@
+@import './type-scale.css';
+
 /* =========================================================
    GLOBAL & LAYOUT KWH DETAIL
 ========================================================= */
-* {
+*,
+*::before,
+*::after {
     box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
 }
 
 html,
@@ -39,8 +47,11 @@ a {
 
 .kwh-detail-content {
     width: 100%;
+    max-width: 1600px;
+    margin-inline: auto;
     min-height: calc(100vh - 70px);
-    padding: 24px;
+    padding: clamp(14px, 2.5vw, 24px);
+    padding-bottom: max(clamp(20px, 3vw, 32px), env(safe-area-inset-bottom, 0px));
     background: #f8fafc;
     animation: fadeIn 0.4s ease-in-out;
 }
@@ -57,6 +68,12 @@ a {
     }
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .kwh-detail-content {
+        animation: none;
+    }
+}
+
 /* =========================================================
    HEADER BAR
 ========================================================= */
@@ -65,7 +82,8 @@ a {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
+    flex-wrap: wrap;
+    gap: 12px 16px;
     padding: 0 0 16px;
     margin-bottom: 24px;
     border-bottom: 1px solid #e2e8f0;
@@ -76,11 +94,12 @@ a {
     align-items: center;
     gap: 14px;
     min-width: 0;
+    flex: 1 1 280px;
 }
 
 .detail-back {
-    width: 34px;
-    height: 34px;
+    width: 38px;
+    height: 38px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -88,9 +107,9 @@ a {
     border-radius: 50%;
     background: #f1f5f9;
     color: #475569;
-    font-size: 14px;
+    font-size: 13px;
     text-decoration: none;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .detail-back:hover {
@@ -102,6 +121,15 @@ a {
     display: flex;
     flex-direction: column;
     gap: 3px;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.title-with-badge {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px 10px;
 }
 
 .device-badge {
@@ -114,6 +142,7 @@ a {
     font-size: 0.72rem;
     font-weight: 600;
     text-transform: uppercase;
+    white-space: nowrap;
 }
 
 .status-auto-badge {
@@ -154,6 +183,7 @@ a {
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    min-height: 40px;
     padding: 5px 2px;
     border: none;
     border-bottom: 1.5px solid #2563eb;
@@ -162,8 +192,9 @@ a {
     font-family: 'Poppins', sans-serif;
     font-size: 0.84rem;
     font-weight: 600;
+    white-space: nowrap;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: color 0.2s ease, border-color 0.2s ease;
     text-decoration: none;
 }
 
@@ -174,6 +205,15 @@ a {
 
 .btn-edit i {
     font-size: 12px;
+}
+
+.detail-back:focus-visible,
+.btn-edit:focus-visible,
+.photo-item:focus-visible,
+.kwh-lightbox-close:focus-visible,
+.kwh-lightbox-nav:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.4);
+    outline-offset: 2px;
 }
 
 /* =========================================================
@@ -189,7 +229,7 @@ a {
     border: 1px solid #dbe4ff;
     border-radius: 10px;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 12px;
     font-size: 0.84rem;
     color: #4b5563;
@@ -197,12 +237,15 @@ a {
 
 .alert-info-custom i {
     font-size: 18px;
+    line-height: 1.3;
     color: #5c67f2;
     flex-shrink: 0;
 }
 
 .alert-info-custom span {
-    line-height: 1.4;
+    line-height: 1.5;
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 .alert-info-custom strong {
@@ -215,6 +258,7 @@ a {
 ========================================================= */
 
 .detail-card {
+    min-width: 0;
     background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 12px;
@@ -230,12 +274,11 @@ a {
 }
 
 .detail-card-title {
-    padding: 14px 18px 10px;
+    padding: 14px 18px 8px;
     font-size: 0.95rem;
     display: flex;
     align-items: center;
     gap: 8px;
-    border-bottom: 1px solid #f1f5f9;
 }
 
 .section-heading {
@@ -243,6 +286,8 @@ a {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 4px 12px;
     padding: 10px 18px;
     font-size: 0.92rem;
     border-bottom: 1px solid #f1f5f9;
@@ -262,35 +307,71 @@ a {
     font-weight: 400;
 }
 
-/* General Grid */
-.general-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 18px;
-    padding: 16px 18px 18px;
+/* =========================================================
+   GENERAL INFORMATION (gaya sama dengan Rectifier)
+========================================================= */
+
+.information-card {
+    width: 100%;
 }
 
-.general-item {
+/* Jumlah kolom otomatis menyesuaikan lebar layar */
+.info-box-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr));
+    gap: 14px;
+    padding: 10px 18px 18px;
+}
+
+.info-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    padding: 12px 14px;
+    background: #f8fafc;
+    border: 1px solid #eef2f7;
+    border-radius: 10px;
+}
+
+.info-box-icon {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 15px;
+}
+
+.info-box-text {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 2px;
+    min-width: 0;
 }
 
-.general-label {
-    font-size: 0.78rem;
-    color: #64748b;
-    font-weight: 500;
-}
-
-.general-value {
+.info-box-label {
+    font-size: 0.7rem;
     color: #0f172a;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 1.35;
+}
+
+.info-box-value {
+    color: #64748b;
     font-size: 0.88rem;
-    font-weight: 600;
-    word-break: break-word;
+    font-weight: 500;
+    overflow-wrap: anywhere;
 }
 
 /* =========================================================
-   CHECKLIST TABLE & PHASA (CRISP STRUCTURED TABLE)
+   CHECKLIST TABLE & PHASA
 ========================================================= */
 
 .checklist-card {
@@ -316,7 +397,7 @@ a {
 
 .kwh-table th.label-column {
     width: 22%;
-    min-width: 180px;
+    min-width: 150px;
     padding: 12px 18px;
     background-color: #f1f5f9;
     color: #1e293b;
@@ -335,6 +416,7 @@ a {
     font-size: 0.85rem;
     vertical-align: middle;
     border-bottom: 1px solid #cbd5e1;
+    overflow-wrap: anywhere;
 }
 
 .kwh-table td.nested-cell {
@@ -346,7 +428,7 @@ a {
     border-bottom: none;
 }
 
-/* Sub Table for Pengukuran Phasa */
+/* Sub Table Pengukuran Phasa */
 .sub-measurement-table {
     width: 100%;
     border-collapse: collapse;
@@ -391,6 +473,10 @@ a {
     background-color: #fafbfd;
 }
 
+.sub-measurement-table .cell-empty {
+    color: #94a3b8;
+}
+
 .sub-measurement-table code {
     display: inline-block;
     background: #eff6ff;
@@ -401,30 +487,7 @@ a {
     font-size: 0.82rem;
     border: 1px solid #bfdbfe;
     font-family: 'Poppins', monospace;
-}
-
-.sub-table-empty {
-    background: #f8fafc !important;
-    color: #94a3b8;
-    text-align: center;
-    vertical-align: middle !important;
-    padding: 14px 18px !important;
-}
-
-.sub-table-note {
-    background: #f8fafc !important;
-    color: #64748b;
-    font-size: 0.78rem;
-    text-align: center;
-    vertical-align: middle !important;
-    padding: 14px 18px !important;
-    line-height: 1.4;
-}
-
-.sub-table-note i {
-    color: #2563eb;
-    font-size: 14px;
-    margin-right: 4px;
+    white-space: nowrap;
 }
 
 /* Badges */
@@ -457,18 +520,20 @@ a {
 .arrester-row {
     display: flex;
     align-items: center;
-    gap: 30px;
+    flex-wrap: wrap;
+    gap: 8px 30px;
 }
 
 /* Cable Container */
 .cable-grid-container {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     width: 100%;
 }
 
 .cable-block {
     padding: 12px 18px;
+    min-width: 0;
 }
 
 .cable-block:first-child {
@@ -490,6 +555,7 @@ a {
     gap: 8px;
     font-size: 0.82rem;
     margin-bottom: 6px;
+    overflow-wrap: anywhere;
 }
 
 .cable-row:last-child {
@@ -502,6 +568,7 @@ a {
     justify-content: center;
     width: 22px;
     height: 22px;
+    flex-shrink: 0;
     background: #f1f5f9;
     color: #1e293b;
     border: 1px solid #cbd5e1;
@@ -520,7 +587,7 @@ a {
 
 .photo-grid {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 190px), 1fr));
     gap: 14px;
     padding: 16px 18px 20px;
 }
@@ -532,17 +599,20 @@ a {
     overflow: hidden;
     background: #ffffff;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    cursor: zoom-in;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.photo-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+@media (hover: hover) {
+    .photo-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    }
 }
 
 .photo-item img {
     width: 100%;
-    height: 130px;
+    aspect-ratio: 4 / 3;
     display: block;
     object-fit: cover;
     background: #f8fafc;
@@ -563,8 +633,13 @@ a {
     border-top: 1px solid #f1f5f9;
 }
 
-.photo-item {
-    cursor: zoom-in;
+.photo-empty-msg {
+    grid-column: 1 / -1;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+    color: #94a3b8;
+    font-size: 0.85rem;
 }
 
 /* =========================================================
@@ -574,8 +649,7 @@ a {
     display: none;
     position: fixed;
     z-index: 99999;
-    top: 0;
-    left: 0;
+    inset: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(15, 23, 42, 0.88);
@@ -613,6 +687,7 @@ a {
 
 .kwh-lightbox-caption {
     margin-top: 12px;
+    max-width: 100%;
     color: #ffffff;
     font-size: 0.9rem;
     font-weight: 600;
@@ -621,6 +696,7 @@ a {
     padding: 6px 18px;
     border-radius: 999px;
     letter-spacing: 0.3px;
+    overflow-wrap: anywhere;
 }
 
 .kwh-lightbox-close {
@@ -680,60 +756,318 @@ a {
     right: -65px;
 }
 
-@media (max-width: 768px) {
-    .kwh-lightbox-prev {
-        left: 10px;
-    }
-    .kwh-lightbox-next {
-        right: 10px;
-    }
-    .kwh-lightbox-nav {
-        width: 38px;
-        height: 38px;
-        font-size: 1.1rem;
-        background: rgba(15, 23, 42, 0.65);
-    }
-}
-
 /* =========================================================
    RESPONSIVE
 ========================================================= */
 
-@media (max-width: 1024px) {
-    .photo-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+/* Lightbox: tombol tidak lagi keluar layar */
+@media (max-width: 900px) {
+    .kwh-lightbox-modal {
+        padding: 56px 12px 16px;
+    }
+
+    .kwh-lightbox-wrapper {
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    .kwh-lightbox-img {
+        max-width: calc(100vw - 24px);
+        max-height: 72vh;
+    }
+
+    @supports (height: 100dvh) {
+        .kwh-lightbox-img {
+            max-height: 72dvh;
+        }
+    }
+
+    .kwh-lightbox-close {
+        position: fixed;
+        top: max(10px, env(safe-area-inset-top, 0px));
+        right: 12px;
+        width: 40px;
+        height: 40px;
+    }
+
+    .kwh-lightbox-nav {
+        position: fixed;
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+        background: rgba(15, 23, 42, 0.65);
+    }
+
+    .kwh-lightbox-prev {
+        left: 8px;
+    }
+
+    .kwh-lightbox-next {
+        right: 8px;
     }
 }
 
 @media (max-width: 768px) {
-    .general-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    .detail-header-bar {
+        margin-bottom: 18px;
+        padding-bottom: 14px;
     }
 
-    .photo-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .kwh-table {
-        min-width: 600px;
+    .table-wrapper {
+        padding: 14px;
     }
 }
 
-@media (max-width: 480px) {
-    .general-grid {
-        grid-template-columns: 1fr;
+/* Tabel checklist: label di atas, nilai di bawah (tanpa scroll samping) */
+@media (max-width: 600px) {
+    .table-wrapper {
+        overflow-x: visible;
     }
 
-    .photo-grid {
-        grid-template-columns: 1fr;
+    .kwh-table,
+    .kwh-table tbody,
+    .kwh-table tr,
+    .kwh-table th.label-column,
+    .kwh-table td.value-column {
+        display: block;
+        width: 100%;
+    }
+
+    .kwh-table th.label-column {
+        min-width: 0;
+        padding: 8px 12px;
+        border-right: none;
+    }
+
+    .kwh-table td.value-column {
+        padding: 10px 12px;
+    }
+
+    .kwh-table td.nested-cell {
+        padding: 0 !important;
+    }
+
+    /* Sub tabel phasa: tiap baris jadi 2 pasang label | nilai */
+    .sub-measurement-table,
+    .sub-measurement-table tbody {
+        display: block;
+        width: 100%;
+    }
+
+    .sub-measurement-table thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+    }
+
+    .sub-measurement-table tbody tr {
+        display: grid;
+        grid-template-columns: minmax(84px, 40%) minmax(0, 1fr);
+        border-bottom: 1px solid #cbd5e1;
+    }
+
+    .sub-measurement-table tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    .sub-measurement-table tbody td {
+        min-width: 0;
+        padding: 8px 12px;
+        border: none;
+    }
+
+    .sub-measurement-table tbody td:nth-child(odd) {
+        background: #f8fafc;
+        border-right: 1px solid #e2e8f0;
+    }
+
+    .sub-measurement-table tbody td:nth-child(n+3) {
+        border-top: 1px dashed #cbd5e1;
+    }
+
+    .sub-measurement-table tbody td:last-child {
+        border-right: none;
+    }
+
+    .sub-measurement-table .cell-empty {
+        display: none;
     }
 
     .cable-grid-container {
         grid-template-columns: 1fr;
     }
 
+    .cable-block {
+        padding: 12px;
+    }
+
     .cable-block:first-child {
         border-right: none;
         border-bottom: 1px solid #cbd5e1;
     }
+
+    .photo-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        padding: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .section-heading,
+    .detail-card-title {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .info-box-grid {
+        padding: 10px 14px 14px;
+        gap: 10px;
+    }
+
+    /* sejajar dengan teks header, di bawah tombol kembali */
+    .btn-edit {
+        margin-left: 52px;
+    }
+}
+
+@media (max-width: 340px) {
+    .photo-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================================================
+   MOBILE: ukuran teks mengikuti type-scale.css
+========================================================= */
+@media (max-width: 600px) {
+    .detail-back {
+        width: 34px;
+        height: 34px;
+        font-size: 12px;
+    }
+
+    .header-left-group {
+        gap: 10px;
+    }
+
+    /* Breadcrumb (komponen <x-breadcrumb>) */
+    .header-title-wrapper :is(nav, ol, ul, li, a, span, i, strong) {
+        font-size: var(--fs-xs) !important;
+        line-height: 1.4 !important;
+    }
+
+    .header-title-wrapper :is(nav, ol, ul) {
+        flex-wrap: wrap;
+    }
+
+    .device-badge {
+        font-size: var(--fs-2xs);
+        padding: 2px 8px;
+    }
+
+    .btn-edit {
+        min-height: 36px;
+        font-size: var(--fs-sm);
+    }
+
+    .alert-info-custom {
+        padding: 10px 12px;
+        font-size: var(--fs-xs);
+        gap: 10px;
+    }
+
+    .alert-info-custom i {
+        font-size: 15px;
+    }
+
+    .detail-card-title,
+    .section-heading {
+        font-size: var(--fs-md);
+    }
+
+    .section-heading small {
+        font-size: var(--fs-2xs);
+    }
+
+    .info-box {
+        padding: 10px 12px;
+        gap: 10px;
+    }
+
+    .info-box-icon {
+        width: 34px;
+        height: 34px;
+        font-size: 14px;
+    }
+
+    .info-box-label {
+        font-size: var(--fs-2xs);
+    }
+
+    .info-box-value {
+        font-size: var(--fs-sm);
+    }
+
+    .kwh-table th.label-column {
+        font-size: var(--fs-xs);
+    }
+
+    .kwh-table td.value-column,
+    .sub-measurement-table,
+    .cable-row {
+        font-size: var(--fs-xs);
+    }
+
+    .sub-measurement-table code {
+        font-size: var(--fs-xs);
+        padding: 2px 6px;
+    }
+
+    .cable-block-title {
+        font-size: var(--fs-2xs);
+    }
+
+    .badge-phasa,
+    .badge-status-ok {
+        font-size: var(--fs-2xs);
+    }
+
+    .status-auto-badge {
+        font-size: var(--fs-xs);
+        padding: 3px 10px;
+    }
+
+    .photo-item span {
+        font-size: var(--fs-2xs);
+    }
+
+    .photo-empty-msg {
+        font-size: var(--fs-xs);
+    }
+
+    .kwh-lightbox-caption {
+        font-size: var(--fs-sm);
+    }
+}
+
+
+/* =========================================================
+   IKON JUDUL CARD — seragam di semua halaman detail
+   (ukuran & warna sama; ganti ukuran lewat --icon-title
+   di type-scale.css)
+   ========================================================= */
+.detail-card-title>i,
+.form-section-title>i,
+.section-heading>span>i,
+.photo-header>i,
+.photo-title>i {
+    flex-shrink: 0;
+    font-size: var(--icon-title);
+    line-height: 1;
+    color: #2563eb;
 }

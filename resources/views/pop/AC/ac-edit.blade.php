@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Edit Air Conditioner - PLN Icon Plus</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
@@ -51,7 +51,9 @@
 
                     <!-- General Information -->
                     <div class="form-card">
-                        <h3 class="form-section-title">General Information</h3>
+                        <h3 class="form-section-title">
+                            <i class="bi bi-info-circle-fill"></i> General Information
+                        </h3>
                         <div class="form-grid-3">
                             <div class="form-group">
                                 <label for="pop">POP</label>
@@ -70,7 +72,9 @@
 
                     <!-- Detail Air Conditioner -->
                     <div class="form-card">
-                        <h3 class="form-section-title">Detail Air Conditioner</h3>
+                        <h3 class="form-section-title">
+                            <i class="bi bi-snow"></i> Detail Air Conditioner
+                        </h3>
                         <div class="form-grid-2">
 
                             <!-- Nomor AC (readonly) -->

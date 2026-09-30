@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="robots" content="noindex, nofollow">
     <title>Detail Baterai {{ $battery->nomor_bank }} - PLN Icon Plus</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -29,7 +29,7 @@
                             <i class="bi bi-arrow-left"></i>
                         </a>
                         <div class="header-title-wrapper">
-                            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                            <div class="title-with-badge">
                                 <x-breadcrumb :items="[
                                     ['label' => 'POP', 'route' => 'pops.index'],
                                     ['label' => $pop->nama_pop_display . ': Battery', 'route' => 'batteries.index', 'params' => ['pop' => $pop->id]],
@@ -65,68 +65,55 @@
 
                 <div class="detail-container">
                     {{-- SECTION 1: GENERAL INFORMATION --}}
-                    <div class="form-card">
-                        <h3 class="form-section-title">
+                    <section class="detail-card information-card">
+                        <div class="detail-card-title">
                             <i class="bi bi-info-circle-fill"></i> General Information
-                        </h3>
-                        <div class="general-info-grid">
-                            <div class="general-info-card">
-                                <div class="info-card-icon">
-                                    <i class="bi bi-geo-alt-fill"></i>
-                                </div>
-                                <div class="info-card-content">
-                                    <span class="info-card-label">POP</span>
-                                    <span class="info-card-value">{{ $pop->nama_pop_display }}</span>
+                        </div>
+                        <div class="info-box-grid">
+                            <div class="info-box">
+                                <div class="info-box-icon"><i class="bi bi-geo-alt-fill"></i></div>
+                                <div class="info-box-text">
+                                    <span class="info-box-label">POP</span>
+                                    <span class="info-box-value">{{ $pop->nama_pop_display }}</span>
                                 </div>
                             </div>
-
-                            <div class="general-info-card">
-                                <div class="info-card-icon">
-                                    <i class="bi bi-building"></i>
-                                </div>
-                                <div class="info-card-content">
-                                    <span class="info-card-label">Building</span>
-                                    <span class="info-card-value">{{ $pop->jenis_bangunan ?? '-' }}</span>
+                            <div class="info-box">
+                                <div class="info-box-icon"><i class="bi bi-building-fill"></i></div>
+                                <div class="info-box-text">
+                                    <span class="info-box-label">Building</span>
+                                    <span class="info-box-value">{{ $pop->jenis_bangunan ?? '-' }}</span>
                                 </div>
                             </div>
-
-                            <div class="general-info-card">
-                                <div class="info-card-icon">
-                                    <i class="bi bi-person-fill"></i>
-                                </div>
-                                <div class="info-card-content">
-                                    <span class="info-card-label">PIC</span>
-                                    <span class="info-card-value">{{ $battery->pic ?? '-' }}</span>
+                            <div class="info-box">
+                                <div class="info-box-icon"><i class="bi bi-person-fill"></i></div>
+                                <div class="info-box-text">
+                                    <span class="info-box-label">PIC</span>
+                                    <span class="info-box-value">{{ $battery->pic ?? '-' }}</span>
                                 </div>
                             </div>
-
-                            <div class="general-info-card">
-                                <div class="info-card-icon">
-                                    <i class="bi bi-tag-fill"></i>
-                                </div>
-                                <div class="info-card-content">
-                                    <span class="info-card-label">Type POP</span>
-                                    <span class="info-card-value">{{ $pop->tipe_pop ?? '-' }}</span>
+                            <div class="info-box">
+                                <div class="info-box-icon"><i class="bi bi-tag-fill"></i></div>
+                                <div class="info-box-text">
+                                    <span class="info-box-label">Type POP</span>
+                                    <span class="info-box-value">{{ $pop->tipe_pop ?? '-' }}</span>
                                 </div>
                             </div>
-
-                            <div class="general-info-card">
-                                <div class="info-card-icon">
-                                    <i class="bi bi-hdd-rack-fill"></i>
-                                </div>
-                                <div class="info-card-content">
-                                    <span class="info-card-label">Nomor Recti</span>
-                                    <span class="info-card-value">{{ $battery->rectifier->nomor_recti ?? $battery->rectifier->nama_alias ?? '-' }}</span>
+                            <div class="info-box">
+                                <div class="info-box-icon"><i class="bi bi-hdd-rack-fill"></i></div>
+                                <div class="info-box-text">
+                                    <span class="info-box-label">Nomor Recti</span>
+                                    <span class="info-box-value">{{ $battery->rectifier->nomor_recti ?? $battery->rectifier->nama_alias ?? '-' }}</span>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </section>
 
                     {{-- SECTION 2: CHECKLIST BATERAI --}}
-                    <div class="form-card">
-                        <h3 class="form-section-title">
-                            <i class="bi bi-battery-charging"></i> Checklist Baterai
-                        </h3>
+                    <section class="detail-card">
+                        <div class="detail-card-title">
+                            <i class="bi bi-clipboard-check-fill"></i> Checklist Baterai
+                        </div>
+                        <div class="detail-card-body">
                         <div class="checklist-section-subtitle">Informasi Baterai</div>
 
                         @php
@@ -248,16 +235,18 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        </div>
+                    </section>
 
                     {{-- SECTION 3 + 4: UJI BATERAI & PHOTO (2-column side by side - OPSI A) --}}
                     <div class="detail-bottom-grid">
 
                         {{-- Kiri: Uji Baterai --}}
-                        <div class="form-card bottom-card">
-                            <h3 class="form-section-title">
-                                <i class="bi bi-speedometer2"></i> Uji Baterai
-                            </h3>
+                        <section class="detail-card bottom-card">
+                            <div class="detail-card-title">
+                                <i class="bi bi-clipboard2-pulse-fill"></i> Uji Baterai
+                            </div>
+                            <div class="detail-card-body">
 
                             @php
                                 $statusUjiClass = 'status-neutral';
@@ -299,20 +288,22 @@
                                 </div>
 
                             </div>
-                        </div>
+                            </div>
+                        </section>
 
                         {{-- Kanan: Photo Battery (Figma Framed Card) --}}
-                        <div class="form-card bottom-card photo-card-container">
-                            <h3 class="form-section-title">
+                        <section class="detail-card bottom-card photo-card-container">
+                            <div class="detail-card-title">
                                 <i class="bi bi-camera-fill"></i> Photo Battery
-                            </h3>
+                            </div>
 
+                            <div class="detail-card-body">
                             <div class="figma-photo-card">
                                 <div class="figma-photo-img-area">
                                     @if (!empty($battery->photo_battery) && file_exists(public_path('storage/' . $battery->photo_battery)))
                                         <img src="{{ asset('storage/' . $battery->photo_battery) }}" 
                                              alt="Foto Baterai" 
-                                             id="detailPhoto"
+                                             id="detailPhoto" tabindex="0"
                                              onclick="previewPhoto('{{ asset('storage/' . $battery->photo_battery) }}', '{{ addslashes($battery->keterangan_gambar ?? 'Foto Baterai') }}')"
                                              title="Klik untuk melihat ukuran penuh">
                                     @else
@@ -326,7 +317,8 @@
                                     <span>{{ $battery->keterangan_gambar ? $battery->keterangan_gambar : 'Keterangan Battery' }}</span>
                                 </div>
                             </div>
-                        </div>
+                            </div>
+                        </section>
 
                     </div>{{-- end detail-bottom-grid --}}
 

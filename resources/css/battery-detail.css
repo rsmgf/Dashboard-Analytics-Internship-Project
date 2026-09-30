@@ -1,5 +1,18 @@
-* {
+@import './type-scale.css';
+
+/* =========================================================
+   GLOBAL & LAYOUT
+   (file ini juga dimuat oleh halaman Edit, jadi aturan
+   .form-card / .checklist-* di bawah sengaja dipertahankan)
+========================================================= */
+*,
+*::before,
+*::after {
     box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -25,17 +38,23 @@ body {
 
 .rectifier-content {
     width: 100%;
+    max-width: 1600px;
+    margin-inline: auto;
     min-height: calc(100vh - 70px);
-    padding: 24px;
+    padding: clamp(14px, 2.5vw, 24px);
+    padding-bottom: max(clamp(20px, 3vw, 32px), env(safe-area-inset-bottom, 0px));
     background: #f8fafc;
 }
 
-/* Header Bar */
+/* =========================================================
+   HEADER BAR
+========================================================= */
 .detail-header-bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
+    flex-wrap: wrap;
+    gap: 12px 16px;
     padding: 0 0 16px;
     margin-bottom: 24px;
     border-bottom: 1px solid #e2e8f0;
@@ -46,11 +65,12 @@ body {
     align-items: center;
     gap: 14px;
     min-width: 0;
+    flex: 1 1 280px;
 }
 
 .detail-back {
-    width: 34px;
-    height: 34px;
+    width: 38px;
+    height: 38px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -61,7 +81,7 @@ body {
     color: #64748b;
     font-size: 14px;
     text-decoration: none;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .detail-back:hover {
@@ -73,6 +93,15 @@ body {
     display: flex;
     flex-direction: column;
     gap: 3px;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.title-with-badge {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px 10px;
 }
 
 .device-badge {
@@ -85,6 +114,7 @@ body {
     border-radius: 6px;
     font-size: 0.72rem;
     font-weight: 600;
+    white-space: nowrap;
 }
 
 .pop-sub-info {
@@ -100,6 +130,7 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    min-height: 40px;
     padding: 5px 2px;
     border: none;
     border-bottom: 1.5px solid #2563eb;
@@ -109,8 +140,9 @@ body {
     font-size: 0.84rem;
     font-weight: 600;
     text-decoration: none;
+    white-space: nowrap;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: color 0.2s ease, border-color 0.2s ease;
 }
 
 .btn-edit:hover {
@@ -118,21 +150,20 @@ body {
     border-bottom-color: #1d4ed8;
 }
 
+.detail-back:focus-visible,
+.btn-edit:focus-visible,
+.figma-photo-img-area img:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.4);
+    outline-offset: 2px;
+}
+
 .detail-container {
     width: 100%;
 }
 
-/* Card Styles */
-.form-card {
-    margin-bottom: 20px;
-    padding: 24px;
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
-}
-
-/* Alert Banner Last Update */
+/* =========================================================
+   ALERT BANNER LAST UPDATE
+========================================================= */
 .alert-info-custom {
     width: 100%;
     margin-top: 0;
@@ -142,14 +173,42 @@ body {
     border: 1px solid #dbe4ff;
     border-radius: 10px;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 12px;
     font-size: 0.84rem;
     color: #4b5563;
 }
-.alert-info-custom i { font-size: 18px; color: #5c67f2; flex-shrink: 0; }
-.alert-info-custom span { line-height: 1.4; }
-.alert-info-custom strong { color: #111827; font-weight: 600; }
+
+.alert-info-custom i {
+    font-size: 18px;
+    line-height: 1.3;
+    color: #5c67f2;
+    flex-shrink: 0;
+}
+
+.alert-info-custom span {
+    line-height: 1.5;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.alert-info-custom strong {
+    color: #111827;
+    font-weight: 600;
+}
+
+/* =========================================================
+   FORM CARD (dipakai halaman Edit)
+========================================================= */
+.form-card {
+    min-width: 0;
+    margin-bottom: 20px;
+    padding: clamp(14px, 3vw, 24px);
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+}
 
 .form-section-title {
     margin: 0 0 16px 0;
@@ -170,73 +229,100 @@ body {
     font-size: 0.85rem;
     color: #64748b;
     font-weight: 500;
-    margin-top: -8px;
     margin-bottom: 14px;
 }
 
-/* General Information Section (Mini Cards) */
-.general-info-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 14px;
+/* =========================================================
+   DETAIL CARD (gaya sama dengan Rectifier)
+========================================================= */
+.detail-card {
+    min-width: 0;
+    margin-bottom: 20px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    overflow: hidden;
 }
 
-.general-info-card {
+.detail-card-title {
     display: flex;
     align-items: center;
+    gap: 8px;
+    padding: 14px 18px 8px;
+    color: #2563eb !important;
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.detail-card-body {
+    padding: 8px 18px 18px;
+}
+
+.detail-card-body>.checklist-section-subtitle {
+    margin-top: 0;
+}
+
+/* =========================================================
+   GENERAL INFORMATION (info-box, sama dengan Rectifier)
+========================================================= */
+.info-box-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr));
     gap: 14px;
-    padding: 12px 16px;
+    padding: 10px 18px 18px;
+}
+
+.info-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    padding: 12px 14px;
     background: #f8fafc;
-    border: 1px solid #e2e8f0;
+    border: 1px solid #eef2f7;
     border-radius: 10px;
-    transition: all 0.2s ease;
 }
 
-.general-info-card:hover {
-    background: #f1f5f9;
-    border-color: #cbd5e1;
-}
-
-.info-card-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    background: #eff6ff;
-    color: #2563eb;
+.info-box-icon {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.15rem;
-    flex-shrink: 0;
-    border: 1px solid #dbeafe;
+    border-radius: 9px;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 15px;
 }
 
-.info-card-content {
+.info-box-text {
     display: flex;
     flex-direction: column;
     gap: 2px;
     min-width: 0;
 }
 
-.info-card-label {
-    font-size: 0.72rem;
-    font-weight: 600;
-    color: #64748b;
+.info-box-label {
+    font-size: 0.7rem;
+    color: #0f172a;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.02em;
+    line-height: 1.35;
 }
 
-.info-card-value {
+.info-box-value {
+    color: #64748b;
     font-size: 0.88rem;
-    font-weight: 600;
-    color: #0f172a;
-    word-break: break-word;
-    line-height: 1.35;
+    font-weight: 500;
+    overflow-wrap: anywhere;
 }
 
 .detail-grid-3 {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
     gap: 20px 24px;
 }
 
@@ -244,6 +330,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    min-width: 0;
 }
 
 .detail-label {
@@ -256,11 +343,13 @@ body {
     font-size: 0.92rem;
     color: #0f172a;
     font-weight: 700;
-    word-break: break-word;
+    overflow-wrap: anywhere;
     line-height: 1.4;
 }
 
-/* Checklist Table (Clean Consistent Style) */
+/* =========================================================
+   CHECKLIST TABLE
+========================================================= */
 .checklist-table-container {
     border: 1px solid #cbd5e1;
     border-radius: 8px;
@@ -279,9 +368,8 @@ body {
 }
 
 .checklist-label {
-    width: 260px;
-    min-width: 220px;
-    flex-shrink: 0;
+    flex: 0 0 clamp(170px, 30%, 260px);
+    min-width: 0;
     background: #ebf3ff;
     padding: 11px 18px;
     font-size: 0.84rem;
@@ -290,6 +378,7 @@ body {
     display: flex;
     align-items: center;
     border-right: 1px solid #cbd5e1;
+    overflow-wrap: anywhere;
 }
 
 .checklist-field {
@@ -306,6 +395,7 @@ body {
     font-weight: 500;
     color: #1e293b;
     min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 .field-colon {
@@ -321,6 +411,7 @@ body {
     align-items: center;
     gap: 10px;
     flex-wrap: wrap;
+    min-width: 0;
     color: #0f172a;
     font-weight: 600;
 }
@@ -357,7 +448,7 @@ body {
     font-weight: 600;
     color: #1e293b;
     line-height: 1.4;
-    word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
 .updated-timestamp {
@@ -378,7 +469,9 @@ body {
     color: #2563eb;
 }
 
-/* Status Badges - Harmonized Standard */
+/* =========================================================
+   STATUS BADGES
+========================================================= */
 .capacity-percent {
     font-weight: 700;
     color: #0f172a;
@@ -397,14 +490,12 @@ body {
     border: 1px solid transparent;
 }
 
-/* 1-EXCELLENT: Hijau */
 .status-excellent {
     color: #15803d;
     background-color: #dcfce7;
     border-color: #86efac;
 }
 
-/* 2-GOOD ENOUGH: Kuning */
 .status-good,
 .status-good-enough {
     color: #854d0e;
@@ -412,14 +503,12 @@ body {
     border-color: #fde047;
 }
 
-/* 3-WARNING: Orange */
 .status-warning {
     color: #c2410c;
     background-color: #fff7ed;
     border-color: #fed7aa;
 }
 
-/* 4-ALERT: Merah */
 .status-danger,
 .status-alert {
     color: #b91c1c;
@@ -433,18 +522,24 @@ body {
     border-color: #cbd5e1;
 }
 
-/* 2-Column Bottom Grid (Uji Baterai & Photo Battery) */
+/* =========================================================
+   UJI BATERAI & PHOTO (2 kolom)
+========================================================= */
 .detail-bottom-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 20px;
     align-items: start;
+}
+
+.detail-bottom-grid>.detail-card,
+.detail-bottom-grid>.form-card {
+    margin-bottom: 0;
 }
 
 .bottom-card {
     display: flex;
     flex-direction: column;
-    margin-bottom: 0;
 }
 
 .bottom-card .checklist-table-container {
@@ -452,14 +547,15 @@ body {
     flex-direction: column;
 }
 
-.bottom-card .checklist-row:last-child {
-    border-bottom: none;
-}
-
-/* Photo Battery Card (Figma Style) */
 .photo-card-container {
     display: flex;
     flex-direction: column;
+}
+
+.photo-card-container .detail-card-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 .figma-photo-card {
@@ -492,11 +588,13 @@ body {
     border-radius: 6px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     transition: transform 0.25s ease;
-    cursor: pointer;
+    cursor: zoom-in;
 }
 
-.figma-photo-img-area img:hover {
-    transform: scale(1.02);
+@media (hover: hover) {
+    .figma-photo-img-area img:hover {
+        transform: scale(1.02);
+    }
 }
 
 .photo-empty-state {
@@ -505,6 +603,8 @@ body {
     align-items: center;
     justify-content: center;
     gap: 10px;
+    padding: 8px;
+    text-align: center;
     color: #94a3b8;
 }
 
@@ -526,25 +626,37 @@ body {
     font-weight: 700;
     font-size: 0.88rem;
     color: #1e293b;
+    overflow-wrap: anywhere;
 }
 
-/* VRLA 4-Cell Grid in Detail */
+/* Popup foto (SweetAlert) tidak melebihi layar */
+.swal2-photo-modal {
+    max-width: 96vw;
+}
+
+.swal2-photo-modal .swal2-image {
+    max-width: 100%;
+    max-height: 70vh;
+    height: auto;
+    object-fit: contain;
+}
+
+/* VRLA: grid sel uji */
 .uji-grid-4-detail {
-    display: flex;
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 110px), 1fr));
     gap: 10px;
-    flex-wrap: wrap;
     margin: 2px 0 6px;
     width: 100%;
+    max-width: 520px;
 }
 
 .uji-cell-box {
     background: #f8fafc;
     border: 1px solid #cbd5e1;
     border-radius: 8px;
-    padding: 8px 16px;
-    min-width: 110px;
-    flex: 0 0 auto;
+    padding: 8px 12px;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -552,12 +664,6 @@ body {
     text-align: center;
     gap: 2px;
     box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
-    transition: all 0.2s ease;
-}
-
-.uji-cell-box:hover {
-    border-color: #94a3b8;
-    background: #f1f5f9;
 }
 
 .uji-cell-label {
@@ -572,11 +678,13 @@ body {
     font-size: 0.95rem;
     font-weight: 700;
     color: #0f172a;
+    white-space: nowrap;
 }
 
 .uji-avg-badge {
     display: inline-flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 6px;
     margin-top: 4px;
     padding: 5px 12px;
@@ -599,27 +707,210 @@ body {
     color: #1e40af;
 }
 
-/* Responsive */
+/* =========================================================
+   RESPONSIVE
+========================================================= */
 @media (max-width: 900px) {
-    .general-info-grid {
+    .detail-bottom-grid {
         grid-template-columns: 1fr;
     }
-    .detail-grid-3 {
-        grid-template-columns: 1fr;
+}
+
+@media (max-width: 768px) {
+    .detail-header-bar {
+        margin-bottom: 18px;
+        padding-bottom: 14px;
     }
+}
+
+/* Baris checklist: label di atas, nilai di bawah */
+@media (max-width: 640px) {
     .checklist-row {
         flex-direction: column;
+        min-height: 0;
     }
+
     .checklist-label {
+        flex: 0 0 auto;
         width: 100%;
+        padding: 8px 12px;
         border-right: none;
         border-bottom: 1px solid #cbd5e1;
     }
-    .detail-bottom-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
+
+    .checklist-field {
+        padding: 10px 12px;
     }
-    .uji-grid-4-detail {
-        grid-template-columns: repeat(2, 1fr);
+
+    .checklist-row.align-top .checklist-label,
+    .checklist-row.align-top .checklist-field {
+        padding-top: 10px;
     }
+
+    .checklist-row.align-top .checklist-label {
+        padding-top: 8px;
+    }
+
+    .field-colon {
+        display: none;
+    }
+
+    .figma-photo-card {
+        min-height: 0;
+    }
+
+    .figma-photo-img-area {
+        min-height: 180px;
+        padding: 12px;
+    }
+
+    .figma-photo-img-area img {
+        max-height: 260px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .detail-card-title {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .detail-card-body {
+        padding: 8px 14px 14px;
+    }
+
+    .info-box-grid {
+        padding: 10px 14px 14px;
+        gap: 10px;
+    }
+
+    /* sejajar dengan teks header, di bawah tombol kembali */
+    .btn-edit {
+        margin-left: 52px;
+    }
+}
+
+/* =========================================================
+   MOBILE: ukuran teks mengikuti type-scale.css
+========================================================= */
+@media (max-width: 600px) {
+    .detail-back {
+        width: 34px;
+        height: 34px;
+        font-size: 12px;
+    }
+
+    .header-left-group {
+        gap: 10px;
+    }
+
+    /* Breadcrumb (komponen <x-breadcrumb>) */
+    .header-title-wrapper :is(nav, ol, ul, li, a, span, i, strong) {
+        font-size: var(--fs-xs) !important;
+        line-height: 1.4 !important;
+    }
+
+    .header-title-wrapper :is(nav, ol, ul) {
+        flex-wrap: wrap;
+    }
+
+    .device-badge {
+        font-size: var(--fs-2xs);
+        padding: 2px 8px;
+    }
+
+    .btn-edit {
+        min-height: 36px;
+        font-size: var(--fs-sm);
+    }
+
+    .alert-info-custom {
+        padding: 10px 12px;
+        font-size: var(--fs-xs);
+        gap: 10px;
+    }
+
+    .alert-info-custom i {
+        font-size: 15px;
+    }
+
+    .detail-card-title,
+    .form-section-title {
+        font-size: var(--fs-md);
+    }
+
+    .checklist-section-subtitle {
+        font-size: var(--fs-xs);
+    }
+
+    .info-box {
+        padding: 10px 12px;
+        gap: 10px;
+    }
+
+    .info-box-icon {
+        width: 34px;
+        height: 34px;
+        font-size: 14px;
+    }
+
+    .info-box-label {
+        font-size: var(--fs-2xs);
+    }
+
+    .info-box-value {
+        font-size: var(--fs-sm);
+    }
+
+    .checklist-label {
+        font-size: var(--fs-xs);
+    }
+
+    .checklist-field,
+    .updated-user {
+        font-size: var(--fs-sm);
+    }
+
+    .status-badge {
+        font-size: var(--fs-2xs);
+    }
+
+    .uji-cell-label {
+        font-size: var(--fs-2xs);
+    }
+
+    .uji-cell-val {
+        font-size: var(--fs-sm);
+    }
+
+    .uji-avg-badge {
+        font-size: var(--fs-xs);
+    }
+
+    .photo-empty-state span {
+        font-size: var(--fs-xs);
+    }
+
+    .figma-photo-caption-bar {
+        font-size: var(--fs-sm);
+        padding: 10px 12px;
+    }
+}
+
+
+/* =========================================================
+   IKON JUDUL CARD — seragam di semua halaman detail
+   (ukuran & warna sama; ganti ukuran lewat --icon-title
+   di type-scale.css)
+   ========================================================= */
+.detail-card-title>i,
+.form-section-title>i,
+.section-heading>span>i,
+.photo-header>i,
+.photo-title>i {
+    flex-shrink: 0;
+    font-size: var(--icon-title);
+    line-height: 1;
+    color: #2563eb;
 }
