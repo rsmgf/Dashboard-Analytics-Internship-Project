@@ -53,7 +53,7 @@
                             {{-- Header --}}
                             <div class="rectifier-card-header">
                                 <div class="checklist-icon">
-                                    <i class="bi bi-file-earmark-text-fill"></i>
+                                    <i class="bi bi-hdd-stack-fill"></i>
                                 </div>
 
                                 <div class="checklist-title">

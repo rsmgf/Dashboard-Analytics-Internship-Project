@@ -244,10 +244,17 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 8px;
+    border-radius: 10px;
+    /* warna sama dengan .device-icon.rectifier di dashboard */
     background: #eff6ff;
-    color: #2563eb;
-    font-size: 17px;
+    color: #0284c7;
+    font-size: var(--icon-title);
+}
+
+/* warna sama dengan .device-icon.kwh di dashboard */
+.checklist-icon.kwh {
+    background: #ecfdf5;
+    color: #059669;
 }
 
 .checklist-title {
@@ -663,7 +670,6 @@ body {
     .checklist-icon {
         width: 34px;
         height: 34px;
-        font-size: 15px;
     }
 
     .checklist-title h3 {

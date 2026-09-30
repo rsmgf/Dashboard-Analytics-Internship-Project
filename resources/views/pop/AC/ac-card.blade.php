@@ -45,7 +45,7 @@
 
                 @if ($acs->isEmpty())
                     <div style="text-align: center; padding: 60px 20px; color: #94a3b8;">
-                        <i class="bi bi-snow" style="font-size: 3rem; display: block; margin-bottom: 12px;"></i>
+                        <i class="bi bi-fan" style="font-size: 3rem; display: block; margin-bottom: 12px;"></i>
                         <p style="font-size: 1rem; font-weight: 500;">Belum ada data AC untuk POP ini.</p>
                     </div>
                 @else
@@ -55,7 +55,7 @@
                                 <div class="ac-card-header">
                                     <div class="ac-title-wrapper">
                                         <div class="ac-icon">
-                                            <i class="bi bi-snow"></i>
+                                            <i class="bi bi-fan"></i>
                                         </div>
                                         <div class="card-title-text">
                                             <h3>Checklist AC</h3>

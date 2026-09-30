@@ -45,7 +45,7 @@
 
                 @if ($gensets->isEmpty())
                     <div class="genset-empty-state" style="text-align: center; padding: 60px 20px; color: #94a3b8;">
-                        <i class="bi bi-cpu" style="font-size: 3rem; display: block; margin-bottom: 12px;"></i>
+                        <i class="bi bi-fuel-pump" style="font-size: 3rem; display: block; margin-bottom: 12px;"></i>
                         <p style="font-size: 1rem; font-weight: 500;">Belum ada data Genset untuk POP ini.</p>
                     </div>
                 @else
@@ -55,7 +55,7 @@
                                 <div class="genset-card-header">
                                     <div class="genset-title-wrapper">
                                         <div class="genset-icon">
-                                            <i class="bi bi-cpu-fill"></i>
+                                            <i class="bi bi-fuel-pump-fill"></i>
                                         </div>
                                         <div class="card-title-text">
                                             <h3>Checklist Genset</h3>

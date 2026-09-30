@@ -49,8 +49,8 @@
                         @endphp
                         <div class="rectifier-card">
                             <div class="rectifier-card-header">
-                                <div class="checklist-icon">
-                                    <i class="bi bi-speedometer2"></i>
+                                <div class="checklist-icon kwh">
+                                    <i class="bi bi-lightning-charge-fill"></i>
                                 </div>
                                 <div class="checklist-title">
                                     <h3>Checklist kWh</h3>
