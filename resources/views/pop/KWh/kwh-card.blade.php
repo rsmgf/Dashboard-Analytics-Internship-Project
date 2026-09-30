@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Card KWH - PLN Icon Plus</title>
 
@@ -24,7 +24,7 @@
             <div class="rectifier-content">
                 <div class="rectifier-page-header">
                     <div class="rectifier-page-info">
-                        <a href="{{ route('pops.index') }}" class="back-button" title="Kembali ke List POP">
+                        <a href="{{ route('pops.index') }}" class="back-button" title="Kembali ke List POP" aria-label="Kembali ke List POP">
                             <i class="bi bi-arrow-left"></i>
                         </a>
                         <div class="rectifier-header-text">
@@ -45,33 +45,43 @@
                         @php
                             $firstPhoto = $kwh->photos->first();
                             $lastUpdatedBy = $kwh->diupdateOleh->name ?? '-';
+                            $kwhLabel = $kwh->nomor_kwh ?? $kwh->nama_alias;
                         @endphp
                         <div class="rectifier-card">
                             <div class="rectifier-card-header">
-                                <div class="checklist-icon">
-                                    <i class="bi bi-speedometer2"></i>
+                                <div class="checklist-icon kwh">
+                                    <i class="bi bi-lightning-charge-fill"></i>
                                 </div>
                                 <div class="checklist-title">
                                     <h3>Checklist kWh</h3>
-                                    <p>{{ $kwh->nomor_kwh ?? $kwh->nama_alias }}</p>
+                                    <p title="{{ $kwhLabel }}">{{ $kwhLabel }}</p>
                                 </div>
-                                <span class="rectifier-number">
-                                    {{ $kwh->nomor_kwh ?? $kwh->nama_alias ?? ('KWH_' . str_pad($index + 1, 2, '0', STR_PAD_LEFT)) }}
-                                </span>
                             </div>
 
                             <div class="rectifier-information">
-                                <div class="equipment-info"><span class="info-label">Type POP</span>
-                                    {{ $kwh->pop->tipe_pop ?? '-' }}</div>
-                                <div class="equipment-info"><span class="info-label">Phasa</span>
-                                    {{ $kwh->jumlah_phasa }}</div>
-                                <div class="equipment-info serial"><span class="info-label">Daya Listrik</span>
-                                    {{ $kwh->daya_ps_gi_formatted }}</div>
+                                <div class="equipment-info">
+                                    <span class="info-label">Type POP</span>
+                                    <span class="info-sep">:</span>
+                                    <span class="data-value">{{ $kwh->pop->tipe_pop ?? '-' }}</span>
+                                </div>
+                                <div class="equipment-info">
+                                    <span class="info-label">Phasa</span>
+                                    <span class="info-sep">:</span>
+                                    <span class="data-value">{{ $kwh->jumlah_phasa ?? '-' }}</span>
+                                </div>
+                                <div class="equipment-info serial">
+                                    <span class="info-label">Daya Listrik</span>
+                                    <span class="info-sep">:</span>
+                                    <span class="data-value">{{ $kwh->daya_ps_gi_formatted }}</span>
+                                </div>
                                 <div class="equipment-info">
                                     <span class="info-label">Status Utilisasi</span>
-                                    <span class="status-auto-badge {{ $kwh->status_badge_class }}">
-                                        </i> {{ $kwh->status_utilisasi }}
-                                        ({{ $kwh->persentase_utilisasi_formatted }})
+                                    <span class="info-sep">:</span>
+                                    <span class="data-value">
+                                        <span class="status-auto-badge {{ $kwh->status_badge_class }}">
+                                            {{ $kwh->status_utilisasi }}
+                                            ({{ $kwh->persentase_utilisasi_formatted }})
+                                        </span>
                                     </span>
                                 </div>
                             </div>
@@ -96,7 +106,8 @@
 
                             <div class="rectifier-card-footer">
                                 <button type="button" class="btn-hapus"
-                                    onclick="hapusKwh({{ $kwh->id }}, '{{ $kwh->nomor_kwh ?? $kwh->nama_alias }}')">
+                                    data-id="{{ $kwh->id }}"
+                                    data-name="{{ $kwhLabel }}">
                                     <i class="bi bi-trash3-fill"></i> Hapus
                                 </button>
                                 <a href="{{ route('kwh.detail', [$pop->id, $kwh->id]) }}" class="detail-button">
@@ -106,9 +117,9 @@
                             </div>
                         </div>
                     @empty
-                        <div style="grid-column: 1 / -1; text-align:center; padding: 60px 20px; color:#94a3b8;">
-                            <i class="bi bi-inbox" style="font-size: 2.5rem;"></i>
-                            <p style="margin-top: 12px;">Belum ada data kWh untuk POP ini.</p>
+                        <div class="empty-rectifier">
+                            <i class="bi bi-inbox"></i>
+                            <p>Belum ada data kWh untuk POP ini.</p>
                         </div>
                     @endforelse
                 </div>
@@ -122,10 +133,32 @@
         const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').content;
         const kwhDestroyUrlTemplate = "{{ route('kwh.destroy', [$pop->id, '__ID__']) }}";
 
+        // Escape HTML agar nama dengan tanda kutip / karakter khusus aman ditampilkan
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str ?? '';
+            return div.innerHTML;
+        }
+
+        // Event delegation: membaca data dari atribut data-*
+        document.addEventListener('click', function (e) {
+            const btn = e.target.closest('.btn-hapus');
+            if (!btn) return;
+            hapusKwh(btn.dataset.id, btn.dataset.name);
+        });
+
+        const swalClasses = {
+            popup: 'swal-popup-custom',
+            title: 'swal-title-custom',
+            htmlContainer: 'swal-html-custom',
+            confirmButton: 'swal-btn-confirm',
+            cancelButton: 'swal-btn-cancel',
+        };
+
         function hapusKwh(id, kwhName) {
             Swal.fire({
                 title: 'Hapus kWh?',
-                html: `Apakah Anda yakin ingin menghapus data <strong>"${kwhName}"</strong>?<br><small style="color: #64748b;">Data kWh dan foto dokumentasinya akan dihapus.</small>`,
+                html: `Apakah Anda yakin ingin menghapus data <strong>"${escapeHtml(kwhName)}"</strong>?<br><small style="color: #64748b;">Data kWh dan foto dokumentasinya akan dihapus.</small>`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#dc2626',
@@ -133,7 +166,9 @@
                 confirmButtonText: '<i class="bi bi-trash3-fill"></i> Ya, Hapus!',
                 cancelButtonText: 'Batal',
                 reverseButtons: true,
-                focusCancel: true
+                focusCancel: true,
+                heightAuto: false,
+                customClass: swalClasses
             }).then((result) => {
                 if (!result.isConfirmed) return;
 
@@ -152,7 +187,9 @@
                             title: 'Berhasil!',
                             text: data.message,
                             showConfirmButton: false,
-                            timer: 1500
+                            timer: 1500,
+                            heightAuto: false,
+                            customClass: swalClasses
                         }).then(() => window.location.reload());
                     })
                     .catch(err => {
@@ -160,7 +197,9 @@
                             icon: 'error',
                             title: 'Gagal',
                             text: err.message,
-                            confirmButtonColor: '#dc2626'
+                            confirmButtonColor: '#dc2626',
+                            heightAuto: false,
+                            customClass: swalClasses
                         });
                     });
             });

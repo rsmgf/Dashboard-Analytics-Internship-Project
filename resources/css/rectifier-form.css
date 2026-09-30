@@ -1,8 +1,17 @@
-*, *::before, *::after {
+@import './type-scale.css';
+
+*,
+*::before,
+*::after {
     box-sizing: border-box;
 }
 
-html, body {
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
+html,
+body {
     margin: 0;
     padding: 0;
     width: 100%;
@@ -26,9 +35,11 @@ html, body {
 }
 
 .rform-content {
-    padding: 24px;
     width: 100%;
-    box-sizing: border-box;
+    max-width: 1600px;
+    margin-inline: auto;
+    padding: clamp(14px, 2.5vw, 24px);
+    padding-bottom: max(clamp(20px, 3vw, 32px), env(safe-area-inset-bottom, 0px));
 }
 
 /* ---- Header Bar with Breadcrumb & Back Button ---- */
@@ -45,6 +56,9 @@ html, body {
     display: flex;
     flex-direction: column;
     gap: 2px;
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 .rform-page-title {
@@ -59,29 +73,30 @@ html, body {
     margin: 0;
     font-size: 0.8rem;
     color: #64748b;
+    overflow-wrap: anywhere;
 }
 
 .rform-back {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 34px;
-    height: 34px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     background: #f1f5f9;
     color: #64748b;
     font-size: 14px;
     text-decoration: none;
     flex-shrink: 0;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
-.rform-back:hover { background: #e2e8f0; color: #0f172a; }
 
 .rform-back:hover {
     background: #e2e8f0;
-    color: #1e293b;
+    color: #0f172a;
 }
 
+/* ---- Section ---- */
 .rform-section {
     background: #fff;
     border: 1px solid #e2e8f0;
@@ -99,7 +114,9 @@ html, body {
     background: #fff;
     display: flex;
     align-items: center;
-    gap: 10px;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+    line-height: 1.4;
 }
 
 .rform-section-sub {
@@ -142,6 +159,7 @@ html, body {
     padding: 20px;
 }
 
+/* ---- Grid baris form: kolom menyesuaikan lebar yang tersedia ---- */
 .rform-row {
     display: grid;
     gap: 16px;
@@ -149,11 +167,11 @@ html, body {
 }
 
 .rform-row-4 {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
 }
 
 .rform-row-2 {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
 }
 
 .rform-row-1 {
@@ -164,6 +182,7 @@ html, body {
     display: flex;
     flex-direction: column;
     gap: 5px;
+    min-width: 0;
 }
 
 .rform-label {
@@ -179,6 +198,7 @@ html, body {
 .rform-input,
 .rform-select {
     width: 100%;
+    min-height: 42px;
     padding: 9px 12px;
     border: 1px solid #cbd5e1;
     border-radius: 7px;
@@ -213,6 +233,7 @@ html, body {
     margin-top: 2px;
 }
 
+/* ---- Foto ---- */
 .rform-photo-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -227,7 +248,7 @@ html, body {
     padding: 36px 20px;
     text-align: center;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
     position: relative;
     overflow: hidden;
     display: flex;
@@ -237,7 +258,8 @@ html, body {
     min-height: 200px;
 }
 
-.rform-drop-zone:hover {
+.rform-drop-zone:hover,
+.rform-drop-zone.dragover {
     background: #e6f0fd;
     border-color: #2563eb;
 }
@@ -264,10 +286,12 @@ html, body {
     font-size: 0.75rem;
     color: #64748b;
     margin-top: 12px;
+    line-height: 1.5;
 }
 
 .rform-browse-btn {
     display: inline-block;
+    min-height: 40px;
     padding: 8px 24px;
     background: linear-gradient(135deg, #0086FF, #005BD4);
     color: #fff;
@@ -283,7 +307,6 @@ html, body {
 
 .rform-browse-btn:hover {
     background: linear-gradient(135deg, #0078E8, #0052C2);
-    transform: translateY(-1px);
     box-shadow: 0 6px 12px -1px rgba(0, 91, 212, 0.3);
 }
 
@@ -330,6 +353,8 @@ html, body {
     flex-direction: column;
     align-items: center;
     gap: 8px;
+    padding: 12px;
+    text-align: center;
     color: #94a3b8;
     font-size: 0.8rem;
 }
@@ -338,30 +363,32 @@ html, body {
     font-size: 2rem;
 }
 
+/* ---- Modul: grid otomatis (1 kolom di HP, banyak kolom di layar lebar) ---- */
 .rform-module-columns {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 190px), 1fr));
     gap: 16px;
-    flex-wrap: wrap;
     margin-bottom: 20px;
+}
+
+.rform-module-columns:empty {
+    display: none;
 }
 
 .rform-module-col {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    min-width: 160px;
-    flex: 1 1 160px;
-    max-width: 200px;
+    min-width: 0;
     background: #fff;
     border: 1px solid #e2e8f0;
     padding: 12px;
     border-radius: 10px;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: box-shadow 0.2s, border-color 0.2s;
 }
 
 .rform-module-col:hover {
-    transform: translateY(-2px);
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     border-color: #cbd5e1;
 }
@@ -382,8 +409,10 @@ html, body {
     color: #dc2626;
     border-radius: 6px;
     cursor: pointer;
+    font-family: 'Poppins', sans-serif;
     font-size: 0.75rem;
     font-weight: 600;
+    min-height: 36px;
     padding: 6px;
     text-align: center;
     margin-top: 4px;
@@ -403,7 +432,9 @@ html, body {
 .btn-tambah-modul {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
+    min-height: 42px;
     padding: 10px 20px;
     background: #f0fdf4;
     border: 1.5px dashed #22c55e;
@@ -423,14 +454,17 @@ html, body {
     border-style: solid;
 }
 
+/* ---- Output MCB ---- */
 .rform-output-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr));
     gap: 20px;
 }
 
 .rform-output-table {
     width: 100%;
+    min-width: 0;
+    table-layout: fixed;
     border-collapse: collapse;
     font-size: 0.8rem;
 }
@@ -443,6 +477,10 @@ html, body {
     color: #374151;
     border-bottom: 1px solid #e2e8f0;
     white-space: nowrap;
+}
+
+.rform-output-table th:first-child {
+    width: 74px;
 }
 
 .rform-output-table td {
@@ -460,6 +498,7 @@ html, body {
 
 .rform-output-table input {
     width: 100%;
+    min-height: 34px;
     padding: 5px 8px;
     border: 1px solid #cbd5e1;
     border-radius: 5px;
@@ -480,25 +519,39 @@ html, body {
     white-space: nowrap;
 }
 
+/* ---- Actions ---- */
 .rform-actions {
     display: flex;
     justify-content: flex-end;
+    flex-wrap: wrap;
     gap: 12px;
     margin-top: 8px;
     padding: 20px 0;
 }
 
-.rform-btn-reset {
+.rform-btn-reset,
+.rform-btn-simpan {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
     padding: 10px 28px;
-    background: #fff;
-    border: 1.5px solid #cbd5e1;
-    color: #374151;
     border-radius: 8px;
     font-size: 0.875rem;
     font-weight: 600;
     font-family: 'Poppins', sans-serif;
     cursor: pointer;
-    transition: all 0.2s;
+    text-decoration: none;
+    /* tombol Batal di halaman edit berupa <a> */
+    -webkit-tap-highlight-color: transparent;
+}
+
+.rform-btn-reset {
+    background: #fff;
+    border: 1.5px solid #cbd5e1;
+    color: #374151;
+    transition: background-color 0.2s;
 }
 
 .rform-btn-reset:hover {
@@ -506,30 +559,37 @@ html, body {
 }
 
 .rform-btn-simpan {
-    padding: 10px 28px;
     background: #005ca9;
     border: none;
     color: #fff;
-    border-radius: 8px;
-    font-size: 0.875rem;
-    font-weight: 600;
-    font-family: 'Poppins', sans-serif;
-    cursor: pointer;
-    transition: background 0.2s;
+    transition: background-color 0.2s;
 }
 
 .rform-btn-simpan:hover {
     background: #004680;
 }
 
+/* Fokus keyboard */
+.rform-back:focus-visible,
+.rform-btn-reset:focus-visible,
+.rform-btn-simpan:focus-visible,
+.rform-browse-btn:focus-visible,
+.btn-tambah-modul:focus-visible,
+.rform-module-remove:focus-visible {
+    outline: 3px solid rgba(0, 92, 169, 0.4);
+    outline-offset: 2px;
+}
+
 .rform-flash {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 8px;
     padding: 11px 16px;
     border-radius: 8px;
     font-size: 0.85rem;
+    line-height: 1.5;
     margin-bottom: 16px;
+    overflow-wrap: anywhere;
 }
 
 .rform-flash.success {
@@ -542,13 +602,6 @@ html, body {
     background: #fee2e2;
     border: 1px solid #fca5a5;
     color: #B91C1C;
-}
-
-@media (max-width: 768px) {
-    .rform-row-4  { grid-template-columns: 1fr 1fr; }
-    .rform-row-2  { grid-template-columns: 1fr; }
-    .rform-photo-grid { grid-template-columns: 1fr; }
-    .rform-output-grid { grid-template-columns: 1fr; }
 }
 
 /* Compact Photo Upload Pattern */
@@ -627,6 +680,7 @@ html, body {
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    min-height: 40px;
     padding: 8px 16px;
     background: #f1f5f9;
     color: #1e293b;
@@ -644,4 +698,309 @@ html, body {
     color: #0f172a;
 }
 
+/* Efek hover angkat hanya untuk perangkat dengan mouse */
+@media (hover: hover) {
+    .rform-browse-btn:hover {
+        transform: translateY(-1px);
+    }
+}
 
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+/* Layar lebar: dropzone dan preview foto berdampingan */
+@media (min-width: 900px) {
+    .rform-photo-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .rform-photo-grid .rform-photo-preview {
+        margin-top: 0;
+    }
+}
+
+/* Tablet portrait & mobile */
+@media (max-width: 768px) {
+    .rform-header-bar {
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        gap: 12px;
+    }
+
+    .rform-section-header {
+        padding: 12px 16px;
+    }
+
+    .rform-section-body {
+        padding: 16px;
+    }
+
+    .rform-row {
+        gap: 14px;
+        margin-bottom: 14px;
+    }
+
+    /* 16px mencegah iOS Safari auto-zoom saat input difokus */
+    .rform-input,
+    .rform-select,
+    .rform-output-table input {
+        font-size: 16px;
+    }
+
+    .rform-input,
+    .rform-select {
+        min-height: 44px;
+    }
+
+    .rform-label {
+        font-size: 0.82rem;
+    }
+
+    .btn-tambah-modul {
+        width: 100%;
+    }
+
+    /* Tombol aksi menempel di bawah layar */
+    .rform-actions {
+        position: sticky;
+        bottom: 0;
+        z-index: 5;
+        flex-direction: column-reverse;
+        gap: 10px;
+        margin: 8px calc(-1 * clamp(14px, 2.5vw, 24px)) calc(-1 * clamp(20px, 3vw, 32px));
+        padding: 12px clamp(14px, 2.5vw, 24px) calc(12px + env(safe-area-inset-bottom, 0px));
+        background: #fff;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .rform-btn-reset,
+    .rform-btn-simpan {
+        width: 100%;
+    }
+}
+
+/* Mobile: tabel MCB berubah jadi kartu per baris agar semua kolom terbaca */
+@media (max-width: 640px) {
+
+    .rform-output-table,
+    .rform-output-table tbody {
+        display: block;
+    }
+
+    .rform-output-table thead {
+        /* disembunyikan secara visual, tetap terbaca screen reader */
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+    }
+
+    .rform-output-table tr {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 130px), 1fr));
+        gap: 10px;
+        padding: 12px;
+        margin-bottom: 10px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+    }
+
+    .rform-output-table td {
+        display: block;
+        min-width: 0;
+        padding: 0;
+        border: none;
+    }
+
+    .rform-output-table td.mcb-label {
+        grid-column: 1 / -1;
+        font-size: 0.85rem;
+        color: #1e293b;
+        padding-bottom: 6px;
+        border-bottom: 1px dashed #cbd5e1;
+    }
+
+    .rform-output-table td:not(.mcb-label)::before {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: #64748b;
+    }
+
+    .rform-output-table td:nth-child(2)::before {
+        content: "Merk";
+    }
+
+    .rform-output-table td:nth-child(3)::before {
+        content: "Kapasitas";
+    }
+
+    .rform-output-table td:nth-child(4)::before {
+        content: "Peruntukan";
+    }
+
+    .rform-output-table input {
+        min-height: 42px;
+    }
+}
+
+@media (max-width: 480px) {
+    .rform-section-body {
+        padding: 14px;
+    }
+
+    .rform-drop-zone {
+        padding: 24px 14px;
+        min-height: 170px;
+    }
+
+    .rform-drop-icon {
+        font-size: 2rem;
+    }
+
+    .rform-preview-box {
+        height: 200px;
+    }
+}
+
+/* HP landscape: tinggi layar sempit, jangan pakai sticky */
+@media (max-height: 480px) and (orientation: landscape) {
+    .rform-actions {
+        position: static;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+}
+
+/* =========================================================
+   MOBILE: ukuran teks mengikuti type-scale.css
+   ========================================================= */
+@media (max-width: 600px) {
+    .rform-back {
+        width: 34px;
+        height: 34px;
+        font-size: 13px;
+    }
+
+    /* Breadcrumb (komponen <x-breadcrumb>) */
+    .rform-header-text :is(nav, ol, ul, li, a, span, i, strong) {
+        font-size: var(--fs-xs) !important;
+        line-height: 1.4 !important;
+    }
+
+    .rform-header-text :is(nav, ol, ul) {
+        flex-wrap: wrap;
+    }
+
+    .rform-page-sub {
+        font-size: var(--fs-xs);
+    }
+
+    /* Section */
+    .rform-section-header {
+        font-size: var(--fs-md);
+        padding: 11px 14px;
+    }
+
+    .rform-section-sub {
+        font-size: var(--fs-2xs);
+    }
+
+    .rform-flash {
+        font-size: var(--fs-xs);
+        padding: 10px 12px;
+    }
+
+    /* Form */
+    .rform-label {
+        font-size: var(--fs-sm);
+    }
+
+    .rform-label small {
+        font-size: var(--fs-2xs);
+    }
+
+    .rform-input,
+    .rform-select {
+        min-height: var(--control-h);
+        font-size: var(--fs-input);
+    }
+
+    .rform-output-table input {
+        min-height: var(--control-h);
+        font-size: var(--fs-input);
+    }
+
+    .rform-error {
+        font-size: var(--fs-2xs);
+    }
+
+    .rform-badge-auto {
+        font-size: var(--fs-2xs);
+    }
+
+    /* Tabel MCB (mode kartu) */
+    .rform-output-table td.mcb-label {
+        font-size: var(--fs-sm);
+    }
+
+    .rform-output-table td:not(.mcb-label)::before {
+        font-size: var(--fs-2xs);
+    }
+
+    /* Foto */
+    .rform-drop-text {
+        font-size: var(--fs-md);
+    }
+
+    .rform-drop-hint {
+        font-size: var(--fs-2xs);
+    }
+
+    .rform-preview-label {
+        font-size: var(--fs-sm);
+    }
+
+    .rform-preview-empty {
+        font-size: var(--fs-xs);
+    }
+
+    .rform-browse-btn {
+        min-height: 38px;
+        padding: 6px 20px;
+        font-size: var(--fs-sm);
+    }
+
+    /* Modul */
+    .rform-module-label {
+        font-size: var(--fs-sm);
+    }
+
+    .rform-module-remove {
+        min-height: 34px;
+        font-size: var(--fs-xs);
+    }
+
+    .btn-tambah-modul {
+        min-height: 40px;
+        padding: 8px 16px;
+        font-size: var(--fs-sm);
+    }
+
+    /* Tombol aksi */
+    .rform-btn-reset,
+    .rform-btn-simpan {
+        min-height: var(--control-h);
+        padding: 8px 20px;
+        font-size: var(--fs-sm);
+    }
+}

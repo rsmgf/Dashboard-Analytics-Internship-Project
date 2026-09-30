@@ -1,5 +1,11 @@
+@import './type-scale.css';
+
 * {
     box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -25,80 +31,68 @@ body {
 
 .rectifier-content {
     width: 100%;
+    max-width: 1600px;
+    margin-inline: auto;
     min-height: calc(100vh - 70px);
-    padding: 24px;
+    padding: clamp(14px, 2.5vw, 24px);
+    padding-bottom: max(clamp(20px, 3vw, 32px), env(safe-area-inset-bottom, 0px));
     background: #f8fafc;
 }
 
+/* ---- Tombol kembali: sama dengan halaman Rectifier ---- */
 .back-button {
     width: 38px;
     height: 38px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid #e2e8f0;
+    flex-shrink: 0;
+    border: none;
     border-radius: 50%;
-    background: #ffffff;
+    background: #f1f5f9;
     color: #64748b;
-    font-size: 15px;
+    font-size: 14px;
     text-decoration: none;
-    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .back-button:hover {
-    background: #f1f5f9;
-    border-color: #cbd5e1;
+    background: #e2e8f0;
     color: #0f172a;
 }
 
-.form-card {
-    margin-bottom: 20px;
-    padding: 24px;
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+.back-button:focus-visible,
+.btn-edit-form:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.4);
+    outline-offset: 2px;
 }
 
-.form-section-title {
-    margin: 0 0 20px 0;
-    color: #1e40af;
-    font-size: 1rem;
-    font-weight: 600;
-}
-
-/* Alert Banner Last Update */
-.alert-info-custom {
-    width: 100%;
-    margin-top: 0;
-    margin-bottom: 20px;
-    padding: 12px 18px;
-    background-color: #f5f7ff;
-    border: 1px solid #dbe4ff;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 0.84rem;
-    color: #4b5563;
-}
-.alert-info-custom i { font-size: 18px; color: #5c67f2; flex-shrink: 0; }
-.alert-info-custom span { line-height: 1.4; }
-.alert-info-custom strong { color: #111827; font-weight: 600; }
-
-/* Header Detail & Edit Button */
+/* ---- Header halaman ---- */
 .detail-page-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px 16px;
+    padding: 0 0 16px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid #e2e8f0;
 }
 
 .rectifier-page-info {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 14px;
+    min-width: 0;
+    flex: 1 1 280px;
+}
+
+.rectifier-header-text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 .page-title {
@@ -112,6 +106,7 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    min-height: 40px;
     padding: 5px 2px;
     border: none;
     border-bottom: 1.5px solid #2563eb;
@@ -121,8 +116,9 @@ body {
     font-size: 0.84rem;
     font-weight: 600;
     text-decoration: none;
+    white-space: nowrap;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: color 0.2s ease, border-color 0.2s ease;
 }
 
 .btn-edit-form:hover {
@@ -130,13 +126,152 @@ body {
     border-bottom-color: #1d4ed8;
 }
 
+/* ---- Alert last update ---- */
+.alert-info-custom {
+    width: 100%;
+    margin-top: 0;
+    margin-bottom: 20px;
+    padding: 12px 18px;
+    background-color: #f5f7ff;
+    border: 1px solid #dbe4ff;
+    border-radius: 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 0.84rem;
+    color: #4b5563;
+}
+
+.alert-info-custom i {
+    font-size: 18px;
+    line-height: 1.3;
+    color: #5c67f2;
+    flex-shrink: 0;
+}
+
+.alert-info-custom span {
+    line-height: 1.5;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.alert-info-custom strong {
+    color: #111827;
+    font-weight: 600;
+}
+
+/* ---- Card ---- */
 .detail-container {
     width: 100%;
 }
 
+.form-card {
+    min-width: 0;
+    margin-bottom: 20px;
+    padding: clamp(16px, 2.5vw, 24px);
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+}
+
+/* Judul card: seragam dengan Rectifier (biru #2563eb) */
+.form-section-title,
+.detail-card-title {
+    margin: 0 0 20px 0;
+    color: #2563eb;
+    font-size: 0.95rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Ikon judul card (sama dengan halaman Battery) */
+.form-section-title i,
+.detail-card-title i {
+    flex-shrink: 0;
+    font-size: 1.15rem;
+    line-height: 1;
+    color: #2563eb;
+}
+
+/* =========================================================
+   GENERAL INFORMATION — gaya kotak berikon (sama dengan Rectifier)
+   ========================================================= */
+.detail-card {
+    min-width: 0;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.detail-card .detail-card-title {
+    margin: 0;
+    padding: 14px 18px 8px;
+}
+
+.info-box-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr));
+    gap: 14px;
+    padding: 10px 18px 18px;
+}
+
+.info-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    padding: 12px 14px;
+    background: #f8fafc;
+    border: 1px solid #eef2f7;
+    border-radius: 10px;
+}
+
+.info-box-icon {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 15px;
+}
+
+.info-box-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.info-box-label {
+    font-size: 0.7rem;
+    color: #0f172a;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 1.35;
+}
+
+.info-box-value {
+    color: #64748b;
+    font-size: 0.88rem;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+}
+
+/* ---- Detail item (Uji Genset, keterangan foto) ---- */
 .detail-grid-3 {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
     gap: 20px;
 }
 
@@ -144,6 +279,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 5px;
+    min-width: 0;
 }
 
 .detail-label {
@@ -156,10 +292,10 @@ body {
     font-size: 0.9rem;
     color: #1e293b;
     font-weight: 600;
-    word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
-/* Penyesuaian Tabel Detail agar Senada dengan Form Create */
+/* ---- Tabel checklist ---- */
 .checklist-table-container {
     border: 1px solid #cbd5e1;
     border-radius: 8px;
@@ -177,7 +313,8 @@ body {
 }
 
 .checklist-label {
-    width: 280px;
+    width: clamp(180px, 28%, 280px);
+    flex-shrink: 0;
     background: #ebf3ff;
     padding: 12px 16px;
     font-size: 0.84rem;
@@ -190,6 +327,7 @@ body {
 
 .checklist-field {
     flex: 1;
+    min-width: 0;
     padding: 10px 16px;
     display: flex;
     align-items: center;
@@ -197,9 +335,10 @@ body {
     font-size: 0.84rem;
     font-weight: 600;
     color: #1e293b;
+    overflow-wrap: anywhere;
 }
 
-/* Grid Kapasitas Uji VRLA pada Detail */
+/* ---- Grid VRLA (dipertahankan) ---- */
 .uji-grid-4-detail {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -234,7 +373,7 @@ body {
     font-weight: 700;
 }
 
-/* Status Badge */
+/* ---- Status badge ---- */
 .status-badge {
     display: inline-flex;
     align-items: center;
@@ -248,15 +387,41 @@ body {
     border: 1px solid transparent;
 }
 
-.status-excellent { color: #15803d !important; background-color: #dcfce7 !important; border-color: #bbf7d0 !important; }
-.status-good { color: #a16207 !important; background-color: #fef9c3 !important; border-color: #fef08a !important; }
-.status-warning { color: #c2410c !important; background-color: #ffedd5 !important; border-color: #fed7aa !important; }
-.status-danger { color: #b91c1c !important; background-color: #fee2e2 !important; border-color: #fecaca !important; }
+.status-excellent {
+    color: #15803d !important;
+    background-color: #dcfce7 !important;
+    border-color: #bbf7d0 !important;
+}
 
-/* Photo Section Grid */
+.status-good {
+    color: #a16207 !important;
+    background-color: #fef9c3 !important;
+    border-color: #fef08a !important;
+}
+
+.status-warning {
+    color: #c2410c !important;
+    background-color: #ffedd5 !important;
+    border-color: #fed7aa !important;
+}
+
+.status-danger {
+    color: #b91c1c !important;
+    background-color: #fee2e2 !important;
+    border-color: #fecaca !important;
+}
+
+/* status "Belum PM" (sebelumnya belum punya style) */
+.status-neutral {
+    color: #64748b !important;
+    background-color: #f1f5f9 !important;
+    border-color: #e2e8f0 !important;
+}
+
+/* ---- Foto ---- */
 .photo-grid-2 {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
     gap: 20px;
 }
 
@@ -286,20 +451,173 @@ body {
     margin-top: 12px;
 }
 
-@media (max-width: 900px) {
-    .detail-grid-3,
-    .photo-grid-2 {
-        grid-template-columns: 1fr;
+/* ---- Popup foto (SweetAlert2) ---- */
+.swal-popup-custom {
+    font-family: 'Poppins', sans-serif;
+    border-radius: 16px !important;
+    max-width: 92vw !important;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 768px) {
+    .detail-page-header {
+        margin-bottom: 18px;
+        padding-bottom: 14px;
     }
+
     .checklist-row {
         flex-direction: column;
     }
+
     .checklist-label {
         width: 100%;
         border-right: none;
         border-bottom: 1px solid #cbd5e1;
+        padding: 9px 14px;
     }
+
+    .checklist-field {
+        padding: 10px 14px;
+    }
+
     .uji-grid-4-detail {
         grid-template-columns: 1fr;
     }
+}
+
+@media (max-width: 480px) {
+    .info-box-grid {
+        padding: 10px 14px 14px;
+        gap: 10px;
+    }
+
+    .detail-card .detail-card-title {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .preview-box-large {
+        height: 190px;
+    }
+
+    .btn-edit-form {
+        margin-left: 52px;
+        /* sejajar teks header, di bawah tombol kembali */
+    }
+}
+
+/* =========================================================
+   MOBILE: ukuran teks mengikuti type-scale.css
+   ========================================================= */
+@media (max-width: 600px) {
+    .back-button {
+        width: 34px;
+        height: 34px;
+        font-size: 13px;
+    }
+
+    .rectifier-page-info {
+        gap: 10px;
+    }
+
+    /* Breadcrumb (komponen <x-breadcrumb>) */
+    .rectifier-header-text :is(nav, ol, ul, li, a, span, i, strong) {
+        font-size: var(--fs-xs) !important;
+        line-height: 1.4 !important;
+    }
+
+    .rectifier-header-text :is(nav, ol, ul) {
+        flex-wrap: wrap;
+    }
+
+    .btn-edit-form {
+        min-height: 36px;
+        font-size: var(--fs-sm);
+    }
+
+    .alert-info-custom {
+        padding: 10px 12px;
+        font-size: var(--fs-xs);
+        gap: 10px;
+    }
+
+    .alert-info-custom i {
+        font-size: 15px;
+    }
+
+    .form-section-title,
+    .detail-card-title {
+        font-size: var(--fs-md);
+        margin-bottom: 14px;
+    }
+
+    .detail-card .detail-card-title {
+        margin-bottom: 0;
+    }
+
+    .form-section-title i,
+    .detail-card-title i {
+        font-size: 1rem;
+    }
+
+    .info-box {
+        padding: 10px 12px;
+        gap: 10px;
+    }
+
+    .info-box-icon {
+        width: 34px;
+        height: 34px;
+        font-size: 14px;
+    }
+
+    .info-box-label {
+        font-size: var(--fs-2xs);
+    }
+
+    .info-box-value {
+        font-size: var(--fs-sm);
+    }
+
+    .detail-label {
+        font-size: var(--fs-xs);
+    }
+
+    .detail-value {
+        font-size: var(--fs-sm);
+    }
+
+    .checklist-label,
+    .checklist-field {
+        font-size: var(--fs-sm);
+    }
+
+    .status-badge {
+        font-size: var(--fs-2xs);
+        padding: 4px 10px;
+    }
+
+    .capacity-value {
+        font-size: var(--fs-sm);
+    }
+}
+
+
+/* =========================================================
+   IKON JUDUL CARD — seragam di semua halaman detail
+   (ukuran & warna sama; ganti ukuran lewat --icon-title
+   di type-scale.css)
+   ========================================================= */
+.detail-card-title>i,
+.form-section-title>i,
+.section-heading>span>i,
+.photo-header>i,
+.photo-title>i {
+    flex-shrink: 0;
+    font-size: var(--icon-title);
+    line-height: 1;
+    color: #2563eb;
 }

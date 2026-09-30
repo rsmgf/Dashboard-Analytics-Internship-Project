@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Edit Genset - PLN Icon Plus</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
@@ -21,17 +21,19 @@
             <x-topbar />
 
             <div class="rectifier-content">
-                <div class="rectifier-page-header" style="border-bottom: none; margin-bottom: 20px;">
-                    <div class="rectifier-page-info" style="display: flex; align-items: center; gap: 12px;">
-                        <a href="{{ route('gensets.show', [$pop->id, $genset->id]) }}" class="back-button" title="Kembali ke Detail Genset">
+                <div class="rectifier-page-header">
+                    <div class="rectifier-page-info">
+                        <a href="{{ route('gensets.show', [$pop->id, $genset->id]) }}" class="back-button" title="Kembali ke Detail Genset" aria-label="Kembali ke Detail Genset">
                             <i class="bi bi-arrow-left"></i>
                         </a>
+                        <div class="rectifier-header-text">
                         <x-breadcrumb :items="[
                             ['label' => 'POP', 'route' => 'pops.index'],
                             ['label' => $pop->nama_pop_display . ': Genset', 'route' => 'gensets.index', 'params' => ['pop' => $pop->id]],
                             ['label' => $genset->nomor_genset, 'route' => 'gensets.show', 'params' => [$pop->id, $genset->id]],
                             ['label' => 'Edit Genset'],
                         ]" />
+                        </div>
                     </div>
                 </div>
 
@@ -513,7 +515,8 @@
                 imageAlt: title || 'Foto',
                 showCloseButton: true,
                 showConfirmButton: false,
-                width: 'auto',
+                width: 'min(92vw, 900px)',
+                heightAuto: false,
                 customClass: {
                     popup: 'swal-popup-custom'
                 }

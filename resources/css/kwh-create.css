@@ -1,3 +1,5 @@
+@import './type-scale.css';
+
 /* =========================================================
    KWH CREATE & EDIT FORM STYLES
 ========================================================= */
@@ -57,7 +59,7 @@
 
 .rform-two-col {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 20px;
     align-items: start;
 }
@@ -70,12 +72,14 @@
 
 /* Input With Unit */
 .input-with-unit {
+    width: 100%;
     display: flex;
     align-items: center;
     position: relative;
 }
 
 .input-with-unit .rform-input {
+    min-width: 0;
     padding-right: 48px;
     height: 38px;
     font-weight: 600;
@@ -111,7 +115,7 @@
 /* Cable Form Grid */
 .cable-form-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 20px;
 }
 
@@ -161,6 +165,8 @@
 }
 
 .cable-input-row .rform-input {
+    flex: 1 1 auto;
+    min-width: 0;
     height: 36px;
     font-size: 0.82rem;
 }
@@ -189,11 +195,12 @@
 
 .kwh-photo-cards-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
     gap: 18px;
 }
 
 .kwh-photo-card {
+    min-width: 0;
     background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 10px;
@@ -252,7 +259,7 @@
 
 .kwh-photo-preview-box {
     width: 100%;
-    height: 185px;
+    height: clamp(150px, 42vw, 185px);
     border: 1.5px dashed #cbd5e1;
     border-radius: 8px;
     overflow: hidden;
@@ -298,8 +305,7 @@
     display: none;
     position: fixed;
     z-index: 99999;
-    top: 0;
-    left: 0;
+    inset: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(15, 23, 42, 0.88);
@@ -512,24 +518,206 @@
 }
 
 /* Responsive */
-@media (max-width: 1024px) {
-    .kwh-photo-cards-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-}
-
 @media (max-width: 900px) {
     .cable-form-grid {
         grid-template-columns: 1fr;
     }
 
-    .kwh-form-table {
-        min-width: 580px;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+/* Header bagian foto: badge pindah ke bawah bila sempit */
+.rform-section-header:has(.photo-count-badge) {
+    flex-wrap: wrap;
+    gap: 8px 12px;
+}
+
+.btn-photo-remove:focus-visible,
+.btn-kwh-browse:focus-within,
+.rform-btn-add-module:focus-visible,
+.btn-tambah-foto:focus-visible,
+.kwh-lightbox-close:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.4);
+    outline-offset: 2px;
+}
+
+@media (hover: none) {
+    .kwh-photo-img:hover {
+        transform: none;
+    }
+}
+
+/* Lightbox pada layar kecil */
+@media (max-width: 900px) {
+    .kwh-lightbox-modal {
+        padding: 56px 12px 16px;
+    }
+
+    .kwh-lightbox-wrapper {
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    .kwh-lightbox-img {
+        max-width: calc(100vw - 24px);
+        max-height: 72vh;
+    }
+
+    .kwh-lightbox-close {
+        position: fixed;
+        top: max(10px, env(safe-area-inset-top, 0px));
+        right: 12px;
+        width: 40px;
+        height: 40px;
+    }
+}
+
+/* Tabel pengukuran: tiap baris jadi kartu 2 pasang label | input */
+@media (max-width: 700px) {
+    .kwh-form-table-wrapper {
+        overflow-x: visible;
+    }
+
+    .kwh-form-table,
+    .kwh-form-table tbody {
+        display: block;
+        width: 100%;
+    }
+
+    .kwh-form-table thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+    }
+
+    .kwh-form-table tbody tr {
+        display: grid;
+        grid-template-columns: 62px minmax(0, 1fr);
+        border-bottom: 1px solid #cbd5e1;
+    }
+
+    .kwh-form-table tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    .kwh-form-table tbody td {
+        display: flex;
+        align-items: center;
+        min-width: 0;
+        padding: 8px 10px;
+        border: none;
+    }
+
+    .kwh-form-table tbody td:nth-child(odd) {
+        background: #f8fafc;
+        border-right: 1px solid #e2e8f0;
+        font-size: var(--fs-xs);
+    }
+
+    .kwh-form-table tbody td:nth-child(n+3) {
+        border-top: 1px dashed #cbd5e1;
+    }
+
+    /* sel kosong (—) disembunyikan; baris 1 Phasa tetap disembunyikan oleh JS */
+    .kwh-form-table tbody td.kwh-empty-cell {
+        display: none !important;
     }
 }
 
 @media (max-width: 600px) {
-    .kwh-photo-cards-grid {
-        grid-template-columns: 1fr;
+    .rform-section-header:has(.photo-count-badge) .photo-count-badge {
+        font-size: var(--fs-2xs);
+        padding: 3px 10px;
+    }
+
+    .input-with-unit .rform-input,
+    .cable-input-row .rform-input {
+        height: var(--control-h);
+        font-size: var(--fs-input);
+    }
+
+    .input-with-unit .unit-text {
+        font-size: var(--fs-2xs);
+    }
+
+    .cable-form-block {
+        padding: 14px;
+    }
+
+    .cable-block-heading {
+        font-size: var(--fs-sm);
+    }
+
+    .cable-badge {
+        width: 32px;
+        height: 32px;
+        font-size: var(--fs-xs);
+    }
+
+    .kwh-photo-card-body {
+        padding: 12px;
+    }
+
+    .kwh-photo-card-title {
+        font-size: var(--fs-sm);
+    }
+
+    .btn-photo-remove {
+        width: 34px;
+        height: 34px;
+    }
+
+    .btn-kwh-browse {
+        min-height: 40px;
+        font-size: var(--fs-sm);
+    }
+
+    .rform-btn-add-module,
+    .btn-tambah-foto {
+        width: 100%;
+        justify-content: center;
+        min-height: var(--control-h);
+        font-size: var(--fs-sm);
+    }
+
+    .kwh-sop-note {
+        padding: 14px;
+        margin-bottom: 18px;
+    }
+
+    .sop-note-title {
+        font-size: var(--fs-md);
+    }
+
+    .sop-note-list {
+        font-size: var(--fs-sm);
+        padding-left: 18px;
+    }
+
+    .kwh-lightbox-caption {
+        font-size: var(--fs-sm);
+    }
+
+    /* Tombol aksi: penuh & bertumpuk, Simpan di atas */
+    .rform-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+        gap: 10px;
+        margin-top: 22px;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    .rform-btn-reset,
+    .rform-btn-simpan {
+        width: 100%;
+        justify-content: center;
+        min-height: var(--control-h);
+        font-size: var(--fs-sm);
     }
 }

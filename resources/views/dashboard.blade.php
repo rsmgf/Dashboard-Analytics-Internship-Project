@@ -792,6 +792,295 @@
                 key: 'alert',
                 label: 'Alert'
             }
+<<<<<<< HEAD
+=======
+        },
+        kwh: {
+            title: 'KWH',
+            subtitle: 'Perangkat KWH',
+            icon: 'bi-lightning-charge-fill',
+            hasDeviceNumber: true,
+            statuses: {
+                good: {
+                    label: 'Good',
+                    items: [
+                        { id: 'POP_PAYOSELINCAH_01', popName: 'POP Payo Selincah', location: 'Kota Jambi' },
+                        { id: 'POP_1MRB001_01', popName: 'POP Muara Bulian 01', location: 'Batanghari' },
+                        { id: 'POP_1JMB10007_01', popName: 'POP Telanaipura', location: 'Kota Jambi' },
+                        { id: 'POP_1MRT10000_01', popName: 'POP Muara Tembesi', location: 'Batanghari' },
+                        { id: 'POP_1MBN002_01', popName: 'POP Muara Bungo 02', location: 'Bungo' },
+                        { id: 'POP_1SRL001_01', popName: 'POP Sarolangun 01', location: 'Sarolangun' },
+                        { id: 'POP_1SRL002_01', popName: 'POP Sarolangun 02', location: 'Sarolangun' },
+                        { id: 'POP_1JMB002_01', popName: 'POP Sipin', location: 'Kota Jambi' }
+                    ]
+                },
+                warning: {
+                    label: 'Warning',
+                    items: [
+                        { id: 'POP_1MRB10000_01', popName: 'POP Bangko', location: 'Merangin' },
+                        { id: 'POP_1JMB002_02', popName: 'POP Sipin', location: 'Kota Jambi' }
+                    ]
+                },
+                alert: {
+                    label: 'Alert',
+                    items: [
+                        { id: 'POP_1SRL002_01', popName: 'POP Sarolangun 02', location: 'Sarolangun' }
+                    ]
+                }
+            }
+        },
+        battery: {
+            title: 'Battery',
+            subtitle: 'Perangkat Battery',
+            icon: 'bi-battery-full',
+            hasDeviceNumber: true,
+            statuses: {
+                good: {
+                    label: 'Good',
+                    items: [
+                        { id: 'POP_PAYOSELINCAH_01', popName: 'POP Payo Selincah', location: 'Kota Jambi' },
+                        { id: 'POP_PAYOSELINCAH_02', popName: 'POP Payo Selincah', location: 'Kota Jambi' },
+                        { id: 'POP_1MRB001_01', popName: 'POP Muara Bulian', location: 'Batanghari' },
+                        { id: 'POP_1JMB10007_01', popName: 'POP Telanaipura', location: 'Kota Jambi' },
+                        { id: 'POP_1MRT10000_01', popName: 'POP Muara Tembesi', location: 'Batanghari' },
+                        { id: 'POP_1MBN002_01', popName: 'POP Muara Bungo', location: 'Bungo' },
+                        { id: 'POP_1SRL001_02', popName: 'POP Sarolangun', location: 'Sarolangun' },
+                        { id: 'POP_1JMB002_01', popName: 'POP Sipin', location: 'Kota Jambi' }
+                    ]
+                },
+                warning: {
+                    label: 'Warning',
+                    items: [
+                        { id: 'POP_1MBN002_02', popName: 'POP Muara Bungo 02', location: 'Bungo' },
+                        { id: 'POP_1SRL002_02', popName: 'POP Sarolangun 02', location: 'Sarolangun' }
+                    ]
+                },
+                alert: {
+                    label: 'Alert',
+                    items: [
+                        { id: 'POP_1SRL001_01', popName: 'POP Sarolangun 01', location: 'Sarolangun' }
+                    ]
+                }
+            }
+        },
+        ac: {
+            title: 'Air Conditioner',
+            subtitle: 'Status AC per POP',
+            icon: 'bi-fan',
+            hasDeviceNumber: false,
+            statuses: {
+                good: {
+                    label: 'Good',
+                    items: [
+                        { id: 'POP_PAYOSELINCAH', popName: 'POP Payo Selincah', location: 'Kota Jambi' },
+                        { id: 'POP_1MRB001', popName: 'POP Muara Bulian', location: 'Batanghari' },
+                        { id: 'POP_1JMB10007', popName: 'POP Telanaipura', location: 'Kota Jambi' },
+                        { id: 'POP_1MRT10000', popName: 'POP Muara Tembesi', location: 'Batanghari' },
+                        { id: 'POP_1MBN002', popName: 'POP Muara Bungo 02', location: 'Bungo' },
+                        { id: 'POP_1SRL001', popName: 'POP Sarolangun 01', location: 'Sarolangun' },
+                        { id: 'POP_1SRL002', popName: 'POP Sarolangun 02', location: 'Sarolangun' },
+                        { id: 'POP_1JMB002', popName: 'POP Sipin', location: 'Kota Jambi' }
+                    ]
+                },
+                warning: {
+                    label: 'Warning',
+                    items: [
+                        { id: 'POP_1MBN002', popName: 'POP Muara Bungo 02', location: 'Bungo' },
+                        { id: 'POP_1MRT10000', popName: 'POP Muara Tembesi', location: 'Batanghari' }
+                    ]
+                },
+                alert: {
+                    label: 'Alert',
+                    items: [
+                        { id: 'POP_1SRL001', popName: 'POP Sarolangun 01', location: 'Sarolangun' }
+                    ]
+                }
+            }
+        },
+        genset: {
+            title: 'Genset',
+            subtitle: 'Status Genset per POP',
+            icon: 'bi-fuel-pump-fill',
+            hasDeviceNumber: false,
+            statuses: {
+                good: {
+                    label: 'Good',
+                    items: [
+                        { id: 'POP_PAYOSELINCAH', popName: 'POP Payo Selincah', location: 'Kota Jambi' },
+                        { id: 'POP_1MRB001', popName: 'POP Muara Bulian', location: 'Batanghari' },
+                        { id: 'POP_1JMB10007', popName: 'POP Telanaipura', location: 'Kota Jambi' },
+                        { id: 'POP_1MRT10000', popName: 'POP Muara Tembesi', location: 'Batanghari' },
+                        { id: 'POP_1MBN002', popName: 'POP Muara Bungo', location: 'Bungo' },
+                        { id: 'POP_1SRL001', popName: 'POP Sarolangun', location: 'Sarolangun' },
+                        { id: 'POP_1SRL002', popName: 'POP Sarolangun 02', location: 'Sarolangun' },
+                        { id: 'POP_1JMB002', popName: 'POP Sipin', location: 'Kota Jambi' }
+                    ]
+                },
+                warning: {
+                    label: 'Warning',
+                    items: [
+                        { id: 'POP_1MBN002', popName: 'POP Muara Bungo', location: 'Bungo' },
+                        { id: 'POP_1MRT10000', popName: 'POP Muara Tembesi', location: 'Batanghari' }
+                    ]
+                },
+                alert: {
+                    label: 'Alert',
+                    items: [
+                        { id: 'POP_1SRL001', popName: 'POP Sarolangun', location: 'Sarolangun' }
+                    ]
+                }
+            }
+        }
+    };
+
+    function renderDeviceCards() {
+        const container = document.getElementById('deviceStatusGrid');
+        if (!container) return;
+
+        const topRowKeys = ['rectifier', 'kwh', 'battery'];
+        const bottomRowKeys = ['ac', 'genset'];
+
+        function createCardHTML(deviceKey) {
+            const device = deviceStatusData[deviceKey];
+            const goodCount = device.statuses.good?.items.length || 0;
+            const warnCount = device.statuses.warning?.items.length || 0;
+            const alertCount = device.statuses.alert?.items.length || 0;
+            const totalCount = goodCount + warnCount + alertCount;
+
+            const goodPct = totalCount ? (goodCount / totalCount) * 100 : 0;
+            const warnPct = totalCount ? (warnCount / totalCount) * 100 : 0;
+            const alertPct = totalCount ? (alertCount / totalCount) * 100 : 0;
+
+            const unitLabel = device.hasDeviceNumber ? 'unit terpasang' : 'lokasi POP';
+
+            return `
+                <div class="device-status-card">
+                    <div class="device-card-header">
+                        <div class="device-title">
+                            <div class="device-icon ${deviceKey}">
+                                <i class="bi ${device.icon}"></i>
+                            </div>
+                            <div>
+                                <h3>${device.title}</h3>
+                                <span>${device.subtitle}</span>
+                            </div>
+                        </div>
+                        <div class="device-total-box">
+                            <span class="device-total-num">${totalCount}</span>
+                            <small>${unitLabel}</small>
+                        </div>
+                    </div>
+
+                    <div class="device-mini-summary">
+                        <div class="mini-progress-bar" title="Good: ${goodCount}, Warning: ${warnCount}, Alert: ${alertCount}">
+                            <div class="progress-segment good" style="width: ${goodPct}%"></div>
+                            <div class="progress-segment warning" style="width: ${warnPct}%"></div>
+                            <div class="progress-segment alert" style="width: ${alertPct}%"></div>
+                        </div>
+                        <div class="mini-progress-labels">
+                            <span class="lbl-good"><i class="bi bi-circle-fill"></i> ${Math.round(goodPct)}% Good</span>
+                            <span class="lbl-warn"><i class="bi bi-circle-fill"></i> ${Math.round(warnPct)}% Warning</span>
+                            <span class="lbl-alert"><i class="bi bi-circle-fill"></i> ${Math.round(alertPct)}% Alert</span>
+                        </div>
+                    </div>
+
+                    <div class="device-status-list">
+                        ${Object.entries(device.statuses).map(([statusKey, status]) => `
+                            <button type="button" class="status-dropdown-button" onclick="openStatusPage('${deviceKey}', '${statusKey}')">
+                                <span class="status-left">
+                                    <span class="status-dot ${statusKey}"></span>
+                                    <span>${status.label}</span>
+                                </span>
+                                <div class="status-right">
+                                    <span class="status-count">${status.items.length}</span>
+                                    <i class="bi bi-chevron-right"></i>
+                                </div>
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        container.innerHTML = `
+            <div class="device-status-row top-row">
+                ${topRowKeys.map(key => createCardHTML(key)).join('')}
+            </div>
+            <div class="device-status-row bottom-row">
+                ${bottomRowKeys.map(key => createCardHTML(key)).join('')}
+            </div>
+        `;
+    }
+
+    function openStatusPage(deviceKey, statusKey) {
+        const device = deviceStatusData[deviceKey];
+        const status = device.statuses[statusKey];
+        const container = document.getElementById('statusListContainer');
+        const grid = document.getElementById('statusListCardsGrid');
+
+        document.getElementById('statusListTitle').textContent = `Daftar POP - ${device.title} (${status.label})`;
+        document.getElementById('statusListSubtitle').textContent = `Menampilkan ${status.items.length} POP dengan status kondisi ${status.label}`;
+
+        grid.innerHTML = status.items.map(item => `
+            <div class="pop-status-box">
+                <div class="pop-status-box-header">
+                    <div>
+                        <h4>${item.id}</h4>
+                        <small>${item.popName} &bull; ${item.location}</small>
+                    </div>
+                    <span class="status-pill ${statusKey}">${status.label}</span>
+                </div>
+                <div class="pop-status-box-body">
+                    <div class="pop-meta-row">
+                        <span>Perangkat:</span>
+                        <strong>${device.title}</strong>
+                    </div>
+                    <div class="pop-meta-row">
+                        <span>Tipe Kode:</span>
+                        <strong>${device.hasDeviceNumber ? 'Unit Terpasang' : 'POP Utama'}</strong>
+                    </div>
+                </div>
+                <div class="pop-status-box-footer">
+                    <button type="button" class="btn-detail-pop" onclick="viewPopDetail('${item.id}')">
+                        <i class="bi bi-eye"></i> Detail
+                    </button>
+                </div>
+            </div>
+        `).join('');
+
+        container.style.display = 'block';
+        container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function closeStatusList() {
+        document.getElementById('statusListContainer').style.display = 'none';
+    }
+
+    function viewPopDetail(popId) {
+        const cleanPopId = popId.replace(/_\d+$/, '');
+        const resultBox = document.getElementById('popSummaryResult');
+        resultBox.innerHTML = `
+            <div class="dashboard-loading">
+                <i class="bi bi-arrow-repeat spin"></i> Memuat detail kelengkapan POP ${cleanPopId}...
+            </div>
+        `;
+        resultBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        fetch(popSummaryUrlTemplate.replace('__ID__', encodeURIComponent(cleanPopId)))
+            .then(res => res.text())
+            .then(html => {
+                resultBox.innerHTML = html;
+            })
+            .catch(() => {
+                resultBox.innerHTML = `<div class="dashboard-hint">Gagal memuat data POP: ${cleanPopId}</div>`;
+            });
+    }
+
+    function initAnalyticsCharts() {
+        const popLabels = [
+            'POP PAYO SELINCAH', 'POP TELANAIPURA', 'POP BULIAN 01', 'POP BUNGO 01',
+            'POP SIPIN', 'POP TEMBESI', 'POP SAROLANGUN', 'POP BANGKO', 'POP TUNGKAL', 'POP KERINCI'
+>>>>>>> 6e0e5c5457c7e0131e065c7f1c2e1ef379cf7015
         ];
 
         const deviceMeta = {

@@ -171,7 +171,7 @@
                                 {{-- Card Header --}}
                                 <div class="rectifier-card-header">
                                     <div class="card-icon">
-                                        <i class="bi bi-battery-charging"></i>
+                                        <i class="bi bi-battery-full"></i>
                                     </div>
                                     <div class="card-title-text">
                                         <h3>{{ $battery->nomor_bank }}</h3>
