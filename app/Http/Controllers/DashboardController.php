@@ -7,15 +7,234 @@ use App\Models\Pop;
 use App\Models\Rectifier;
 use Illuminate\Http\Request;
 use App\Models\Battery;
+use App\Models\User;
+use Illuminate\Support\Facades\Cache;
 
 class DashboardController extends Controller
 {
     public function index()
     {
         $totalPop = Pop::count();
-        $canFilter = auth()->user()->can('dashboard.filter.read');
+        $canFilter = auth()->user()->can('dashboard.filter');
+        $canEkspor = auth()->user()->can('dashboard.ekspor');
+        $kpi = $this->kpiSummary();
 
-        return view('dashboard', compact('totalPop', 'canFilter'));
+        $latestStatusNotifications = collect();
+        if (session('active_role') === 'manajer' || auth()->user()->hasRole('manajer')) {
+            \App\Models\Notification::regenerateStatus();
+            $latestStatusNotifications = \App\Models\Notification::status()
+                ->orderBy('created_at', 'desc')
+                ->take(5)
+                ->get();
+        }
+
+        return view('dashboard', array_merge(
+            compact('totalPop', 'canFilter', 'canEkspor', 'latestStatusNotifications'),
+            $kpi,
+            [
+                'totalPendingApproval' => $this->pendingApprovalCount(),
+                'populasiPop'          => $this->popPopulation(),
+            ]
+        ));
+    }
+
+    private function kpiSummary(): array
+    {
+        // di-cache 5 menit karena menghitung accessor untuk semua POP cukup berat
+        return Cache::remember('dashboard.kpi', now()->addMinutes(5), function () {
+            $pops = Pop::with(['rectifiers', 'kwhs', 'batteries', 'acs', 'gensets'])->get();
+
+            $totalPopAlert = 0;
+            $totalPopWarning = 0;
+
+            foreach ($pops as $pop) {
+                $levels = collect();
+
+                foreach ($pop->rectifiers as $r) {
+                    $levels->push($this->normalizeLevel($r->status_utilisasi));
+                }
+                foreach ($pop->kwhs as $k) {
+                    $levels->push($this->normalizeLevel($k->status_utilisasi));
+                }
+                foreach ($this->batteryGroups($pop) as $g) {
+                    $levels->push(match ($g['level']) {
+                        'alert' => 'alert',
+                        'warn'  => 'warning',
+                        default => 'good',   // excellent & good enough dianggap sehat
+                    });
+                }
+                foreach ($pop->acs as $ac) {
+                    $levels->push($this->levelFromPmClass($ac->status_pm['class'] ?? null));
+                }
+                foreach ($pop->gensets as $g) {
+                    $levels->push($this->levelFromPmClass($g->status_pm['class'] ?? null));
+                }
+
+                if ($levels->contains('alert')) {
+                    $totalPopAlert++;
+                } elseif ($levels->contains('warning')) {
+                    $totalPopWarning++;
+                }
+            }
+
+            return compact('totalPopAlert', 'totalPopWarning');
+        });
+    }
+
+    public function deviceStatus()
+    {
+        $data = Cache::remember('dashboard.deviceStatus', now()->addMinutes(5), function () {
+            return $this->buildDeviceStatus();
+        });
+
+        return response()->json($data);
+    }
+
+    /**
+     * Struktur hasil:
+     * [ 'rectifier' => ['good' => [item...], 'warning' => [...], 'alert' => [...]], 'kwh' => ..., ... ]
+     * Satu item = satu UNIT perangkat (bukan satu POP).
+     */
+    private function buildDeviceStatus(): array
+    {
+        $pops = Pop::with(['rectifiers', 'kwhs', 'batteries', 'acs', 'gensets'])->get();
+
+        // SESUAIKAN: relasi, sumber status, dan label unit per perangkat
+        $config = [
+            'rectifier' => [
+                'rel'   => 'rectifiers',
+                'level' => fn($d) => $this->normalizeLevel($d->status_utilisasi),
+                'unit'  => fn($d) => $d->nomor_recti ?? $d->nama_alias ?? '-',
+            ],
+            'kwh' => [
+                'rel'   => 'kwhs',
+                'level' => fn($d) => $this->normalizeLevel($d->status_utilisasi),
+                'unit'  => fn($d) => $d->nomor_kwh ?? '-',
+            ],
+            'ac' => [
+                'rel'   => 'acs',
+                'level' => fn($d) => match ($d->status_pm['class'] ?? null) {
+                    'pm-badge-success' => 'sudah_pm',
+                    'pm-badge-warning' => 'jadwal_pm',
+                    'pm-badge-danger'  => 'belum_pm',
+                    default => 'belum_pm',
+                },
+                'unit'  => fn($d) => $d->nomor_ac ?? '-',
+                'statuses' => ['sudah_pm' => [], 'jadwal_pm' => [], 'belum_pm' => []]
+            ],
+            'genset' => [
+                'rel'   => 'gensets',
+                'level' => fn($d) => match ($d->status_pm['class'] ?? null) {
+                    'pm-badge-success' => 'sudah_pm',
+                    'pm-badge-warning' => 'jadwal_pm',
+                    'pm-badge-danger'  => 'belum_pm',
+                    default => 'belum_pm',
+                },
+                'unit'  => fn($d) => $d->nomor_genset ?? '-',
+                'statuses' => ['sudah_pm' => [], 'jadwal_pm' => [], 'belum_pm' => []]
+            ],
+        ];
+
+        $result = [];
+
+        foreach ($config as $key => $cfg) {
+            $result[$key] = $cfg['statuses'] ?? ['good' => [], 'warning' => [], 'alert' => []];
+
+            foreach ($pops as $pop) {
+                foreach ($pop->{$cfg['rel']} as $device) {
+                    $level = ($cfg['level'])($device);
+
+                    $result[$key][$level][] = [
+                        'pop_id'   => $pop->id,
+                        'kode'     => $pop->kode_pop,
+                        'pop_name' => $pop->nama_pop,
+                        'location' => $pop->kota_kabupaten,
+                        'unit'     => (string) ($cfg['unit'])($device),
+                        'device_id'=> $device->id,
+                    ];
+                }
+            }
+        }
+
+        $result['battery'] = ['excellent' => [], 'enough' => [], 'warn' => [], 'alert' => []];
+
+        foreach ($pops as $pop) {
+            foreach ($this->batteryGroups($pop) as $g) {
+                $result['battery'][$g['level']][] = [
+                    'pop_id'   => $pop->id,
+                    'kode'     => $pop->kode_pop,
+                    'pop_name' => $pop->nama_pop,
+                    'location' => $pop->kota_kabupaten,
+                    'unit'     => $g['unit'],
+                    'device_id'=> $g['device_id'] ?? null,
+                ];
+            }
+        }
+
+        return $result;
+    }
+
+    private function batteryGroups(Pop $pop): array
+    {
+        $out = [];
+
+        foreach ($pop->batteries->groupBy('rectifier_id') as $rectifierId => $group) {
+            $rectifier = $rectifierId ? $pop->rectifiers->firstWhere('id', $rectifierId) : null;
+
+            $totalUji = $group->sum('kapasitas_uji');
+            $beban = ($rectifier && (float) $rectifier->beban > 0) ? (float) $rectifier->beban : null;
+            $backupTime = ($beban && $totalUji > 0) ? round($totalUji / $beban, 2) : null;
+
+            $performa = Battery::performaBackupClass($backupTime, $beban !== null);
+
+            $level = match ($performa['class'] ?? null) {
+                'status-excellent' => 'excellent',
+                'status-good'      => 'enough',   // Good Enough
+                'status-warning'   => 'warn',
+                'status-danger'    => 'alert',
+                default            => null,       // neutral / belum ada data
+            };
+
+            if (!$level) {
+                continue;
+            }
+
+            $out[] = [
+                'level'     => $level,
+                'unit'      => ($rectifier?->nomor_recti ?? 'Rectifier') . ' · ' . $backupTime . ' jam',
+                'device_id' => $rectifierId,
+            ];
+        }
+
+        return $out;
+    }
+
+    private function normalizeLevel(?string $value): string
+    {
+        $v = strtoupper((string) $value);
+
+        return match (true) {
+            str_contains($v, 'ALERT') => 'alert',
+            str_contains($v, 'WARNING') => 'warning',
+            default => 'good',
+        };
+    }
+
+    private function levelFromPmClass(?string $class): string
+    {
+        return match ($class) {
+            'pm-badge-danger' => 'alert',
+            'pm-badge-warning' => 'warning',
+            default => 'good',
+        };
+    }
+
+    private function pendingApprovalCount(): int
+    {
+        // SESUAIKAN dengan struktur tabel users kamu, contoh:
+        return User::where('is_active', '0')->count();
+        // alternatif: User::whereNull('approved_at')->count();
+        // alternatif: User::where('is_approved', false)->count();
     }
 
     public function searchPop(Request $request)
@@ -68,6 +287,7 @@ class DashboardController extends Controller
     public function filterOptions()
     {
         $kotaList = Pop::whereNotNull('kota_kabupaten')
+            ->where('kota_kabupaten', '!=', '')
             ->distinct()
             ->orderBy('kota_kabupaten')
             ->pluck('kota_kabupaten');
@@ -114,5 +334,20 @@ class DashboardController extends Controller
         $pops = $pops->values();
 
         return view('dashboard.partials.filter-results', compact('pops'));
+    }
+
+    private function popPopulation(): array
+    {
+        // SESUAIKAN: ganti 'tipe_pop' dengan nama kolom tipe di tabel pops
+        $rows = Pop::query()
+            ->selectRaw("COALESCE(NULLIF(TRIM(tipe_pop), ''), 'Belum diisi') as tipe, COUNT(*) as total")
+            ->groupBy('tipe')
+            ->orderByDesc('total')
+            ->get();
+
+        return [
+            'labels' => $rows->pluck('tipe')->values(),
+            'data'   => $rows->pluck('total')->map(fn($v) => (int) $v)->values(),
+        ];
     }
 }

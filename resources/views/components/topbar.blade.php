@@ -1,15 +1,68 @@
 <header class="topbar">
-    <button type="button" class="sidebar-toggle" id="sidebarToggle" title="Buka / Tutup Sidebar">
-        <i class="bi bi-list" id="sidebarToggleIcon"></i>
-    </button>
+    {{-- Sidebar toggle — disembunyikan saat mode manajer aktif --}}
+    @php
+        $user = Auth::user();
+        $activeRole = session('active_role') ?? ($user?->hasRole('manajer') ? 'manajer' : 'super_admin');
+        $isManajerMode = $activeRole === 'manajer';
+        // Hanya yang punya role manajer yang bisa switch (otomatis dia punya akses admin)
+        $hasBothRoles = $user && $user->hasRole('manajer');
+    @endphp
 
-    <div class="user-profile" style="margin-left: auto; display: flex; align-items: center; gap: 12px; cursor: pointer;">
-        <span style="font-weight: 600; font-size: 14px; color: #333;">
+    @if (!$isManajerMode)
+        <button type="button" class="sidebar-toggle" id="sidebarToggle" title="Buka / Tutup Sidebar">
+            <i class="bi bi-list" id="sidebarToggleIcon"></i>
+        </button>
+    @else
+        {{-- Logo mini di kiri saat manajer mode (sidebar hilang) --}}
+        <div class="topbar-brand">
+            <img src="{{ asset('images/logo-iconplus.png') }}" alt="PLN Icon Plus">
+        </div>
+    @endif
+
+    {{-- Spacer --}}
+    <div style="flex:1;"></div>
+
+    {{-- Switch Role Button — hanya tampil jika user punya kedua role --}}
+    @if ($hasBothRoles)
+        <form method="POST" action="{{ route('role.switch') }}" class="topbar-switch-form">
+            @csrf
+            @if ($isManajerMode)
+                <input type="hidden" name="role" value="super_admin">
+                <button type="submit" class="btn-switch-role" title="Beralih ke mode Super Admin">
+                    <i class="bi bi-shield-lock-fill"></i>
+                    <span>Mode Admin</span>
+                </button>
+            @else
+                <input type="hidden" name="role" value="manajer">
+                <button type="submit" class="btn-switch-role manajer" title="Beralih ke mode Manajer">
+                    <i class="bi bi-person-circle"></i>
+                    <span>Mode Manajer</span>
+                </button>
+            @endif
+        </form>
+    @endif
+
+    <div class="user-profile">
+        @if ($isManajerMode)
+            <div class="topbar-role-badge">
+                <i class="bi bi-person-badge-fill"></i>
+                <span>Manajer</span>
+            </div>
+        @endif
+        <span class="user-display-name">
             {{ Auth::check() ? Auth::user()->name : 'Nama User' }}
         </span>
-        <div style="width: 38px; height: 38px; background-color: #007bff; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-            <i class="bi bi-person-fill" style="font-size: 20px;"></i>
-        </div>
+
+        {{-- Logout hanya di topbar saat mode manajer --}}
+        @if ($isManajerMode)
+            <form method="POST" action="{{ route('logout') }}" class="topbar-logout-form">
+                @csrf
+                <button type="submit" class="btn-topbar-logout" title="Logout">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Logout</span>
+                </button>
+            </form>
+        @endif
     </div>
 </header><div id="toast-container"></div><script>
 function showToast(type, message) {
@@ -77,6 +130,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     if (overlay) overlay.addEventListener('click', closeMobileSidebar);
+    const closeBtn = document.getElementById('sidebarCloseBtn');
+    if (closeBtn) closeBtn.addEventListener('click', closeMobileSidebar);
     window.addEventListener('resize', function () {
         if (!isMobile()) { closeMobileSidebar(); }
         else {

@@ -103,34 +103,22 @@ class MenuSeeder extends Seeder
             'is_sidebar' => false,
         ]);
 
-        $dashboardFilter = Menu::create([
-            'name' => 'Dashboard Filter POP', 
-            'route' => 'dashboard.filter',
-            'parent_id' => null,
-            'icon' => 'bi bi-sliders',
-            'order' => 0,
-            'is_sidebar' => false,
-        ]);
-
-
-
         $karyawan = Role::where('name', 'karyawan')->first();
         $teknisi = Role::where('name', 'teknisi')->first();
         $superAdmin = Role::where('name', 'super_admin')->first();
         $manajer = Role::where('name', 'manajer')->first();
 
         // sesuaikan siapa boleh lihat menu apa
-        $dashboard->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id]); // semua role
-        $pop->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id]);   // semua role
-        $rectifier->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id]);
-        $kwh->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id]);
-        $battery->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id]);
-        $genset->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id]);
-        $ac->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id]);
-        $rma->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id]);   // semua role
-        $usermanagement->roles()->sync([$superAdmin->id]);   // hanya admin
-        $accountConfig->roles()->sync([$superAdmin->id]);
-        $AccessManagement->roles()->sync([$superAdmin->id]);
-        $dashboardFilter->roles()->sync([$manajer->id, $superAdmin->id]);
+        $dashboard->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id, $manajer->id]); // semua role
+        $pop->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id, $manajer->id]);   // semua role
+        $rectifier->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id, $manajer->id]);
+        $kwh->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id, $manajer->id]);
+        $battery->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id, $manajer->id]);
+        $genset->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id, $manajer->id]);
+        $ac->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id, $manajer->id]);
+        $rma->roles()->sync([$karyawan->id, $teknisi->id, $superAdmin->id, $manajer->id]);   // semua role
+        $usermanagement->roles()->sync([$superAdmin->id, $manajer->id]);
+        $accountConfig->roles()->sync([$superAdmin->id, $manajer->id]);
+        $AccessManagement->roles()->sync([$superAdmin->id, $manajer->id]);
     }
 }

@@ -1,6 +1,15 @@
+@php 
+    $activeRole = session('active_role') ?? (auth()->user()?->hasRole('manajer') ? 'manajer' : 'super_admin');
+    $isManajerMode = $activeRole === 'manajer'; 
+@endphp
+@if(!$isManajerMode)
 <aside class="sidebar" id="sidebar">
 
-    {{-- LOGO --}}
+    {{-- HEADER SIDEBAR (dengan tombol tutup mobile) --}}
+    <button type="button" class="sidebar-close-btn" id="sidebarCloseBtn" title="Tutup Sidebar">
+        <i class="bi bi-x"></i>
+    </button>
+
     <div class="sidebar-logo">
         <img src="{{ asset('images/logo-iconplus.png') }}" alt="PLN Icon Plus">
     </div>
@@ -13,7 +22,9 @@
             @foreach ($menus ?? [] as $menu)
                 @if ($menu->children->isNotEmpty())
                     @php
-                        $isChildActive = $menu->children->contains(fn($c) => $c->route && request()->routeIs($c->route));
+                        $isChildActive = $menu->children->contains(
+                            fn($c) => $c->route && request()->routeIs($c->route),
+                        );
                     @endphp
 
                     {{-- PARENT DENGAN CHILD → toggle dropdown, bukan link --}}
@@ -50,8 +61,7 @@
         <div class="sidebar-footer">
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="sidebar-menu logout-btn"
-                    style="border: none; background: transparent; cursor: pointer; text-align: left;">
+                <button type="submit" class="sidebar-menu sidebar-logout-item">
                     <i class="bi bi-box-arrow-right"></i>
                     <span>Logout</span>
                 </button>
@@ -75,3 +85,4 @@
     </script>
 
 </aside>
+@endif

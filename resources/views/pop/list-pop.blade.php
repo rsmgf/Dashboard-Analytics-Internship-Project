@@ -67,8 +67,8 @@
 
             <div class="pop-content">
                 <!-- PAGE TITLE -->
-                <div class="pop-header" style="display: flex; justify-content: space-between; align-items: center;">
-                    <div class="pop-title-wrapper" style="display: flex; align-items: center; gap: 15px;">
+                <div class="pop-header">
+                    <div class="pop-title-wrapper">
                         <div class="pop-title-icon">
                             <i class="bi bi-geo-alt-fill"></i>
                         </div>
@@ -79,7 +79,7 @@
                     </div>
 
                     @can('pops.index.create')
-                        <div style="display: flex; gap: 10px; align-items: center;">
+                        <div class="pop-header-actions">
                             <a href="{{ route('pops.import') }}" class="btn-import-pop">
                                 <i class="bi bi-file-earmark-arrow-up"></i> Import Excel
                             </a>
@@ -112,7 +112,8 @@
                             <option value="Rectifier"
                                 {{ request('filter', 'Rectifier') == 'Rectifier' ? 'selected' : '' }}>Rectifier</option>
                             <option value="kWh" {{ request('filter') == 'kWh' ? 'selected' : '' }}>kWh</option>
-                            <option value="Battery" {{ request('filter') == 'Battery' ? 'selected' : '' }}>Battery</option>
+                            <option value="Battery" {{ request('filter') == 'Battery' ? 'selected' : '' }}>Battery
+                            </option>
                             <option value="Genset" {{ request('filter') == 'Genset' ? 'selected' : '' }}>Genset</option>
                             <option value="AC" {{ request('filter') == 'AC' ? 'selected' : '' }}>AC</option>
                         </select>
@@ -120,64 +121,67 @@
                 </form>
 
                 <div class="table-card">
-                    <table class="pop-table">
-                        <thead>
-                            <tr>
-                                <th>No.</th>
-                                <th>Provinsi</th>
-                                <th>Kota/Kabupaten</th>
-                                <th>ID POP</th>
-                                <th>Nama POP</th>
-                                <th>Building</th>
-                                <th>Tipe POP</th>
-                                <th style="text-align: center;">Detail</th>
-                            </tr>
-                        </thead>
-                        <tbody id="popTableBody">
-                            @forelse($pops as $index => $pop)
+                    <div class="table-scroll">
+                        <table class="pop-table">
+                            <thead>
                                 <tr>
-                                    <td>{{ $pops->firstItem() + $index }}.</td>
-                                    <td>{{ $pop->provinsi ?? 'Jambi' }}</td>
-                                    <td>{{ $pop->kota_kabupaten }}</td>
-                                    <td>{{ $pop->kode_pop }}</td>
-                                    <td>{{ $pop->nama_pop_display }}</td>
-                                    <td>{{ $pop->jenis_bangunan }}</td>
-                                    <td>{{ $pop->tipe_pop ?? 'POP-SB' }}</td>
-                                    <td style="text-align: center;">
-                                        <div
-                                            style="display: flex; gap: 6px; justify-content: center; align-items: center;">
-
-                                            <!-- Tombol Lihat — semua role bisa lihat detail -->
-                                            <button type="button" class="btn-detail"
-                                                onclick="lihatPOP('{{ $pop->id }}')">Lihat</button>
-
-                                            @can('pops.index.update')
-                                                <a href="{{ route('pops.edit', $pop->id) }}" class="btn-edit"
-                                                    title="Edit POP" aria-label="Edit POP {{ $pop->nama_pop }}">
-                                                    <i class="bi bi-pencil-fill"></i>
-                                                </a>
-                                            @endcan
-
-                                            @can('pops.index.delete')
-                                                <button type="button" title="Hapus POP"
-                                                    aria-label="Hapus POP {{ $pop->nama_pop }}"
-                                                    onclick="openDeleteModal('{{ route('pops.destroy', $pop->id) }}', '{{ $pop->nama_pop }}')"
-                                                    class="btn-hapus">
-                                                    <i class="bi bi-trash3-fill"></i>
-                                                </button>
-                                            @endcan
-
-                                        </div>
-                                    </td>
+                                    <th>No.</th>
+                                    <th>Provinsi</th>
+                                    <th>Kota/Kabupaten</th>
+                                    <th>ID POP</th>
+                                    <th>Nama POP</th>
+                                    <th>Building</th>
+                                    <th>Tipe POP</th>
+                                    <th style="text-align: center;">Detail</th>
                                 </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="8" style="text-align: center; padding: 20px; color: #64748b;">Belum
-                                        ada data POP.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody id="popTableBody">
+                                @forelse($pops as $index => $pop)
+                                    <tr>
+                                        <td>{{ $pops->firstItem() + $index }}.</td>
+                                        <td>{{ $pop->provinsi ?? 'Jambi' }}</td>
+                                        <td>{{ $pop->kota_kabupaten }}</td>
+                                        <td>{{ $pop->kode_pop }}</td>
+                                        <td>{{ $pop->nama_pop_display }}</td>
+                                        <td>{{ $pop->jenis_bangunan }}</td>
+                                        <td>{{ $pop->tipe_pop ?? 'POP-SB' }}</td>
+                                        <td style="text-align: center;">
+                                            <div
+                                                style="display: flex; gap: 6px; justify-content: center; align-items: center;">
+
+                                                <!-- Tombol Lihat — semua role bisa lihat detail -->
+                                                <button type="button" class="btn-detail"
+                                                    onclick="lihatPOP('{{ $pop->id }}')">Lihat</button>
+
+                                                @can('pops.index.update')
+                                                    <a href="{{ route('pops.edit', $pop->id) }}" class="btn-edit"
+                                                        title="Edit POP" aria-label="Edit POP {{ $pop->nama_pop }}">
+                                                        <i class="bi bi-pencil-fill"></i>
+                                                    </a>
+                                                @endcan
+
+                                                @can('pops.index.delete')
+                                                    <button type="button" title="Hapus POP"
+                                                        aria-label="Hapus POP {{ $pop->nama_pop }}"
+                                                        onclick="openDeleteModal('{{ route('pops.destroy', $pop->id) }}', '{{ $pop->nama_pop }}')"
+                                                        class="btn-hapus">
+                                                        <i class="bi bi-trash3-fill"></i>
+                                                    </button>
+                                                @endcan
+
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="8" style="text-align: center; padding: 20px; color: #64748b;">
+                                            Belum
+                                            ada data POP.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
 
                     <!-- WRAPPER PAGINATION -->
                     <div class="pagination-container">
@@ -292,4 +296,3 @@
 </body>
 
 </html>
-
