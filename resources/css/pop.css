@@ -1,485 +1,663 @@
 /* Wrapper Konten */
-        .pop-content {
-            padding: 24px 30px 30px 30px !important;
-            animation: fadeIn 0.4s ease-in-out; /* Animasi masuk yang halus */
-        }
+.pop-content {
+    padding: 24px 30px 30px 30px !important;
+    animation: fadeIn 0.4s ease-in-out;
+    /* Animasi masuk yang halus */
+}
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
 
-        /* Header Title */
-        .pop-header {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-             margin-bottom: 15px; 
-            border-bottom: 2px solid #f1f5f9;
-            padding-bottom: 12px; 
-        }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
-        .pop-title-icon {
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(135deg, #0d5c9e, #2563eb); /* Efek gradien modern */
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 12px; /* Bentuk squircle lebih modern dibanding bulat penuh */
-            font-size: 1.3rem;
-            box-shadow: 0 4px 10px rgba(13, 92, 158, 0.2);
-        }
+/* Header Title */
+.pop-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #f1f5f9;
+    padding-bottom: 12px;
+    flex-wrap: wrap;
+}
 
-        .pop-header h1 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #1e293b; /* Warna teks lebih tegas */
-            margin: 0 0 2px 0;
-        }
+.pop-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1 1 auto;
+}
 
-        .pop-header p {
-            font-size: 0.85rem;
-            color: #64748b;
-            margin: 0;
-            font-weight: 500;
-        }
+.pop-header-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
 
-        /* Search & Filter Row */
-        .filter-section {
-            display: flex;
-            gap: 20px;
-            align-items: flex-end;
-            margin-bottom: 15px; /* SEBELUMNYA 24px. Kurangi angka ini jika ingin kolom pencarian lebih dekat ke tabel */
-        }
+.pop-title-icon {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #0d5c9e, #2563eb);
+    /* Efek gradien modern */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    /* Bentuk squircle lebih modern dibanding bulat penuh */
+    font-size: 1.3rem;
+    box-shadow: 0 4px 10px rgba(13, 92, 158, 0.2);
+}
 
-        .search-wrapper {
-            flex: 1;
-            position: relative;
-        }
+.pop-header h1 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+    /* Warna teks lebih tegas */
+    margin: 0 0 2px 0;
+}
 
-        /* Icon kaca pembesar di dalam input */
-        .search-icon {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #94a3b8;
-            font-size: 0.9rem;
-            pointer-events: none; /* agar klik menembus ke input */
-            z-index: 1;
-        }
+.pop-header p {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin: 0;
+    font-weight: 500;
+}
 
-        /* Styling Input & Select */
-        .search-input, .filter-control {
-            width: 100%;
-            padding: 10px 16px 10px 36px; /* padding-left lebih besar untuk icon */
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            outline: none;
-            background-color: #f8fafc;
-            color: #334155;
-            transition: all 0.3s ease;
-        }
+/* Search & Filter Row */
+.filter-section {
+    display: flex;
+    gap: 20px;
+    align-items: flex-end;
+    margin-bottom: 15px;
+    /* SEBELUMNYA 24px. Kurangi angka ini jika ingin kolom pencarian lebih dekat ke tabel */
+}
 
-        .filter-control {
-            padding-left: 16px; /* filter tidak pakai icon, reset padding */
-        }
+.search-wrapper {
+    flex: 1;
+    position: relative;
+}
 
-        .search-input::placeholder {
-            color: #94a3b8;
-        }
+/* Icon kaca pembesar di dalam input */
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 0.9rem;
+    pointer-events: none;
+    /* agar klik menembus ke input */
+    z-index: 1;
+}
 
-        /* Efek saat diklik / fokus */
-        .search-input:focus, .filter-control:focus {
-            background-color: #ffffff;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-        }
+/* Styling Input & Select */
+.search-input,
+.filter-control {
+    width: 100%;
+    padding: 10px 16px 10px 36px;
+    /* padding-left lebih besar untuk icon */
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+    background-color: #f8fafc;
+    color: #334155;
+    transition: all 0.3s ease;
+}
 
+.filter-control {
+    padding-left: 16px;
+    /* filter tidak pakai icon, reset padding */
+}
 
-        .filter-wrapper {
-            width: 240px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
+.search-input::placeholder {
+    color: #94a3b8;
+}
 
-        .filter-label {
-            font-size: 0.75rem;
-            color: #64748b;
-            font-weight: 500;
-        }
-
-        .filter-label span {
-            color: #ef4444; /* Merah yang lebih modern */
-            font-weight: bold;
-        }
-
-        .filter-control {
-            cursor: pointer;
-            appearance: none; /* Menghilangkan panah default di beberapa browser */
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 12px center;
-            background-size: 12px;
-            padding-right: 32px;
-        }
-
-        /* Table Card */
-        .table-card {
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); /* Shadow halus */
-            overflow: hidden;
-        }
-
-        .pop-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-        }
-
-        .pop-table th, .pop-table td {
-            padding: 14px 16px;
-            border-bottom: 1px solid #e2e8f0;
-            text-align: left;
-            vertical-align: middle;
-        }
-
-        /* Styling Header Tabel */
-        .pop-table th {
-            background-color: #f8fafc;
-            font-weight: 600;
-            color: #475569;
-            white-space: nowrap;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.05em; /* Memberi jarak antar huruf agar elegan */
-        }
-
-        .pop-table td {
-            color: #334155;
-            font-weight: 500;
-        }
-
-        /* Efek Hover pada Baris Tabel */
-        .pop-table tbody tr {
-            transition: background-color 0.2s ease;
-        }
-
-        .pop-table tbody tr:hover {
-            background-color: #f1f5f9; /* Highlight baris saat disorot mouse */
-        }
-
-        /* Button Detail */
-        .btn-detail {
-            background-color: #1E8AE2;
-            color: #ffffff;
-            border: 1px solid #1E8AE2;
-            padding: 6px 16px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-        }
-
-        .btn-detail:hover {
-            background-color: #166bb5;
-            border-color: #166bb5;
-            color: #ffffff;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 6px -1px rgba(30, 138, 226, 0.3);
-        }
-
-        .btn-detail:active { transform: translateY(0); }
-
-        /* Button Edit — Kuning solid, icon-only square */
-        .btn-edit {
-            background-color: #EAB308;
-            color: #ffffff;
-            border: 1px solid #EAB308;
-            width: 32px;
-            height: 32px;
-            padding: 0;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            flex-shrink: 0;
-        }
-
-        .btn-edit:hover {
-            background-color: #CA8A04;
-            border-color: #CA8A04;
-            color: #ffffff;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 6px -1px rgba(234, 179, 8, 0.35);
-        }
-
-        .btn-edit:active { transform: translateY(0); }
-
-        /* Button Hapus — Merah solid, icon-only square */
-        .btn-hapus {
-            background-color: #DC2626;
-            color: #ffffff;
-            border: 1px solid #DC2626;
-            width: 32px;
-            height: 32px;
-            padding: 0;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .btn-hapus:hover {
-            background-color: #991B1B;
-            border-color: #991B1B;
-            color: #ffffff;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.35);
-        }
-
-        .btn-hapus:active { transform: translateY(0); }
+/* Efek saat diklik / fokus */
+.search-input:focus,
+.filter-control:focus {
+    background-color: #ffffff;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
 
 
-        .btn-tambah-pop {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            background: linear-gradient(135deg, #0086FF, #005BD4);
-            color: #ffffff;
-            text-decoration: none;
-            font-family: 'Poppins', sans-serif;
-            font-size: 13px;
-            font-weight: 600;
-            white-space: nowrap;
-            cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0, 91, 212, 0.2);
-            transition: all 0.25s ease;
-        }
+.filter-wrapper {
+    width: 240px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
 
-        .btn-tambah-pop:hover {
-            background: linear-gradient(135deg, #0078E8, #0052C2);
-            color: #ffffff;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 91, 212, 0.3);
-        }
+.filter-label {
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: 500;
+}
 
-        .btn-import-pop {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            background: linear-gradient(135deg, #10B981, #059669);
-            color: #ffffff;
-            text-decoration: none;
-            font-family: 'Poppins', sans-serif;
-            font-size: 13px;
-            font-weight: 600;
-            white-space: nowrap;
-            cursor: pointer;
-            box-shadow: 0 2px 6px rgba(5, 150, 105, 0.2);
-            transition: all 0.25s ease;
-        }
+.filter-label span {
+    color: #ef4444;
+    /* Merah yang lebih modern */
+    font-weight: bold;
+}
 
-        .btn-import-pop:hover {
-            background: linear-gradient(135deg, #059669, #047857);
-            color: #ffffff;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
-        }
+.filter-control {
+    cursor: pointer;
+    appearance: none;
+    /* Menghilangkan panah default di beberapa browser */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+    padding-right: 32px;
+}
 
-        .pop-table {
-            margin-bottom: 0; /* Menghapus jarak kosong di bawah tabel */
-        }
+/* Table Card */
+.table-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    overflow: hidden;
+}
 
-        .pop-table tbody tr:last-child td {
-            border-bottom: 1px solid #e2e8f0;; 
-        }
+.table-scroll {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+}
 
-        /* 2. KOTAK PAGINASI UTAMA */
-        .pagination-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 16px;
-            background-color: #ffffff;
-            font-size: 0.85rem;
-            color: #64748b;
-            font-weight: 500;
-            margin-top: 0;
-            row-gap: 12px;
-        }
+.pop-table {
+    width: 100%;
+    min-width: 640px;
+    margin-bottom: 0;
+    font-size: 0.8rem;
+    /* dasar tabel lebih kecil */
+    border-collapse: collapse;
+}
 
-        .pagination-container > div,
-        .pagination-container nav {
-            margin: 0 !important;
-            padding: 0 !important;
-            display: flex;
-            align-items: center;
-            line-height: 1.2;
-        }
+.pop-table th,
+.pop-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #e2e8f0;
+    text-align: left;
+    vertical-align: middle;
+}
 
-        .pagination {
-            display: flex;
-            flex-wrap: wrap;
-            list-style: none;
-            padding: 0;
-            margin: 0 !important;
-            gap: 6px;
-            align-items: center;
-        }
+.pop-table th {
+    background-color: #f8fafc;
+    font-weight: 600;
+    color: #475569;
+    white-space: nowrap;
+    text-transform: uppercase;
+    font-size: 0.68rem;
+    letter-spacing: 0.05em;
+}
 
-        /* 3. TOMBOL ANGKA STANDAR */
-        .page-item .page-link,
-        .page-item span.page-link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 34px;
-            height: 34px;
-            padding: 0 10px;
-            background-color: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            color: #3b82f6;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            line-height: 1;
-            box-sizing: border-box;
-        }
+.pop-table td {
+    color: #334155;
+    font-weight: 400;
+    font-size: 0.8rem;
+}
 
-        .page-item .page-link:hover {
-            background-color: #f8fafc;
-            border-color: #cbd5e1;
-            color: #2563eb;
-        }
+/* Efek Hover pada Baris Tabel */
+.pop-table tbody tr {
+    transition: background-color 0.2s ease;
+}
 
-        /* Tombol Aktif */
-        .page-item.active .page-link,
-        .page-item.active span.page-link {
-            background-color: #4ea8de;
-            border-color: #4ea8de;
-            color: #ffffff;
-        }
+.pop-table tbody tr:hover {
+    background-color: #f1f5f9;
+    /* Highlight baris saat disorot mouse */
+}
 
-        /* Tombol Disabled */
-        .page-item.disabled span.page-link {
-            color: #94a3b8;
-            background-color: #f8fafc;
-            border-color: #e2e8f0;
-            cursor: not-allowed;
-        }
+/* Button Detail */
+.btn-detail {
+    background-color: #1E8AE2;
+    color: #ffffff;
+    border: 1px solid #1E8AE2;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
 
-        /* 4. PANAH < DAN > AGAR PAS DI TENGAH */
-        .page-item:first-child .page-link,
-        .page-item:last-child .page-link,
-        .page-item:first-child span.page-link,
-        .page-item:last-child span.page-link {
-            font-size: 1.25rem;
-            font-family: Arial, sans-serif;
-            font-weight: normal;
-            padding: 0;
-        }
+.btn-detail:hover {
+    background-color: #166bb5;
+    border-color: #166bb5;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(30, 138, 226, 0.3);
+}
 
-        /* Titik-titik elipsis (...) */
-        .page-item.disabled[aria-disabled="true"] span.page-link:not(:first-child):not(:last-child) {
-            background-color: transparent;
-            border: none;
-            color: #64748b;
-            font-size: 1.1rem;
-            letter-spacing: 1px;
-        }
+.btn-detail:active {
+    transform: translateY(0);
+}
 
-        .pagination svg {
-            display: none;
-        }
+/* Button Edit — Kuning solid, icon-only square */
+.btn-edit {
+    background-color: #EAB308;
+    color: #ffffff;
+    border: 1px solid #EAB308;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    flex-shrink: 0;
+}
 
-        /* 5. RESPONSIVE: TABLET */
-        @media (max-width: 900px) {
-            .pagination-container {
-                padding: 12px;
-            }
-        }
+.btn-edit:hover {
+    background-color: #CA8A04;
+    border-color: #CA8A04;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(234, 179, 8, 0.35);
+}
 
-        /* 6. RESPONSIVE: MOBILE (HP) */
-        @media (max-width: 640px) {
-            .pagination-container {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-                gap: 10px;
-                padding: 14px 10px;
-            }
+.btn-edit:active {
+    transform: translateY(0);
+}
 
-            .pagination-container > div {
-                justify-content: center;
-                width: 100%;
-                font-size: 0.8rem;
-            }
+/* Button Hapus — Merah solid, icon-only square */
+.btn-hapus {
+    background-color: #DC2626;
+    color: #ffffff;
+    border: 1px solid #DC2626;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
 
-            .pagination-container nav {
-                width: 100%;
-                justify-content: center;
-            }
+.btn-hapus:hover {
+    background-color: #991B1B;
+    border-color: #991B1B;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.35);
+}
 
-            .pagination {
-                justify-content: center;
-            }
+.btn-hapus:active {
+    transform: translateY(0);
+}
 
-            .page-item .page-link,
-            .page-item span.page-link {
-                min-width: 30px;
-                height: 30px;
-                padding: 0 8px;
-                font-size: 0.8rem;
-            }
-             .profile-avatar {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background: #087cf5;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
 
-        .profile-avatar i {
-            font-size: 20px;
-        }
+.btn-tambah-pop {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #0086FF, #005BD4);
+    color: #ffffff;
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 91, 212, 0.2);
+    transition: all 0.25s ease;
+}
 
-        .swal-popup-custom   { font-family: 'Poppins', sans-serif; border-radius: 16px !important; }
-        .swal-title-custom   { font-size: 1.15rem !important; font-weight: 700 !important; color: #111827 !important; }
-        .swal-html-custom    { font-size: 0.875rem !important; color: #6b7280 !important; line-height: 1.6 !important; }
-        .swal-btn-confirm    { font-family: 'Poppins', sans-serif !important; font-weight: 600 !important; border-radius: 8px !important; padding: 10px 20px !important; background-color: #087cf5 !important; color: #fff !important;}
-        .swal-btn-cancel     { font-family: 'Poppins', sans-serif !important; font-weight: 600 !important; border-radius: 8px !important; padding: 10px 20px !important; background-color: #ef4444 !important; color: #fff !important;}
-        }
+.btn-tambah-pop:hover {
+    background: linear-gradient(135deg, #0078E8, #0052C2);
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 91, 212, 0.3);
+}
+
+.btn-import-pop {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #10B981, #059669);
+    color: #ffffff;
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(5, 150, 105, 0.2);
+    transition: all 0.25s ease;
+}
+
+.btn-import-pop:hover {
+    background: linear-gradient(135deg, #059669, #047857);
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+}
+
+.pop-table {
+    margin-bottom: 0;
+    /* Menghapus jarak kosong di bawah tabel */
+}
+
+.pop-table tbody tr:last-child td {
+    border-bottom: 1px solid #e2e8f0;
+    ;
+}
+
+/* 2. KOTAK PAGINASI UTAMA */
+.pagination-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    border-top: 1px solid #e2e8f0;
+    background-color: #ffffff;
+    font-size: 0.85rem;
+    color: #64748b;
+    font-weight: 500;
+    margin-top: 0;
+    row-gap: 12px;
+}
+
+.pagination-container>div,
+.pagination-container nav {
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    line-height: 1.2;
+}
+
+.pagination {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin: 0 !important;
+    gap: 6px;
+    align-items: center;
+}
+
+/* 3. TOMBOL ANGKA STANDAR */
+.page-item .page-link,
+.page-item span.page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 34px;
+    height: 34px;
+    padding: 0 10px;
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    color: #3b82f6;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    line-height: 1;
+    box-sizing: border-box;
+}
+
+.page-item .page-link:hover {
+    background-color: #f8fafc;
+    border-color: #cbd5e1;
+    color: #2563eb;
+}
+
+/* Tombol Aktif */
+.page-item.active .page-link,
+.page-item.active span.page-link {
+    background-color: #4ea8de;
+    border-color: #4ea8de;
+    color: #ffffff;
+}
+
+/* Tombol Disabled */
+.page-item.disabled span.page-link {
+    color: #94a3b8;
+    background-color: #f8fafc;
+    border-color: #e2e8f0;
+    cursor: not-allowed;
+}
+
+/* 4. PANAH < DAN > AGAR PAS DI TENGAH */
+.page-item:first-child .page-link,
+.page-item:last-child .page-link,
+.page-item:first-child span.page-link,
+.page-item:last-child span.page-link {
+    font-size: 1.25rem;
+    font-family: Arial, sans-serif;
+    font-weight: normal;
+    padding: 0;
+}
+
+/* Titik-titik elipsis (...) */
+.page-item.disabled[aria-disabled="true"] span.page-link:not(:first-child):not(:last-child) {
+    background-color: transparent;
+    border: none;
+    color: #64748b;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+}
+
+.pagination svg {
+    display: none;
+}
+
+/* 5. RESPONSIVE: TABLET */
+@media (max-width: 900px) {
+    .pagination-container {
+        padding: 12px;
+    }
+}
+
+/* 6. RESPONSIVE: MOBILE (HP) */
+@media (max-width: 768px) {
+    .pop-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .pop-header h1 {
+        font-size: 1.1rem;
+    }
+
+    .pop-title-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 1.1rem;
+        border-radius: 10px;
+    }
+
+    .pop-header-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .btn-import-pop,
+    .btn-tambah-pop {
+        flex: 1;
+        font-size: 12px;
+        padding: 8px 12px;
+        justify-content: center;
+    }
+
+    .filter-section {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .filter-wrapper {
+        width: 100%;
+    }
+
+    .pagination-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 10px;
+        padding: 14px 10px;
+    }
+
+    .pagination-container>div {
+        justify-content: center;
+        width: 100%;
+        font-size: 0.8rem;
+    }
+
+    .pagination-container nav {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .pagination {
+        justify-content: center;
+    }
+
+    .page-item .page-link,
+    .page-item span.page-link {
+        min-width: 30px;
+        height: 30px;
+        padding: 0 8px;
+        font-size: 0.8rem;
+    }
+
+    .pop-table {
+        font-size: 0.75rem;
+        min-width: 600px;
+    }
+
+    .pop-table th {
+        font-size: 0.64rem;
+        padding: 8px 10px;
+    }
+
+    .pop-table td {
+        font-size: 0.75rem;
+        padding: 8px 10px;
+    }
+
+    .btn-detail {
+        padding: 4px 10px;
+        font-size: 0.7rem;
+    }
+
+    .btn-edit,
+    .btn-hapus {
+        width: 26px;
+        height: 26px;
+        font-size: 0.7rem;
+    }
+
+    .pop-header p {
+        font-size: 0.78rem;
+    }
+
+    .search-input,
+    .filter-control {
+        font-size: 0.85rem;
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+
+    .profile-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: #087cf5;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .profile-avatar i {
+        font-size: 20px;
+    }
+
+    .swal-popup-custom {
+        font-family: 'Poppins', sans-serif;
+        border-radius: 16px !important;
+    }
+
+    .swal-title-custom {
+        font-size: 1.05rem !important;
+        font-weight: 700 !important;
+        color: #111827 !important;
+    }
+
+    .swal-html-custom {
+        font-size: 0.85rem !important;
+        color: #6b7280 !important;
+        line-height: 1.6 !important;
+    }
+
+    .swal-btn-confirm {
+        font-family: 'Poppins', sans-serif !important;
+        font-weight: 600 !important;
+        font-size: 0.85rem !important;
+        border-radius: 8px !important;
+        padding: 9px 18px !important;
+        background-color: #087cf5 !important;
+        color: #fff !important;
+    }
+
+    .swal-btn-cancel {
+        font-family: 'Poppins', sans-serif !important;
+        font-weight: 600 !important;
+        font-size: 0.85rem !important;
+        border-radius: 8px !important;
+        padding: 9px 18px !important;
+        background-color: #ef4444 !important;
+        color: #fff !important;
+    }
+}
+
+@media (max-width: 1024px) {
+
+    .pop-table th,
+    .pop-table td {
+        padding: 9px 12px;
+    }
+
+    .filter-wrapper {
+        width: 200px;
+    }
+}

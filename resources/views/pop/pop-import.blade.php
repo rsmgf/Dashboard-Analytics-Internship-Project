@@ -118,7 +118,9 @@
             transition: color 0.2s;
         }
 
-        .btn-clear-file:hover { color: #dc2626; }
+        .btn-clear-file:hover {
+            color: #dc2626;
+        }
 
         /* ---- Template Download ---- */
         .template-info-box {
@@ -254,6 +256,342 @@
             margin: 8px 0 0 18px;
             padding: 0;
         }
+
+        /* ============ Helper tampilan ============ */
+        .only-mobile {
+            display: none;
+        }
+
+        .col-info-title {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+
+        .col-info-scroll {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 8px;
+        }
+
+        .import-form {
+            margin-top: 28px;
+        }
+
+        .import-note {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-top: 8px;
+        }
+
+        .import-actions {
+            margin-top: 24px;
+        }
+
+        .result-text {
+            margin: 4px 0 0;
+        }
+
+        .result-box,
+        .result-box li {
+            overflow-wrap: anywhere;
+        }
+
+        .col-info-table code {
+            background: #eef2f7;
+            color: #0f172a;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 0.78rem;
+            white-space: nowrap;
+        }
+
+        /* ============ TABLET (≤ 1024px) ============ */
+        @media (max-width: 1024px) {
+            .import-dropzone {
+                padding: 32px 20px;
+            }
+
+            .col-info-table {
+                min-width: 560px;
+                font-size: 0.78rem;
+            }
+
+            .col-info-table th,
+            .col-info-table td {
+                padding: 7px 10px;
+            }
+        }
+
+        /* ============ MOBILE (≤ 768px) ============ */
+        @media (max-width: 768px) {
+
+            /* --- Header + breadcrumb --- */
+            .add-pop-header-bar {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                flex-wrap: nowrap;
+            }
+
+            .add-pop-back {
+                flex-shrink: 0;
+                width: 34px;
+                height: 34px;
+                font-size: 1rem;
+            }
+
+            .add-pop-header-text {
+                min-width: 0;
+                /* wajib agar teks bisa menyusut */
+                flex: 1 1 auto;
+            }
+
+            .breadcrumb-nav {
+                gap: 5px;
+            }
+
+            .breadcrumb-link {
+                font-size: 0.78rem;
+            }
+
+            .breadcrumb-home i {
+                font-size: 0.85rem;
+            }
+
+            .breadcrumb-sep {
+                font-size: 0.55rem;
+            }
+
+            .breadcrumb-current {
+                font-size: 0.95rem;
+                min-width: 0;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .add-pop-subheading {
+                font-size: 0.75rem !important;
+                line-height: 1.4;
+                margin-top: 2px;
+            }
+
+            /* --- Card --- */
+            .add-pop-card {
+                padding: 16px 14px !important;
+            }
+
+            /* --- Kotak template: susun vertikal --- */
+            .template-info-box {
+                flex-wrap: wrap;
+                gap: 10px;
+                padding: 12px 14px;
+                margin-bottom: 18px;
+            }
+
+            .template-info-box i {
+                font-size: 1.3rem;
+            }
+
+            .template-info-box .ti-text {
+                flex: 1 1 calc(100% - 44px);
+                min-width: 0;
+            }
+
+            .template-info-box .ti-text strong {
+                font-size: 0.8rem;
+            }
+
+            .template-info-box .ti-text span {
+                font-size: 0.72rem;
+                line-height: 1.45;
+                display: block;
+            }
+
+            .btn-download-template {
+                width: 100%;
+                justify-content: center;
+                padding: 9px 14px;
+                font-size: 0.78rem;
+            }
+
+            /* --- Dropzone --- */
+            .only-desktop {
+                display: none;
+            }
+
+            .only-mobile {
+                display: inline;
+            }
+
+            .import-form {
+                margin-top: 20px;
+            }
+
+            .import-dropzone {
+                padding: 24px 14px;
+                border-radius: 10px;
+            }
+
+            .import-dropzone i.drop-icon {
+                font-size: 2.1rem;
+                margin-bottom: 6px;
+            }
+
+            .import-dropzone .drop-title {
+                font-size: 0.88rem;
+            }
+
+            .import-dropzone .drop-sub {
+                font-size: 0.72rem;
+                margin-bottom: 12px;
+            }
+
+            .btn-pilih-file {
+                width: 100%;
+                justify-content: center;
+                padding: 10px 16px;
+                font-size: 0.8rem;
+            }
+
+            /* --- Preview file --- */
+            .file-selected-box {
+                padding: 10px 12px;
+                gap: 10px;
+                font-size: 0.78rem;
+            }
+
+            .file-selected-box i {
+                font-size: 1.15rem;
+            }
+
+            .file-selected-name {
+                min-width: 0;
+            }
+
+            .btn-clear-file {
+                width: 30px;
+                height: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+            }
+
+            .import-note {
+                font-size: 0.7rem;
+                line-height: 1.5;
+            }
+
+            .note-dot {
+                display: none;
+            }
+
+            .import-note {
+                display: flex;
+                gap: 6px;
+                flex-wrap: wrap;
+            }
+
+            /* --- Tombol aksi: Import di atas, Batal di bawah, lebar penuh --- */
+            .import-actions {
+                display: flex;
+                flex-direction: column-reverse;
+                gap: 10px;
+                margin-top: 18px;
+            }
+
+            .import-actions .add-pop-btn-cancel,
+            .import-actions .add-pop-btn-save {
+                width: 100%;
+                justify-content: center;
+                text-align: center;
+                padding: 11px 16px;
+                font-size: 0.82rem;
+            }
+
+            /* --- Result box --- */
+            .result-box {
+                padding: 11px 13px;
+                font-size: 0.78rem;
+                border-radius: 8px;
+            }
+
+            .result-box ul {
+                margin-left: 16px;
+            }
+        }
+
+        /* ============ HP kecil (≤ 640px): tabel jadi kartu ============ */
+        @media (max-width: 640px) {
+            .col-info-scroll {
+                overflow: visible;
+            }
+
+            .col-info-table,
+            .col-info-table tbody,
+            .col-info-table tr,
+            .col-info-table td {
+                display: block;
+                width: 100%;
+            }
+
+            .col-info-table {
+                min-width: 0;
+                border: none;
+            }
+
+            .col-info-table thead {
+                display: none;
+            }
+
+            .col-info-table tr {
+                background: #fff;
+                border: 1px solid #e2e8f0;
+                border-radius: 10px;
+                margin-bottom: 10px;
+                overflow: hidden;
+            }
+
+            .col-info-table td {
+                display: flex;
+                align-items: flex-start;
+                gap: 10px;
+                padding: 8px 12px;
+                border: none;
+                border-bottom: 1px solid #f1f5f9;
+                font-size: 0.76rem;
+                line-height: 1.5;
+                overflow-wrap: anywhere;
+            }
+
+            .col-info-table td:last-child {
+                border-bottom: none;
+            }
+
+            .col-info-table tr:nth-child(even) td {
+                background: transparent;
+            }
+
+            .col-info-table td::before {
+                content: attr(data-label);
+                flex: 0 0 82px;
+                font-size: 0.66rem;
+                font-weight: 600;
+                color: #64748b;
+                text-transform: uppercase;
+                letter-spacing: 0.04em;
+                padding-top: 2px;
+            }
+
+            /* Baris pertama (header kolom) dibuat sebagai judul kartu */
+            .col-info-table td:first-child {
+                background: #f8fafc !important;
+            }
+        }
     </style>
 </head>
 
@@ -274,10 +612,7 @@
                         <i class="bi bi-arrow-left"></i>
                     </a>
                     <div class="add-pop-header-text">
-                        <x-breadcrumb :items="[
-                            ['label' => 'POP', 'route' => 'pops.index'],
-                            ['label' => 'Import Excel POP'],
-                        ]" />
+                        <x-breadcrumb :items="[['label' => 'POP', 'route' => 'pops.index'], ['label' => 'Import Excel POP']]" />
                         <p class="add-pop-subheading">Upload file Excel untuk menambah banyak data POP sekaligus</p>
                     </div>
                 </div>
@@ -286,7 +621,7 @@
                 @if (session('import_success'))
                     <div class="result-box result-success">
                         <strong><i class="bi bi-check-circle-fill"></i> Import Berhasil!</strong>
-                        <p style="margin: 4px 0 0;">{{ session('import_success') }}</p>
+                        <p class="result-text">{{ session('import_success') }}</p>
                     </div>
                 @endif
 
@@ -315,99 +650,111 @@
                         <i class="bi bi-file-earmark-spreadsheet-fill"></i>
                         <div class="ti-text">
                             <strong>Gunakan template yang sudah disediakan</strong>
-                            <span>Pastikan header kolom di file Excel sesuai dengan template agar import berhasil.</span>
+                            <span>Pastikan header kolom di file Excel sesuai dengan template agar import
+                                berhasil.</span>
                         </div>
-                        <a href="{{ asset('templates/template_import_pop.xlsx') }}" class="btn-download-template" download>
+                        <a href="{{ asset('templates/template_import_pop.xlsx') }}" class="btn-download-template"
+                            download>
                             <i class="bi bi-download"></i> Download Template
                         </a>
                     </div>
 
                     {{-- INFO KOLOM --}}
-                    <p style="font-size: 0.82rem; font-weight: 600; color: #475569; margin-bottom: 8px;">
+                    <p class="col-info-title">
                         <i class="bi bi-table"></i> Kolom yang dibutuhkan di file Excel:
                     </p>
-                    <table class="col-info-table">
-                        <thead>
-                            <tr>
-                                <th>Header di Excel</th>
-                                <th>Keterangan</th>
-                                <th>Status</th>
-                                <th>Nilai yang Diizinkan</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><code>Provinsi</code></td>
-                                <td>Nama provinsi POP</td>
-                                <td><span class="badge-required">Wajib</span></td>
-                                <td>Teks bebas</td>
-                            </tr>
-                            <tr>
-                                <td><code>Kota/Kabupaten</code></td>
-                                <td>Nama kota atau kabupaten</td>
-                                <td><span class="badge-required">Wajib</span></td>
-                                <td>Teks bebas</td>
-                            </tr>
-                            <tr>
-                                <td><code>ID POP</code></td>
-                                <td>Kode unik POP (tidak boleh duplikat)</td>
-                                <td><span class="badge-required">Wajib</span></td>
-                                <td>Teks bebas, unik</td>
-                            </tr>
-                            <tr>
-                                <td><code>Nama POP</code></td>
-                                <td>Nama lengkap POP</td>
-                                <td><span class="badge-required">Wajib</span></td>
-                                <td>Teks bebas</td>
-                            </tr>
-                            <tr>
-                                <td><code>Building</code></td>
-                                <td>Jenis bangunan POP</td>
-                                <td><span class="badge-optional">Opsional</span></td>
-                                <td>Shelter, Shelter CKD, Shelter Permanen, Mini Shelter, ODC, Mini POP, Mikro POP, OLT Gantung</td>
-                            </tr>
-                            <tr>
-                                <td><code>Tipe POP</code></td>
-                                <td>Tipe klasifikasi POP</td>
-                                <td><span class="badge-optional">Opsional</span></td>
-                                <td>POP-SB, POP-A, POP-B, POP-D</td>
-                            </tr>
-                        </tbody>
-                    </table>
+
+                    <div class="col-info-scroll">
+                        <table class="col-info-table">
+                            <thead>
+                                <tr>
+                                    <th>Header di Excel</th>
+                                    <th>Keterangan</th>
+                                    <th>Status</th>
+                                    <th>Nilai yang Diizinkan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td data-label="Header"><code>Provinsi</code></td>
+                                    <td data-label="Keterangan">Nama provinsi POP</td>
+                                    <td data-label="Status"><span class="badge-required">Wajib</span></td>
+                                    <td data-label="Nilai">Teks bebas</td>
+                                </tr>
+                                <tr>
+                                    <td data-label="Header"><code>Kota/Kabupaten</code></td>
+                                    <td data-label="Keterangan">Nama kota atau kabupaten</td>
+                                    <td data-label="Status"><span class="badge-required">Wajib</span></td>
+                                    <td data-label="Nilai">Teks bebas</td>
+                                </tr>
+                                <tr>
+                                    <td data-label="Header"><code>ID POP</code></td>
+                                    <td data-label="Keterangan">Kode unik POP (tidak boleh duplikat)</td>
+                                    <td data-label="Status"><span class="badge-required">Wajib</span></td>
+                                    <td data-label="Nilai">Teks bebas, unik</td>
+                                </tr>
+                                <tr>
+                                    <td data-label="Header"><code>Nama POP</code></td>
+                                    <td data-label="Keterangan">Nama lengkap POP</td>
+                                    <td data-label="Status"><span class="badge-required">Wajib</span></td>
+                                    <td data-label="Nilai">Teks bebas</td>
+                                </tr>
+                                <tr>
+                                    <td data-label="Header"><code>Building</code></td>
+                                    <td data-label="Keterangan">Jenis bangunan POP</td>
+                                    <td data-label="Status"><span class="badge-optional">Opsional</span></td>
+                                    <td data-label="Nilai">Shelter, Shelter CKD, Shelter Permanen, Mini Shelter, ODC,
+                                        Mini POP, Mikro POP, OLT Gantung</td>
+                                </tr>
+                                <tr>
+                                    <td data-label="Header"><code>Tipe POP</code></td>
+                                    <td data-label="Keterangan">Tipe klasifikasi POP</td>
+                                    <td data-label="Status"><span class="badge-optional">Opsional</span></td>
+                                    <td data-label="Nilai">POP-SB, POP-A, POP-B, POP-D</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
                     {{-- FORM UPLOAD --}}
                     <form id="importForm" action="{{ route('pops.import.store') }}" method="POST"
-                        enctype="multipart/form-data" style="margin-top: 28px;">
+                        enctype="multipart/form-data" class="import-form">
                         @csrf
 
                         <div class="import-dropzone" id="importDropzone"
-                            onclick="document.getElementById('fileExcel').click()"
-                            ondragover="handleDragOver(event)"
-                            ondragleave="handleDragLeave(event)"
-                            ondrop="handleDrop(event)">
+                            onclick="document.getElementById('fileExcel').click()" ondragover="handleDragOver(event)"
+                            ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
                             <i class="bi bi-cloud-arrow-up-fill drop-icon"></i>
-                            <div class="drop-title">Seret & Lepas file Excel di sini</div>
-                            <div class="drop-sub">atau klik untuk memilih file dari perangkat</div>
+                            <div class="drop-title">
+                                <span class="only-desktop">Seret &amp; Lepas file Excel di
+                                    sini</span>
+                                <span class="only-mobile">Pilih file Excel dari perangkat</span>
+                            </div>
+                            <div class="drop-sub">
+                                <span class="only-desktop">atau klik untuk memilih file dari
+                                    perangkat</span>
+                                <span class="only-mobile">Ketuk tombol di bawah</span>
+                            </div>
                             <button type="button" class="btn-pilih-file">
                                 <i class="bi bi-folder2-open"></i> Pilih File
                             </button>
-                            <input type="file" id="fileExcel" name="file"
-                                accept=".xlsx,.xls,.csv"
-                                style="display: none;"
-                                onchange="handleFileSelect(this)">
+                            <input type="file" id="fileExcel" name="file" accept=".xlsx,.xls,.csv"
+                                style="display: none;" onchange="handleFileSelect(this)">
                         </div>
 
                         {{-- Preview file terpilih --}}
                         <div class="file-selected-box" id="fileSelectedBox">
                             <i class="bi bi-file-earmark-excel-fill" style="color: #16a34a;"></i>
                             <span class="file-selected-name" id="fileSelectedName"></span>
-                            <button type="button" class="btn-clear-file" onclick="clearFile()" title="Hapus pilihan">
+                            <button type="button" class="btn-clear-file" onclick="clearFile()"
+                                title="Hapus pilihan">
                                 <i class="bi bi-x-lg"></i>
                             </button>
                         </div>
 
-                        <p style="font-size: 0.75rem; color: #94a3b8; margin-top: 8px;">
-                            <i class="bi bi-info-circle"></i> Format yang diterima: .xlsx, .xls, .csv &nbsp;·&nbsp; Maksimal 5MB
+                        <p class="import-note">
+                            <i class="bi bi-info-circle"></i> Format yang diterima: .xlsx, .xls, .csv <span
+                                class="note-dot">·</span> Maksimal 5MB
                         </p>
 
                         {{-- ACTIONS --}}

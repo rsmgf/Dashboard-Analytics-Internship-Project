@@ -308,6 +308,21 @@
     background-color: #3b82f6;
 }
 
+.access-action-divider {
+    color: #cbd5e1;
+    font-weight: 300;
+    margin: 0 4px;
+    user-select: none;
+}
+
+.access-action-toggle.extra-action {
+    color: #0284c7;
+}
+
+.access-action-toggle.extra-action .tgl input:checked+.slider {
+    background-color: #0284c7;
+}
+
 .tgl input:checked+.slider::before {
     transform: translateX(16px);
 }

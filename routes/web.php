@@ -12,6 +12,7 @@ use App\Http\Controllers\PopController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RectifierController;
 use App\Http\Controllers\RmaController;
+use App\Http\Controllers\RoleSwitchController;
 use Illuminate\Support\Facades\Route;
 
 // --- GUEST / AUTH REDIRECT ---
@@ -19,17 +20,15 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-// --- DASHBOARD ---
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
 // --- PROFILE ---
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+// --- SWITCH ROLE ---
+Route::post('/role/switch', [RoleSwitchController::class, 'switch'])->name('role.switch')->middleware('auth');
 
 require __DIR__ . '/auth.php';
 
@@ -57,12 +56,17 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/dashboard/search-pop', [DashboardController::class, 'searchPop'])->name('dashboard.searchPop');
         Route::get('/dashboard/pop/{pop}/summary', [DashboardController::class, 'popSummary'])->name('dashboard.popSummary');
+        Route::get('/dashboard/device-status', [DashboardController::class, 'deviceStatus'])->name('dashboard.deviceStatus');
     });
 
-    Route::middleware('permission:dashboard.filter.read')->group(function () {
+    Route::middleware('permission:dashboard.filter')->group(function () {
         Route::get('/dashboard/filter-options', [DashboardController::class, 'filterOptions'])->name('dashboard.filterOptions');
         Route::get('/dashboard/filter-pop', [DashboardController::class, 'filterPop'])->name('dashboard.filterPop');
     });
+
+    // dashboard.filter is the menu route; dashboard.ekspor is the menu route for export permission
+    Route::get('/dashboard/filter', fn() => redirect()->route('dashboard'))->name('dashboard.filter');
+    Route::get('/dashboard/ekspor', fn() => redirect()->route('dashboard'))->name('dashboard.ekspor');
 
     // --- FORM & RIWAYAT RMA ---
     Route::middleware('permission:rma.read')->group(function () {
@@ -154,7 +158,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('permission:kwh.card.delete')->group(function () {
         Route::delete('/pops/{pop}/kwh/{id}', [KwhController::class, 'destroy'])->name('kwh.destroy');
     });
-  
+
     // --- BATTERIES ---
     Route::get('/pops/{pop}/batteries', [BatteryController::class, 'index'])->name('batteries.index');
 
@@ -212,7 +216,6 @@ Route::middleware('auth')->group(function () {
         Route::delete('/pops/{pop}/ac/{id}', [AcController::class, 'destroy'])->name('acs.destroy');
     });
 
-Route::get('/notifications', function () {
-    return view('notifikasi');
-})->name('notifications.index');
+    Route::get('/notifications', [\App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{notification}/mark-as-read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
 });

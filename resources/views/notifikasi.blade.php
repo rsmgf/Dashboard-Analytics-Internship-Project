@@ -67,137 +67,57 @@
                     {{-- TAB 1: STATUS --}}
                     <div id="tabStatus" class="notif-tab-pane active">
                         <div class="notif-list">
-
-                            {{-- Item 1: Warning --}}
-                            <div class="notif-row">
+                            @forelse($notificationsStatus as $notif)
+                            <div class="notif-row {{ $notif->is_read ? 'read' : '' }}" id="notif-status-{{ $notif->id }}" onclick="markNotifAsRead('notif-status-{{ $notif->id }}', {{ $notif->id }}, '{{ $notif->category }}', '{{ $notif->pop_id }}', '{{ $notif->device_type }}', '{{ $notif->device_id }}')">
                                 <div class="notif-icon-col">
-                                    <div class="notif-icon-box bg-icon-red has-dot">
-                                        <i class="bi bi-lightning-charge-fill"></i>
+                                    <div class="notif-icon-box {{ $notif->icon_bg_class }} {{ !$notif->is_read ? 'has-dot' : '' }}">
+                                        <i class="{{ $notif->icon_class }}"></i>
                                     </div>
                                 </div>
                                 <div class="notif-text-col">
-                                    <h4 class="notif-title">Rectifier - POP-1KR8011</h4>
-                                    <p class="notif-subtitle">Tegangan output di bawah normal</p>
+                                    <h4 class="notif-title">{{ $notif->title }}</h4>
+                                    <p class="notif-subtitle">{{ $notif->message }}</p>
                                 </div>
                                 <div class="notif-info-col">
-                                    <span class="badge-status badge-warning">WARNING</span>
-                                    <span class="notif-time">17 Feb 2025 10:45</span>
+                                    @if($notif->badge_label)
+                                    <span class="badge-status {{ $notif->badge_class }}">{{ $notif->badge_label }}</span>
+                                    @endif
+                                    <span class="notif-time">{{ $notif->created_at->format('d M Y H:i') }}</span>
                                     <i class="bi bi-chevron-right notif-arrow"></i>
                                 </div>
                             </div>
-
-                            {{-- Item 2: Alert --}}
-                            <div class="notif-row">
-                                <div class="notif-icon-col">
-                                    <div class="notif-icon-box bg-icon-orange has-dot">
-                                        <i class="bi bi-battery-charging"></i>
-                                    </div>
-                                </div>
-                                <div class="notif-text-col">
-                                    <h4 class="notif-title">Battery - POP-1TNA014</h4>
-                                    <p class="notif-subtitle">Kapasitas baterai 20%</p>
-                                </div>
-                                <div class="notif-info-col">
-                                    <span class="badge-status badge-alert">ALERT</span>
-                                    <span class="notif-time">17 Feb 2025 10:45</span>
-                                    <i class="bi bi-chevron-right notif-arrow"></i>
-                                </div>
+                            @empty
+                            <div style="text-align:center; padding: 30px; color: #64748b;">
+                                Belum ada notifikasi status
                             </div>
-
-                            {{-- Item 3: Belum Uji --}}
-                            <div class="notif-row">
-                                <div class="notif-icon-col">
-                                    <div class="notif-icon-box bg-icon-blue">
-                                        <i class="bi bi-snow"></i>
-                                    </div>
-                                </div>
-                                <div class="notif-text-col">
-                                    <h4 class="notif-title">Rectifier - POP-1KR8011</h4>
-                                    <p class="notif-subtitle">Tegangan output di bawah normal</p>
-                                </div>
-                                <div class="notif-info-col">
-                                    <span class="badge-status badge-belum-uji">BELUM UJI</span>
-                                    <span class="notif-time">17 Feb 2025 10:45</span>
-                                    <i class="bi bi-chevron-right notif-arrow"></i>
-                                </div>
-                            </div>
-
-                            {{-- Item 4: Jadwal Uji --}}
-                            <div class="notif-row">
-                                <div class="notif-icon-col">
-                                    <div class="notif-icon-box bg-icon-purple">
-                                        <i class="bi bi-lightning-fill"></i>
-                                    </div>
-                                </div>
-                                <div class="notif-text-col">
-                                    <h4 class="notif-title">Rectifier - POP-1KR8011</h4>
-                                    <p class="notif-subtitle">Tegangan output jauh di bawah normal</p>
-                                </div>
-                                <div class="notif-info-col">
-                                    <span class="badge-status badge-jadwal-uji">JADWAL UJI</span>
-                                    <span class="notif-time">17 Feb 2025 10:45</span>
-                                    <i class="bi bi-chevron-right notif-arrow"></i>
-                                </div>
-                            </div>
-
+                            @endforelse
                         </div>
                     </div>
 
                     {{-- TAB 2: AKTIVITAS --}}
                     <div id="tabAktivitas" class="notif-tab-pane">
                         <div class="notif-list">
-
-                            {{-- Item 1 --}}
-                            <div class="notif-row">
+                            @forelse($notificationsAktivitas as $notif)
+                            <div class="notif-row {{ $notif->is_read ? 'read' : '' }}" id="notif-aktivitas-{{ $notif->id }}" onclick="markNotifAsRead('notif-aktivitas-{{ $notif->id }}', {{ $notif->id }}, '{{ $notif->category }}', '{{ $notif->pop_id }}', '{{ $notif->device_type }}', '{{ $notif->device_id }}')">
                                 <div class="notif-icon-col">
-                                    <div class="notif-icon-box bg-icon-red has-dot">
-                                        <i class="bi bi-lightning-charge-fill"></i>
+                                    <div class="notif-icon-box {{ $notif->icon_bg_class }} {{ !$notif->is_read ? 'has-dot' : '' }}">
+                                        <i class="{{ $notif->icon_class }}"></i>
                                     </div>
                                 </div>
                                 <div class="notif-text-col">
-                                    <h4 class="notif-title">Rectifier - POP-1KR8011</h4>
-                                    <p class="notif-subtitle"><strong>Damara</strong> menambahkan rectifier pada POP-1K38011</p>
+                                    <h4 class="notif-title">{{ $notif->title }}</h4>
+                                    <p class="notif-subtitle">{!! $notif->message !!}</p>
                                 </div>
                                 <div class="notif-info-col">
-                                    <span class="notif-time">17 Feb 2025 10:45</span>
+                                    <span class="notif-time">{{ $notif->created_at->format('d M Y H:i') }}</span>
                                     <i class="bi bi-chevron-right notif-arrow"></i>
                                 </div>
                             </div>
-
-                            {{-- Item 2 --}}
-                            <div class="notif-row">
-                                <div class="notif-icon-col">
-                                    <div class="notif-icon-box bg-icon-orange has-dot">
-                                        <i class="bi bi-battery-charging"></i>
-                                    </div>
-                                </div>
-                                <div class="notif-text-col">
-                                    <h4 class="notif-title">Battery - POP-1TNA014</h4>
-                                    <p class="notif-subtitle"><strong>Damara</strong> mengedit rectifier POP_1CKG004_RECT01 pada POP-1K38011</p>
-                                </div>
-                                <div class="notif-info-col">
-                                    <span class="notif-time">17 Feb 2025 10:45</span>
-                                    <i class="bi bi-chevron-right notif-arrow"></i>
-                                </div>
+                            @empty
+                            <div style="text-align:center; padding: 30px; color: #64748b;">
+                                Belum ada aktivitas
                             </div>
-
-                            {{-- Item 3 --}}
-                            <div class="notif-row">
-                                <div class="notif-icon-col">
-                                    <div class="notif-icon-box bg-icon-blue">
-                                        <i class="bi bi-snow"></i>
-                                    </div>
-                                </div>
-                                <div class="notif-text-col">
-                                    <h4 class="notif-title">Rectifier - POP-1KR8011</h4>
-                                    <p class="notif-subtitle"><strong>Damara</strong> mengedit rectifier POP_1CKG004_RECT01 pada POP-1K38011</p>
-                                </div>
-                                <div class="notif-info-col">
-                                    <span class="notif-time">17 Feb 2025 10:45</span>
-                                    <i class="bi bi-chevron-right notif-arrow"></i>
-                                </div>
-                            </div>
-
+                            @endforelse
                         </div>
                     </div>
 
@@ -218,6 +138,66 @@
         if (target) {
             target.classList.add('active');
         }
+    }
+
+    function markNotifAsRead(elementId, notifId, category = '', popId = null, deviceType = null, deviceId = null) {
+        const item = document.getElementById(elementId);
+        
+        const processNavigation = () => {
+            if (popId) {
+                // Jika aktivitas perangkat (bukan POP), arahkan ke halaman detail perangkat
+                if (category === 'aktivitas' && deviceType !== 'pop' && deviceId) {
+                    let detailPath = '';
+                    if (deviceType === 'rectifier') detailPath = `rectifiers/${deviceId}`;
+                    else if (deviceType === 'kwh') detailPath = `kwh/${deviceId}`;
+                    else if (deviceType === 'battery') detailPath = `batteries/${deviceId}`;
+                    else if (deviceType === 'genset') detailPath = `gensets/${deviceId}`;
+                    else if (deviceType === 'ac') detailPath = `ac/${deviceId}`;
+                    
+                    if (detailPath) {
+                        window.location.href = `{{ route('pops.index', [], false) }}/${popId}/${detailPath}`;
+                        return;
+                    }
+                }
+                
+                // Default / Status: arahkan ke Dashboard Pop Summary
+                window.location.href = `{{ route('dashboard', [], false) }}?pop_id=${popId}&device_type=${deviceType || ''}&device_id=${deviceId || ''}`;
+            }
+        };
+
+        if (!item) {
+            processNavigation();
+            return;
+        }
+
+        const dot = item.querySelector('.unread-dot') || item.querySelector('.has-dot');
+        
+        // AJAX call to mark as read
+        fetch(`/notifications/${notifId}/mark-as-read`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }).then(res => res.json()).then(data => {
+            if (data.success) {
+                if (dot) {
+                    if (dot.classList.contains('has-dot')) {
+                        dot.classList.remove('has-dot');
+                    } else {
+                        dot.style.opacity = '0';
+                        dot.style.transform = 'scale(0)';
+                        setTimeout(() => dot.remove(), 300);
+                    }
+                }
+                item.classList.add('read');
+            }
+            processNavigation();
+        }).catch(err => {
+            console.error(err);
+            processNavigation();
+        });
     }
 </script>
 </body>
