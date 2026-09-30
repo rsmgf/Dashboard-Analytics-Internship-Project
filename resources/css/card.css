@@ -1,5 +1,13 @@
-* {
+@import './type-scale.css';
+
+*,
+*::before,
+*::after {
     box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
 }
 
 html,
@@ -35,8 +43,11 @@ body {
 .rectifier-content,
 .content {
     width: 100%;
+    max-width: 1800px;
+    margin-inline: auto;
     min-height: calc(100vh - 70px);
-    padding: 24px;
+    padding: clamp(14px, 2.5vw, 24px);
+    padding-bottom: max(clamp(20px, 3vw, 32px), env(safe-area-inset-bottom, 0px));
     background: #f8fafc;
     animation: fadeIn 0.4s ease-in-out;
 }
@@ -62,7 +73,7 @@ body {
     padding: 0 0 16px;
     border-bottom: 1px solid #e2e8f0;
     margin-bottom: 24px;
-    gap: 16px;
+    gap: 12px 16px;
     flex-wrap: wrap;
 }
 
@@ -71,11 +82,13 @@ body {
     display: flex;
     align-items: center;
     gap: 14px;
+    min-width: 0;
+    flex: 1 1 280px;
 }
 
 .back-button {
-    width: 34px;
-    height: 34px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     background: #f1f5f9;
     color: #64748b;
@@ -84,7 +97,7 @@ body {
     justify-content: center;
     font-size: 14px;
     text-decoration: none;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease;
     flex-shrink: 0;
 }
 
@@ -97,6 +110,8 @@ body {
     display: flex;
     flex-direction: column;
     gap: 3px;
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 .rectifier-pop-sub,
@@ -115,6 +130,7 @@ body {
     align-items: center;
     justify-content: center;
     gap: 8px;
+    min-height: 42px;
     padding: 10px 20px;
     border: none;
     border-radius: 8px;
@@ -128,23 +144,25 @@ body {
     cursor: pointer;
     box-shadow: 0 2px 6px rgba(0, 91, 212, 0.2);
     transition: all 0.25s ease;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .btn-tambah-rectifier:hover {
     background: linear-gradient(135deg, #0078E8, #0052C2);
     color: #ffffff;
-    transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 91, 212, 0.3);
 }
 
 .status-auto-badge {
     display: inline-flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 6px;
     padding: 4px 12px;
     border-radius: 999px;
     font-size: 0.75rem;
     font-weight: 600;
+    line-height: 1.4;
 }
 
 .status-aman {
@@ -162,14 +180,15 @@ body {
     color: #991b1b;
 }
 
-/* Rectifier Grid & Card */
+/* Rectifier Grid & Card
+   auto-fill: jumlah kolom menyesuaikan lebar layar secara otomatis
+   (1 kolom di HP, 2 di tablet/laptop, 3+ di monitor lebar) */
 .rectifier-grid,
 .grid {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: 20px;
-    row-gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 400px), 1fr));
+    gap: 20px;
     padding-top: 6px;
 }
 
@@ -178,6 +197,7 @@ body {
     position: relative;
     width: 100%;
     height: auto;
+    min-width: 0;
     min-height: 295px;
     display: flex;
     flex-direction: column;
@@ -188,16 +208,24 @@ body {
         0 4px 6px -1px rgba(0, 0, 0, 0.05),
         0 2px 4px -1px rgba(0, 0, 0, 0.03);
     overflow: hidden;
-    transition: all 0.2s ease;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-.rectifier-card:hover,
-.card:hover {
-    border-color: #b8c9dc;
-    box-shadow:
-        0 8px 15px -3px rgba(0, 0, 0, 0.08),
-        0 4px 6px -2px rgba(0, 0, 0, 0.04);
-    transform: translateY(-1px);
+/* Efek hover hanya untuk perangkat dengan mouse (hindari "lengket" di layar sentuh) */
+@media (hover: hover) {
+
+    .rectifier-card:hover,
+    .card:hover {
+        border-color: #b8c9dc;
+        box-shadow:
+            0 8px 15px -3px rgba(0, 0, 0, 0.08),
+            0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        transform: translateY(-1px);
+    }
+
+    .btn-tambah-rectifier:hover {
+        transform: translateY(-1px);
+    }
 }
 
 .rectifier-card-header,
@@ -241,7 +269,7 @@ body {
 .checklist-title p {
     margin: 3px 0 0;
     font-size: 0.8rem;
-    line-height: 1.2;
+    line-height: 1.3;
     color: #64748b;
     white-space: nowrap;
     overflow: hidden;
@@ -251,6 +279,7 @@ body {
 .rectifier-number,
 .number {
     flex-shrink: 0;
+    max-width: 45%;
     padding: 4px 9px;
     border: 1px solid #bfdbfe;
     border-radius: 6px;
@@ -260,6 +289,8 @@ body {
     line-height: 1.2;
     font-weight: 600;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .rectifier-information,
@@ -280,34 +311,38 @@ body {
 
 .meta-item {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 7px;
-    font-size: 0.7rem;
+    font-size: 0.72rem;
+    line-height: 1.5;
     color: #64748b;
+    overflow-wrap: anywhere;
 }
 
 .meta-item i {
     color: #2563eb;
     font-size: 13px;
+    line-height: 1.5;
+    flex-shrink: 0;
 }
 
-/* Last Updated Row on Card */
+/* Last Updated Row on Card: boleh turun baris agar informasi tidak terpotong */
 .rectifier-last-updated {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 6px;
     padding: 8px 25px 0;
     font-size: 0.68rem;
+    line-height: 1.5;
     color: #94a3b8;
     font-style: italic;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    overflow-wrap: anywhere;
 }
 
 .rectifier-last-updated i {
     color: #94a3b8;
     font-size: 12px;
+    line-height: 1.5;
     flex-shrink: 0;
 }
 
@@ -318,14 +353,22 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
     padding: 14px 25px 18px;
     border-top: 1px solid #f1f5f9;
+}
+
+/* jarak antara konten dan footer */
+.rectifier-last-updated {
+    margin-bottom: 14px;
 }
 
 .btn-hapus {
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    min-height: 34px;
     padding: 5px 12px;
     background: #fef2f2;
     color: #dc2626;
@@ -336,6 +379,7 @@ body {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .btn-hapus:hover {
@@ -343,13 +387,13 @@ body {
     color: #ffffff;
     border-color: #dc2626;
     box-shadow: 0 2px 6px rgba(220, 38, 38, 0.2);
-    transform: translateY(-1px);
 }
 
 .detail-button {
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    min-height: 34px;
     padding: 5px 2px;
     color: #2563eb;
     font-size: 0.8rem;
@@ -373,6 +417,16 @@ body {
     transform: translateX(3px);
 }
 
+/* Fokus keyboard */
+.back-button:focus-visible,
+.btn-tambah-rectifier:focus-visible,
+.btn-hapus:focus-visible,
+.detail-button:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.4);
+    outline-offset: 2px;
+    border-radius: 6px;
+}
+
 /* Status Badge Styles (Same as Battery Card) */
 .status-badge {
     display: inline-flex;
@@ -383,42 +437,62 @@ body {
     padding: 3px 8px;
     border-radius: 4px;
     letter-spacing: 0.5px;
+    line-height: 1.4;
     white-space: nowrap;
 }
 
-.status-safe, .status-excellent {
+.status-safe,
+.status-excellent {
     background: #dcfce7;
     color: #15803d;
     border: 1px solid #bbf7d0;
 }
-.dot-safe, .dot-excellent { background: #22c55e; }
 
-.status-warning, .status-good-enough, .status-good {
+.dot-safe,
+.dot-excellent {
+    background: #22c55e;
+}
+
+.status-warning,
+.status-good-enough,
+.status-good {
     background: #fef9c3;
     color: #a16207;
     border: 1px solid #fef08a;
 }
-.dot-warning, .dot-good-enough, .dot-good { background: #eab308; }
+
+.dot-warning,
+.dot-good-enough,
+.dot-good {
+    background: #eab308;
+}
 
 .status-alert {
     background: #fee2e2;
     color: #dc2626;
     border: 1px solid #fecaca;
 }
-.dot-alert { background: #ef4444; }
+
+.dot-alert {
+    background: #ef4444;
+}
 
 .status-unknown {
     background: #f1f5f9;
     color: #64748b;
     border: 1px solid #e2e8f0;
 }
-.dot-unknown { background: #94a3b8; }
+
+.dot-unknown {
+    background: #94a3b8;
+}
 
 .status-dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
     display: inline-block;
+    flex-shrink: 0;
 }
 
 .empty-rectifier {
@@ -430,7 +504,7 @@ body {
     justify-content: center;
     color: #94a3b8;
     text-align: center;
-    padding: 40px;
+    padding: 40px 20px;
 }
 
 .empty-rectifier i {
@@ -444,17 +518,17 @@ body {
     font-size: 0.9rem;
 }
 
-/* Sejajarkan label:value */
+/* Sejajarkan label : value */
 .equipment-info {
     display: grid;
-    grid-template-columns: 130px 14px 1fr;
-    align-items: center;
+    grid-template-columns: 130px 14px minmax(0, 1fr);
+    align-items: start;
     gap: 0;
     margin: 0;
     font-size: 0.85rem;
     line-height: 1.8;
     color: #334155;
-    word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
 .equipment-info .info-label,
@@ -478,16 +552,18 @@ body {
 }
 
 .equipment-info .data-value {
+    min-width: 0;
     color: #1e293b;
     font-weight: 500;
     display: inline-flex;
     align-items: center;
+    flex-wrap: wrap;
     justify-content: flex-start;
     gap: 6px;
     text-align: left;
 }
 
-/* Fallback for components without info-sep (e.g. kwh-card legacy markup) */
+/* Fallback untuk markup lama tanpa info-sep */
 .equipment-info:not(:has(.info-sep)) {
     display: flex;
     align-items: baseline;
@@ -510,47 +586,78 @@ body {
     right: 0;
 }
 
+/* ---- SweetAlert2 (dipakai dialog hapus) ---- */
+.swal-popup-custom {
+    font-family: 'Poppins', sans-serif;
+    border-radius: 16px !important;
+    width: min(92vw, 28rem) !important;
+    padding: 1.25rem 1rem 1.5rem !important;
+}
 
-/* Responsive Styles */
-@media (max-width: 1100px) {
+.swal-title-custom {
+    font-size: 1.15rem !important;
+    font-weight: 700 !important;
+    color: #111827 !important;
+}
 
-    .rectifier-grid,
-    .grid {
-        grid-template-columns: 1fr;
-    }
+.swal-html-custom {
+    font-size: 0.875rem !important;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.swal-btn-confirm,
+.swal-btn-cancel {
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 600 !important;
+    border-radius: 8px !important;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+/* Tablet */
+@media (max-width: 1024px) {
 
     .rectifier-card,
     .card {
-        height: 280px;
-        min-height: 280px;
+        min-height: 0;
     }
 }
 
-@media (max-width: 600px) {
+/* Tablet portrait / HP besar */
+@media (max-width: 768px) {
 
-    .rectifier-content,
-    .content {
-        padding: 12px 14px 20px;
+    .rectifier-page-header,
+    .page-header {
+        margin-bottom: 18px;
+        padding-bottom: 14px;
     }
+
+    .btn-tambah-rectifier {
+        flex: 1 1 100%;
+    }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
 
     .rectifier-grid,
     .grid {
-        grid-template-columns: 1fr;
-        row-gap: 15px;
-        padding-top: 10px;
+        gap: 14px;
+        padding-top: 4px;
     }
 
     .rectifier-card,
     .card {
-        height: auto;
-        min-height: 260px;
-        padding-bottom: 50px;
+        min-height: 0;
     }
 
     .rectifier-card-header,
     .card-header {
-        gap: 9px;
-        padding: 12px;
+        gap: 10px;
+        padding: 14px 16px 6px;
     }
 
     .checklist-icon {
@@ -560,43 +667,175 @@ body {
     }
 
     .checklist-title h3 {
-        font-size: 0.9rem;
+        font-size: 0.92rem;
     }
 
     .checklist-title p {
-        font-size: 0.72rem;
+        font-size: 0.74rem;
     }
 
     .rectifier-number,
     .number {
         font-size: 0.65rem;
         padding: 4px 7px;
+        max-width: 38%;
     }
 
     .rectifier-information,
     .information {
-        padding: 10px 18px 5px;
+        padding: 10px 16px 4px;
     }
 
     .equipment-info {
-        font-size: 0.8rem;
-        line-height: 1.6;
+        grid-template-columns: 104px 12px minmax(0, 1fr);
+        font-size: 0.82rem;
+        line-height: 1.65;
+    }
+
+    .equipment-info .info-label {
+        white-space: normal;
     }
 
     .rectifier-meta,
     .meta {
-        padding: 10px 18px 0;
-        gap: 8px;
+        padding: 8px 16px 0;
+        gap: 6px;
     }
 
-    .meta-item {
-        font-size: 0.7rem;
+    .rectifier-last-updated {
+        padding: 8px 16px 0;
     }
 
     .rectifier-card-footer,
     .card-footer {
-        left: 18px;
-        right: 18px;
-        bottom: 14px;
+        padding: 12px 16px 16px;
+    }
+
+    .btn-hapus,
+    .detail-button {
+        min-height: 40px;
+    }
+
+    .btn-hapus {
+        padding: 6px 14px;
+        font-size: 0.8rem;
+    }
+
+    .detail-button {
+        font-size: 0.85rem;
+    }
+}
+
+/* HP sangat kecil */
+@media (max-width: 360px) {
+    .equipment-info {
+        grid-template-columns: 92px 10px minmax(0, 1fr);
+        font-size: 0.78rem;
+    }
+
+    .rectifier-number,
+    .number {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .rectifier-content,
+    .content {
+        animation: none;
+    }
+
+    * {
+        transition: none !important;
+    }
+}
+
+/* =========================================================
+   MOBILE: ukuran teks mengikuti type-scale.css
+   ========================================================= */
+@media (max-width: 600px) {
+    .back-button {
+        width: 34px;
+        height: 34px;
+        font-size: 13px;
+    }
+
+    .rectifier-page-info,
+    .page-info {
+        gap: 10px;
+    }
+
+    /* Breadcrumb (komponen <x-breadcrumb>) */
+    .rectifier-header-text :is(nav, ol, ul, li, a, span, i, strong),
+    .rectifier-page-info :is(nav, ol, ul, li, a, span, i, strong):not(.back-button):not(.back-button *) {
+        font-size: var(--fs-xs) !important;
+        line-height: 1.4 !important;
+    }
+
+    .rectifier-header-text :is(nav, ol, ul),
+    .rectifier-page-info :is(nav, ol, ul) {
+        flex-wrap: wrap;
+    }
+
+    .btn-tambah-rectifier {
+        min-height: 40px;
+        padding: 8px 16px;
+        font-size: var(--fs-sm);
+    }
+
+    /* Kartu */
+    .checklist-title h3 {
+        font-size: var(--fs-md);
+    }
+
+    .checklist-title p {
+        font-size: var(--fs-xs);
+    }
+
+    .rectifier-number,
+    .number {
+        font-size: var(--fs-2xs);
+    }
+
+    .equipment-info {
+        font-size: var(--fs-sm);
+    }
+
+    .meta-item {
+        font-size: var(--fs-xs);
+    }
+
+    .rectifier-last-updated {
+        font-size: var(--fs-2xs);
+    }
+
+    .btn-hapus {
+        min-height: 36px;
+        padding: 5px 12px;
+        font-size: var(--fs-xs);
+    }
+
+    .detail-button {
+        min-height: 36px;
+        font-size: var(--fs-sm);
+    }
+
+    .status-badge {
+        font-size: var(--fs-2xs);
+    }
+
+    .status-auto-badge {
+        font-size: var(--fs-xs);
+        padding: 3px 10px;
+    }
+
+    /* Popup hapus */
+    .swal-title-custom {
+        font-size: var(--fs-lg) !important;
+    }
+
+    .swal-html-custom {
+        font-size: var(--fs-sm) !important;
     }
 }

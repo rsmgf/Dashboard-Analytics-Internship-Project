@@ -1,5 +1,11 @@
+@import './type-scale.css';
+
 * {
     box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -25,44 +31,76 @@ body {
 
 .rectifier-content {
     width: 100%;
+    max-width: 1600px;
+    margin-inline: auto;
     min-height: calc(100vh - 70px);
-    padding: 24px;
+    padding: clamp(14px, 2.5vw, 24px);
+    padding-bottom: max(clamp(20px, 3vw, 32px), env(safe-area-inset-bottom, 0px));
     background: #f8fafc;
 }
 
+/* ---- Header: sama dengan halaman form Rectifier ---- */
 .rectifier-page-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0;
-    margin-bottom: 20px;
+    gap: 14px;
+    padding: 0 0 16px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid #e2e8f0;
 }
 
+.rectifier-page-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+    flex: 1;
+}
+
+.rectifier-header-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+/* ---- Tombol kembali: sama dengan halaman Rectifier ---- */
 .back-button {
     width: 38px;
     height: 38px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid #e2e8f0;
+    flex-shrink: 0;
+    border: none;
     border-radius: 50%;
-    background: #ffffff;
+    background: #f1f5f9;
     color: #64748b;
-    font-size: 15px;
+    font-size: 14px;
     text-decoration: none;
-    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .back-button:hover {
-    background: #f1f5f9;
-    border-color: #cbd5e1;
+    background: #e2e8f0;
     color: #0f172a;
 }
 
+.back-button:focus-visible,
+.btn-reset:focus-visible,
+.btn-submit:focus-visible,
+.btn-compact-browse:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.4);
+    outline-offset: 2px;
+}
+
+/* ---- Card & grid form ---- */
 .form-card {
+    min-width: 0;
     margin-bottom: 20px;
-    padding: 24px;
+    padding: clamp(16px, 2.5vw, 24px);
     background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 12px;
@@ -71,20 +109,21 @@ body {
 
 .form-section-title {
     margin: 0 0 20px 0;
-    color: #1e40af;
-    font-size: 1rem;
-    font-weight: 600;
+    color: #2563eb;
+    font-size: 0.95rem;
+    font-weight: 700;
 }
 
+/* Jumlah kolom menyesuaikan lebar yang tersedia */
 .form-grid-3 {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
     gap: 20px;
 }
 
 .form-grid-2 {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
     gap: 20px;
     align-items: start;
 }
@@ -99,6 +138,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 7px;
+    min-width: 0;
 }
 
 .form-group label {
@@ -138,7 +178,11 @@ body {
     cursor: not-allowed !important;
 }
 
-/* Checklist Table Layout */
+.invalid-feedback {
+    overflow-wrap: anywhere;
+}
+
+/* ---- Tabel checklist ---- */
 .checklist-table-container {
     border: 1px solid #cbd5e1;
     border-radius: 8px;
@@ -156,7 +200,8 @@ body {
 }
 
 .checklist-label {
-    width: 280px;
+    width: clamp(180px, 28%, 280px);
+    flex-shrink: 0;
     background: #ebf3ff;
     padding: 12px 16px;
     font-size: 0.84rem;
@@ -169,6 +214,7 @@ body {
 
 .checklist-field {
     flex: 1;
+    min-width: 0;
     padding: 8px 12px;
     display: flex;
     flex-direction: column;
@@ -178,7 +224,7 @@ body {
 
 .table-input {
     width: 100%;
-    height: 36px;
+    height: 38px;
     padding: 6px 12px;
     border: 1px solid #cbd5e1;
     border-radius: 6px;
@@ -198,21 +244,23 @@ body {
 select.table-input,
 select.form-control {
     appearance: none;
+    -webkit-appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 12px center;
     background-size: 12px;
     padding-right: 32px;
+    text-overflow: ellipsis;
 }
 
 .mt-2 {
     margin-top: 8px;
 }
 
-/* Upload Foto Layout */
+/* ---- Upload foto (pola lama) ---- */
 .upload-container {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
     gap: 20px;
     align-items: center;
 }
@@ -303,9 +351,10 @@ select.form-control {
     color: #94a3b8;
     font-size: 0.68rem;
     font-style: italic;
+    line-height: 1.5;
 }
 
-/* Status Display Styles */
+/* ---- Status otomatis ---- */
 .status-display-wrapper {
     width: 100%;
 }
@@ -313,9 +362,11 @@ select.form-control {
 .status-readonly-box {
     width: 100%;
     min-height: 42px;
+    height: auto;
     display: flex;
     align-items: center;
-    gap: 9px;
+    flex-wrap: wrap;
+    gap: 4px 9px;
     padding: 10px 13px;
     background: #f1f5f9;
     border: 1px solid #e2e8f0;
@@ -345,26 +396,36 @@ select.form-control {
     background: #cbd5e1;
 }
 
+/* ---- Tombol aksi ---- */
 .form-actions {
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    flex-wrap: wrap;
     gap: 12px;
     margin-top: 24px;
 }
 
-.btn-reset {
+.btn-reset,
+.btn-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     height: 42px;
-    padding: 0 24px;
     border: none;
     border-radius: 8px;
-    background: #64748b;
     color: #ffffff;
     font-family: 'Poppins', sans-serif;
     font-size: 0.84rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.btn-reset {
+    padding: 0 24px;
+    background: #64748b;
 }
 
 .btn-reset:hover {
@@ -372,44 +433,16 @@ select.form-control {
 }
 
 .btn-submit {
-    height: 42px;
     padding: 0 28px;
-    border: none;
-    border-radius: 8px;
     background: #0070d8;
-    color: #ffffff;
-    font-family: 'Poppins', sans-serif;
-    font-size: 0.84rem;
-    font-weight: 600;
-    cursor: pointer;
     box-shadow: 0 2px 5px rgba(0, 112, 216, 0.20);
-    transition: all 0.2s ease;
 }
 
 .btn-submit:hover {
     background: #005fbd;
 }
 
-@media (max-width: 900px) {
-
-    .form-grid-3,
-    .form-grid-2 {
-        grid-template-columns: 1fr;
-    }
-
-    .upload-container,
-    .checklist-row {
-        flex-direction: column;
-    }
-
-    .checklist-label {
-        width: 100%;
-        border-right: none;
-        border-bottom: 1px solid #cbd5e1;
-    }
-}
-
-/* Compact Photo Upload (kWh Pattern) */
+/* ---- Compact photo upload ---- */
 .photo-compact-card {
     display: flex;
     flex-direction: column;
@@ -428,7 +461,7 @@ select.form-control {
     overflow: hidden;
     position: relative;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .photo-compact-preview:hover {
@@ -466,11 +499,6 @@ select.form-control {
     height: 100%;
     object-fit: cover;
     border-radius: 8px;
-    transition: transform 0.2s ease;
-}
-
-.photo-compact-img:hover {
-    transform: scale(1.02);
 }
 
 .photo-compact-hidden {
@@ -488,6 +516,7 @@ select.form-control {
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    min-height: 40px;
     padding: 8px 16px;
     background: #f1f5f9;
     color: #1e293b;
@@ -503,4 +532,148 @@ select.form-control {
     background: #e2e8f0;
     border-color: #94a3b8;
     color: #0f172a;
+}
+
+/* Popup foto (SweetAlert2) */
+.swal-popup-custom {
+    font-family: 'Poppins', sans-serif;
+    border-radius: 16px !important;
+    max-width: 92vw !important;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 768px) {
+    .rectifier-page-header {
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        gap: 12px;
+    }
+
+    .form-grid-3,
+    .form-grid-2,
+    .form-grid-1 {
+        gap: 16px;
+    }
+
+    /* Tabel checklist: label di atas, input di bawah */
+    .checklist-row {
+        flex-direction: column;
+    }
+
+    .checklist-label {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #cbd5e1;
+        padding: 9px 14px;
+    }
+
+    .checklist-field {
+        padding: 10px 12px;
+    }
+
+    /* Tombol aksi menempel di bawah layar */
+    .form-actions {
+        position: sticky;
+        bottom: 0;
+        z-index: 5;
+        flex-direction: column-reverse;
+        align-items: stretch;
+        gap: 10px;
+        margin: 8px calc(-1 * clamp(14px, 2.5vw, 24px)) calc(-1 * clamp(20px, 3vw, 32px));
+        padding: 12px clamp(14px, 2.5vw, 24px) calc(12px + env(safe-area-inset-bottom, 0px));
+        background: #ffffff;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .btn-reset,
+    .btn-submit {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .photo-compact-preview {
+        height: 170px;
+    }
+}
+
+@media (max-height: 480px) and (orientation: landscape) {
+    .form-actions {
+        position: static;
+    }
+}
+
+/* =========================================================
+   MOBILE: ukuran teks mengikuti type-scale.css
+   ========================================================= */
+@media (max-width: 600px) {
+    .back-button {
+        width: 34px;
+        height: 34px;
+        font-size: 13px;
+    }
+
+    .rectifier-page-info {
+        gap: 10px;
+    }
+
+    /* Breadcrumb (komponen <x-breadcrumb>) */
+    .rectifier-header-text :is(nav, ol, ul, li, a, span, i, strong) {
+        font-size: var(--fs-xs) !important;
+        line-height: 1.4 !important;
+    }
+
+    .rectifier-header-text :is(nav, ol, ul) {
+        flex-wrap: wrap;
+    }
+
+    .form-section-title {
+        font-size: var(--fs-md);
+        margin-bottom: 14px;
+    }
+
+    .form-group label {
+        font-size: var(--fs-sm);
+    }
+
+    .form-control,
+    .table-input {
+        min-height: var(--control-h);
+        height: var(--control-h);
+        font-size: var(--fs-input);
+    }
+
+    .upload-info {
+        font-size: var(--fs-2xs);
+    }
+
+    .status-readonly-box strong {
+        font-size: var(--fs-sm);
+    }
+
+    .status-source {
+        font-size: var(--fs-2xs);
+    }
+
+    .photo-compact-empty span {
+        font-size: var(--fs-xs);
+    }
+
+    .photo-compact-empty small {
+        font-size: var(--fs-2xs);
+    }
+
+    .btn-compact-browse {
+        min-height: 38px;
+        font-size: var(--fs-sm);
+    }
+
+    .btn-reset,
+    .btn-submit {
+        height: var(--control-h);
+        font-size: var(--fs-sm);
+    }
 }

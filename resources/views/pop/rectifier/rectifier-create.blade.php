@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Tambah Rectifier - {{ $pop->nama_pop_display }} - PLN Icon Plus</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -29,7 +29,7 @@
 
                 {{-- HEADER BAR: Back + Breadcrumb As Title --}}
                 <div class="rform-header-bar">
-                    <a href="{{ route('rectifiers.index', $pop->id) }}" class="rform-back" title="Kembali ke List Rectifier">
+                    <a href="{{ route('rectifiers.index', $pop->id) }}" class="rform-back" title="Kembali ke List Rectifier" aria-label="Kembali ke List Rectifier">
                         <i class="bi bi-arrow-left"></i>
                     </a>
                     <div class="rform-header-text">
@@ -626,7 +626,7 @@
         }
 
         // Drag & drop support
-        const previewBox = document.getElementById('previewBoxRectifier');
+        const previewBox = document.getElementById('dropZone');
         if (previewBox) {
             ['dragenter', 'dragover'].forEach(name => {
                 previewBox.addEventListener(name, (e) => {

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Edit Rectifier - {{ $rectifier->nomor_recti }} - PLN Icon Plus</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -29,7 +29,7 @@
 
             {{-- HEADER BAR: Back + Breadcrumb As Title --}}
             <div class="rform-header-bar">
-                <a href="{{ route('rectifiers.show', [$pop->id, $rectifier->id]) }}" class="rform-back" title="Kembali ke Detail Rectifier">
+                <a href="{{ route('rectifiers.show', [$pop->id, $rectifier->id]) }}" class="rform-back" title="Kembali ke Detail Rectifier" aria-label="Kembali ke Detail Rectifier">
                     <i class="bi bi-arrow-left"></i>
                 </a>
                 <div class="rform-header-text">
@@ -39,7 +39,6 @@
                         ['label' => $rectifier->nomor_recti ?? ($rectifier->merk . ' - ' . $rectifier->type), 'route' => 'rectifiers.show', 'params' => [$pop->id, $rectifier->id]],
                         ['label' => 'Edit Rectifier'],
                     ]" />
-                    <p class="rform-page-sub">Kode POP: <strong>{{ $pop->kode_pop }}</strong> &middot; {{ $pop->kota_kabupaten }}, {{ $pop->provinsi }}</p>
                 </div>
             </div>
 

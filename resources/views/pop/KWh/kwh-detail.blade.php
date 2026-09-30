@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Detail kWh - PLN Icon Plus</title>
 
@@ -30,7 +30,7 @@
                             <i class="bi bi-arrow-left"></i>
                         </a>
                         <div class="header-title-wrapper">
-                            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                            <div class="title-with-badge">
                                 <x-breadcrumb :items="[
                                     ['label' => 'POP', 'route' => 'pops.index'],
                                     [
@@ -71,48 +71,62 @@
                         <i class="bi bi-info-circle-fill"></i> General Information
                     </div>
 
-                    <div class="general-grid">
-                        <div class="general-item">
-                            <span class="general-label">Nomor kWh</span>
-                            <span class="general-value" style="font-weight:600; color:#2563eb;">{{ $kwh->nomor_kwh ?? $kwh->nama_alias }}</span>
+                    <div class="info-box-grid">
+                        <div class="info-box">
+                            <div class="info-box-icon"><i class="bi bi-lightning-charge-fill"></i></div>
+                            <div class="info-box-text">
+                                <span class="info-box-label">Nomor kWh</span>
+                                <span class="info-box-value">{{ $kwh->nomor_kwh ?? $kwh->nama_alias }}</span>
+                            </div>
                         </div>
-
-                        <div class="general-item">
-                            <span class="general-label">POP</span>
-                            <span class="general-value">{{ $pop->nama_pop_display }}</span>
+                        <div class="info-box">
+                            <div class="info-box-icon"><i class="bi bi-geo-alt-fill"></i></div>
+                            <div class="info-box-text">
+                                <span class="info-box-label">POP</span>
+                                <span class="info-box-value">{{ $pop->nama_pop_display }}</span>
+                            </div>
                         </div>
-
-                        <div class="general-item">
-                            <span class="general-label">Tanggal Pemeriksaan</span>
-                            <span
-                                class="general-value">{{ $kwh->tanggal_pemeriksaan->translatedFormat('d F Y') }}</span>
+                        <div class="info-box">
+                            <div class="info-box-icon"><i class="bi bi-calendar-check-fill"></i></div>
+                            <div class="info-box-text">
+                                <span class="info-box-label">Tanggal Pemeriksaan</span>
+                                <span class="info-box-value">{{ $kwh->tanggal_pemeriksaan->translatedFormat('d F Y') }}</span>
+                            </div>
                         </div>
-
-                        <div class="general-item">
-                            <span class="general-label">Building / Jenis Bangunan</span>
-                            <span class="general-value">{{ $pop->jenis_bangunan ?? '-' }}</span>
+                        <div class="info-box">
+                            <div class="info-box-icon"><i class="bi bi-building-fill"></i></div>
+                            <div class="info-box-text">
+                                <span class="info-box-label">Building / Jenis Bangunan</span>
+                                <span class="info-box-value">{{ $pop->jenis_bangunan ?? '-' }}</span>
+                            </div>
                         </div>
-
-                        <div class="general-item">
-                            <span class="general-label">Type POP</span>
-                            <span class="general-value">{{ $pop->tipe_pop ?? '-' }}</span>
+                        <div class="info-box">
+                            <div class="info-box-icon"><i class="bi bi-diagram-3-fill"></i></div>
+                            <div class="info-box-text">
+                                <span class="info-box-label">Type POP</span>
+                                <span class="info-box-value">{{ $pop->tipe_pop ?? '-' }}</span>
+                            </div>
                         </div>
-
-                        <div class="general-item">
-                            <span class="general-label">PIC / Petugas</span>
-                            <span class="general-value">{{ $kwh->pic }}</span>
+                        <div class="info-box">
+                            <div class="info-box-icon"><i class="bi bi-person-fill"></i></div>
+                            <div class="info-box-text">
+                                <span class="info-box-label">PIC / Petugas</span>
+                                <span class="info-box-value">{{ $kwh->pic }}</span>
+                            </div>
                         </div>
-
-                        <div class="general-item">
-                            <span class="general-label">ID Pelanggan Listrik</span>
-                            <span class="general-value">{{ $kwh->id_customer_pln }}</span>
+                        <div class="info-box">
+                            <div class="info-box-icon"><i class="bi bi-person-vcard-fill"></i></div>
+                            <div class="info-box-text">
+                                <span class="info-box-label">ID Pelanggan Listrik</span>
+                                <span class="info-box-value">{{ $kwh->id_customer_pln }}</span>
+                            </div>
                         </div>
                     </div>
                 </section>
 
                 <section class="detail-card checklist-card">
                     <div class="section-heading">
-                        <span><i class="bi bi-speedometer2"></i> Checklist & Pengukuran Phasa</span>
+                        <span><i class="bi bi-clipboard-check-fill"></i> Checklist & Pengukuran Phasa</span>
                         <small>Main AC Power Information (Panel kWh Meter)</small>
                     </div>
 
@@ -169,27 +183,27 @@
                                                 <tr>
                                                     <td><strong>R - S</strong></td>
                                                     <td><code>{{ $kwh->teg_rs }} Vac</code></td>
-                                                    <td><span style="color: #94a3b8;">&mdash;</span></td>
-                                                    <td><span style="color: #94a3b8;">&mdash;</span></td>
+                                                    <td class="cell-empty">&mdash;</td>
+                                                    <td class="cell-empty">&mdash;</td>
                                                 </tr>
                                                 <tr>
                                                     <td><strong>S - T</strong></td>
                                                     <td><code>{{ $kwh->teg_st }} Vac</code></td>
-                                                    <td><span style="color: #94a3b8;">&mdash;</span></td>
-                                                    <td><span style="color: #94a3b8;">&mdash;</span></td>
+                                                    <td class="cell-empty">&mdash;</td>
+                                                    <td class="cell-empty">&mdash;</td>
                                                 </tr>
                                                 <tr>
                                                     <td><strong>R - T</strong></td>
                                                     <td><code>{{ $kwh->teg_rt }} Vac</code></td>
-                                                    <td><span style="color: #94a3b8;">&mdash;</span></td>
-                                                    <td><span style="color: #94a3b8;">&mdash;</span></td>
+                                                    <td class="cell-empty">&mdash;</td>
+                                                    <td class="cell-empty">&mdash;</td>
                                                 </tr>
                                                 @endif
                                                 <tr>
                                                     <td><strong>N - G</strong></td>
                                                     <td><code>{{ $kwh->teg_ng }} Vac</code></td>
-                                                    <td><span style="color: #94a3b8;">&mdash;</span></td>
-                                                    <td><span style="color: #94a3b8;">&mdash;</span></td>
+                                                    <td class="cell-empty">&mdash;</td>
+                                                    <td class="cell-empty">&mdash;</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -279,15 +293,15 @@
 
                     <div class="photo-grid">
                         @forelse ($kwh->photos as $photo)
-                            <div class="photo-item"
-                                onclick="openKwhLightbox({{ $loop->index }})">
+                            <div class="photo-item" role="button" tabindex="0"
+                                onclick="openKwhLightbox({{ $loop->index }})"
+                                onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openKwhLightbox({{ $loop->index }});}">
                                 <img src="{{ asset('storage/' . $photo->path) }}" alt="{{ $photo->keterangan }}"
                                     onerror="this.src='https://placehold.co/400x300/f1f5f9/94a3b8?text={{ urlencode($photo->keterangan) }}'">
                                 <span>{{ $photo->keterangan }}</span>
                             </div>
                         @empty
-                            <p style="color:#94a3b8; grid-column: 1/-1; text-align:center; padding: 20px;">Belum ada
-                                foto dokumentasi.</p>
+                            <p class="photo-empty-msg">Belum ada foto dokumentasi.</p>
                         @endforelse
                     </div>
                 </section>

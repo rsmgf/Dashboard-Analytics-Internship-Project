@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Data Genset - PLN Icon Plus</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
@@ -23,8 +23,8 @@
 
             <div class="genset-content">
                 <div class="genset-page-header">
-                    <div class="genset-page-info" style="display: flex; align-items: center; gap: 12px;">
-                        <a href="{{ route('pops.index') }}" class="genset-back-button" title="Kembali ke List POP">
+                    <div class="genset-page-info">
+                        <a href="{{ route('pops.index') }}" class="genset-back-button" title="Kembali ke List POP" aria-label="Kembali ke List POP">
                             <i class="bi bi-arrow-left"></i>
                         </a>
                         <div class="genset-header-text">
@@ -106,8 +106,9 @@
 
                                 <div class="genset-card-footer">
                                     @can('gensets.index.delete')
-                                    <button class="genset-delete-button"
-                                        onclick="confirmDelete('{{ route('gensets.destroy', [$pop->id, $genset->id]) }}', '{{ $genset->nomor_genset }}')">
+                                    <button type="button" class="genset-delete-button"
+                                        data-url="{{ route('gensets.destroy', [$pop->id, $genset->id]) }}"
+                                        data-name="{{ $genset->nomor_genset }}">
                                         <i class="bi bi-trash3-fill"></i>
                                         Hapus
                                     </button>
@@ -127,10 +128,24 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        // Escape HTML agar nama dengan tanda kutip / karakter khusus aman ditampilkan
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str ?? '';
+            return div.innerHTML;
+        }
+
+        // Event delegation: membaca data dari atribut data-*
+        document.addEventListener('click', function (e) {
+            const btn = e.target.closest('.genset-delete-button');
+            if (!btn) return;
+            confirmDelete(btn.dataset.url, btn.dataset.name);
+        });
+
         function confirmDelete(url, gensetName) {
             Swal.fire({
                 title: 'Hapus Genset?',
-                html: `Apakah Anda yakin ingin menghapus data <strong>"${gensetName}"</strong>?<br><small style="color: #64748b;">Data genset ini akan dihapus secara permanen dan tidak dapat dikembalikan.</small>`,
+                html: `Apakah Anda yakin ingin menghapus data <strong>"${escapeHtml(gensetName)}"</strong>?<br><small style="color: #64748b;">Data genset ini akan dihapus secara permanen dan tidak dapat dikembalikan.</small>`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#dc2626',
@@ -138,7 +153,15 @@
                 confirmButtonText: '<i class="bi bi-trash3-fill"></i> Ya, Hapus!',
                 cancelButtonText: 'Batal',
                 reverseButtons: true,
-                focusCancel: true
+                focusCancel: true,
+                heightAuto: false,
+                customClass: {
+                    popup: 'swal-popup-custom',
+                    title: 'swal-title-custom',
+                    htmlContainer: 'swal-html-custom',
+                    confirmButton: 'swal-btn-confirm',
+                    cancelButton: 'swal-btn-cancel',
+                }
             }).then((result) => {
                 if (result.isConfirmed) {
                     const form = document.createElement('form');
