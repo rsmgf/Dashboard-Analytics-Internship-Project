@@ -78,6 +78,9 @@ button.sidebar-menu {
     height: auto;
     object-fit: contain;
     transition: width 0.3s ease, opacity 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.15);
+    padding: 6px 12px;
+    border-radius: 6px;
 }
 
 .sidebar-section {
@@ -319,7 +322,7 @@ button.sidebar-menu {
     align-items: center;
     margin: 0 !important;
     padding: 10px 24px !important;
-    background: #ffffff;
+    background: #fbfbfb;
     border-bottom: 1px solid var(--border-color);
     z-index: 999;
 }
@@ -346,11 +349,12 @@ button.sidebar-menu {
 }
 
 .user-profile {
-    margin-left: auto;
+    margin-left: 12px;
     display: flex;
     align-items: center;
+    gap: 12px;
     min-width: 0;
-    max-width: 65%;
+    max-width: 70%;
 }
 
 .user-display-name {
@@ -361,6 +365,110 @@ button.sidebar-menu {
     word-break: break-word;
     line-height: 1.3;
     text-align: right;
+}
+
+/* Topbar brand logo (for manajer mode) */
+.topbar-brand img {
+    height: 38px;
+    width: auto;
+    object-fit: contain;
+    background-color: #0284C7;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+.topbar-role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #eff6ff;
+    color: #0284c7;
+    border: 1px solid #bae6fd;
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.topbar-role-badge i {
+    font-size: 0.85rem;
+}
+
+/* Switch Role button */
+.topbar-switch-form {
+    display: flex;
+    align-items: center;
+    margin-right: 8px;
+}
+
+.btn-switch-role {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 16px;
+    border: 1.5px solid #0284c7;
+    border-radius: 8px;
+    background: #f0f9ff;
+    color: #0284c7;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    white-space: nowrap;
+}
+
+.btn-switch-role:hover {
+    background: #0284c7;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(2, 132, 199, 0.2);
+}
+
+.btn-switch-role.manajer {
+    border-color: #7c3aed;
+    background: #f5f3ff;
+    color: #7c3aed;
+}
+
+.btn-switch-role.manajer:hover {
+    background: #7c3aed;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.2);
+}
+
+/* Topbar logout button (manajer mode) */
+.topbar-logout-form {
+    display: flex;
+    align-items: center;
+}
+
+.btn-topbar-logout {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border: 1.5px solid #ef4444;
+    border-radius: 8px;
+    background: #fff5f5;
+    color: #ef4444;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    white-space: nowrap;
+}
+
+.btn-topbar-logout:hover {
+    background: #ef4444;
+    color: #fff;
+}
+
+/* Manajer mode — no sidebar, full width */
+body.manajer-mode .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
 }
 
 .pop-content {
@@ -429,19 +537,66 @@ body.sidebar-collapsed .dropdown-arrow {
     background: var(--sidebar-bg);
 }
 
-.logout-btn {
+/* Logout button styled exactly like sidebar-menu */
+.sidebar-logout-item {
     width: calc(100% - 20px);
-    color: var(--sidebar-muted);
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 4px 10px;
+    padding: 10px 14px;
+    color: rgba(255, 255, 255, 0.65);
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    border-left: 3px solid transparent;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: left;
+    white-space: nowrap;
+    transition: background 0.2s ease, color 0.2s ease, border-left 0.2s ease;
 }
 
-.logout-btn:hover {
+.sidebar-logout-item i:first-child {
+    width: 20px;
+    min-width: 20px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    text-align: center;
+}
+
+.sidebar-logout-item span {
+    display: inline-block;
+    opacity: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.sidebar-logout-item:hover {
     color: #ef4444;
-    /* Soft red for logout hover */
     background: rgba(239, 68, 68, 0.1);
+    border-left-color: #ef4444;
 }
 
-body.sidebar-collapsed .logout-btn {
+body.sidebar-collapsed .sidebar-logout-item {
     width: calc(100% - 16px);
+    justify-content: center;
+    padding: 10px 0;
+    gap: 0;
+    border-left: none;
+}
+
+body.sidebar-collapsed .sidebar-logout-item span {
+    display: none;
 }
 
 /* OVERLAY — backdrop gelap di belakang sidebar saat mobile */

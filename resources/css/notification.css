@@ -95,7 +95,8 @@ body {
     align-items: flex-end;
     gap: 6px;
     position: relative;
-    bottom: -1.5px; /* Menutupi garis bawah card */
+    bottom: -1.5px;
+    /* Menutupi garis bawah card */
 }
 
 .tab-btn {
@@ -124,7 +125,8 @@ body {
     color: #0284c7;
     font-weight: 700;
     border-color: #7dd3fc;
-    border-bottom: 2px solid #ffffff; /* Buka penutup border dasar */
+    border-bottom: 2px solid #ffffff;
+    /* Buka penutup border dasar */
 }
 
 /* Kontrol Tab Pane */
@@ -138,8 +140,15 @@ body {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(4px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* ==========================================================================
@@ -185,10 +194,25 @@ body {
 }
 
 /* Warna Varian Ikon */
-.bg-icon-red { background-color: #fee2e2; color: #dc2626; }
-.bg-icon-orange { background-color: #fef3c7; color: #d97706; }
-.bg-icon-blue { background-color: #e0f2fe; color: #0284c7; }
-.bg-icon-purple { background-color: #f3e8ff; color: #7c3aed; }
+.bg-icon-red {
+    background-color: #fee2e2;
+    color: #dc2626;
+}
+
+.bg-icon-orange {
+    background-color: #fef3c7;
+    color: #d97706;
+}
+
+.bg-icon-blue {
+    background-color: #e0f2fe;
+    color: #0284c7;
+}
+
+.bg-icon-purple {
+    background-color: #f3e8ff;
+    color: #7c3aed;
+}
 
 /* Dot Status Belum Dibaca */
 .has-dot::after {
@@ -248,10 +272,29 @@ body {
     display: inline-block;
 }
 
-.badge-warning { background-color: #fffbeb; color: #d97706; border: 1px solid #fcd34d; }
-.badge-alert { background-color: #fef2f2; color: #dc2626; border: 1px solid #fca5a5; }
-.badge-belum-uji { background-color: #f0fdf4; color: #16a34a; border: 1px solid #86efac; }
-.badge-jadwal-uji { background-color: #f0f9ff; color: #0284c7; border: 1px solid #7dd3fc; }
+.badge-warning {
+    background-color: #fffbeb;
+    color: #d97706;
+    border: 1px solid #fcd34d;
+}
+
+.badge-alert {
+    background-color: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fca5a5;
+}
+
+.badge-belum-uji {
+    background-color: #f0fdf4;
+    color: #16a34a;
+    border: 1px solid #86efac;
+}
+
+.badge-jadwal-uji {
+    background-color: #f0f9ff;
+    color: #0284c7;
+    border: 1px solid #7dd3fc;
+}
 
 /* Jam & Panah */
 .notif-time {

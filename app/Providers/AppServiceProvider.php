@@ -3,6 +3,13 @@
 namespace App\Providers;
 
 use App\Models\Menu;
+use App\Models\Pop;
+use App\Models\Rectifier;
+use App\Models\Kwh;
+use App\Models\Battery;
+use App\Models\Ac;
+use App\Models\Genset;
+use App\Observers\DashboardCacheObserver;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
@@ -23,8 +30,20 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Pop::observe(DashboardCacheObserver::class);
+        Rectifier::observe(DashboardCacheObserver::class);
+        Kwh::observe(DashboardCacheObserver::class);
+        Battery::observe(DashboardCacheObserver::class);
+        Ac::observe(DashboardCacheObserver::class);
+        Genset::observe(DashboardCacheObserver::class);
+
+        // Manajer dan super_admin keduanya punya semua permission.
+        // Perbedaan mode (sidebar/tidak) hanya diatur via session active_role — bukan via Gate.
         Gate::before(function ($user, $ability) {
-            return $user->hasRole('super_admin') ? true : null;
+            if ($user->hasRole('super_admin') || $user->hasRole('manajer')) {
+                return true;
+            }
+            return null;
         });
 
         View::composer('components.sidebar', function ($view) {

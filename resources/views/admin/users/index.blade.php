@@ -183,6 +183,7 @@
                         <option value="" disabled>Pilih</option>
                         <option value="karyawan">Karyawan</option>
                         <option value="teknisi">Teknisi</option>
+                        <option value="manajer">Manajer</option>
                         <option value="super_admin">Super Admin</option>
                     </select>
                 </div>

@@ -1,3 +1,8 @@
+@php 
+    $activeRole = session('active_role') ?? (auth()->user()?->hasRole('manajer') ? 'manajer' : 'super_admin');
+    $isManajerMode = $activeRole === 'manajer'; 
+@endphp
+@if(!$isManajerMode)
 <aside class="sidebar" id="sidebar">
 
     {{-- HEADER SIDEBAR (dengan tombol tutup mobile) --}}
@@ -56,8 +61,7 @@
         <div class="sidebar-footer">
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="sidebar-menu logout-btn"
-                    style="border: none; background: transparent; cursor: pointer; text-align: left;">
+                <button type="submit" class="sidebar-menu sidebar-logout-item">
                     <i class="bi bi-box-arrow-right"></i>
                     <span>Logout</span>
                 </button>
@@ -81,3 +85,4 @@
     </script>
 
 </aside>
+@endif

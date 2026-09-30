@@ -49,7 +49,7 @@ class UserManagementController extends Controller
         }
 
         $request->validate([
-            'role'        => ['required', 'in:karyawan,teknisi,super_admin'],
+            'role'        => ['required', 'in:karyawan,teknisi,super_admin,manajer'],
         ], [
             'role.required' => 'Role wajib dipilih.',
             'role.in'       => 'Role tidak valid.',

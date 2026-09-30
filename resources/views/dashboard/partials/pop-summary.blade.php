@@ -1,3 +1,7 @@
+@php $canEkspor = auth()->user()?->can('dashboard.ekspor') ?? false; @endphp
+@if(!$canEkspor)
+<style>.export-menu-wrapper { display: none !important; }</style>
+@endif
 {{-- POP HEADER + PAGE-LEVEL EXPORT --}}
 <div class="pop-summary-header" id="pop-summary-page" style="display: flex; justify-content: space-between; align-items: flex-start;">
     <div>
@@ -327,7 +331,7 @@
 
             <div class="dashboard-carousel-track" id="batteryOuterTrack">
                 @foreach ($batteryGroups as $groupIndex => $group)
-                    <div class="rectifier-group-slide">
+                    <div class="rectifier-group-slide" id="battery-group-{{ $group['rectifier']?->id ?? 0 }}">
                         <div class="rectifier-group-line">
                             <div class="rectifier-group-line-left">
                                 <span class="dashboard-module-badge">Rectifier #{{ $groupIndex + 1 }}</span>
