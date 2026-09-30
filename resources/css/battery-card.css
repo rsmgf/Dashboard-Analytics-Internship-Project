@@ -428,6 +428,15 @@ body {
     display: inline-block;
 }
 
+/* Warna teks status: merah = masih dijadwalkan, hijau = sudah dikerjakan */
+.status-text-due {
+    color: #dc2626 !important;
+}
+
+.status-text-done {
+    color: #15803d !important;
+}
+
 .rectifier-meta {
     display: flex;
     flex-direction: row;

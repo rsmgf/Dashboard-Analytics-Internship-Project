@@ -80,16 +80,22 @@
                                         <span>Kapasitas (KVA)</span>
                                         <strong>{{ $genset->kapasitas_kva }} KVA</strong>
                                     </div>
+                                    @php
+                                        $statusRaw = $genset->status_genset ?? 'Belum PM';
+                                        $statusKey = strtolower($statusRaw);
+                                        $statusClass = str_contains($statusKey, 'sudah') ? 'status-text-done' : (str_contains($statusKey, 'jadwal') ? 'status-text-due' : '');
+                                        $statusLabel = preg_replace('/\bPm\b/', 'PM', ucwords($statusKey));
+                                    @endphp
                                     <div class="genset-info-row">
                                         <span>Status PM Genset</span>
-                                        <strong>{{ $genset->status_genset ?? 'Belum PM' }}</strong>
+                                        <strong class="{{ $statusClass }}">{{ $statusLabel }}</strong>
                                     </div>
                                 </div>
 
                                 <div class="genset-meta">
                                     <div class="genset-meta-item">
                                         <i class="bi bi-calendar-fill"></i>
-                                        <span>{{ $genset->tanggal_pm ? $genset->tanggal_pm->format('d M Y') : '-' }}</span>
+                                        <span>{{ $genset->tanggal_pm ? $genset->tanggal_pm->locale('id')->translatedFormat('d M Y') : '-' }}</span>
                                     </div>
                                     <div class="genset-meta-item">
                                         <i class="bi bi-geo-alt-fill"></i>
@@ -100,7 +106,7 @@
                                 @if ($genset->diupdateOleh)
                                     <div class="genset-last-updated">
                                         <i class="bi bi-clock-history"></i>
-                                        <span>{{ $genset->diupdateOleh->name }} · {{ $genset->updated_at->format('d M Y, H:i') }}</span>
+                                        <span>{{ $genset->diupdateOleh->name }} · {{ $genset->updated_at->locale('id')->translatedFormat('d M Y, H.i') }} WIB</span>
                                     </div>
                                 @endif
 

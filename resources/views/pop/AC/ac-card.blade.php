@@ -78,16 +78,22 @@
                                         <span>PK</span>
                                         <strong>{{ $ac->pk }} PK</strong>
                                     </div>
+                                    @php
+                                        $statusRaw = $ac->status_ac ?? 'Belum PM';
+                                        $statusKey = strtolower($statusRaw);
+                                        $statusClass = str_contains($statusKey, 'sudah') ? 'status-text-done' : (str_contains($statusKey, 'jadwal') ? 'status-text-due' : '');
+                                        $statusLabel = preg_replace('/\bPm\b/', 'PM', ucwords($statusKey));
+                                    @endphp
                                     <div class="ac-info-row">
                                         <span>Status PM</span>
-                                        <strong>{{ $ac->status_ac ?? 'Belum PM' }}</strong>
+                                        <strong class="{{ $statusClass }}">{{ $statusLabel }}</strong>
                                     </div>
                                 </div>
 
                                 <div class="ac-meta">
                                     <div class="ac-meta-item">
                                         <i class="bi bi-calendar-fill"></i>
-                                        <span>{{ $ac->tanggal_terakhir_pm ? $ac->tanggal_terakhir_pm->format('d M Y') : '-' }}</span>
+                                        <span>{{ $ac->tanggal_terakhir_pm ? $ac->tanggal_terakhir_pm->locale('id')->translatedFormat('d M Y') : '-' }}</span>
                                     </div>
                                     <div class="ac-meta-item">
                                         <i class="bi bi-geo-alt-fill"></i>
@@ -98,7 +104,7 @@
                                 @if ($ac->diupdateOleh)
                                     <div class="ac-last-updated">
                                         <i class="bi bi-clock-history"></i>
-                                        <span>{{ $ac->diupdateOleh->name }} · {{ $ac->updated_at->format('d M Y, H:i') }}</span>
+                                        <span>{{ $ac->diupdateOleh->name }} · {{ $ac->updated_at->locale('id')->translatedFormat('d M Y, H.i') }} WIB</span>
                                     </div>
                                 @endif
 

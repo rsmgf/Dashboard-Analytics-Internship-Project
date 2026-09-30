@@ -301,6 +301,15 @@ body {
     flex-shrink: 0;
 }
 
+/* Warna teks status: merah = masih dijadwalkan, hijau = sudah dikerjakan */
+.status-text-due {
+    color: #dc2626 !important;
+}
+
+.status-text-done {
+    color: #15803d !important;
+}
+
 .ac-meta {
     display: flex;
     flex-direction: column;
