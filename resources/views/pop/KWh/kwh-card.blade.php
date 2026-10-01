@@ -88,12 +88,12 @@
 
                             <div class="rectifier-meta">
                                 <div class="meta-item">
-                                    <i class="bi bi-person-fill"></i>
-                                    <span>{{ $kwh->pic }}</span>
+                                    <i class="bi bi-calendar-fill"></i>
+                                    <span>{{ $kwh->tanggal_pemeriksaan ? $kwh->tanggal_pemeriksaan->locale('id')->translatedFormat('d M Y') : '-' }}</span>
                                 </div>
                                 <div class="meta-item">
-                                    <i class="bi bi-calendar-fill"></i>
-                                    <span>{{ $kwh->tanggal_pemeriksaan->locale('id')->translatedFormat('d M Y') }}</span>
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                    <span>{{ $pop->kota_kabupaten }}</span>
                                 </div>
                             </div>
 

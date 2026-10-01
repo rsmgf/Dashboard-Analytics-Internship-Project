@@ -255,7 +255,7 @@
                                     $statusUjiClass = 'status-excellent'; // Hijau
                                 } elseif ($statusUpper === 'JADWAL UJI BATT' || $statusUpper === 'POOR' || $statusUpper === 'ALERT') {
                                     $statusUjiClass = 'status-danger'; // Merah
-                                } elseif ($statusUpper === 'WARNING') {
+                                } elseif ($statusUpper === 'WARNING' || str_contains($statusUpper, 'BLM') || str_contains($statusUpper, 'BELUM')) {
                                     $statusUjiClass = 'status-warning'; // Orange
                                 }
                             @endphp

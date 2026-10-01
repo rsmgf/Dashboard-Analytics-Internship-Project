@@ -238,8 +238,8 @@
                             </div>
 
                             <div class="form-group">
-                                <label>Tanggal Penggantian <span class="required">*</span></label>
-                                <input type="date" class="form-control" id="tanggal_penggantian" name="tanggal_penggantian" value="{{ old('tanggal_penggantian', $battery->tanggal_penggantian ? $battery->tanggal_penggantian->format('Y-m-d') : '') }}" required>
+                                <label>Tanggal Penggantian</label>
+                                <input type="date" class="form-control" id="tanggal_penggantian" name="tanggal_penggantian" value="{{ old('tanggal_penggantian', $battery->tanggal_penggantian ? $battery->tanggal_penggantian->format('Y-m-d') : '') }}">
                             </div>
 
                             <div class="form-group">
@@ -276,7 +276,7 @@
                                 </div>
                                 <div class="rform-drop-text">{{ $hasPhoto ? 'Klik untuk ganti foto' : 'Masukkan file disini' }}</div>
                                 <button type="button" class="rform-browse-btn">Browse</button>
-                                <div class="rform-drop-hint">Format: JPG, JPEG, PNG • Maks. ukuran: 10 MB</div>
+                                <div class="rform-drop-hint">Format: JPG, JPEG, PNG • Maks. ukuran: 2 MB</div>
                                 <input type="file" id="photo_battery" name="photo_battery" accept=".jpg,.jpeg,.png"
                                        style="display:none;" onchange="previewFoto(this)">
                             </div>

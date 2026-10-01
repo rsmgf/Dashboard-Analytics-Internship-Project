@@ -281,23 +281,25 @@
                         </div>
                         <div class="rform-section-body">
                             <div class="rform-photo-grid">
-                                <div class="rform-drop-zone" id="dropZone"
-                                    onclick="document.getElementById('fotoInput').click()">
-                                    <div class="rform-drop-icon">
-                                        <i class="bi bi-cloud-arrow-up-fill"></i>
+                                <div class="rform-photo-col">
+                                    <span class="rform-preview-label">Unggah Foto Baru</span>
+                                    <div class="rform-drop-zone" id="dropZone"
+                                        onclick="document.getElementById('fotoInput').click()">
+                                        <div class="rform-drop-icon">
+                                            <i class="bi bi-cloud-arrow-up-fill"></i>
+                                        </div>
+                                        <div class="rform-drop-text" id="dropText">
+                                            {{ $rectifier->foto_rectifier ? 'Klik untuk ganti foto' : 'Masukkan file disini' }}
+                                        </div>
+                                        <button type="button" class="rform-browse-btn">Browse</button>
+                                        <div class="rform-drop-hint">Format: JPG, JPEG, PNG • Maks. ukuran: 2 MB</div>
+                                        <input type="file" id="fotoInput" name="foto_rectifier"
+                                            accept=".jpg,.jpeg,.png" style="display:none;" onchange="previewFoto(this)">
                                     </div>
-                                    <div class="rform-drop-text" id="dropText">
-                                        {{ $rectifier->foto_rectifier ? 'Klik untuk ganti foto' : 'Masukkan file disini' }}
-                                    </div>
-                                    <button type="button" class="rform-browse-btn">Browse</button>
-                                    <div class="rform-drop-hint">Format: JPG, JPEG, PNG • Maks. ukuran: 10 MB</div>
-                                    <input type="file" id="fotoInput" name="foto_rectifier"
-                                        accept=".jpg,.jpeg,.png" style="display:none;" onchange="previewFoto(this)">
                                 </div>
 
-                                <div class="rform-photo-preview">
-                                    <span
-                                        class="rform-preview-label">{{ $rectifier->foto_rectifier ? 'Foto saat ini' : 'Preview foto' }}</span>
+                                <div class="rform-photo-col">
+                                    <span class="rform-preview-label">{{ $rectifier->foto_rectifier ? 'Foto Saat Ini' : 'Preview Foto' }}</span>
                                     <div class="rform-preview-box">
                                         @if ($rectifier->foto_rectifier)
                                             <img id="fotoPreview"

@@ -116,16 +116,16 @@
                                 </div>
                             </div>
 
-                            {{-- Meta: PIC & Tanggal Pemeriksaan --}}
+                            {{-- Meta: Tanggal Pemeriksaan & Lokasi --}}
                             <div class="rectifier-meta">
-                                <div class="meta-item">
-                                    <i class="bi bi-person-fill"></i>
-                                    <span>{{ $rectifier->pic ?? '-' }}</span>
-                                </div>
-
                                 <div class="meta-item">
                                     <i class="bi bi-calendar-fill"></i>
                                     <span>{{ $rectifier->tanggal_pemeriksaan ? \Carbon\Carbon::parse($rectifier->tanggal_pemeriksaan)->locale('id')->translatedFormat('d M Y') : '-' }}</span>
+                                </div>
+
+                                <div class="meta-item">
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                    <span>{{ $pop->kota_kabupaten }}</span>
                                 </div>
                             </div>
 

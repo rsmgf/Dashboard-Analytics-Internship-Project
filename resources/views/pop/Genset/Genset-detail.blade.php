@@ -165,11 +165,12 @@
                                 <span class="detail-label">Status Genset</span>
                                 <div class="detail-value">
                                     @php
-                                        $status    = $genset->status_genset ?? 'Belum PM';
+                                        $status     = $genset->status_genset ?? 'Belum PM';
                                         $badgeClass = match($status) {
                                             'Sudah PM'  => 'status-excellent',
-                                            'Jadwal PM' => 'status-warning',
-                                            default     => 'status-neutral',
+                                            'Jadwal PM' => 'status-danger',
+                                            'Belum PM'  => 'status-warning',
+                                            default     => 'status-warning',
                                         };
                                     @endphp
                                     <span class="status-badge {{ $badgeClass }}">{{ strtoupper($status) }}</span>

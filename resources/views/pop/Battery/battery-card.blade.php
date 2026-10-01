@@ -208,7 +208,7 @@
                                     @php
                                         $statusRaw = $battery->status_uji ?? 'BLM UJI BATT';
                                         $statusKey = strtolower($statusRaw);
-                                        $statusClass = str_contains($statusKey, 'sudah') ? 'status-text-done' : (str_contains($statusKey, 'jadwal') ? 'status-text-due' : '');
+                                        $statusClass = str_contains($statusKey, 'sudah') ? 'status-text-done' : (str_contains($statusKey, 'jadwal') ? 'status-text-due' : ((str_contains($statusKey, 'belum') || str_contains($statusKey, 'blm')) ? 'status-text-warning' : ''));
                                         $statusLabel = preg_replace(['/\bBlm\b/', '/\bBatt(ery)?\b/'], ['Belum', 'Baterai'], ucwords($statusKey));
                                     @endphp
                                     <div class="equipment-info">
@@ -220,7 +220,7 @@
 
                                 <div class="rectifier-meta">
                                     <div class="meta-item">
-                                        <i class="bi bi-calendar-event-fill"></i>
+                                        <i class="bi bi-calendar-fill"></i>
                                         <span>{{ $battery->tanggal_uji_terakhir ? $battery->tanggal_uji_terakhir->locale('id')->translatedFormat('d M Y') : '-' }}</span>
                                     </div>
                                     <div class="meta-item">

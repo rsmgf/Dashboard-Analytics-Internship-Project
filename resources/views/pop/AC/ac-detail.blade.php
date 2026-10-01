@@ -139,8 +139,9 @@
                                             $status     = $ac->status_ac ?? 'Belum PM';
                                             $badgeClass = match($status) {
                                                 'Sudah PM'  => 'status-excellent',
-                                                'Jadwal PM' => 'status-warning',
-                                                default     => 'status-neutral',
+                                                'Jadwal PM' => 'status-danger',
+                                                'Belum PM'  => 'status-warning',
+                                                default     => 'status-warning',
                                             };
                                         @endphp
                                         {{ $ac->tanggal_terakhir_pm ? $ac->tanggal_terakhir_pm->translatedFormat('d F Y') : '-' }}

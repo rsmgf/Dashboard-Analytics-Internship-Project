@@ -239,30 +239,33 @@
                             <span class="rform-section-sub">Upload foto kondisi rectifier di lokasi</span>
                         </div>
                         <div class="rform-section-body">
-                        <div class="rform-photo-grid">
-                            <div class="rform-drop-zone" id="dropZone" onclick="document.getElementById('fotoInput').click()">
-                                <div class="rform-drop-icon">
-                                    <i class="bi bi-cloud-arrow-up-fill"></i>
+                            <div class="rform-photo-grid">
+                                <div class="rform-photo-col">
+                                    <span class="rform-preview-label">Unggah Foto</span>
+                                    <div class="rform-drop-zone" id="dropZone" onclick="document.getElementById('fotoInput').click()">
+                                        <div class="rform-drop-icon">
+                                            <i class="bi bi-cloud-arrow-up-fill"></i>
+                                        </div>
+                                        <div class="rform-drop-text" id="dropText">Masukkan file disini</div>
+                                        <button type="button" class="rform-browse-btn">Browse</button>
+                                        <div class="rform-drop-hint">Format: JPG, JPEG, PNG &bull; Maks. ukuran: 2 MB</div>
+                                        <input type="file" id="fotoInput" name="foto_rectifier" accept=".jpg,.jpeg,.png"
+                                            style="display:none;" onchange="previewFoto(this)">
+                                    </div>
                                 </div>
-                                <div class="rform-drop-text" id="dropText">Masukkan file disini</div>
-                                <button type="button" class="rform-browse-btn">Browse</button>
-                                <div class="rform-drop-hint">Format: JPG, JPEG, PNG &bull; Maks. ukuran: 10 MB</div>
-                                <input type="file" id="fotoInput" name="foto_rectifier" accept=".jpg,.jpeg,.png"
-                                    style="display:none;" onchange="previewFoto(this)">
-                            </div>
 
-                            <div class="rform-photo-preview">
-                                <span class="rform-preview-label">Preview foto</span>
-                                <div class="rform-preview-box">
-                                    <img id="fotoPreview" src="" alt="" style="display:none;">
-                                    <div class="rform-preview-empty" id="fotoEmpty">
-                                        <i class="bi bi-image"></i>
-                                        <span>Belum ada foto yang dipilih</span>
+                                <div class="rform-photo-col">
+                                    <span class="rform-preview-label">Preview Foto</span>
+                                    <div class="rform-preview-box">
+                                        <img id="fotoPreview" src="" alt="" style="display:none;">
+                                        <div class="rform-preview-empty" id="fotoEmpty">
+                                            <i class="bi bi-image"></i>
+                                            <span>Belum ada foto yang dipilih</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        @error('foto_rectifier')<div style="color:#ef4444;font-size:0.8rem;margin-top:4px;">{{ $message }}</div>@enderror
+                            @error('foto_rectifier')<div style="color:#ef4444;font-size:0.8rem;margin-top:4px;">{{ $message }}</div>@enderror
                         </div>
                     </div>
 

@@ -223,7 +223,7 @@
                                 </div>
                                 <div class="rform-drop-text" id="dropText">{{ $hasPhoto ? 'Klik untuk ganti foto' : 'Masukkan file disini' }}</div>
                                 <button type="button" class="rform-browse-btn">Browse</button>
-                                <div class="rform-drop-hint">Format: JPG, JPEG, PNG • Maks. ukuran: 10 MB</div>
+                                <div class="rform-drop-hint">Format: JPG, JPEG, PNG • Maks. ukuran: 2 MB</div>
                                 <input type="file" id="photo_ac" name="photo_ac" accept=".jpg,.jpeg,.png"
                                        style="display:none;" onchange="previewFotoAC(this)">
                             </div>
@@ -305,13 +305,20 @@
                 const dot  = document.getElementById('statusDot');
                 const text = document.getElementById('statusText');
                 if (!val) {
-                    dot.style.background = '#94a3b8'; text.textContent = 'Belum PM'; return;
+                    dot.style.background = '#ea580c';
+                    text.style.color = '#ea580c';
+                    text.textContent = 'Belum PM';
+                    return;
                 }
                 const months = (new Date() - new Date(val)) / (1000 * 60 * 60 * 24 * 30);
                 if (months >= 6) {
-                    dot.style.background = '#f59e0b'; text.textContent = 'Jadwal PM';
+                    dot.style.background = '#dc2626';
+                    text.style.color = '#dc2626';
+                    text.textContent = 'Jadwal PM';
                 } else {
-                    dot.style.background = '#10b981'; text.textContent = 'Sudah PM';
+                    dot.style.background = '#10b981';
+                    text.style.color = '#15803d';
+                    text.textContent = 'Sudah PM';
                 }
             }
 

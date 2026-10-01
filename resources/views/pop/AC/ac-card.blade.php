@@ -81,7 +81,7 @@
                                     @php
                                         $statusRaw = $ac->status_ac ?? 'Belum PM';
                                         $statusKey = strtolower($statusRaw);
-                                        $statusClass = str_contains($statusKey, 'sudah') ? 'status-text-done' : (str_contains($statusKey, 'jadwal') ? 'status-text-due' : '');
+                                        $statusClass = str_contains($statusKey, 'sudah') ? 'status-text-done' : (str_contains($statusKey, 'jadwal') ? 'status-text-due' : (str_contains($statusKey, 'belum') ? 'status-text-warning' : ''));
                                         $statusLabel = preg_replace('/\bPm\b/', 'PM', ucwords($statusKey));
                                     @endphp
                                     <div class="ac-info-row">

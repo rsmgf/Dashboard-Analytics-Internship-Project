@@ -236,8 +236,8 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="tanggal_penggantian">Tanggal Penggantian <span class="required">*</span></label>
-                                <input type="date" id="tanggal_penggantian" name="tanggal_penggantian" class="form-control" value="{{ old('tanggal_penggantian') }}" required>
+                                <label for="tanggal_penggantian">Tanggal Penggantian</label>
+                                <input type="date" id="tanggal_penggantian" name="tanggal_penggantian" class="form-control" value="{{ old('tanggal_penggantian') }}">
                             </div>
 
                             <div class="form-group">
@@ -271,7 +271,7 @@
                                 </div>
                                 <div class="rform-drop-text">Masukkan file disini</div>
                                 <button type="button" class="rform-browse-btn">Browse</button>
-                                <div class="rform-drop-hint">Format: JPG, JPEG, PNG • Maks. ukuran: 10 MB</div>
+                                <div class="rform-drop-hint">Format: JPG, JPEG, PNG • Maks. ukuran: 2 MB</div>
                                 <input type="file" id="photo_battery" name="photo_battery" accept=".jpg,.jpeg,.png"
                                     style="display:none;" onchange="previewFoto(this)">
                             </div>
