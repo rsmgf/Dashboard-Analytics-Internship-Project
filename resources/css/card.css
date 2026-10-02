@@ -311,8 +311,10 @@ body {
 .rectifier-meta,
 .meta {
     display: flex;
-    flex-direction: column;
-    gap: 5px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 14px;
     padding: 10px 25px 0;
 }
 
@@ -561,7 +563,7 @@ body {
 .equipment-info .data-value {
     min-width: 0;
     color: #1e293b;
-    font-weight: 500;
+    font-weight: 200;
     display: inline-flex;
     align-items: center;
     flex-wrap: wrap;

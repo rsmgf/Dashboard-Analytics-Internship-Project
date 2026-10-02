@@ -290,10 +290,25 @@ html {
     flex-shrink: 0;
 }
 
+/* Warna teks status: merah = masih dijadwalkan, hijau = sudah dikerjakan, orange = belum dikerjakan */
+.status-text-due {
+    color: #dc2626 !important;
+}
+
+.status-text-done {
+    color: #15803d !important;
+}
+
+.status-text-warning {
+    color: #ea580c !important;
+}
+
 .genset-meta {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 14px;
     padding: 8px 20px 0;
     font-size: 0.72rem;
     color: #64748b;
@@ -308,7 +323,7 @@ html {
 }
 
 .genset-meta-item i {
-    color: #7c3aed;
+    color: #2563eb;
     font-size: 13px;
     line-height: 1.5;
     flex-shrink: 0;

@@ -184,9 +184,9 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="tanggal_pm">Tanggal PM <span class="required">*</span></label>
+                                <label for="tanggal_pm">Tanggal PM</label>
                                 <input type="date" id="tanggal_pm" name="tanggal_pm" class="form-control"
-                                    value="{{ old('tanggal_pm') }}" required>
+                                    value="{{ old('tanggal_pm') }}">
                                 <small class="upload-info">Jadwal Pemeliharaan (PM) rutin disarankan setiap 6 bulan sekali.</small>
                                 @error('tanggal_pm')<div style="color:#ef4444;font-size:0.8rem;margin-top:4px;">{{ $message }}</div>@enderror
                             </div>
@@ -391,7 +391,8 @@
                 const dot  = document.getElementById('statusDot');
                 const text = document.getElementById('statusText');
                 if (!val) {
-                    dot.style.background  = '#94a3b8';
+                    dot.style.background  = '#ea580c';
+                    text.style.color = '#ea580c';
                     text.textContent = 'Belum PM';
                     return;
                 }
@@ -400,10 +401,12 @@
                 const diffMs   = now - pm;
                 const diffMonth = diffMs / (1000 * 60 * 60 * 24 * 30);
                 if (diffMonth >= 6) {
-                    dot.style.background  = '#f59e0b';
+                    dot.style.background  = '#dc2626';
+                    text.style.color = '#dc2626';
                     text.textContent = 'Jadwal PM';
                 } else {
                     dot.style.background  = '#10b981';
+                    text.style.color = '#15803d';
                     text.textContent = 'Sudah PM';
                 }
             }

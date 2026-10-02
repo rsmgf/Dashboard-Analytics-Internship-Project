@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Card KWH - PLN Icon Plus</title>
+    <title>Kartu kWh - PLN Icon Plus</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
@@ -60,7 +60,7 @@
 
                             <div class="rectifier-information">
                                 <div class="equipment-info">
-                                    <span class="info-label">Type POP</span>
+                                    <span class="info-label">Tipe POP</span>
                                     <span class="info-sep">:</span>
                                     <span class="data-value">{{ $kwh->pop->tipe_pop ?? '-' }}</span>
                                 </div>
@@ -88,20 +88,18 @@
 
                             <div class="rectifier-meta">
                                 <div class="meta-item">
-                                    <i class="bi bi-person-fill"></i>
-                                    <span>{{ $kwh->pic }}</span>
+                                    <i class="bi bi-calendar-fill"></i>
+                                    <span>{{ $kwh->tanggal_pemeriksaan ? $kwh->tanggal_pemeriksaan->locale('id')->translatedFormat('d M Y') : '-' }}</span>
                                 </div>
                                 <div class="meta-item">
-                                    <i class="bi bi-calendar-fill"></i>
-                                    <span>Terakhir diperiksa pada
-                                        {{ $kwh->tanggal_pemeriksaan->translatedFormat('d M Y') }}</span>
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                    <span>{{ $pop->kota_kabupaten }}</span>
                                 </div>
                             </div>
 
                             <div class="rectifier-last-updated">
                                 <i class="bi bi-clock-history"></i>
-                                <span>Data terakhir diupdate oleh {{ $lastUpdatedBy }} &middot;
-                                    {{ $kwh->updated_at->translatedFormat('d M Y, H:i') }}</span>
+                                <span>{{ $lastUpdatedBy }} &middot; {{ $kwh->updated_at->locale('id')->translatedFormat('d M Y, H.i') }} WIB</span>
                             </div>
 
                             <div class="rectifier-card-footer">

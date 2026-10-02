@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Card Rectifier - {{ $pop->nama_pop_display }} - PLN Icon Plus</title>
+    <title>Kartu Rectifier - {{ $pop->nama_pop_display }} - PLN Icon Plus</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
@@ -95,7 +95,7 @@
                                     <span class="data-value">{{ $rectifier->merk ?? '-' }}</span>
                                 </div>
                                 <div class="equipment-info">
-                                    <span class="info-label">Type</span>
+                                    <span class="info-label">Tipe</span>
                                     <span class="info-sep">:</span>
                                     <span class="data-value">{{ $rectifier->type ?? '-' }}</span>
                                 </div>
@@ -116,16 +116,16 @@
                                 </div>
                             </div>
 
-                            {{-- Meta: PIC & Tanggal Pemeriksaan --}}
+                            {{-- Meta: Tanggal Pemeriksaan & Lokasi --}}
                             <div class="rectifier-meta">
-                                <div class="meta-item">
-                                    <i class="bi bi-person-fill"></i>
-                                    <span>{{ $rectifier->pic ?? '-' }}</span>
-                                </div>
-
                                 <div class="meta-item">
                                     <i class="bi bi-calendar-fill"></i>
                                     <span>{{ $rectifier->tanggal_pemeriksaan ? \Carbon\Carbon::parse($rectifier->tanggal_pemeriksaan)->locale('id')->translatedFormat('d M Y') : '-' }}</span>
+                                </div>
+
+                                <div class="meta-item">
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                    <span>{{ $pop->kota_kabupaten }}</span>
                                 </div>
                             </div>
 
@@ -134,7 +134,7 @@
                                 <i class="bi bi-clock-history"></i>
                                 <span>
                                     @if($rectifier->diupdateOleh)
-                                        {{ $rectifier->diupdateOleh->name }} &middot; {{ $rectifier->updated_at->locale('id')->translatedFormat('d M Y, H:i') }} WIB
+                                        {{ $rectifier->diupdateOleh->name }} &middot; {{ $rectifier->updated_at->locale('id')->translatedFormat('d M Y, H.i') }} WIB
                                     @else
                                         Belum ada pembaruan
                                     @endif
