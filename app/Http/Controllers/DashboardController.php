@@ -28,8 +28,12 @@ class DashboardController extends Controller
                 ->get();
         }
 
+        $mapPops = Pop::whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->get(['id', 'kode_pop', 'nama_pop', 'kota_kabupaten', 'latitude', 'longitude', 'tipe_pop', 'jenis_bangunan']);
+
         return view('dashboard', array_merge(
-            compact('totalPop', 'canFilter', 'canEkspor', 'latestStatusNotifications'),
+            compact('totalPop', 'canFilter', 'canEkspor', 'latestStatusNotifications', 'mapPops'),
             $kpi,
             [
                 'totalPendingApproval' => $this->pendingApprovalCount(),

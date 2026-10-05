@@ -1377,98 +1377,23 @@
             }
         }
 
-        //peta provinsi jambi
-        const mapPopData = [{
-                pop: 'POP_PAYOSELINCAH',
-                name: 'POP Payo Selincah',
-                lat: -1.608,
-                lng: 103.614,
-                device: 'ac',
-                status: 'good',
-                kab: 'Kota Jambi'
-            },
-            {
-                pop: 'POP_1MRB001',
-                name: 'POP Muara Bulian',
-                lat: -1.725,
-                lng: 103.250,
-                device: 'battery',
-                status: 'warning',
-                kab: 'Batanghari'
-            },
-            {
-                pop: 'POP_1JMB10007',
-                name: 'POP Telanaipura',
-                lat: -1.625,
-                lng: 103.600,
-                device: 'rectifier',
-                status: 'good',
-                kab: 'Kota Jambi'
-            },
-            {
-                pop: 'POP_1MRT10000',
-                name: 'POP Muara Tembesi',
-                lat: -1.720,
-                lng: 103.120,
-                device: 'kwh',
-                status: 'good',
-                kab: 'Batanghari'
-            },
-            {
-                pop: 'POP_1MBN002',
-                name: 'POP Muara Bungo',
-                lat: -1.490,
-                lng: 102.120,
-                device: 'genset',
-                status: 'warning',
-                kab: 'Bungo'
-            },
-            {
-                pop: 'POP_1SRL001',
-                name: 'POP Sarolangun 01',
-                lat: -2.300,
-                lng: 102.650,
-                device: 'rectifier',
-                status: 'alert',
-                kab: 'Sarolangun'
-            },
-            {
-                pop: 'POP_1KRN001',
-                name: 'POP Kerinci/Sungai Penuh',
-                lat: -2.060,
-                lng: 101.400,
-                device: 'battery',
-                status: 'good',
-                kab: 'Kerinci'
-            },
-            {
-                pop: 'POP_1KBL001',
-                name: 'POP Kuala Tungkal',
-                lat: -0.816,
-                lng: 103.460,
-                device: 'genset',
-                status: 'good',
-                kab: 'Tanjung Jabung Barat'
-            },
-            {
-                pop: 'POP_1MSB001',
-                name: 'POP Muara Sabak',
-                lat: -1.130,
-                lng: 103.850,
-                device: 'ac',
-                status: 'good',
-                kab: 'Tanjung Jabung Timur'
-            },
-            {
-                pop: 'POP_1BGK001',
-                name: 'POP Bangko',
-                lat: -2.070,
-                lng: 102.260,
-                device: 'rectifier',
-                status: 'alert',
-                kab: 'Merangin'
-            }
-        ];
+        // Data peta titik POP provinsi jambi (hanya menampilkan POP nyata yang memiliki koordinat)
+        @php
+            $realMapPops = ($mapPops ?? collect())->map(function($p) {
+                return [
+                    'id'       => $p->id,
+                    'pop'      => $p->kode_pop,
+                    'name'     => $p->nama_pop_display,
+                    'lat'      => (float) $p->latitude,
+                    'lng'      => (float) $p->longitude,
+                    'device'   => 'pop',
+                    'status'   => 'good',
+                    'kab'      => $p->kota_kabupaten ?? '-',
+                    'building' => $p->jenis_bangunan ?? '-',
+                ];
+            })->values()->all();
+        @endphp
+        const mapPopData = @json($realMapPops);
 
         function initJambiMap() {
             const mapElement = document.getElementById('jambiMap');
@@ -1505,7 +1430,7 @@
                         <span>Kode: ${item.pop}</span>
                         <small>Wilayah: ${item.kab}</small>
                         <span class="popup-status ${item.status}">Status: ${item.status.toUpperCase()}</span>
-                        <button type="button" onclick="viewPopDetail('${item.pop}')">Lihat Detail</button>
+                        <button type="button" onclick="viewPopDetail('${item.id || item.pop}')">Lihat Detail</button>
                     </div>
                 `);
 

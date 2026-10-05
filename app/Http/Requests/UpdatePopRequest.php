@@ -23,6 +23,8 @@ class UpdatePopRequest extends FormRequest
             'kota_kabupaten' => 'required|string',
             'tipe_pop'       => 'nullable|in:POP-SB,POP-A,POP-B,POP-D',
             'jenis_bangunan' => 'nullable|in:Shelter,Shelter CKD,Shelter Permanen,Mini Shelter,ODC,Mini POP,Mikro POP,OLT Gantung',
+            'latitude'       => 'nullable|numeric|between:-90,90',
+            'longitude'      => 'nullable|numeric|between:-180,180',
         ];
     }
 
@@ -35,6 +37,8 @@ class UpdatePopRequest extends FormRequest
             'kota_kabupaten' => 'Kota / Kabupaten',
             'tipe_pop'       => 'Tipe POP',
             'jenis_bangunan' => 'Jenis Bangunan',
+            'latitude'       => 'Latitude',
+            'longitude'      => 'Longitude',
         ];
     }
 
@@ -48,6 +52,10 @@ class UpdatePopRequest extends FormRequest
             'kota_kabupaten.required' => 'Kota/Kabupaten wajib dipilih.',
             'tipe_pop.in'             => 'Pilihan Tipe POP tidak valid. Harus salah satu dari: POP-SB, POP-A, POP-B, POP-D.',
             'jenis_bangunan.in'       => 'Pilihan Jenis Bangunan tidak valid.',
+            'latitude.numeric'        => 'Latitude harus berupa angka/desimal.',
+            'latitude.between'        => 'Nilai Latitude harus antara -90 sampai 90.',
+            'longitude.numeric'       => 'Longitude harus berupa angka/desimal.',
+            'longitude.between'       => 'Nilai Longitude harus antara -180 sampai 180.',
         ];
     }
 }

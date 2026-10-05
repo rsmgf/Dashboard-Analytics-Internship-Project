@@ -151,6 +151,26 @@
                                 @enderror
                             </div>
 
+                            <div class="add-pop-group">
+                                <label for="latitude">Latitude</label>
+                                <input type="text" id="latitude" name="latitude" inputmode="decimal"
+                                    class="add-pop-input {{ $errors->has('latitude') ? 'is-invalid' : '' }}"
+                                    value="{{ old('latitude', $pop->latitude) }}" placeholder="Contoh: -1.610122" autocomplete="off">
+                                @error('latitude')
+                                    <span class="add-pop-error">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div class="add-pop-group">
+                                <label for="longitude">Longitude</label>
+                                <input type="text" id="longitude" name="longitude" inputmode="decimal"
+                                    class="add-pop-input {{ $errors->has('longitude') ? 'is-invalid' : '' }}"
+                                    value="{{ old('longitude', $pop->longitude) }}" placeholder="Contoh: 103.613120" autocomplete="off">
+                                @error('longitude')
+                                    <span class="add-pop-error">{{ $message }}</span>
+                                @enderror
+                            </div>
+
                         </div>{{-- /.add-pop-form-grid --}}
 
                         <div class="add-pop-actions">
