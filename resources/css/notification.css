@@ -1,9 +1,3 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
 body {
     font-family: 'Poppins', sans-serif;
     background-color: #f8fafc;
@@ -88,10 +82,7 @@ body {
     gap: 6px;
     position: relative;
     bottom: -1.5px;
-<<<<<<< HEAD
     /* Menutupi garis bawah card */
-=======
->>>>>>> 6e0e5c5457c7e0131e065c7f1c2e1ef379cf7015
 }
 
 .tab-btn {
@@ -120,10 +111,7 @@ body {
     font-weight: 700;
     border-color: #7dd3fc;
     border-bottom: 2px solid #ffffff;
-<<<<<<< HEAD
     /* Buka penutup border dasar */
-=======
->>>>>>> 6e0e5c5457c7e0131e065c7f1c2e1ef379cf7015
 }
 
 .notif-tab-pane {
@@ -132,18 +120,15 @@ body {
 
 .notif-tab-pane.active {
     display: block;
-    animation: fadeIn 0.3s ease-in-out;
+    animation: notifFadeIn 0.3s ease-in-out;
 }
 
-@keyframes fadeIn {
+@keyframes notifFadeIn {
     from {
         opacity: 0;
         transform: translateY(4px);
     }
-<<<<<<< HEAD
 
-=======
->>>>>>> 6e0e5c5457c7e0131e065c7f1c2e1ef379cf7015
     to {
         opacity: 1;
         transform: translateY(0);
@@ -188,26 +173,27 @@ body {
     font-size: 1.35rem;
 }
 
-<<<<<<< HEAD
 /* Warna Varian Ikon */
-=======
->>>>>>> 6e0e5c5457c7e0131e065c7f1c2e1ef379cf7015
-.bg-icon-red {
+.bg-icon-red,
+.notif-icon-box.notif-red {
     background-color: #fee2e2;
     color: #dc2626;
 }
 
-.bg-icon-orange {
+.bg-icon-orange,
+.notif-icon-box.notif-yellow {
     background-color: #fef3c7;
     color: #d97706;
 }
 
-.bg-icon-blue {
+.bg-icon-blue,
+.notif-icon-box.notif-blue {
     background-color: #e0f2fe;
     color: #0284c7;
 }
 
-.bg-icon-purple {
+.bg-icon-purple,
+.notif-icon-box.notif-purple {
     background-color: #f3e8ff;
     color: #7c3aed;
 }
@@ -233,13 +219,14 @@ body {
     font-size: 0.95rem;
     font-weight: 700;
     color: #0284c7;
-    margin-bottom: 3px;
+    margin: 0 0 3px;
     word-break: break-word;
 }
 
 .notif-subtitle {
     font-size: 0.85rem;
     color: #64748b;
+    margin: 0;
     line-height: 1.4;
     word-break: break-word;
 }
@@ -292,7 +279,8 @@ body {
     border: 1px solid #7dd3fc;
 }
 
-.notif-time {
+.notif-info-col .notif-time {
+    display: block;
     font-size: 0.85rem;
     font-weight: 600;
     color: #0369a1;
@@ -303,6 +291,10 @@ body {
     font-size: 1.15rem;
     color: #94a3b8;
     transition: all 0.2s ease;
+}
+
+.notif-row.read .notif-title {
+    color: #64748b;
 }
 
 .notif-row:hover .notif-arrow {

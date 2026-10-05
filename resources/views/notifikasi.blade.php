@@ -170,7 +170,7 @@
             return;
         }
 
-        const dot = item.querySelector('.unread-dot') || item.querySelector('.has-dot');
+        const dot = item.querySelector('.has-dot');
         
         // AJAX call to mark as read
         fetch(`/notifications/${notifId}/mark-as-read`, {
@@ -182,15 +182,7 @@
             }
         }).then(res => res.json()).then(data => {
             if (data.success) {
-                if (dot) {
-                    if (dot.classList.contains('has-dot')) {
-                        dot.classList.remove('has-dot');
-                    } else {
-                        dot.style.opacity = '0';
-                        dot.style.transform = 'scale(0)';
-                        setTimeout(() => dot.remove(), 300);
-                    }
-                }
+                if (dot) dot.classList.remove('has-dot');
                 item.classList.add('read');
             }
             processNavigation();
