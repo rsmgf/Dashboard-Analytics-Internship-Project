@@ -100,6 +100,10 @@ class Notification extends Model
             'jadwal_uji' => 'badge-jadwal-uji',
             'belum_pm'   => 'badge-belum-uji',
             'jadwal_pm'  => 'badge-jadwal-uji',
+            'very_healthy'  => 'badge-very-healthy',
+            'healthy'       => 'badge-healthy',
+            'unhealthy'     => 'badge-unhealthy',
+            'very_unhealthy' => 'badge-very-unhealthy',
             default      => '',
         };
     }
@@ -116,6 +120,10 @@ class Notification extends Model
             'jadwal_uji' => 'JADWAL UJI',
             'belum_pm'   => 'BELUM PM',
             'jadwal_pm'  => 'JADWAL PM',
+            'very_healthy'   => 'VERY HEALTHY',
+            'healthy'        => 'HEALTHY',
+            'unhealthy'      => 'UNHEALTHY',
+            'very_unhealthy' => 'VERY UNHEALTHY',
             default      => '',
         };
     }
@@ -139,13 +147,13 @@ class Notification extends Model
             ->where('utilisasi', '>', 50)
             ->get()
             ->each(function ($r) use (&$activeItems) {
-                $severity = $r->utilisasi > 70 ? 'alert' : 'warning';
+                $severity = $r->utilisasi >= 80 ? 'alert' : 'warning';
                 $activeItems->push([
                     'device_type' => 'rectifier',
                     'device_id'   => $r->id,
                     'pop_id'      => $r->pop_id,
                     'pop_kode'    => $r->pop?->kode_pop,
-                    'device_label'=> $r->nomor_recti ?? 'Rectifier #' . $r->id,
+                    'device_label' => $r->nomor_recti ?? 'Rectifier #' . $r->id,
                     'severity'    => $severity,
                     'title'       => 'Rectifier - ' . ($r->pop?->kode_pop ?? 'N/A'),
                     'message'     => 'Utilisasi ' . number_format($r->utilisasi, 1) . '% — ' . ($severity === 'alert' ? 'di atas batas kritis' : 'melebihi ambang normal'),
@@ -164,10 +172,10 @@ class Notification extends Model
                     'device_id'   => $b->id,
                     'pop_id'      => $b->pop_id,
                     'pop_kode'    => $b->pop?->kode_pop,
-                    'device_label'=> 'Bank ' . ($b->nomor_bank ?? $b->id),
+                    'device_label' => 'Bank ' . ($b->nomor_bank ?? $b->id),
                     'severity'    => $severity,
                     'title'       => 'Battery - ' . ($b->pop?->kode_pop ?? 'N/A'),
-                    'message'     => 'Performa baterai: ' . str_replace(['1-','2-','3-','4-'], '', $b->performa_baterai),
+                    'message'     => 'Performa baterai: ' . str_replace(['1-', '2-', '3-', '4-'], '', $b->performa_baterai),
                 ]);
             });
 
@@ -181,7 +189,7 @@ class Notification extends Model
                     'device_id'   => $b->id,
                     'pop_id'      => $b->pop_id,
                     'pop_kode'    => $b->pop?->kode_pop,
-                    'device_label'=> 'Bank ' . ($b->nomor_bank ?? $b->id),
+                    'device_label' => 'Bank ' . ($b->nomor_bank ?? $b->id),
                     'severity'    => $severity,
                     'title'       => 'Battery - ' . ($b->pop?->kode_pop ?? 'N/A'),
                     'message'     => $b->status_uji_label . ($b->tanggal_uji_terakhir ? ' · Uji terakhir: ' . $b->tanggal_uji_terakhir->format('d M Y') : ''),
@@ -198,7 +206,7 @@ class Notification extends Model
                     'device_id'   => $ac->id,
                     'pop_id'      => $ac->pop_id,
                     'pop_kode'    => $ac->pop?->kode_pop,
-                    'device_label'=> 'AC-' . ($ac->nomor_ac ?? $ac->id),
+                    'device_label' => 'AC-' . ($ac->nomor_ac ?? $ac->id),
                     'severity'    => $severity,
                     'title'       => 'AC - ' . ($ac->pop?->kode_pop ?? 'N/A'),
                     'message'     => $ac->status_pm['status'] . ($ac->status_pm['text'] !== '-' ? ' ' . $ac->status_pm['text'] : ''),
@@ -215,12 +223,48 @@ class Notification extends Model
                     'device_id'   => $g->id,
                     'pop_id'      => $g->pop_id,
                     'pop_kode'    => $g->pop?->kode_pop,
-                    'device_label'=> 'Genset-' . ($g->nomor_genset ?? $g->id),
+                    'device_label' => 'Genset-' . ($g->nomor_genset ?? $g->id),
                     'severity'    => $severity,
                     'title'       => 'Genset - ' . ($g->pop?->kode_pop ?? 'N/A'),
                     'message'     => $g->status_pm['status'] . ($g->status_pm['text'] !== '-' ? ' ' . $g->status_pm['text'] : ''),
                 ]);
             });
+
+        // Healthy Index dihitung per Rectifier.
+        // Data yang belum lengkap tidak menghasilkan notifikasi indeks.
+        $healthyIndexService = app(\App\Services\HealthyIndexService::class);
+
+        $healthyIndexPops = \App\Models\Pop::with([
+            'rectifiers.batteries',
+            'kwhs',
+            'acs',
+            'gensets',
+        ])->get();
+
+        foreach ($healthyIndexPops as $pop) {
+            $indexData = $healthyIndexService->calculateForPop($pop);
+
+            foreach ($indexData['rectifiers'] as $index) {
+                if ($index['score'] === null) {
+                    continue;
+                }
+
+                $activeItems->push([
+                    'device_type' => 'rectifier',
+                    'device_id'   => $index['rectifier_id'],
+                    'pop_id'      => $pop->id,
+                    'pop_kode'    => $pop->kode_pop,
+                    'device_label' => $index['rectifier_name'],
+                    'severity'    => $index['status_key'],
+                    'title'       => 'Healthy Index - ' . $pop->kode_pop,
+                    'message'     => $index['rectifier_name']
+                        . ' memperoleh '
+                        . rtrim(rtrim(number_format($index['score'], 2, ',', '.'), '0'), ',')
+                        . '/100 poin — '
+                        . $index['status_label'],
+                ]);
+            }
+        }
 
         $existingNotifs = static::where('category', 'status')->get();
         $toKeepIds = [];

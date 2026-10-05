@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detail Air Conditioner - PLN Icon Plus</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
-    @vite([
-        'resources/css/sidebar.css',
-        'resources/css/ac-detail.css'
-    ])
+    @vite(['resources/css/sidebar.css', 'resources/css/ac-detail.css'])
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body>
+
+<body
+    class="{{ (session('active_role') ?? (auth()->user()?->hasRole('manajer') ? 'manajer' : 'super_admin')) === 'manajer' ? 'manajer-mode' : '' }}">
     <div class="app-container">
         <x-sidebar />
         <div id="sidebarOverlay" class="sidebar-overlay"></div>
@@ -28,15 +28,19 @@
                         </a>
                         <x-breadcrumb :items="[
                             ['label' => 'POP', 'route' => 'pops.index'],
-                            ['label' => $pop->nama_pop_display . ': AC', 'route' => 'acs.index', 'params' => ['pop' => $pop->id]],
+                            [
+                                'label' => $pop->nama_pop_display . ': AC',
+                                'route' => 'acs.index',
+                                'params' => ['pop' => $pop->id],
+                            ],
                             ['label' => $ac->nomor_ac],
                         ]" />
                     </div>
                     <div>
                         @can('acs.index.update')
-                        <a href="{{ route('acs.edit', [$pop->id, $ac->id]) }}" class="btn-edit-form">
-                            <i class="bi bi-pencil-fill"></i> Edit Form
-                        </a>
+                            <a href="{{ route('acs.edit', [$pop->id, $ac->id]) }}" class="btn-edit-form">
+                                <i class="bi bi-pencil-fill"></i> Edit Form
+                            </a>
                         @endcan
                     </div>
                 </div>
@@ -47,8 +51,9 @@
                     <span>
                         Terakhir diperbarui:
                         <strong>
-                            @if($ac->diupdateOleh)
-                                {{ $ac->diupdateOleh->name }} &middot; {{ $ac->updated_at->translatedFormat('d F Y, H:i') }} WIB
+                            @if ($ac->diupdateOleh)
+                                {{ $ac->diupdateOleh->name }} &middot;
+                                {{ $ac->updated_at->translatedFormat('d F Y, H:i') }} WIB
                             @else
                                 {{ $ac->updated_at ? $ac->updated_at->translatedFormat('d F Y, H:i') . ' WIB' : 'Belum ada data pembaruan' }}
                             @endif
@@ -117,16 +122,17 @@
                                     <div class="checklist-label">Tanggal Terakhir PM</div>
                                     <div class="checklist-field">
                                         @php
-                                            $status     = $ac->status_ac ?? 'Belum PM';
-                                            $badgeClass = match($status) {
-                                                'Sudah PM'  => 'status-excellent',
+                                            $status = $ac->status_ac ?? 'Belum PM';
+                                            $badgeClass = match ($status) {
+                                                'Sudah PM' => 'status-excellent',
                                                 'Jadwal PM' => 'status-warning',
-                                                default     => 'status-neutral',
+                                                default => 'status-neutral',
                                             };
                                         @endphp
                                         {{ $ac->tanggal_terakhir_pm ? $ac->tanggal_terakhir_pm->translatedFormat('d F Y') : '-' }}
                                         &nbsp;
-                                        <span class="status-badge {{ $badgeClass }}">{{ strtoupper($status) }}</span>
+                                        <span
+                                            class="status-badge {{ $badgeClass }}">{{ strtoupper($status) }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -137,9 +143,10 @@
                             <h3 class="form-section-title">Photo Air Conditioner</h3>
                             <div class="detail-photo-box">
                                 @if ($ac->photo_ac)
-                                    <img src="{{ asset('storage/' . $ac->photo_ac) }}" alt="Foto Kondisi AC" id="detailPhoto"
-                                         onclick="Swal.fire({ title: '{{ addslashes($ac->keterangan_gambar_ac ?? 'Foto AC') }}', imageUrl: this.src, imageAlt: 'Foto AC', showCloseButton: true, showConfirmButton: false, width: 'auto', customClass: { popup: 'swal-popup-custom' } })"
-                                         title="Klik untuk melihat ukuran penuh">
+                                    <img src="{{ asset('storage/' . $ac->photo_ac) }}" alt="Foto Kondisi AC"
+                                        id="detailPhoto"
+                                        onclick="Swal.fire({ title: '{{ addslashes($ac->keterangan_gambar_ac ?? 'Foto AC') }}', imageUrl: this.src, imageAlt: 'Foto AC', showCloseButton: true, showConfirmButton: false, width: 'auto', customClass: { popup: 'swal-popup-custom' } })"
+                                        title="Klik untuk melihat ukuran penuh">
                                 @else
                                     <div id="noDetailPhoto" class="no-preview">
                                         <i class="bi bi-image" style="font-size: 2.5rem; color: #94a3b8;"></i>
@@ -148,10 +155,10 @@
                                 @endif
                             </div>
                             @if ($ac->keterangan_gambar_ac)
-                            <div class="detail-item mt-3">
-                                <span class="detail-label">Keterangan Gambar</span>
-                                <span class="detail-value">{{ $ac->keterangan_gambar_ac }}</span>
-                            </div>
+                                <div class="detail-item mt-3">
+                                    <span class="detail-label">Keterangan Gambar</span>
+                                    <span class="detail-value">{{ $ac->keterangan_gambar_ac }}</span>
+                                </div>
                             @endif
                         </div>
 
@@ -162,4 +169,5 @@
         </main>
     </div>
 </body>
+
 </html>

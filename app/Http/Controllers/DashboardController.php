@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\Battery;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
+use App\Services\HealthyIndexService;
 
 class DashboardController extends Controller
 {
@@ -18,9 +19,39 @@ class DashboardController extends Controller
         $canFilter = auth()->user()->can('dashboard.filter');
         $canEkspor = auth()->user()->can('dashboard.ekspor');
         $kpi = $this->kpiSummary();
+        $healthyIndexService = app(HealthyIndexService::class);
+
+        $healthyIndexPops = Pop::whereRaw('LOWER(provinsi) LIKE ?', ['%jambi%'])
+            ->with([
+                'rectifiers.batteries',
+                'kwhs',
+                'acs',
+                'gensets',
+            ])
+            ->get()
+            ->map(fn(Pop $pop) => $healthyIndexService->calculateForPop($pop))
+            ->values();
+
+        $rectifierHealthStatuses = $healthyIndexPops
+            ->flatMap(fn(array $pop) => $pop['rectifiers'] ?? [])
+            ->filter(fn(array $index) => $index['score'] !== null)
+            ->pluck('status_key');
+
+        $totalRectifierHealthy = $rectifierHealthStatuses
+            ->filter(fn(string $status) => in_array($status, ['very_healthy', 'healthy'], true))
+            ->count();
+
+        $totalRectifierUnhealthy = $rectifierHealthStatuses
+            ->filter(fn(string $status) => in_array($status, ['unhealthy', 'very_unhealthy'], true))
+            ->count();
+
+        $totalRectifierWithHealthyIndex = $rectifierHealthStatuses->count();
 
         $latestStatusNotifications = collect();
-        if (session('active_role') === 'manajer' || auth()->user()->hasRole('manajer')) {
+        $activeRole = session('active_role')
+            ?? (auth()->user()->hasRole('manajer') ? 'manajer' : 'super_admin');
+
+        if (in_array($activeRole, ['manajer', 'super_admin'], true)) {
             \App\Models\Notification::regenerateStatus();
             $latestStatusNotifications = \App\Models\Notification::status()
                 ->orderBy('created_at', 'desc')
@@ -34,6 +65,10 @@ class DashboardController extends Controller
             [
                 'totalPendingApproval' => $this->pendingApprovalCount(),
                 'populasiPop'          => $this->popPopulation(),
+                'healthyIndexPops' => $healthyIndexPops,
+                'totalRectifierHealthy' => $totalRectifierHealthy,
+                'totalRectifierUnhealthy' => $totalRectifierUnhealthy,
+                'totalRectifierWithHealthyIndex' => $totalRectifierWithHealthyIndex,
             ]
         ));
     }
@@ -97,79 +132,161 @@ class DashboardController extends Controller
      */
     private function buildDeviceStatus(): array
     {
-        $pops = Pop::with(['rectifiers', 'kwhs', 'batteries', 'acs', 'gensets'])->get();
+        $pops = Pop::with([
+            'rectifiers',
+            'kwhs',
+            'batteries',
+            'acs',
+            'gensets',
+        ])->get();
 
-        // SESUAIKAN: relasi, sumber status, dan label unit per perangkat
         $config = [
             'rectifier' => [
-                'rel'   => 'rectifiers',
+                'rel' => 'rectifiers',
                 'level' => fn($d) => $this->normalizeLevel($d->status_utilisasi),
-                'unit'  => fn($d) => $d->nomor_recti ?? $d->nama_alias ?? '-',
+                'unit' => fn($d) => $d->nomor_recti ?? $d->nama_alias ?? '-',
+                'sort_value' => fn($d) => $d->utilisasi !== null
+                    ? (float) $d->utilisasi
+                    : null,
             ],
             'kwh' => [
-                'rel'   => 'kwhs',
+                'rel' => 'kwhs',
                 'level' => fn($d) => $this->normalizeLevel($d->status_utilisasi),
-                'unit'  => fn($d) => $d->nomor_kwh ?? '-',
+                'unit' => fn($d) => $d->nomor_kwh ?? '-',
+                'sort_value' => fn($d) => $d->persentase_utilisasi !== null
+                    ? (float) $d->persentase_utilisasi
+                    : null,
             ],
             'ac' => [
-                'rel'   => 'acs',
+                'rel' => 'acs',
                 'level' => fn($d) => match ($d->status_pm['class'] ?? null) {
                     'pm-badge-success' => 'sudah_pm',
                     'pm-badge-warning' => 'jadwal_pm',
-                    'pm-badge-danger'  => 'belum_pm',
+                    'pm-badge-danger' => 'belum_pm',
                     default => 'belum_pm',
                 },
-                'unit'  => fn($d) => $d->nomor_ac ?? '-',
-                'statuses' => ['sudah_pm' => [], 'jadwal_pm' => [], 'belum_pm' => []]
+                'unit' => fn($d) => $d->nomor_ac ?? '-',
+                'sort_value' => fn($d) => $d->pm_berikutnya?->timestamp,
+                'statuses' => [
+                    'sudah_pm' => [],
+                    'jadwal_pm' => [],
+                    'belum_pm' => [],
+                ],
             ],
             'genset' => [
-                'rel'   => 'gensets',
+                'rel' => 'gensets',
                 'level' => fn($d) => match ($d->status_pm['class'] ?? null) {
                     'pm-badge-success' => 'sudah_pm',
                     'pm-badge-warning' => 'jadwal_pm',
-                    'pm-badge-danger'  => 'belum_pm',
+                    'pm-badge-danger' => 'belum_pm',
                     default => 'belum_pm',
                 },
-                'unit'  => fn($d) => $d->nomor_genset ?? '-',
-                'statuses' => ['sudah_pm' => [], 'jadwal_pm' => [], 'belum_pm' => []]
+                'unit' => fn($d) => $d->nomor_genset ?? '-',
+                'sort_value' => fn($d) => $d->pm_berikutnya?->timestamp,
+                'statuses' => [
+                    'sudah_pm' => [],
+                    'jadwal_pm' => [],
+                    'belum_pm' => [],
+                ],
             ],
         ];
 
         $result = [];
 
         foreach ($config as $key => $cfg) {
-            $result[$key] = $cfg['statuses'] ?? ['good' => [], 'warning' => [], 'alert' => []];
+            $result[$key] = $cfg['statuses'] ?? [
+                'good' => [],
+                'warning' => [],
+                'alert' => [],
+            ];
 
             foreach ($pops as $pop) {
-                foreach ($pop->{$cfg['rel']} as $device) {
+                $devices = $pop->{$cfg['rel']};
+                $showDeviceId = in_array($key, ['rectifier', 'ac'], true)
+                    && $devices->count() > 1;
+
+                foreach ($devices as $device) {
                     $level = ($cfg['level'])($device);
 
                     $result[$key][$level][] = [
-                        'pop_id'   => $pop->id,
-                        'kode'     => $pop->kode_pop,
-                        'pop_name' => $pop->nama_pop,
-                        'location' => $pop->kota_kabupaten,
-                        'unit'     => (string) ($cfg['unit'])($device),
-                        'device_id'=> $device->id,
+                        'pop_id' => $pop->id,
+                        'kode' => $pop->kode_pop,
+                        'pop_name' => $pop->nama_pop_display,
+                        'unit' => (string) ($cfg['unit'])($device),
+                        'show_device_id' => $showDeviceId,
+                        'device_id' => $device->id,
+                        'sort_value' => ($cfg['sort_value'])($device),
                     ];
                 }
             }
         }
 
-        $result['battery'] = ['excellent' => [], 'enough' => [], 'warn' => [], 'alert' => []];
+        $result['battery'] = [
+            'excellent' => [],
+            'enough' => [],
+            'warn' => [],
+            'alert' => [],
+        ];
 
         foreach ($pops as $pop) {
-            foreach ($this->batteryGroups($pop) as $g) {
-                $result['battery'][$g['level']][] = [
-                    'pop_id'   => $pop->id,
-                    'kode'     => $pop->kode_pop,
-                    'pop_name' => $pop->nama_pop,
-                    'location' => $pop->kota_kabupaten,
-                    'unit'     => $g['unit'],
-                    'device_id'=> $g['device_id'] ?? null,
+            foreach ($this->batteryGroups($pop) as $group) {
+                $result['battery'][$group['level']][] = [
+                    'pop_id' => $pop->id,
+                    'kode' => $pop->kode_pop,
+                    'pop_name' => $pop->nama_pop_display,
+                    'unit' => $group['unit'],
+                    'device_id' => $group['device_id'],
+                    'sort_value' => $group['sort_value'],
                 ];
             }
         }
+
+        foreach ($result as $deviceKey => &$statusGroups) {
+            foreach ($statusGroups as $statusKey => &$items) {
+                $descending = match ($deviceKey) {
+                    'rectifier', 'kwh' => in_array($statusKey, ['alert', 'warning'], true),
+                    'battery' => in_array($statusKey, ['excellent', 'enough'], true),
+                    'ac', 'genset' => $statusKey === 'sudah_pm',
+                    default => false,
+                };
+
+                usort($items, function (array $a, array $b) use ($descending): int {
+                    $aValue = $a['sort_value'];
+                    $bValue = $b['sort_value'];
+
+                    // Data tanpa nilai pembanding diletakkan setelah data yang punya nilai.
+                    if ($aValue === null && $bValue !== null) {
+                        return 1;
+                    }
+
+                    if ($aValue !== null && $bValue === null) {
+                        return -1;
+                    }
+
+                    if ($aValue !== null && $bValue !== null) {
+                        $comparison = $aValue <=> $bValue;
+
+                        if ($comparison !== 0) {
+                            return $descending ? -$comparison : $comparison;
+                        }
+                    }
+
+                    // Jika nilainya sama, gunakan nama POP lalu ID perangkat agar urutan stabil.
+                    $popComparison = strcasecmp($a['pop_name'] ?? '', $b['pop_name'] ?? '');
+
+                    return $popComparison !== 0
+                        ? $popComparison
+                        : (($a['device_id'] ?? 0) <=> ($b['device_id'] ?? 0));
+                });
+
+                foreach ($items as &$item) {
+                    unset($item['sort_value']);
+                }
+                unset($item);
+            }
+            unset($items);
+        }
+        unset($statusGroups);
 
         return $result;
     }
@@ -183,7 +300,9 @@ class DashboardController extends Controller
 
             $totalUji = $group->sum('kapasitas_uji');
             $beban = ($rectifier && (float) $rectifier->beban > 0) ? (float) $rectifier->beban : null;
-            $backupTime = ($beban && $totalUji > 0) ? round($totalUji / $beban, 2) : null;
+            $backupTime = ($beban && $totalUji > 0)
+                ? (float) $totalUji / $beban
+                : null;
 
             $performa = Battery::performaBackupClass($backupTime, $beban !== null);
 
@@ -201,8 +320,9 @@ class DashboardController extends Controller
 
             $out[] = [
                 'level'     => $level,
-                'unit'      => ($rectifier?->nomor_recti ?? 'Rectifier') . ' · ' . $backupTime . ' jam',
+                'unit' => $rectifier?->nomor_recti ?? ('Rectifier ' . $rectifierId),
                 'device_id' => $rectifierId,
+                'sort_value' => $backupTime,
             ];
         }
 
@@ -279,8 +399,21 @@ class DashboardController extends Controller
 
         $acs = $pop->acs()->get();
         $gensets = $pop->gensets()->get();
+        $healthyIndex = app(HealthyIndexService::class)->calculateForPop($pop);
 
-        return view('dashboard.partials.pop-summary', compact('pop', 'rectifiers', 'kwhs', 'batteries', 'batteryGroups', 'acs', 'gensets'));
+        return view(
+            'dashboard.partials.pop-summary',
+            compact(
+                'pop',
+                'rectifiers',
+                'kwhs',
+                'batteries',
+                'batteryGroups',
+                'acs',
+                'gensets',
+                'healthyIndex'
+            )
+        );
     }
 
     // Isi dropdown Kota/Kabupaten di panel filter

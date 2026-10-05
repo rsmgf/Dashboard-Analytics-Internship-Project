@@ -28,15 +28,15 @@
             @csrf
             @if ($isManajerMode)
                 <input type="hidden" name="role" value="super_admin">
-                <button type="submit" class="btn-switch-role" title="Beralih ke mode Super Admin">
+                <button type="submit" class="btn-switch-role" title="Beralih ke mode Adminstrator">
                     <i class="bi bi-shield-lock-fill"></i>
-                    <span>Mode Admin</span>
+                    <span>Mode Administrator</span>
                 </button>
             @else
                 <input type="hidden" name="role" value="manajer">
-                <button type="submit" class="btn-switch-role manajer" title="Beralih ke mode Manajer">
+                <button type="submit" class="btn-switch-role manajer" title="Beralih ke mode Executive">
                     <i class="bi bi-person-circle"></i>
-                    <span>Mode Manajer</span>
+                    <span>Mode Executive</span>
                 </button>
             @endif
         </form>
@@ -46,7 +46,7 @@
         @if ($isManajerMode)
             <div class="topbar-role-badge">
                 <i class="bi bi-person-badge-fill"></i>
-                <span>Manajer</span>
+                <span>Executive</span>
             </div>
         @endif
         <span class="user-display-name">

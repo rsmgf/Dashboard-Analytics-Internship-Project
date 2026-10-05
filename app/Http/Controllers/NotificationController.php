@@ -10,10 +10,12 @@ class NotificationController extends Controller
 {
     public function index()
     {
-        $activeRole = session('active_role') ?? (Auth::user()?->hasRole('manajer') ? 'manajer' : 'super_admin');
-        
-        if ($activeRole !== 'manajer') {
-            abort(403, 'Akses ditolak. Fitur notifikasi hanya untuk manajer.');
+        $user = Auth::user();
+        $activeRole = session('active_role')
+            ?? ($user?->hasRole('manajer') ? 'manajer' : 'super_admin');
+
+        if (!in_array($activeRole, ['manajer', 'super_admin'], true)) {
+            abort(403, 'Akses ditolak. Fitur notifikasi hanya untuk manajer dan super admin.');
         }
 
         // Generate status terbaru sebelum menampilkan (bisa dipindah ke scheduler nantinya)

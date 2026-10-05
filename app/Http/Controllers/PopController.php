@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Pop;
@@ -7,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StorePopRequest;
 use App\Http\Requests\UpdatePopRequest;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Services\HealthyIndexService;
 
 class PopController extends Controller
 {
@@ -18,12 +20,28 @@ class PopController extends Controller
         if ($request->has('search')) {
             $search = $request->input('search');
             $query->where('nama_pop', 'like', "%{$search}%")
-                    ->orWhere('kode_pop', 'like', "%{$search}%")
-                    ->orWhere('kota_kabupaten', 'like', "%{$search}%")
-                    ->orWhere('jenis_bangunan', 'like', "%{$search}%");
+                ->orWhere('kode_pop', 'like', "%{$search}%")
+                ->orWhere('kota_kabupaten', 'like', "%{$search}%")
+                ->orWhere('jenis_bangunan', 'like', "%{$search}%");
         }
 
         $pops = $query->paginate(10)->appends($request->query());
+
+        $pops->getCollection()->load([
+            'rectifiers.batteries',
+            'kwhs',
+            'acs',
+            'gensets',
+        ]);
+
+        $healthyIndexService = app(HealthyIndexService::class);
+
+        foreach ($pops as $pop) {
+            $pop->setAttribute(
+                'healthy_index_data',
+                $healthyIndexService->calculateForPop($pop)
+            );
+        }
 
         return view('pop.list-pop', compact('pops'));
     }
@@ -111,9 +129,9 @@ class PopController extends Controller
         $errorMessages = $import->getErrors();
 
         $successMsg = "{$importedCount} data POP berhasil diimport." .
-                      (count($errorMessages) > 0
-                          ? ' ' . count($errorMessages) . ' baris dilewati.'
-                          : ' Semua baris berhasil.');
+            (count($errorMessages) > 0
+                ? ' ' . count($errorMessages) . ' baris dilewati.'
+                : ' Semua baris berhasil.');
 
         return redirect()->route('pops.import')
             ->with('import_success', $successMsg)

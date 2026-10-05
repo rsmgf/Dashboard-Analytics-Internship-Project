@@ -128,6 +128,181 @@
 /* =========================================================
    2. HEADER POP & MODULE SECTION  (pop-summary.blade.php)
    ========================================================= */
+.healthy-index-panel {
+    margin: 20px 0 28px;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #dbe5ef;
+    border-radius: 14px;
+}
+
+.healthy-index-panel-heading,
+.healthy-index-card-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.healthy-index-panel-heading {
+    margin-bottom: 16px;
+}
+
+.healthy-index-panel-heading h3,
+.healthy-index-card-heading h4 {
+    margin: 0;
+    color: #0f3356;
+}
+
+.healthy-index-panel-heading h3 {
+    font-size: 1rem;
+}
+
+.healthy-index-panel-heading p {
+    margin: 5px 0 0;
+    color: #64748b;
+    font-size: 0.82rem;
+}
+
+.healthy-index-total {
+    flex-shrink: 0;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.healthy-index-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+}
+
+.healthy-index-card {
+    min-width: 0;
+    padding: 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: #f8fafc;
+}
+
+.healthy-index-card-heading small {
+    display: block;
+    margin-bottom: 4px;
+    color: #64748b;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+}
+
+.healthy-index-card-heading h4 {
+    font-size: 0.92rem;
+    overflow-wrap: anywhere;
+}
+
+.healthy-index-status {
+    flex-shrink: 0;
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.healthy-index-status.very_healthy {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.healthy-index-status.healthy {
+    background: #d1fae5;
+    color: #047857;
+}
+
+.healthy-index-status.unhealthy {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.healthy-index-status.very_unhealthy {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.healthy-index-status.data_incomplete {
+    background: #e2e8f0;
+    color: #475569;
+}
+
+.healthy-index-score {
+    display: flex;
+    align-items: baseline;
+    gap: 7px;
+    margin: 18px 0 14px;
+}
+
+.healthy-index-score strong {
+    color: #0f3356;
+    font-size: 1.7rem;
+    line-height: 1;
+}
+
+.healthy-index-score span {
+    color: #64748b;
+    font-size: 0.78rem;
+}
+
+.healthy-index-components {
+    display: grid;
+    gap: 8px;
+    padding-top: 12px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.healthy-index-components div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    color: #64748b;
+    font-size: 0.76rem;
+}
+
+.healthy-index-components strong {
+    color: #334155;
+    font-weight: 650;
+    text-align: right;
+}
+
+.healthy-index-incomplete {
+    margin-top: 14px;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 0.8rem;
+}
+
+.healthy-index-incomplete ul {
+    margin: 7px 0 0;
+    padding-left: 18px;
+}
+
+.healthy-index-incomplete li+li {
+    margin-top: 3px;
+}
+
+@media (max-width: 600px) {
+    .healthy-index-panel {
+        padding: 14px;
+    }
+
+    .healthy-index-panel-heading {
+        flex-direction: column;
+    }
+}
+
 .pop-summary-header {
     margin-bottom: 20px;
     padding-bottom: 14px;
