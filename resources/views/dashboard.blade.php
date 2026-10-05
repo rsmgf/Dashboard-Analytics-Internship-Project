@@ -286,6 +286,10 @@
                                             @click="exportPDF('healthyIndexChart', 'Top_10_Healthy_POP'); open = false"><i
                                                 class="bi bi-file-pdf" style="margin-right:8px;"></i> Download
                                             PDF</button>
+                                        <button type="button"
+                                            @click="showDashboardDataTable('healthy'); open = false">
+                                            <i class="bi bi-table" style="margin-right:8px;"></i> Lihat Data Tabel
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -317,6 +321,10 @@
                                             @click="exportPDF('nonHealthyIndexChart', 'Top_10_NonHealthy_POP'); open = false"><i
                                                 class="bi bi-file-pdf" style="margin-right:8px;"></i> Download
                                             PDF</button>
+                                        <button type="button"
+                                            @click="showDashboardDataTable('unhealthy'); open = false">
+                                            <i class="bi bi-table" style="margin-right:8px;"></i> Lihat Data Tabel
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -351,6 +359,10 @@
                                         <button @click="exportPDF('populationBody', 'Populasi_POP'); open = false"><i
                                                 class="bi bi-file-pdf" style="margin-right:8px;"></i> Download
                                             PDF</button>
+                                        <button type="button"
+                                            @click="showDashboardDataTable('population'); open = false">
+                                            <i class="bi bi-table" style="margin-right:8px;"></i> Lihat Data Tabel
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -360,6 +372,18 @@
                                     <canvas id="populasiChart"></canvas>
                                 </div>
                                 <ul id="populasiLegend" class="population-legend"></ul>
+                                <div id="populationDataTablePanel" class="population-data-table-wrap" hidden>
+                                    <table class="population-data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Tipe POP</th>
+                                                <th>Jumlah</th>
+                                                <th>Persentase</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="populasiTableBody"></tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
 
@@ -447,6 +471,9 @@
                                         <button @click="exportPDF('jambiMap', 'Peta_Persebaran_POP'); open = false"><i
                                                 class="bi bi-file-pdf" style="margin-right:8px;"></i> Download
                                             PDF</button>
+                                        <button type="button" @click="showDashboardDataTable('map'); open = false">
+                                            <i class="bi bi-table" style="margin-right:8px;"></i> Lihat Data Tabel
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -469,13 +496,35 @@
         </main>
     </div>
 
+    <div id="dashboardDataTableModal" class="dashboard-data-modal" hidden>
+        <div class="dashboard-data-modal-backdrop" onclick="closeDashboardDataTable()"></div>
+
+        <section class="dashboard-data-modal-panel" role="dialog" aria-modal="true"
+            aria-labelledby="dashboardDataTableTitle">
+            <header class="dashboard-data-modal-header">
+                <h2 id="dashboardDataTableTitle">Data Chart</h2>
+                <button type="button" class="dashboard-data-modal-close" onclick="closeDashboardDataTable()"
+                    aria-label="Tutup tabel">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </header>
+
+            <div class="dashboard-data-table-wrap">
+                <table class="dashboard-data-table">
+                    <thead id="dashboardDataTableHead"></thead>
+                    <tbody id="dashboardDataTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
     {{-- Leaflet JS CDN --}}
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
         /* =========================================================
-                                                                                                                                                                                                                                                                                                                           0. STATE GLOBAL
-                                                                                                                                                                                                                                                                                                                           ========================================================= */
+                                                                                                                                                                                                                                                                                                                                                                                                           0. STATE GLOBAL
+                                                                                                                                                                                                                                                                                                                                                                                                           ========================================================= */
         const carouselState = {};
         let jambiMap = null;
         let markers = [];
@@ -972,6 +1021,48 @@
             } [c]));
         }
 
+        let dashboardTableData = {};
+
+        function showDashboardDataTable(key) {
+            if (key === 'population') {
+                const panel = document.getElementById('populationDataTablePanel');
+
+                if (panel) {
+                    panel.hidden = !panel.hidden;
+                }
+
+                return;
+            }
+
+            const tableData = dashboardTableData[key];
+
+            if (!tableData) {
+                return;
+            }
+
+            document.getElementById('dashboardDataTableTitle').textContent = tableData.title;
+            document.getElementById('dashboardDataTableHead').innerHTML = `
+        <tr>${tableData.headers.map(header => `<th>${escapeHtml(header)}</th>`).join('')}</tr>
+    `;
+
+            document.getElementById('dashboardDataTableBody').innerHTML =
+                tableData.rows.length ?
+                tableData.rows.map(row => `
+                <tr>${row.map(value => `<td>${escapeHtml(value ?? '-')}</td>`).join('')}</tr>
+            `).join('') :
+                `<tr><td colspan="${tableData.headers.length}" class="dashboard-table-empty">
+                Belum ada data untuk ditampilkan.
+            </td></tr>`;
+
+            document.getElementById('dashboardDataTableModal').hidden = false;
+            document.body.classList.add('dashboard-data-modal-open');
+        }
+
+        function closeDashboardDataTable() {
+            document.getElementById('dashboardDataTableModal').hidden = true;
+            document.body.classList.remove('dashboard-data-modal-open');
+        }
+
         function loadDeviceStatus() {
             const container = document.getElementById('deviceStatusGrid');
             if (!container) return;
@@ -1034,24 +1125,24 @@
                 </div>
                 <div class="mini-progress-labels">
                     ${statuses.map(s => `
-                                                                                                                                                                                                                                                    <span class="lbl-${s.key}" title="${s.label}"><i class="bi bi-circle-fill"></i>${Math.round(pct(s.key))}%</span>
-                                                                                                                                                                                                                                                `).join('')}
+                                                                                                                                                                                                                                                                                                                                    <span class="lbl-${s.key}" title="${s.label}"><i class="bi bi-circle-fill"></i>${Math.round(pct(s.key))}%</span>
+                                                                                                                                                                                                                                                                                                                                `).join('')}
                 </div>
             </div>
 
             <div class="device-status-list">
                 ${statuses.map(s => `
-                                                                                                                                                                                                                                                <button type="button" class="status-dropdown-button"
-                                                                                                                                                                                                                                                        data-device="${key}" data-status="${s.key}" ${counts[s.key] === 0 ? 'disabled' : ''}>
-                                                                                                                                                                                                                                                    <span class="status-left">
-                                                                                                                                                                                                                                                        <span class="status-dot ${s.key}"></span>${s.label}
-                                                                                                                                                                                                                                                    </span>
-                                                                                                                                                                                                                                                    <span class="status-right">
-                                                                                                                                                                                                                                                        <span class="status-count">${counts[s.key]}</span>
-                                                                                                                                                                                                                                                        <i class="bi bi-chevron-right"></i>
-                                                                                                                                                                                                                                                    </span>
-                                                                                                                                                                                                                                                </button>
-                                                                                                                                                                                                                                            `).join('')}
+                                                                                                                                                                                                                                                                                                                                <button type="button" class="status-dropdown-button"
+                                                                                                                                                                                                                                                                                                                                        data-device="${key}" data-status="${s.key}" ${counts[s.key] === 0 ? 'disabled' : ''}>
+                                                                                                                                                                                                                                                                                                                                    <span class="status-left">
+                                                                                                                                                                                                                                                                                                                                        <span class="status-dot ${s.key}"></span>${s.label}
+                                                                                                                                                                                                                                                                                                                                    </span>
+                                                                                                                                                                                                                                                                                                                                    <span class="status-right">
+                                                                                                                                                                                                                                                                                                                                        <span class="status-count">${counts[s.key]}</span>
+                                                                                                                                                                                                                                                                                                                                        <i class="bi bi-chevron-right"></i>
+                                                                                                                                                                                                                                                                                                                                    </span>
+                                                                                                                                                                                                                                                                                                                                </button>
+                                                                                                                                                                                                                                                                                                                            `).join('')}
             </div>
         </div>`;
             }).join('');
@@ -1079,9 +1170,9 @@
                 <div class="pop-status-box-header">
                     <div class="pop-status-identity">
                         ${showDeviceId ? `
-                                                        <span class="pop-status-label">${deviceLabel}</span>
-                                                        <strong class="pop-status-device-id">${escapeHtml(item.unit || '-')}</strong>
-                                                    ` : ''}
+                                                                                                                                        <span class="pop-status-label">${deviceLabel}</span>
+                                                                                                                                        <strong class="pop-status-device-id">${escapeHtml(item.unit || '-')}</strong>
+                                                                                                                                    ` : ''}
                         <span class="pop-status-label">Nama POP</span>
                         <strong class="pop-status-name">${escapeHtml(item.pop_name || item.kode || '-')}</strong>
                     </div>
@@ -1511,8 +1602,66 @@
                 });
             }
 
+            const healthyTableHeaders = [
+                'Nama POP',
+                'Kode POP',
+                'Rectifier',
+                'Rectifier (poin)',
+                'kWh (poin)',
+                'Battery (poin)',
+                'AC (poin)',
+                'Genset (poin)',
+                'Total (poin)',
+                'Status',
+            ];
+
+            const toHealthyTableRows = rows => rows.map(row => [
+                row.popName,
+                row.popCode,
+                row.rectifier_name,
+                formatHealthyIndexScore(row.components.rectifier),
+                formatHealthyIndexScore(row.components.kwh),
+                formatHealthyIndexScore(row.components.battery),
+                formatHealthyIndexScore(row.components.ac),
+                formatHealthyIndexScore(row.components.genset),
+                formatHealthyIndexScore(row.score),
+                row.status_label,
+            ]);
+
+            dashboardTableData.healthy = {
+                title: 'Data Top 10 Healthy Index',
+                headers: healthyTableHeaders,
+                rows: toHealthyTableRows(topHealthyRows),
+            };
+
+            dashboardTableData.unhealthy = {
+                title: 'Data Top 10 UnHealthy Index',
+                headers: healthyTableHeaders,
+                rows: toHealthyTableRows(topUnhealthyRows),
+            };
+
             // 3. Populasi POP
             const populasiData = @json($populasiPop);
+            const populationTotal = populasiData.data.reduce((sum, value) => sum + Number(value), 0);
+
+            dashboardTableData.population = {
+                title: 'Data Populasi POP Menurut Tipe',
+                headers: ['Tipe POP', 'Jumlah POP', 'Persentase'],
+                rows: populasiData.labels.map((label, index) => {
+                    const count = Number(populasiData.data[index]);
+                    const percentage = populationTotal ?
+                        `${((count / populationTotal) * 100).toLocaleString('id-ID', {
+                maximumFractionDigits: 1,
+            })}%` :
+                        '0%';
+
+                    return [
+                        label,
+                        count.toLocaleString('id-ID'),
+                        percentage,
+                    ];
+                }),
+            };
             const populasiCanvas = document.getElementById('populasiChart');
             const legendEl = document.getElementById('populasiLegend');
 
@@ -1605,6 +1754,34 @@
         </li>
     `).join('');
 
+                const populationTableBody = document.getElementById('populasiTableBody');
+                const populationTableTotal = populasiData.data.reduce(
+                    (sum, value) => sum + Number(value),
+                    0
+                );
+
+                if (populationTableBody) {
+                    populationTableBody.innerHTML = populasiData.labels.map((label, index) => {
+                        const count = Number(populasiData.data[index]);
+                        const percentage = populationTableTotal ?
+                            ((count / populationTableTotal) * 100).toLocaleString('id-ID', {
+                                maximumFractionDigits: 1,
+                            }) :
+                            '0';
+
+                        return `
+            <tr>
+                <td>
+                    <span class="population-table-color" style="background:${colors[index]}"></span>
+                    ${escapeHtml(label)}
+                </td>
+                <td>${count.toLocaleString('id-ID')}</td>
+                <td>${percentage}%</td>
+            </tr>
+        `;
+                    }).join('');
+                }
+
                 const legendItems = legendEl.querySelectorAll('.pop-legend-item');
 
                 function highlightLegend(activeIndex) {
@@ -1689,23 +1866,91 @@
             @json($healthyIndexPops).map(pop => [pop.pop_code, pop])
         );
 
+        const markerStatusPriority = {
+            very_unhealthy: 1,
+            unhealthy: 2,
+            healthy: 3,
+            very_healthy: 4,
+        };
+
         mapPopData.forEach(item => {
             const popData = healthyIndexByPopCode.get(item.pop);
             const indexes = popData?.rectifiers || [];
 
             const completeIndexes = indexes
                 .filter(index => index.score !== null)
-                .sort((a, b) => a.score - b.score);
+                .sort((a, b) => {
+                    const priorityDifference =
+                        (markerStatusPriority[a.status_key] ?? 99) -
+                        (markerStatusPriority[b.status_key] ?? 99);
 
-            // Warna marker POP mengikuti skor Rectifier terendah.
+                    // Dahulukan status terburuk; jika sama, skor terendah lebih buruk.
+                    return priorityDifference || a.score - b.score;
+                });
+
             const worstIndex = completeIndexes[0] || null;
 
             item.popId = popData?.pop_id || null;
             item.name = popData?.pop_name || item.name;
             item.rectifierIndexes = indexes;
-            item.status = worstIndex?.status_key || 'data_incomplete';
-            item.statusLabel = worstIndex?.status_label || 'Data belum lengkap';
+
+            // Status ini menjadi warna marker saat filter "Semua Status".
+            item.defaultStatus = worstIndex?.status_key || 'data_incomplete';
+            item.defaultStatusLabel = worstIndex?.status_label || 'Data belum lengkap';
+
+            // Simpan seluruh status Rectifier untuk keperluan filter.
+            item.rectifierStatuses = completeIndexes.map(index => index.status_key);
         });
+
+        dashboardTableData.map = {
+            title: 'Data Persebaran POP dan Healthy Index Rectifier',
+            headers: [
+                'Nama POP',
+                'Kode POP',
+                'Kabupaten',
+                'Status POP',
+                'Healthy Index tiap Rectifier',
+            ],
+            rows: mapPopData.map(item => {
+                const rectifierSummary = (item.rectifierIndexes || []).map(index => {
+                    const score = index.score === null ?
+                        'Data belum lengkap' :
+                        `${formatHealthyIndexScore(index.score)} poin - ${index.status_label}`;
+
+                    return `${index.rectifier_name}: ${score}`;
+                }).join(' | ');
+
+                return [
+                    item.name,
+                    item.pop,
+                    item.kab,
+                    item.defaultStatusLabel,
+                    rectifierSummary || 'Belum ada data Rectifier',
+                ];
+            }),
+        };
+
+        const markerColors = {
+            very_healthy: '#22c55e',
+            healthy: '#15803d',
+            unhealthy: '#ff4444',
+            very_unhealthy: '#dc2626',
+            data_incomplete: '#94a3b8',
+        };
+
+        function createMarkerIcon(status) {
+            const markerColor = markerColors[status] || markerColors.data_incomplete;
+
+            return L.divIcon({
+                className: 'custom-map-marker-wrapper',
+                html: `<div class="custom-map-marker" style="--marker-color:${markerColor}">
+            <i class="bi bi-geo-alt-fill"></i>
+        </div>`,
+                iconSize: [32, 40],
+                iconAnchor: [16, 40],
+                popupAnchor: [0, -36],
+            });
+        }
 
         function initJambiMap() {
             const mapElement = document.getElementById('jambiMap');
@@ -1723,22 +1968,7 @@
             }).addTo(jambiMap);
 
             mapPopData.forEach(item => {
-                const markerColors = {
-                    very_healthy: '#15803d',
-                    healthy: '#22c55e',
-                    unhealthy: '#f59e0b',
-                    very_unhealthy: '#dc2626',
-                    data_incomplete: '#94a3b8',
-                };
-
-                const markerColor = markerColors[item.status] || markerColors.data_incomplete;
-                const customIcon = L.divIcon({
-                    className: 'custom-map-marker-wrapper',
-                    html: `<div class="custom-map-marker" style="--marker-color:${markerColor}"><i class="bi bi-geo-alt-fill"></i></div>`,
-                    iconSize: [32, 40],
-                    iconAnchor: [16, 40],
-                    popupAnchor: [0, -36]
-                });
+                const customIcon = createMarkerIcon(item.defaultStatus);
 
                 const marker = L.marker([item.lat, item.lng], {
                     icon: customIcon
@@ -1748,21 +1978,35 @@
                         'Data belum lengkap' :
                         `${formatHealthyIndexScore(index.score)} poin — ${index.status_label}`;
 
-                    return `<small>${escapeHtml(index.rectifier_name)}: ${escapeHtml(detail)}</small>`;
+                    return `
+        <div class="map-popup-rectifier">
+            <strong>${escapeHtml(index.rectifier_name)}</strong>
+            <span>${escapeHtml(detail)}</span>
+        </div>
+    `;
                 }).join('');
 
                 marker.bindPopup(`
-                    <div class="map-popup">
-                        <strong>${item.name}</strong>
-                        <span>Kode: ${item.pop}</span>
-                        <small>Wilayah: ${item.kab}</small>
-                        <span class="popup-status ${item.status}">Status: ${item.status.toUpperCase()}</span>
-                        <button type="button" onclick="viewPopDetail('${item.id || item.pop}')">Lihat Detail</button>
-                    </div>
-                `);
+    <div class="map-popup">
+        <strong>${escapeHtml(item.name)}</strong>
+        <span>Kode: ${escapeHtml(item.pop)}</span>
+        <small>Wilayah: ${escapeHtml(item.kab)}</small>
+        <span class="popup-status ${item.defaultStatus}">
+            Status POP: ${escapeHtml(item.defaultStatusLabel)}
+        </span>
+        <div class="map-popup-rectifiers">
+            <strong>Healthy Index tiap Rectifier</strong>
+            ${rectifierDetails || '<small>Belum ada data Rectifier.</small>'}
+        </div>
+        ${item.popId
+            ? `<button type="button" onclick="viewPopDetail('${item.popId}')">Lihat Detail</button>`
+            : ''}
+    </div>
+`);
 
                 marker.device = item.device;
-                marker.status = item.status;
+                marker.defaultStatus = item.defaultStatus;
+                marker.rectifierStatuses = item.rectifierStatuses || [];
                 marker.addTo(jambiMap);
                 markers.push(marker);
             });
@@ -1773,13 +2017,27 @@
         }
 
         function filterMarkers() {
-            const st = document.getElementById('mapStatusFilter').value;
-            markers.forEach(m => {
-                const matchSt = st === 'all' || m.status === st;
-                if (matchSt) {
-                    if (!jambiMap.hasLayer(m)) jambiMap.addLayer(m);
-                } else if (jambiMap.hasLayer(m)) {
-                    jambiMap.removeLayer(m);
+            const selectedStatus = document.getElementById('mapStatusFilter').value;
+
+            markers.forEach(marker => {
+                const matchesFilter =
+                    selectedStatus === 'all' ||
+                    marker.rectifierStatuses.includes(selectedStatus);
+
+                if (matchesFilter) {
+                    if (!jambiMap.hasLayer(marker)) {
+                        jambiMap.addLayer(marker);
+                    }
+
+                    // Saat filter aktif, warna marker mengikuti status yang dipilih.
+                    // Saat "Semua Status", kembalikan ke status Rectifier terburuk.
+                    const markerStatus = selectedStatus === 'all' ?
+                        marker.defaultStatus :
+                        selectedStatus;
+
+                    marker.setIcon(createMarkerIcon(markerStatus));
+                } else if (jambiMap.hasLayer(marker)) {
+                    jambiMap.removeLayer(marker);
                 }
             });
         }
