@@ -1708,12 +1708,12 @@ body.pop-focus .pop-back-bar {
 
     /* Top 10 charts: kurangi lebih lanjut di HP kecil */
     .healthy-index-charts-row .analytics-card {
-        min-height: 260px;
+        min-height: 285px;
         padding: 12px;
     }
 
     .healthy-index-charts-row .chart-container-stacked {
-        height: 200px;
+        height: 230px;
     }
 
     /* Judul chart lebih kecil di HP */
