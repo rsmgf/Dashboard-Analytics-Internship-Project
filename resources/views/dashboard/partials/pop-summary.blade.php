@@ -35,7 +35,6 @@
     <div class="healthy-index-panel-heading">
         <div>
             <h3>Healthy Index per Rectifier</h3>
-            <p>Skor setiap Rectifier menggunakan Battery yang terhubung dengannya.</p>
         </div>
         <span class="healthy-index-total">
             {{ count($healthyIndex['rectifiers']) }} Rectifier

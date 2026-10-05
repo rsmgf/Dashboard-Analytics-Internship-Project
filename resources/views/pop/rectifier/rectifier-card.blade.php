@@ -73,7 +73,7 @@
                                     if ($numUtil <= 50) {
                                         $uBadgeClass = 'status-safe';
                                         $uDotClass   = 'dot-safe';
-                                        $uStatus     = 'SAFE';
+                                        $uStatus     = 'GOOD';
                                     } elseif ($numUtil <= 70) {
                                         $uBadgeClass = 'status-warning';
                                         $uDotClass   = 'dot-warning';

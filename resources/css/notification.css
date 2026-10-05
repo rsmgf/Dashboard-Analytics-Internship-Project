@@ -5,8 +5,8 @@ body {
 }
 
 .notif-page-wrapper {
-    padding: 32px 40px;
-    max-width: 1200px;
+    padding: 24px 28px;
+    max-width: 1100px;
     margin: 0 auto;
 }
 
@@ -14,7 +14,7 @@ body {
     display: flex;
     align-items: center;
     gap: 16px;
-    margin-bottom: 24px;
+    margin-bottom: 16px;
 }
 
 .btn-back-circle {
@@ -134,17 +134,17 @@ body {
 }
 
 .notif-panel-body {
-    padding: 16px 28px 24px 28px;
+    padding: 12px 20px 20px 20px;
 }
 
 .notif-row {
     display: flex;
     align-items: flex-start;
-    padding: 18px 12px;
+    padding: 14px 12px;
     border-bottom: 1px solid #f1f5f9;
     border-radius: 10px;
     transition: all 0.2s ease;
-    gap: 16px;
+    gap: 14px;
     position: relative;
 }
 
@@ -326,11 +326,11 @@ body {
 
 @media (max-width: 1024px) {
     .notif-page-wrapper {
-        padding: 16px 12px;
+        padding: 16px 14px;
     }
 
     .notif-panel-body {
-        padding: 12px;
+        padding: 10px 12px 16px;
     }
 
     .notif-folder-header {
@@ -352,7 +352,7 @@ body {
 
     .notif-row {
         flex-wrap: wrap;
-        padding: 14px 10px;
+        padding: 12px 10px;
         position: relative;
     }
 
@@ -363,15 +363,16 @@ body {
     .notif-info-col {
         width: 100%;
         margin-left: 0;
-        margin-top: 10px;
-        padding-left: 60px;
-        justify-content: space-between;
+        margin-top: 8px;
+        padding-left: 58px;
+        justify-content: flex-start;
+        gap: 10px;
     }
 
     .notif-arrow {
         position: absolute;
         right: 12px;
-        top: 16px;
+        top: 14px;
     }
 }
 
