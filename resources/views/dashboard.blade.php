@@ -1385,13 +1385,15 @@
                         },
                         ticks: {
                             font: {
-                                size: 9
+                                family: 'Poppins',
+                                size: 8,
+                                weight: '500',
                             },
                             color: '#475569',
-                            maxRotation: 0,
-                            minRotation: 0,
+                            maxRotation: 45,
+                            minRotation: 45,
                             autoSkip: false,
-                            padding: 4,
+                            padding: 2,
                         }
                     },
                     y: {
@@ -1437,13 +1439,13 @@
 
                         anchor: 'end',
                         align: 'top',
-                        offset: -3,
+                        offset: -2,
                         clamp: true,
                         clip: false,
                         color: '#0f172a',
                         font: {
                             family: 'Poppins',
-                            size: 11,
+                            size: 8.5,
                             weight: '600',
                         },
                     },
