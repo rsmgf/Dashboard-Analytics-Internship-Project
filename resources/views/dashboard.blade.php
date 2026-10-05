@@ -473,8 +473,8 @@
 
     <script>
         /* =========================================================
-                                                                                                                                                                                                                                                                                                                       0. STATE GLOBAL
-                                                                                                                                                                                                                                                                                                                       ========================================================= */
+                                                                                                                                                                                                                                                                                                                           0. STATE GLOBAL
+                                                                                                                                                                                                                                                                                                                           ========================================================= */
         const carouselState = {};
         let jambiMap = null;
         let markers = [];
@@ -1033,24 +1033,24 @@
                 </div>
                 <div class="mini-progress-labels">
                     ${statuses.map(s => `
-                                                                                                                                                                                                                                                <span class="lbl-${s.key}" title="${s.label}"><i class="bi bi-circle-fill"></i>${Math.round(pct(s.key))}%</span>
-                                                                                                                                                                                                                                            `).join('')}
+                                                                                                                                                                                                                                                    <span class="lbl-${s.key}" title="${s.label}"><i class="bi bi-circle-fill"></i>${Math.round(pct(s.key))}%</span>
+                                                                                                                                                                                                                                                `).join('')}
                 </div>
             </div>
 
             <div class="device-status-list">
                 ${statuses.map(s => `
-                                                                                                                                                                                                                                            <button type="button" class="status-dropdown-button"
-                                                                                                                                                                                                                                                    data-device="${key}" data-status="${s.key}" ${counts[s.key] === 0 ? 'disabled' : ''}>
-                                                                                                                                                                                                                                                <span class="status-left">
-                                                                                                                                                                                                                                                    <span class="status-dot ${s.key}"></span>${s.label}
-                                                                                                                                                                                                                                                </span>
-                                                                                                                                                                                                                                                <span class="status-right">
-                                                                                                                                                                                                                                                    <span class="status-count">${counts[s.key]}</span>
-                                                                                                                                                                                                                                                    <i class="bi bi-chevron-right"></i>
-                                                                                                                                                                                                                                                </span>
-                                                                                                                                                                                                                                            </button>
-                                                                                                                                                                                                                                        `).join('')}
+                                                                                                                                                                                                                                                <button type="button" class="status-dropdown-button"
+                                                                                                                                                                                                                                                        data-device="${key}" data-status="${s.key}" ${counts[s.key] === 0 ? 'disabled' : ''}>
+                                                                                                                                                                                                                                                    <span class="status-left">
+                                                                                                                                                                                                                                                        <span class="status-dot ${s.key}"></span>${s.label}
+                                                                                                                                                                                                                                                    </span>
+                                                                                                                                                                                                                                                    <span class="status-right">
+                                                                                                                                                                                                                                                        <span class="status-count">${counts[s.key]}</span>
+                                                                                                                                                                                                                                                        <i class="bi bi-chevron-right"></i>
+                                                                                                                                                                                                                                                    </span>
+                                                                                                                                                                                                                                                </button>
+                                                                                                                                                                                                                                            `).join('')}
             </div>
         </div>`;
             }).join('');
@@ -1078,9 +1078,9 @@
                 <div class="pop-status-box-header">
                     <div class="pop-status-identity">
                         ${showDeviceId ? `
-                                                    <span class="pop-status-label">${deviceLabel}</span>
-                                                    <strong class="pop-status-device-id">${escapeHtml(item.unit || '-')}</strong>
-                                                ` : ''}
+                                                        <span class="pop-status-label">${deviceLabel}</span>
+                                                        <strong class="pop-status-device-id">${escapeHtml(item.unit || '-')}</strong>
+                                                    ` : ''}
                         <span class="pop-status-label">Nama POP</span>
                         <strong class="pop-status-name">${escapeHtml(item.pop_name || item.kode || '-')}</strong>
                     </div>
@@ -1662,110 +1662,31 @@
             }
         }
 
-        //peta provinsi jambi
-        const mapPopData = [{
-                pop: 'POP_PAYOSELINCAH',
-                name: 'POP Payo Selincah',
-                lat: -1.608,
-                lng: 103.614,
-                device: 'ac',
-                status: 'good',
-                kab: 'Kota Jambi'
-            },
-            {
-                pop: 'POP_1MRB001',
-                name: 'POP Muara Bulian',
-                lat: -1.725,
-                lng: 103.250,
-                device: 'battery',
-                status: 'warning',
-                kab: 'Batanghari'
-            },
-            {
-                pop: 'POP_1JMB10007',
-                name: 'POP Telanaipura',
-                lat: -1.625,
-                lng: 103.600,
-                device: 'rectifier',
-                status: 'good',
-                kab: 'Kota Jambi'
-            },
-            {
-                pop: 'POP_1MRT10000',
-                name: 'POP Muara Tembesi',
-                lat: -1.720,
-                lng: 103.120,
-                device: 'kwh',
-                status: 'good',
-                kab: 'Batanghari'
-            },
-            {
-                pop: 'POP_1MBN002',
-                name: 'POP Muara Bungo',
-                lat: -1.490,
-                lng: 102.120,
-                device: 'genset',
-                status: 'warning',
-                kab: 'Bungo'
-            },
-            {
-                pop: 'POP_1SRL001',
-                name: 'POP Sarolangun 01',
-                lat: -2.300,
-                lng: 102.650,
-                device: 'rectifier',
-                status: 'alert',
-                kab: 'Sarolangun'
-            },
-            {
-                pop: 'POP_1KRN001',
-                name: 'POP Kerinci/Sungai Penuh',
-                lat: -2.060,
-                lng: 101.400,
-                device: 'battery',
-                status: 'good',
-                kab: 'Kerinci'
-            },
-            {
-                pop: 'POP_1KBL001',
-                name: 'POP Kuala Tungkal',
-                lat: -0.816,
-                lng: 103.460,
-                device: 'genset',
-                status: 'good',
-                kab: 'Tanjung Jabung Barat'
-            },
-            {
-                pop: 'POP_1MSB001',
-                name: 'POP Muara Sabak',
-                lat: -1.130,
-                lng: 103.850,
-                device: 'ac',
-                status: 'good',
-                kab: 'Tanjung Jabung Timur'
-            },
-            {
-                pop: 'POP_1BGK001',
-                name: 'POP Bangko',
-                lat: -2.070,
-                lng: 102.260,
-                device: 'rectifier',
-                status: 'alert',
-                kab: 'Merangin'
-            }
-        ];
-        // Cocokkan koordinat contoh peta dengan hasil Healthy Index dari database.
-        // Kunci pencocokan adalah kode POP.
+        // Data POP aktual dari backend dengan koordinat.
+        @php
+            $realMapPops = ($mapPops ?? collect())
+                ->map(function ($p) {
+                    return [
+                        'id' => $p->id,
+                        'pop' => $p->kode_pop,
+                        'name' => $p->nama_pop_display,
+                        'lat' => (float) $p->latitude,
+                        'lng' => (float) $p->longitude,
+                        'device' => 'pop',
+                        'status' => 'good',
+                        'kab' => $p->kota_kabupaten ?? '-',
+                        'building' => $p->jenis_bangunan ?? '-',
+                    ];
+                })
+                ->values()
+                ->all();
+        @endphp
+
+        const mapPopData = @json($realMapPops);
+
         const healthyIndexByPopCode = new Map(
             @json($healthyIndexPops).map(pop => [pop.pop_code, pop])
         );
-
-        const healthyStatusLabels = {
-            very_healthy: 'Very Healthy',
-            healthy: 'Healthy',
-            unhealthy: 'UnHealthy',
-            very_unhealthy: 'Very UnHealthy',
-        };
 
         mapPopData.forEach(item => {
             const popData = healthyIndexByPopCode.get(item.pop);
@@ -1775,7 +1696,7 @@
                 .filter(index => index.score !== null)
                 .sort((a, b) => a.score - b.score);
 
-            // Jika ada beberapa Rectifier, warna marker mewakili indeks terendah.
+            // Warna marker POP mengikuti skor Rectifier terendah.
             const worstIndex = completeIndexes[0] || null;
 
             item.popId = popData?.pop_id || null;
@@ -1784,23 +1705,6 @@
             item.status = worstIndex?.status_key || 'data_incomplete';
             item.statusLabel = worstIndex?.status_label || 'Data belum lengkap';
         });
-        // Data peta titik POP provinsi jambi (hanya menampilkan POP nyata yang memiliki koordinat)
-        @php
-            $realMapPops = ($mapPops ?? collect())->map(function($p) {
-                return [
-                    'id'       => $p->id,
-                    'pop'      => $p->kode_pop,
-                    'name'     => $p->nama_pop_display,
-                    'lat'      => (float) $p->latitude,
-                    'lng'      => (float) $p->longitude,
-                    'device'   => 'pop',
-                    'status'   => 'good',
-                    'kab'      => $p->kota_kabupaten ?? '-',
-                    'building' => $p->jenis_bangunan ?? '-',
-                ];
-            })->values()->all();
-        @endphp
-        const mapPopData = @json($realMapPops);
 
         function initJambiMap() {
             const mapElement = document.getElementById('jambiMap');
