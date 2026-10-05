@@ -34,12 +34,12 @@ body {
     /* cegah konten memaksa lebar melebihi layar */
 }
 
-/* ---- Container: fluid padding + max-width untuk layar sangat lebar ---- */
+/* ---- Container: sejajar dengan layout pop-content & tanpa ruang kosong berlebih ---- */
 .add-pop-content {
     width: 100%;
-    max-width: 1200px;
-    margin-inline: auto;
-    padding: clamp(16px, 2.5vw, 24px) clamp(16px, 3vw, 32px) clamp(24px, 4vw, 40px);
+    margin: 0;
+    padding: 32px;
+    box-sizing: border-box;
 }
 
 /* ---- Header Bar with Breadcrumb & Back Button ---- */
@@ -378,12 +378,6 @@ body.sidebar-collapsed .sidebar-logo img {
    RESPONSIVE
    ========================================================= */
 
-/* Layar sangat lebar */
-@media (min-width: 1600px) {
-    .add-pop-content {
-        max-width: 1320px;
-    }
-}
 
 /* Tablet & di bawahnya: sidebar biasanya jadi off-canvas,
    jadi collapsed-margin tidak boleh dipakai */
@@ -395,6 +389,10 @@ body.sidebar-collapsed .sidebar-logo img {
 
 /* Tablet portrait & mobile: form 1 kolom */
 @media (max-width: 768px) {
+    .add-pop-content {
+        padding: 16px;
+    }
+
     .add-pop-header-bar {
         margin-bottom: 16px;
         padding-bottom: 12px;

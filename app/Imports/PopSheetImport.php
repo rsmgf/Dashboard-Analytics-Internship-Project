@@ -92,6 +92,12 @@ class PopSheetImport implements ToCollection, WithStartRow, WithChunkReading
                 $tipePop = null;
             }
 
+            $latRaw  = isset($row[6]) ? trim((string) $row[6]) : null;
+            $longRaw = isset($row[7]) ? trim((string) $row[7]) : null;
+
+            $latitude  = (is_numeric($latRaw) && (float) $latRaw >= -90 && (float) $latRaw <= 90) ? (float) $latRaw : null;
+            $longitude = (is_numeric($longRaw) && (float) $longRaw >= -180 && (float) $longRaw <= 180) ? (float) $longRaw : null;
+
             // Simpan ke DB
             Pop::create([
                 'provinsi'       => $provinsi,
@@ -100,6 +106,8 @@ class PopSheetImport implements ToCollection, WithStartRow, WithChunkReading
                 'nama_pop'       => $namaPop,
                 'jenis_bangunan' => $jenisBangunan ?: null,
                 'tipe_pop'       => $tipePop ?: null,
+                'latitude'       => $latitude,
+                'longitude'      => $longitude,
             ]);
 
             $this->importedCount++;
