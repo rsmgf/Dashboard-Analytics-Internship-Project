@@ -63,7 +63,7 @@
                 @csrf
                 <button type="submit" class="sidebar-menu sidebar-logout-item">
                     <i class="bi bi-box-arrow-right"></i>
-                    <span>Logout</span>
+                    <span>Keluar</span>
                 </button>
             </form>
         </div>

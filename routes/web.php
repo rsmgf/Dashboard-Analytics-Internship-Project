@@ -33,7 +33,7 @@ Route::post('/role/switch', [RoleSwitchController::class, 'switch'])->name('role
 require __DIR__ . '/auth.php';
 
 // --- SUPER ADMIN: USER & MENU MANAGEMENT ---
-Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->group(function () {
+Route::middleware(['auth', 'role:super_admin|manajer'])->prefix('admin')->group(function () {
     Route::get('/users', [UserManagementController::class, 'index'])->name('admin.users.index');
     Route::patch('/users/{user}/role', [UserManagementController::class, 'updateRole'])->name('admin.users.updateRole');
     Route::patch('/users/{user}/toggle-status', [UserManagementController::class, 'toggleStatus'])->name('admin.users.toggleStatus');

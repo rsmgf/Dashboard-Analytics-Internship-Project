@@ -52,9 +52,14 @@
     </style>
 </head>
 
-<body class="{{ (session('active_role') ?? (auth()->user()?->hasRole('manajer') ? 'manajer' : 'super_admin')) === 'manajer' ? 'manajer-mode' : '' }}">
-    @if(!$canEkspor)
-    <style>.export-menu-wrapper { display: none !important; }</style>
+<body
+    class="{{ (session('active_role') ?? (auth()->user()?->hasRole('manajer') ? 'manajer' : 'super_admin')) === 'manajer' ? 'manajer-mode' : '' }}">
+    @if (!$canEkspor)
+        <style>
+            .export-menu-wrapper {
+                display: none !important;
+            }
+        </style>
     @endif
     <div class="app-container">
         {{-- SIDEBAR --}}
@@ -159,38 +164,59 @@
                         </div>
 
                         <div class="dashboard-kpi-card">
-                            <div class="kpi-icon kpi-red"><i class="bi bi-exclamation-triangle-fill"></i></div>
+                            <div class="kpi-icon kpi-healthy"><i class="bi bi-heart-pulse-fill"></i></div>
                             <div class="kpi-info">
-                                <span>POP Alert</span>
-                                <strong class="text-danger">{{ number_format($totalPopAlert) }}</strong>
-                                <small>{{ $totalPop ? round(($totalPopAlert / $totalPop) * 100) : 0 }}% dari
-                                    total</small>
+                                <span>Total POP Healthy</span>
+                                <strong class="text-healthy">{{ number_format($totalRectifierHealthy) }}</strong>
+                                <small>
+                                    {{ $totalRectifierWithHealthyIndex
+                                        ? round(($totalRectifierHealthy / $totalRectifierWithHealthyIndex) * 100)
+                                        : 0 }}%
+                                    dari PoP dengan indeks
+                                </small>
                             </div>
                         </div>
 
                         <div class="dashboard-kpi-card">
-                            <div class="kpi-icon kpi-yellow"><i class="bi bi-exclamation-circle-fill"></i></div>
+                            <div class="kpi-icon kpi-unhealthy"><i class="bi bi-heartbreak-fill"></i></div>
                             <div class="kpi-info">
-                                <span>POP Warning</span>
-                                <strong class="text-warning">{{ number_format($totalPopWarning) }}</strong>
-                                <small>{{ $totalPop ? round(($totalPopWarning / $totalPop) * 100) : 0 }}% dari
-                                    total</small>
+                                <span>Total POP UnHealthy</span>
+                                <strong class="text-unhealthy">{{ number_format($totalRectifierUnhealthy) }}</strong>
+                                <small>
+                                    {{ $totalRectifierWithHealthyIndex
+                                        ? round(($totalRectifierUnhealthy / $totalRectifierWithHealthyIndex) * 100)
+                                        : 0 }}%
+                                    dari PoP dengan indeks
+                                </small>
                             </div>
                         </div>
 
-                        <div class="dashboard-kpi-card">
-                            <div class="kpi-icon kpi-purple"><i class="bi bi-person-fill-exclamation"></i></div>
-                            <div class="kpi-info">
-                                <span>Menunggu Approval</span>
-                                <strong class="text-purple">{{ number_format($totalPendingApproval) }}</strong>
-                                <small>Pengguna</small>
+                        @if (auth()->user()->hasAnyRole(['super_admin', 'manajer']))
+                            <div class="dashboard-kpi-card">
+                                <div class="kpi-icon kpi-pending"><i class="bi bi-person-fill-exclamation"></i></div>
+                                <div class="kpi-info">
+                                    <span>Menunggu Approval</span>
+                                    <strong class="text-pending">{{ number_format($totalPendingApproval) }}</strong>
+                                    <small>Pengguna</small>
+                                </div>
                             </div>
-                        </div>
+                        @else
+                            <div class="dashboard-kpi-card">
+                                <div class="kpi-icon kpi-active"><i class="bi bi-people-fill"></i></div>
+                                <div class="kpi-info">
+                                    <span>Pengguna Aktif</span>
+                                    <strong class="text-active">
+                                        {{ number_format(\App\Models\User::where('is_active', true)->count()) }}
+                                    </strong>
+                                </div>
+                            </div>
+                        @endif
                     </div>
 
                     {{-- STATUS PERANGKAT POP --}}
                     <div class="device-status-section">
-                        <div class="section-title-dashboard" style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
+                        <div class="section-title-dashboard"
+                            style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
                             <div>
                                 <h2>Status Perangkat POP</h2>
                                 <p>Pilih status pada perangkat untuk melihat daftar POP berdasarkan kondisi
@@ -198,11 +224,20 @@
                                 </p>
                             </div>
                             <div x-data="{ open: false }" class="export-menu-wrapper">
-                                <button @click="open = !open" @click.away="open = false" class="export-menu-btn" title="Export Status Perangkat"><i class="bi bi-list"></i></button>
+                                <button @click="open = !open" @click.away="open = false" class="export-menu-btn"
+                                    title="Export Status Perangkat"><i class="bi bi-list"></i></button>
                                 <div x-show="open" style="display:none;" class="export-dropdown">
-                                    <button @click="exportImage('deviceStatusGrid', 'png', 'Status_Perangkat_POP'); open = false"><i class="bi bi-image" style="margin-right:8px;"></i> Download PNG</button>
-                                    <button @click="exportImage('deviceStatusGrid', 'jpeg', 'Status_Perangkat_POP'); open = false"><i class="bi bi-image-fill" style="margin-right:8px;"></i> Download JPEG</button>
-                                    <button @click="exportPDF('deviceStatusGrid', 'Status_Perangkat_POP'); open = false"><i class="bi bi-file-pdf" style="margin-right:8px;"></i> Download PDF</button>
+                                    <button
+                                        @click="exportImage('deviceStatusGrid', 'png', 'Status_Perangkat_POP'); open = false"><i
+                                            class="bi bi-image" style="margin-right:8px;"></i> Download PNG</button>
+                                    <button
+                                        @click="exportImage('deviceStatusGrid', 'jpeg', 'Status_Perangkat_POP'); open = false"><i
+                                            class="bi bi-image-fill" style="margin-right:8px;"></i> Download
+                                        JPEG</button>
+                                    <button
+                                        @click="exportPDF('deviceStatusGrid', 'Status_Perangkat_POP'); open = false"><i
+                                            class="bi bi-file-pdf" style="margin-right:8px;"></i> Download
+                                        PDF</button>
                                 </div>
                             </div>
                         </div>
@@ -221,22 +256,36 @@
                             </button>
                         </div>
                         <div id="statusListCardsGrid" class="status-list-cards-grid"></div>
+                        <button type="button" id="statusListLoadMore" class="status-list-load-more" hidden>
+                            Lihat selengkapnya
+                        </button>
                     </div>
 
                     {{-- ANALYTICS ROW 1: HEALTHY & NON-HEALTHY INDEX --}}
-                    <div class="dashboard-analytics-row">
+                    <div class="dashboard-analytics-row healthy-index-charts-row">
                         <div class="analytics-card">
-                            <div class="analytics-card-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div class="analytics-card-header"
+                                style="display: flex; justify-content: space-between; align-items: flex-start;">
                                 <div class="analytics-title">
                                     <i class="bi bi-hand-thumbs-up-fill"></i>
                                     <h3>TOP 10 - Healthy Index POP Provinsi Jambi</h3>
                                 </div>
                                 <div x-data="{ open: false }" class="export-menu-wrapper">
-                                    <button @click="open = !open" @click.away="open = false" class="export-menu-btn"><i class="bi bi-list"></i></button>
+                                    <button @click="open = !open" @click.away="open = false"
+                                        class="export-menu-btn"><i class="bi bi-list"></i></button>
                                     <div x-show="open" style="display:none;" class="export-dropdown">
-                                        <button @click="exportImage('healthyIndexChart', 'png', 'Top_10_Healthy_POP'); open = false"><i class="bi bi-image" style="margin-right:8px;"></i> Download PNG</button>
-                                        <button @click="exportImage('healthyIndexChart', 'jpeg', 'Top_10_Healthy_POP'); open = false"><i class="bi bi-image-fill" style="margin-right:8px;"></i> Download JPEG</button>
-                                        <button @click="exportPDF('healthyIndexChart', 'Top_10_Healthy_POP'); open = false"><i class="bi bi-file-pdf" style="margin-right:8px;"></i> Download PDF</button>
+                                        <button
+                                            @click="exportImage('healthyIndexChart', 'png', 'Top_10_Healthy_POP'); open = false"><i
+                                                class="bi bi-image" style="margin-right:8px;"></i> Download
+                                            PNG</button>
+                                        <button
+                                            @click="exportImage('healthyIndexChart', 'jpeg', 'Top_10_Healthy_POP'); open = false"><i
+                                                class="bi bi-image-fill" style="margin-right:8px;"></i> Download
+                                            JPEG</button>
+                                        <button
+                                            @click="exportPDF('healthyIndexChart', 'Top_10_Healthy_POP'); open = false"><i
+                                                class="bi bi-file-pdf" style="margin-right:8px;"></i> Download
+                                            PDF</button>
                                     </div>
                                 </div>
                             </div>
@@ -246,17 +295,28 @@
                         </div>
 
                         <div class="analytics-card">
-                            <div class="analytics-card-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div class="analytics-card-header"
+                                style="display: flex; justify-content: space-between; align-items: flex-start;">
                                 <div class="analytics-title">
                                     <i class="bi bi-hand-thumbs-down-fill text-danger"></i>
-                                    <h3>TOP 10 - Non Healthy Index POP Provinsi Jambi</h3>
+                                    <h3>TOP 10 - UnHealthy Index POP Provinsi Jambi</h3>
                                 </div>
                                 <div x-data="{ open: false }" class="export-menu-wrapper">
-                                    <button @click="open = !open" @click.away="open = false" class="export-menu-btn"><i class="bi bi-list"></i></button>
+                                    <button @click="open = !open" @click.away="open = false"
+                                        class="export-menu-btn"><i class="bi bi-list"></i></button>
                                     <div x-show="open" style="display:none;" class="export-dropdown">
-                                        <button @click="exportImage('nonHealthyIndexChart', 'png', 'Top_10_NonHealthy_POP'); open = false"><i class="bi bi-image" style="margin-right:8px;"></i> Download PNG</button>
-                                        <button @click="exportImage('nonHealthyIndexChart', 'jpeg', 'Top_10_NonHealthy_POP'); open = false"><i class="bi bi-image-fill" style="margin-right:8px;"></i> Download JPEG</button>
-                                        <button @click="exportPDF('nonHealthyIndexChart', 'Top_10_NonHealthy_POP'); open = false"><i class="bi bi-file-pdf" style="margin-right:8px;"></i> Download PDF</button>
+                                        <button
+                                            @click="exportImage('nonHealthyIndexChart', 'png', 'Top_10_NonHealthy_POP'); open = false"><i
+                                                class="bi bi-image" style="margin-right:8px;"></i> Download
+                                            PNG</button>
+                                        <button
+                                            @click="exportImage('nonHealthyIndexChart', 'jpeg', 'Top_10_NonHealthy_POP'); open = false"><i
+                                                class="bi bi-image-fill" style="margin-right:8px;"></i> Download
+                                            JPEG</button>
+                                        <button
+                                            @click="exportPDF('nonHealthyIndexChart', 'Top_10_NonHealthy_POP'); open = false"><i
+                                                class="bi bi-file-pdf" style="margin-right:8px;"></i> Download
+                                            PDF</button>
                                     </div>
                                 </div>
                             </div>
@@ -269,18 +329,28 @@
                     {{-- ANALYTICS ROW 2: POPULASI POP & NOTIFIKASI TERBARU --}}
                     <div class="dashboard-analytics-row">
                         {{-- KARTU POPULASI POP --}}
-                        <div class="analytics-card">
-                            <div class="analytics-card-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div class="analytics-card population-card">
+                            <div class="analytics-card-header"
+                                style="display: flex; justify-content: space-between; align-items: flex-start;">
                                 <div class="analytics-title">
                                     <i class="bi bi-pie-chart-fill"></i>
                                     <h3>Populasi POP Menurut Tipe POP</h3>
                                 </div>
                                 <div x-data="{ open: false }" class="export-menu-wrapper">
-                                    <button @click="open = !open" @click.away="open = false" class="export-menu-btn"><i class="bi bi-list"></i></button>
+                                    <button @click="open = !open" @click.away="open = false"
+                                        class="export-menu-btn"><i class="bi bi-list"></i></button>
                                     <div x-show="open" style="display:none;" class="export-dropdown">
-                                        <button @click="exportImage('populationBody', 'png', 'Populasi_POP'); open = false"><i class="bi bi-image" style="margin-right:8px;"></i> Download PNG</button>
-                                        <button @click="exportImage('populationBody', 'jpeg', 'Populasi_POP'); open = false"><i class="bi bi-image-fill" style="margin-right:8px;"></i> Download JPEG</button>
-                                        <button @click="exportPDF('populationBody', 'Populasi_POP'); open = false"><i class="bi bi-file-pdf" style="margin-right:8px;"></i> Download PDF</button>
+                                        <button
+                                            @click="exportImage('populationBody', 'png', 'Populasi_POP'); open = false"><i
+                                                class="bi bi-image" style="margin-right:8px;"></i> Download
+                                            PNG</button>
+                                        <button
+                                            @click="exportImage('populationBody', 'jpeg', 'Populasi_POP'); open = false"><i
+                                                class="bi bi-image-fill" style="margin-right:8px;"></i> Download
+                                            JPEG</button>
+                                        <button @click="exportPDF('populationBody', 'Populasi_POP'); open = false"><i
+                                                class="bi bi-file-pdf" style="margin-right:8px;"></i> Download
+                                            PDF</button>
                                     </div>
                                 </div>
                             </div>
@@ -294,46 +364,48 @@
                         </div>
 
                         {{-- KARTU NOTIFIKASI TERBARU (Hanya untuk Manajer) --}}
-                        @if(auth()->user()->hasRole('manajer'))
-                        <div class="analytics-card">
-                            <div class="analytics-card-header notif-header-flex">
-                                <div class="analytics-title">
-                                    <i class="bi bi-bell-fill"></i>
-                                    <h3>Notifikasi Terbaru</h3>
+                        @if (auth()->user()->hasAnyRole('manajer', 'super_admin'))
+                            <div class="analytics-card">
+                                <div class="analytics-card-header notif-header-flex">
+                                    <div class="analytics-title">
+                                        <i class="bi bi-bell-fill"></i>
+                                        <h3>Notifikasi Terbaru</h3>
+                                    </div>
+                                    <a href="{{ url('/notifications') }}" class="link-selengkapnya"
+                                        title="Lihat Semua Notifikasi">
+                                        Selengkapnya <i class="bi bi-chevron-right"></i>
+                                    </a>
                                 </div>
-                                <a href="{{ url('/notifications') }}" class="link-selengkapnya"
-                                    title="Lihat Semua Notifikasi">
-                                    Selengkapnya <i class="bi bi-chevron-right"></i>
-                                </a>
-                            </div>
-                            <div class="notification-list">
-                                @forelse($latestStatusNotifications as $notif)
-                                <div class="notification-item {{ $notif->is_read ? 'read' : '' }}" id="notif-{{ $notif->id }}"
-                                    onclick="markNotifAsRead('notif-{{ $notif->id }}', {{ $notif->id }}, '{{ $notif->category }}', '{{ $notif->pop_id }}', '{{ $notif->device_type }}', '{{ $notif->device_id }}')">
-                                    <div class="notif-icon-wrapper">
-                                        <div class="notif-icon {{ $notif->icon_bg_class }}">
-                                            <i class="{{ $notif->icon_class }}"></i>
+                                <div class="notification-list">
+                                    @forelse($latestStatusNotifications as $notif)
+                                        <div class="notification-item {{ $notif->is_read ? 'read' : '' }}"
+                                            id="notif-{{ $notif->id }}"
+                                            onclick="markNotifAsRead('notif-{{ $notif->id }}', {{ $notif->id }}, '{{ $notif->category }}', '{{ $notif->pop_id }}', '{{ $notif->device_type }}', '{{ $notif->device_id }}')">
+                                            <div class="notif-icon-wrapper">
+                                                <div class="notif-icon {{ $notif->icon_bg_class }}">
+                                                    <i class="{{ $notif->icon_class }}"></i>
+                                                </div>
+                                                @if (!$notif->is_read)
+                                                    <span class="unread-dot"></span>
+                                                @endif
+                                            </div>
+                                            <div class="notif-content">
+                                                <strong>{{ $notif->title }}</strong>
+                                                <p>{{ $notif->message }}</p>
+                                            </div>
+                                            <div class="notif-time">
+                                                <span>{{ $notif->created_at->format('d M Y H:i') }}</span>
+                                                <i class="bi bi-chevron-right"></i>
+                                            </div>
                                         </div>
-                                        @if(!$notif->is_read)
-                                        <span class="unread-dot"></span>
-                                        @endif
-                                    </div>
-                                    <div class="notif-content">
-                                        <strong>{{ $notif->title }}</strong>
-                                        <p>{{ $notif->message }}</p>
-                                    </div>
-                                    <div class="notif-time">
-                                        <span>{{ $notif->created_at->format('d M Y H:i') }}</span>
-                                        <i class="bi bi-chevron-right"></i>
-                                    </div>
+                                    @empty
+                                        <div
+                                            style="text-align:center; padding: 20px; color: #64748b; font-size: 13px;">
+                                            Belum ada notifikasi
+                                        </div>
+                                    @endforelse
                                 </div>
-                                @empty
-                                <div style="text-align:center; padding: 20px; color: #64748b; font-size: 13px;">
-                                    Belum ada notifikasi
-                                </div>
-                                @endforelse
                             </div>
-                        </div>
                         @endif
                     </div>
 
@@ -354,16 +426,27 @@
                                 <div class="map-filter">
                                     <select id="mapStatusFilter">
                                         <option value="all">Semua Status</option>
-                                        <option value="good">Healthy</option>
-                                        <option value="warning">UnHealthy</option>
+                                        <option value="very_healthy">Very Healthy</option>
+                                        <option value="healthy">Healthy</option>
+                                        <option value="unhealthy">UnHealthy</option>
+                                        <option value="very_unhealthy">Very UnHealthy</option>
                                     </select>
                                 </div>
                                 <div x-data="{ open: false }" class="export-menu-wrapper">
-                                    <button @click="open = !open" @click.away="open = false" class="export-menu-btn"><i class="bi bi-list"></i></button>
+                                    <button @click="open = !open" @click.away="open = false"
+                                        class="export-menu-btn"><i class="bi bi-list"></i></button>
                                     <div x-show="open" style="display:none;" class="export-dropdown">
-                                        <button @click="exportImage('jambiMap', 'png', 'Peta_Persebaran_POP'); open = false"><i class="bi bi-image" style="margin-right:8px;"></i> Download PNG</button>
-                                        <button @click="exportImage('jambiMap', 'jpeg', 'Peta_Persebaran_POP'); open = false"><i class="bi bi-image-fill" style="margin-right:8px;"></i> Download JPEG</button>
-                                        <button @click="exportPDF('jambiMap', 'Peta_Persebaran_POP'); open = false"><i class="bi bi-file-pdf" style="margin-right:8px;"></i> Download PDF</button>
+                                        <button
+                                            @click="exportImage('jambiMap', 'png', 'Peta_Persebaran_POP'); open = false"><i
+                                                class="bi bi-image" style="margin-right:8px;"></i> Download
+                                            PNG</button>
+                                        <button
+                                            @click="exportImage('jambiMap', 'jpeg', 'Peta_Persebaran_POP'); open = false"><i
+                                                class="bi bi-image-fill" style="margin-right:8px;"></i> Download
+                                            JPEG</button>
+                                        <button @click="exportPDF('jambiMap', 'Peta_Persebaran_POP'); open = false"><i
+                                                class="bi bi-file-pdf" style="margin-right:8px;"></i> Download
+                                            PDF</button>
                                     </div>
                                 </div>
                             </div>
@@ -372,8 +455,11 @@
                         <div class="jambi-map-container">
                             <div id="jambiMap" class="jambi-map"></div>
                             <div class="map-legend">
-                                <span><i class="legend-dot good"></i> Healthy</span>
-                                <span><i class="legend-dot warning"></i> UnHealthy</span>
+                                <span><i class="legend-dot very_healthy"></i> Very Healthy</span>
+                                <span><i class="legend-dot healthy"></i> Healthy</span>
+                                <span><i class="legend-dot unhealthy"></i> UnHealthy</span>
+                                <span><i class="legend-dot very_unhealthy"></i> Very UnHealthy</span>
+                                <span><i class="legend-dot data-incomplete"></i> Data belum lengkap</span>
                             </div>
                         </div>
                     </div>
@@ -387,8 +473,8 @@
 
     <script>
         /* =========================================================
-                                                                                                                       0. STATE GLOBAL
-                                                                                                                       ========================================================= */
+                                                                                                                                                                                                                                                                                                                       0. STATE GLOBAL
+                                                                                                                                                                                                                                                                                                                       ========================================================= */
         const carouselState = {};
         let jambiMap = null;
         let markers = [];
@@ -425,7 +511,7 @@
            ========================================================= */
         function markNotifAsRead(elementId, notifId, category = '', popId = null, deviceType = null, deviceId = null) {
             const item = document.getElementById(elementId);
-            
+
             const processNavigation = () => {
                 if (popId) {
                     if (category === 'aktivitas' && deviceType !== 'pop' && deviceId) {
@@ -435,7 +521,7 @@
                         else if (deviceType === 'battery') detailPath = `batteries/${deviceId}`;
                         else if (deviceType === 'genset') detailPath = `gensets/${deviceId}`;
                         else if (deviceType === 'ac') detailPath = `ac/${deviceId}`;
-                        
+
                         if (detailPath) {
                             window.location.href = `{{ route('pops.index', [], false) }}/${popId}/${detailPath}`;
                             return;
@@ -831,20 +917,36 @@
                 title: 'Air Conditioner',
                 icon: 'bi-fan',
                 unit: 'unit',
-                statuses: [
-                    { key: 'sudah_pm', label: 'Sudah PM' },
-                    { key: 'jadwal_pm', label: 'Jadwal PM' },
-                    { key: 'belum_pm', label: 'Belum PM' }
+                statuses: [{
+                        key: 'sudah_pm',
+                        label: 'Sudah PM'
+                    },
+                    {
+                        key: 'jadwal_pm',
+                        label: 'Jadwal PM'
+                    },
+                    {
+                        key: 'belum_pm',
+                        label: 'Belum PM'
+                    }
                 ]
             },
             genset: {
                 title: 'Genset',
                 icon: 'bi-lightning',
                 unit: 'unit',
-                statuses: [
-                    { key: 'sudah_pm', label: 'Sudah PM' },
-                    { key: 'jadwal_pm', label: 'Jadwal PM' },
-                    { key: 'belum_pm', label: 'Belum PM' }
+                statuses: [{
+                        key: 'sudah_pm',
+                        label: 'Sudah PM'
+                    },
+                    {
+                        key: 'jadwal_pm',
+                        label: 'Jadwal PM'
+                    },
+                    {
+                        key: 'belum_pm',
+                        label: 'Belum PM'
+                    }
                 ]
             }
         };
@@ -856,6 +958,8 @@
 
         let deviceStatusData = {};
         let activeStatus = null; // { device, status }
+        let statusListItems = [];
+        let statusListVisibleCount = 10;
 
         function escapeHtml(s) {
             return String(s ?? '').replace(/[&<>"']/g, c => ({
@@ -929,24 +1033,24 @@
                 </div>
                 <div class="mini-progress-labels">
                     ${statuses.map(s => `
-                                                <span class="lbl-${s.key}" title="${s.label}"><i class="bi bi-circle-fill"></i>${Math.round(pct(s.key))}%</span>
-                                            `).join('')}
+                                                                                                                                                                                                                                                <span class="lbl-${s.key}" title="${s.label}"><i class="bi bi-circle-fill"></i>${Math.round(pct(s.key))}%</span>
+                                                                                                                                                                                                                                            `).join('')}
                 </div>
             </div>
 
             <div class="device-status-list">
                 ${statuses.map(s => `
-                                            <button type="button" class="status-dropdown-button"
-                                                    data-device="${key}" data-status="${s.key}" ${counts[s.key] === 0 ? 'disabled' : ''}>
-                                                <span class="status-left">
-                                                    <span class="status-dot ${s.key}"></span>${s.label}
-                                                </span>
-                                                <span class="status-right">
-                                                    <span class="status-count">${counts[s.key]}</span>
-                                                    <i class="bi bi-chevron-right"></i>
-                                                </span>
-                                            </button>
-                                        `).join('')}
+                                                                                                                                                                                                                                            <button type="button" class="status-dropdown-button"
+                                                                                                                                                                                                                                                    data-device="${key}" data-status="${s.key}" ${counts[s.key] === 0 ? 'disabled' : ''}>
+                                                                                                                                                                                                                                                <span class="status-left">
+                                                                                                                                                                                                                                                    <span class="status-dot ${s.key}"></span>${s.label}
+                                                                                                                                                                                                                                                </span>
+                                                                                                                                                                                                                                                <span class="status-right">
+                                                                                                                                                                                                                                                    <span class="status-count">${counts[s.key]}</span>
+                                                                                                                                                                                                                                                    <i class="bi bi-chevron-right"></i>
+                                                                                                                                                                                                                                                </span>
+                                                                                                                                                                                                                                            </button>
+                                                                                                                                                                                                                                        `).join('')}
             </div>
         </div>`;
             }).join('');
@@ -962,12 +1066,69 @@
             });
         }
 
+        function renderStatusListCards(deviceKey, statusKey, label) {
+            const visibleItems = statusListItems.slice(0, statusListVisibleCount);
+
+            document.getElementById('statusListCardsGrid').innerHTML = visibleItems.map(item => {
+                const showDeviceId = deviceKey === 'battery' || item.show_device_id;
+                const deviceLabel = deviceKey === 'battery' ? 'Rectifier terkait' : 'ID perangkat';
+
+                return `
+            <article class="pop-status-box">
+                <div class="pop-status-box-header">
+                    <div class="pop-status-identity">
+                        ${showDeviceId ? `
+                                                    <span class="pop-status-label">${deviceLabel}</span>
+                                                    <strong class="pop-status-device-id">${escapeHtml(item.unit || '-')}</strong>
+                                                ` : ''}
+                        <span class="pop-status-label">Nama POP</span>
+                        <strong class="pop-status-name">${escapeHtml(item.pop_name || item.kode || '-')}</strong>
+                    </div>
+
+                    <span class="status-pill ${statusKey}">${escapeHtml(label)}</span>
+                </div>
+
+                <button type="button" class="btn-detail-pop"
+                    data-pop-id="${item.pop_id}"
+                    data-device-type="${deviceKey}"
+                    data-device-id="${item.device_id || ''}">
+                    <i class="bi bi-eye" aria-hidden="true"></i>
+                    <span>Lihat detail POP</span>
+                </button>
+            </article>
+        `;
+            }).join('');
+
+            const remaining = statusListItems.length - statusListVisibleCount;
+            const loadMoreButton = document.getElementById('statusListLoadMore');
+
+            loadMoreButton.hidden = remaining <= 0;
+            if (remaining > 0) {
+                loadMoreButton.textContent =
+                    `Lihat selengkapnya (${Math.min(10, remaining)} berikutnya)`;
+            }
+
+            document.getElementById('statusListSubtitle').textContent =
+                `Menampilkan ${visibleItems.length} dari ${statusListItems.length} unit perangkat berstatus ${label}`;
+        }
+
+        function showMoreStatusCards() {
+            statusListVisibleCount += 10;
+
+            if (activeStatus) {
+                const label = statusLabel(activeStatus.device, activeStatus.status);
+                renderStatusListCards(activeStatus.device, activeStatus.status, label);
+            }
+        }
+
         function openStatusPage(deviceKey, statusKey) {
-            // klik status yang sama sekali lagi = tutup
-            if (activeStatus && activeStatus.device === deviceKey && activeStatus.status === statusKey) {
+            if (activeStatus &&
+                activeStatus.device === deviceKey &&
+                activeStatus.status === statusKey) {
                 closeStatusList();
                 return;
             }
+
             activeStatus = {
                 device: deviceKey,
                 status: statusKey
@@ -975,26 +1136,13 @@
             markActiveStatus();
 
             const meta = deviceMeta[deviceKey];
-            const items = (deviceStatusData[deviceKey] || {})[statusKey] || [];
             const label = statusLabel(deviceKey, statusKey);
 
-            document.getElementById('statusListTitle').textContent = `${meta.title} · ${label}`;
-            document.getElementById('statusListSubtitle').textContent = `${items.length} unit perangkat berstatus ${label}`;
+            statusListItems = (deviceStatusData[deviceKey] || {})[statusKey] || [];
+            statusListVisibleCount = 10;
 
-            document.getElementById('statusListCardsGrid').innerHTML = items.map(item => `
-        <div class="pop-status-box">
-            <div class="pop-status-box-header">
-                <div>
-                    <h4 title="${escapeHtml(item.unit)}">${escapeHtml(item.unit)}</h4>
-                    <small>${escapeHtml(item.pop_name)} &bull; ${escapeHtml(item.location)}</small>
-                </div>
-                <span class="status-pill ${statusKey}">${label}</span>
-            </div>
-            <button type="button" class="btn-detail-pop" data-pop-id="${item.pop_id}" data-device-type="${deviceKey}" data-device-id="${item.device_id || ''}">
-                <i class="bi bi-eye"></i> Detail
-            </button>
-        </div>
-    `).join('');
+            document.getElementById('statusListTitle').textContent = meta.title;
+            renderStatusListCards(deviceKey, statusKey, label);
 
             const box = document.getElementById('statusListContainer');
             box.style.display = 'block';
@@ -1006,7 +1154,11 @@
 
         function closeStatusList() {
             activeStatus = null;
+            statusListItems = [];
+            statusListVisibleCount = 10;
             markActiveStatus();
+
+            document.getElementById('statusListLoadMore').hidden = true;
             document.getElementById('statusListContainer').style.display = 'none';
         }
 
@@ -1015,6 +1167,8 @@
             const btn = e.target.closest('.status-dropdown-button');
             if (btn && !btn.disabled) openStatusPage(btn.dataset.device, btn.dataset.status);
         });
+
+        document.getElementById('statusListLoadMore').addEventListener('click', showMoreStatusCards);
 
         document.getElementById('statusListCardsGrid').addEventListener('click', e => {
             const btn = e.target.closest('.btn-detail-pop');
@@ -1056,16 +1210,19 @@
                             popId: cleanPopId
                         }
                     }));
-                    
+
                     if (deviceType && deviceId) {
                         setTimeout(() => {
-                            let targetId = deviceType === 'battery' 
-                                ? 'battery-group-' + (deviceId || '0') 
-                                : deviceType + '-card-' + deviceId;
-                                
+                            let targetId = deviceType === 'battery' ?
+                                'battery-group-' + (deviceId || '0') :
+                                deviceType + '-card-' + deviceId;
+
                             const targetEl = document.getElementById(targetId);
                             if (targetEl) {
-                                targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                targetEl.scrollIntoView({
+                                    behavior: 'smooth',
+                                    block: 'center'
+                                });
                                 targetEl.style.transition = 'box-shadow 0.5s';
                                 targetEl.style.boxShadow = '0 0 15px rgba(2, 132, 199, 0.5)';
                                 setTimeout(() => targetEl.style.boxShadow = '', 2000);
@@ -1094,25 +1251,55 @@
         /* =========================================================
            8. CHART ANALYTICS
            ========================================================= */
+
+        function formatHealthyIndexScore(value) {
+            const score = Number(value);
+
+            if (!Number.isFinite(score)) {
+                return '-';
+            }
+
+            return Number(score.toFixed(2)).toLocaleString('id-ID', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 2,
+            });
+        }
+
         function initAnalyticsCharts() {
             const popLabels = [
                 'POP PAYO SELINCAH', 'POP TELANAIPURA', 'POP BULIAN 01', 'POP BUNGO 01',
                 'POP SIPIN', 'POP TEMBESI', 'POP SAROLANGUN', 'POP BANGKO', 'POP TUNGKAL', 'POP KERINCI'
             ];
 
-            const stackedOptions = () => ({
+            const stackedOptions = rows => ({
                 responsive: true,
                 maintainAspectRatio: false,
+                interaction: {
+                    mode: 'nearest',
+                    intersect: true,
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true,
+                },
+                onHover: (event, activeElements) => {
+                    event.native.target.style.cursor = activeElements.length ? 'pointer' : 'default';
+                },
                 scales: {
                     x: {
                         stacked: true,
+                        grid: {
+                            drawOnChartArea: false,
+                        },
                         ticks: {
                             font: {
                                 size: 9
                             },
                             color: '#475569',
-                            maxRotation: 45,
-                            minRotation: 45
+                            maxRotation: 0,
+                            minRotation: 0,
+                            autoSkip: false,
+                            padding: 4,
                         }
                     },
                     y: {
@@ -1120,7 +1307,7 @@
                         max: 100,
                         title: {
                             display: true,
-                            text: 'NILAI PER POP',
+                            text: 'POIN',
                             font: {
                                 size: 10,
                                 weight: 'bold'
@@ -1144,84 +1331,182 @@
                         }
                     },
                     datalabels: {
-                        display: false
-                    }
+                        display: context =>
+                            context.datasetIndex === context.chart.data.datasets.length - 1 &&
+                            context.dataset.data[context.dataIndex] !== null,
+
+                        formatter: (value, context) => {
+                            const total = context.chart.data.datasets.reduce((sum, dataset) => {
+                                return sum + Number(dataset.data[context.dataIndex] || 0);
+                            }, 0);
+
+                            return formatHealthyIndexScore(total);
+                        },
+
+                        anchor: 'end',
+                        align: 'top',
+                        offset: -3,
+                        clamp: true,
+                        clip: false,
+                        color: '#0f172a',
+                        font: {
+                            family: 'Poppins',
+                            size: 11,
+                            weight: '600',
+                        },
+                    },
+                    tooltip: {
+                        mode: 'nearest',
+                        intersect: true,
+                        callbacks: {
+                            title: context => {
+                                const row = rows[context[0].dataIndex];
+                                return row ? `${row.popName} · ${row.rectifier_name}` : '';
+                            },
+                            label: context => {
+                                const value = context.parsed.y ?? 0;
+                                return `${context.dataset.label}: ${formatHealthyIndexScore(value)} poin`;
+                            },
+                            footer: context => {
+                                const row = rows[context[0].dataIndex];
+                                return row ?
+                                    `Total: ${formatHealthyIndexScore(row.score)} poin` :
+                                    '';
+                            },
+                        },
+                    },
                 }
             });
 
-            // 1. Healthy Index
+            // Hasil indeks lengkap, satu entri untuk setiap Rectifier.
+            const healthyIndexRows = @json($healthyIndexPops);
+
+            const indexRows = healthyIndexRows.flatMap(pop =>
+                (pop.rectifiers || [])
+                .filter(rectifier => rectifier.score !== null)
+                .map(rectifier => ({
+                    ...rectifier,
+                    popName: pop.pop_name,
+                    popCode: pop.pop_code,
+                }))
+            );
+
+            const devicePalette = [
+                '#2563EB', // Rectifier
+                '#F59E0B', // kWh
+                '#7C3AED', // Battery
+                '#14B8A6', // AC
+                '#16A34A', // Genset
+            ];
+
+            const chartDatasets = rows => {
+                const paddedValues = key => [
+                    ...rows.map(row => row.components[key]),
+                    ...Array(Math.max(0, 10 - rows.length)).fill(null),
+                ];
+
+                const barSizing = {
+                    categoryPercentage: 0.68,
+                    barPercentage: 0.72,
+                    maxBarThickness: 48,
+                    borderColor: 'transparent',
+                    borderWidth: 0,
+                    hoverBorderColor: '#0f172a',
+                    hoverBorderWidth: 1,
+                };
+
+                return [{
+                        label: 'Rectifier',
+                        data: paddedValues('rectifier'),
+                        backgroundColor: devicePalette[0],
+                        ...barSizing,
+                    },
+                    {
+                        label: 'kWh',
+                        data: paddedValues('kwh'),
+                        backgroundColor: devicePalette[1],
+                        ...barSizing,
+                    },
+                    {
+                        label: 'Battery',
+                        data: paddedValues('battery'),
+                        backgroundColor: devicePalette[2],
+                        ...barSizing,
+                    },
+                    {
+                        label: 'AC',
+                        data: paddedValues('ac'),
+                        backgroundColor: devicePalette[3],
+                        ...barSizing,
+                    },
+                    {
+                        label: 'Genset',
+                        data: paddedValues('genset'),
+                        backgroundColor: devicePalette[4],
+                        ...barSizing,
+                    },
+                ];
+            };
+
+            const chartLabels = rows => [
+                ...rows.map((row, index) => {
+                    const popCode = String(row.popCode || row.popName || '')
+                        .replace(/^POP[_\-\s]*/i, '');
+
+                    let rectifierName = String(row.rectifier_name || '')
+                        .replace(String(row.popCode || '') + '_', '')
+                        .replace(/^RECTIFIER[_\-\s]*/i, 'REC')
+                        .replace(/^RECT[_\-\s]*/i, 'REC');
+
+                    if (!rectifierName) {
+                        rectifierName = `R${index + 1}`;
+                    }
+
+                    return [
+                        popCode.length > 10 ? `${popCode.slice(0, 9)}…` : popCode,
+                        rectifierName.length > 6 ? `${rectifierName.slice(0, 5)}…` : rectifierName,
+                    ];
+                }),
+                ...Array(Math.max(0, 10 - rows.length)).fill(''),
+            ];
+
+            // Top Healthy: Healthy dan Very Healthy, skor tertinggi di atas.
+            const topHealthyRows = indexRows
+                .filter(row => ['healthy', 'very_healthy'].includes(row.status_key))
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 10);
+
             const ctxHealthy = document.getElementById('healthyIndexChart')?.getContext('2d');
+
             if (ctxHealthy) {
                 new Chart(ctxHealthy, {
                     type: 'bar',
                     data: {
-                        labels: popLabels,
-                        datasets: [{
-                                label: 'Rectifier',
-                                data: [18, 17, 16, 15, 14, 13, 12, 11, 10, 9],
-                                backgroundColor: '#1e3a8a'
-                            },
-                            {
-                                label: 'KWH',
-                                data: [19, 18, 17, 16, 15, 14, 13, 12, 11, 10],
-                                backgroundColor: '#2563eb'
-                            },
-                            {
-                                label: 'Baterai',
-                                data: [20, 19, 18, 17, 16, 15, 14, 13, 12, 11],
-                                backgroundColor: '#3b82f6'
-                            },
-                            {
-                                label: 'AC',
-                                data: [19, 18, 17, 16, 15, 14, 13, 12, 11, 10],
-                                backgroundColor: '#60a5fa'
-                            },
-                            {
-                                label: 'Genset',
-                                data: [18, 17, 16, 15, 14, 13, 12, 11, 10, 9],
-                                backgroundColor: '#93c5fd'
-                            }
-                        ]
+                        labels: chartLabels(topHealthyRows),
+                        datasets: chartDatasets(topHealthyRows),
                     },
-                    options: stackedOptions()
+                    options: stackedOptions(topHealthyRows),
+                    plugins: [ChartDataLabels],
                 });
             }
 
-            // 2. Non-Healthy Index
+            // Top Non-Healthy: UnHealthy dan Very UnHealthy, skor terendah di atas.
+            const topUnhealthyRows = indexRows
+                .filter(row => ['unhealthy', 'very_unhealthy'].includes(row.status_key))
+                .sort((a, b) => a.score - b.score)
+                .slice(0, 10);
+
             const ctxNonHealthy = document.getElementById('nonHealthyIndexChart')?.getContext('2d');
+
             if (ctxNonHealthy) {
                 new Chart(ctxNonHealthy, {
                     type: 'bar',
                     data: {
-                        labels: popLabels.slice().reverse(),
-                        datasets: [{
-                                label: 'Rectifier',
-                                data: [10, 12, 13, 14, 15, 16, 17, 18, 19, 20],
-                                backgroundColor: '#7f1d1d'
-                            },
-                            {
-                                label: 'KWH',
-                                data: [10, 11, 12, 14, 15, 16, 17, 18, 19, 19],
-                                backgroundColor: '#991b1b'
-                            },
-                            {
-                                label: 'Baterai',
-                                data: [10, 11, 12, 13, 15, 16, 17, 18, 19, 19],
-                                backgroundColor: '#dc2626'
-                            },
-                            {
-                                label: 'AC',
-                                data: [9, 10, 11, 12, 14, 15, 16, 17, 18, 18],
-                                backgroundColor: '#ef4444'
-                            },
-                            {
-                                label: 'Genset',
-                                data: [9, 10, 10, 11, 12, 14, 15, 16, 17, 18],
-                                backgroundColor: '#fca5a5'
-                            }
-                        ]
+                        labels: chartLabels(topUnhealthyRows),
+                        datasets: chartDatasets(topUnhealthyRows),
                     },
-                    options: stackedOptions()
+                    options: stackedOptions(topUnhealthyRows),
+                    plugins: [ChartDataLabels],
                 });
             }
 
@@ -1377,6 +1662,128 @@
             }
         }
 
+        //peta provinsi jambi
+        const mapPopData = [{
+                pop: 'POP_PAYOSELINCAH',
+                name: 'POP Payo Selincah',
+                lat: -1.608,
+                lng: 103.614,
+                device: 'ac',
+                status: 'good',
+                kab: 'Kota Jambi'
+            },
+            {
+                pop: 'POP_1MRB001',
+                name: 'POP Muara Bulian',
+                lat: -1.725,
+                lng: 103.250,
+                device: 'battery',
+                status: 'warning',
+                kab: 'Batanghari'
+            },
+            {
+                pop: 'POP_1JMB10007',
+                name: 'POP Telanaipura',
+                lat: -1.625,
+                lng: 103.600,
+                device: 'rectifier',
+                status: 'good',
+                kab: 'Kota Jambi'
+            },
+            {
+                pop: 'POP_1MRT10000',
+                name: 'POP Muara Tembesi',
+                lat: -1.720,
+                lng: 103.120,
+                device: 'kwh',
+                status: 'good',
+                kab: 'Batanghari'
+            },
+            {
+                pop: 'POP_1MBN002',
+                name: 'POP Muara Bungo',
+                lat: -1.490,
+                lng: 102.120,
+                device: 'genset',
+                status: 'warning',
+                kab: 'Bungo'
+            },
+            {
+                pop: 'POP_1SRL001',
+                name: 'POP Sarolangun 01',
+                lat: -2.300,
+                lng: 102.650,
+                device: 'rectifier',
+                status: 'alert',
+                kab: 'Sarolangun'
+            },
+            {
+                pop: 'POP_1KRN001',
+                name: 'POP Kerinci/Sungai Penuh',
+                lat: -2.060,
+                lng: 101.400,
+                device: 'battery',
+                status: 'good',
+                kab: 'Kerinci'
+            },
+            {
+                pop: 'POP_1KBL001',
+                name: 'POP Kuala Tungkal',
+                lat: -0.816,
+                lng: 103.460,
+                device: 'genset',
+                status: 'good',
+                kab: 'Tanjung Jabung Barat'
+            },
+            {
+                pop: 'POP_1MSB001',
+                name: 'POP Muara Sabak',
+                lat: -1.130,
+                lng: 103.850,
+                device: 'ac',
+                status: 'good',
+                kab: 'Tanjung Jabung Timur'
+            },
+            {
+                pop: 'POP_1BGK001',
+                name: 'POP Bangko',
+                lat: -2.070,
+                lng: 102.260,
+                device: 'rectifier',
+                status: 'alert',
+                kab: 'Merangin'
+            }
+        ];
+        // Cocokkan koordinat contoh peta dengan hasil Healthy Index dari database.
+        // Kunci pencocokan adalah kode POP.
+        const healthyIndexByPopCode = new Map(
+            @json($healthyIndexPops).map(pop => [pop.pop_code, pop])
+        );
+
+        const healthyStatusLabels = {
+            very_healthy: 'Very Healthy',
+            healthy: 'Healthy',
+            unhealthy: 'UnHealthy',
+            very_unhealthy: 'Very UnHealthy',
+        };
+
+        mapPopData.forEach(item => {
+            const popData = healthyIndexByPopCode.get(item.pop);
+            const indexes = popData?.rectifiers || [];
+
+            const completeIndexes = indexes
+                .filter(index => index.score !== null)
+                .sort((a, b) => a.score - b.score);
+
+            // Jika ada beberapa Rectifier, warna marker mewakili indeks terendah.
+            const worstIndex = completeIndexes[0] || null;
+
+            item.popId = popData?.pop_id || null;
+            item.name = popData?.pop_name || item.name;
+            item.rectifierIndexes = indexes;
+            item.status = worstIndex?.status_key || 'data_incomplete';
+            item.statusLabel = worstIndex?.status_label || 'Data belum lengkap';
+        });
         // Data peta titik POP provinsi jambi (hanya menampilkan POP nyata yang memiliki koordinat)
         @php
             $realMapPops = ($mapPops ?? collect())->map(function($p) {
@@ -1411,8 +1818,15 @@
             }).addTo(jambiMap);
 
             mapPopData.forEach(item => {
-                const markerColor = item.status === 'good' ? '#22c55e' :
-                    (item.status === 'warning' ? '#f59e0b' : '#ef4444');
+                const markerColors = {
+                    very_healthy: '#15803d',
+                    healthy: '#22c55e',
+                    unhealthy: '#f59e0b',
+                    very_unhealthy: '#dc2626',
+                    data_incomplete: '#94a3b8',
+                };
+
+                const markerColor = markerColors[item.status] || markerColors.data_incomplete;
                 const customIcon = L.divIcon({
                     className: 'custom-map-marker-wrapper',
                     html: `<div class="custom-map-marker" style="--marker-color:${markerColor}"><i class="bi bi-geo-alt-fill"></i></div>`,
@@ -1424,6 +1838,14 @@
                 const marker = L.marker([item.lat, item.lng], {
                     icon: customIcon
                 });
+                const rectifierDetails = (item.rectifierIndexes || []).map(index => {
+                    const detail = index.score === null ?
+                        'Data belum lengkap' :
+                        `${formatHealthyIndexScore(index.score)} poin — ${index.status_label}`;
+
+                    return `<small>${escapeHtml(index.rectifier_name)}: ${escapeHtml(detail)}</small>`;
+                }).join('');
+
                 marker.bindPopup(`
                     <div class="map-popup">
                         <strong>${item.name}</strong>
@@ -1448,9 +1870,7 @@
         function filterMarkers() {
             const st = document.getElementById('mapStatusFilter').value;
             markers.forEach(m => {
-                const matchSt = (st === 'all') ||
-                    (st === 'good' && m.status === 'good') ||
-                    (st === 'warning' && m.status !== 'good');
+                const matchSt = st === 'all' || m.status === st;
                 if (matchSt) {
                     if (!jambiMap.hasLayer(m)) jambiMap.addLayer(m);
                 } else if (jambiMap.hasLayer(m)) {
@@ -1470,7 +1890,7 @@
             if (openPopId) {
                 const openDeviceType = params.get('device_type');
                 const openDeviceId = params.get('device_id');
-                
+
                 // Beri sedikit delay agar UI dashboard siap
                 setTimeout(() => {
                     viewPopDetail(openPopId, openDeviceType, openDeviceId);

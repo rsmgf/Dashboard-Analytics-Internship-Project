@@ -661,3 +661,44 @@
         width: 200px;
     }
 }
+
+.pop-healthy-index-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 6px;
+}
+
+.pop-healthy-index-badge {
+    display: inline-flex;
+    padding: 4px 8px;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    line-height: 1.35;
+    font-weight: 600;
+}
+
+.pop-healthy-index-badge.very_healthy {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.pop-healthy-index-badge.healthy {
+    background: #d1fae5;
+    color: #047857;
+}
+
+.pop-healthy-index-badge.unhealthy {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.pop-healthy-index-badge.very_unhealthy {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.pop-healthy-index-badge.data_incomplete {
+    background: #e2e8f0;
+    color: #475569;
+}

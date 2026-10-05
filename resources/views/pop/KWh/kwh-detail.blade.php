@@ -14,7 +14,7 @@
     @vite(['resources/css/sidebar.css', 'resources/css/kwh-detail.css'])
 </head>
 
-<body>
+<body class="{{ (session('active_role') ?? (auth()->user()?->hasRole('manajer') ? 'manajer' : 'super_admin')) === 'manajer' ? 'manajer-mode' : '' }}">
 
     <div class="app-container">
         <x-sidebar />
