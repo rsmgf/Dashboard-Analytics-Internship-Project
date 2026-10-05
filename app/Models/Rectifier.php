@@ -92,7 +92,7 @@ class Rectifier extends Model
 
         if ($this->utilisasi <= 50) {
             return 'Good';
-        } elseif ($this->utilisasi <= 70) {
+        } elseif ($this->utilisasi < 80) {
             return 'Warning';
         } else {
             return 'Alert';

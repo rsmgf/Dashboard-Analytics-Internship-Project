@@ -82,7 +82,10 @@ body {
     gap: 6px;
     position: relative;
     bottom: -1.5px;
+<<<<<<< HEAD
     /* Menutupi garis bawah card */
+=======
+>>>>>>> 6e6b6151af3f569fa58b5318495e023192c64476
 }
 
 .tab-btn {
@@ -111,7 +114,10 @@ body {
     font-weight: 700;
     border-color: #7dd3fc;
     border-bottom: 2px solid #ffffff;
+<<<<<<< HEAD
     /* Buka penutup border dasar */
+=======
+>>>>>>> 6e6b6151af3f569fa58b5318495e023192c64476
 }
 
 .notif-tab-pane {
@@ -173,9 +179,13 @@ body {
     font-size: 1.35rem;
 }
 
+<<<<<<< HEAD
 /* Warna Varian Ikon */
 .bg-icon-red,
 .notif-icon-box.notif-red {
+=======
+.bg-icon-red {
+>>>>>>> 6e6b6151af3f569fa58b5318495e023192c64476
     background-color: #fee2e2;
     color: #dc2626;
 }
@@ -300,6 +310,30 @@ body {
 .notif-row:hover .notif-arrow {
     color: #0284c7;
     transform: translateX(3px);
+}
+
+.badge-very-healthy {
+    background-color: #dcfce7;
+    color: #166534;
+    border: 1px solid #86efac;
+}
+
+.badge-healthy {
+    background-color: #d1fae5;
+    color: #047857;
+    border: 1px solid #6ee7b7;
+}
+
+.badge-unhealthy {
+    background-color: #fef3c7;
+    color: #b45309;
+    border: 1px solid #fcd34d;
+}
+
+.badge-very-unhealthy {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fca5a5;
 }
 
 @media (max-width: 1024px) {

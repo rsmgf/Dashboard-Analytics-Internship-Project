@@ -100,7 +100,7 @@ class Genset extends Model
         $nextPm = $this->pm_berikutnya;
         $now = now();
 
-        if ($now->startOfDay()->greaterThan($nextPm->startOfDay())) {
+        if ($now->startOfDay()->greaterThanOrEqualTo($nextPm->startOfDay())) {
             $lewatHari = $nextPm->startOfDay()->diffInDays($now->startOfDay());
             return [
                 'status' => 'Jadwal Preventive Maintenance',

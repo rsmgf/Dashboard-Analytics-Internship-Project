@@ -552,8 +552,8 @@ body.sidebar-collapsed .dropdown-arrow {
     border-radius: 8px;
     border-left: 3px solid transparent;
     font-family: 'Poppins', sans-serif;
-    font-size: 13.5px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 700;
     cursor: pointer;
     text-align: left;
     white-space: nowrap;
@@ -581,10 +581,19 @@ body.sidebar-collapsed .dropdown-arrow {
     flex: 1 1 auto;
 }
 
-.sidebar-logout-item:hover {
-    color: #ef4444;
-    background: rgba(239, 68, 68, 0.1);
-    border-left-color: #ef4444;
+.sidebar-logout-item:hover,
+.sidebar-logout-item:focus-visible {
+    color: #ffffff;
+    background: #ff6666;
+    border-left-color: #fecaca;
+    outline: none;
+}
+
+.sidebar-logout-item:hover i,
+.sidebar-logout-item:hover span,
+.sidebar-logout-item:focus-visible i,
+.sidebar-logout-item:focus-visible span {
+    color: #ffffff;
 }
 
 body.sidebar-collapsed .sidebar-logout-item {

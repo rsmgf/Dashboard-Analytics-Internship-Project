@@ -99,7 +99,7 @@ class Kwh extends Model
 
         if ($persen <= 50) {
             $status = 'Good';
-        } elseif ($persen <= 70) {
+        } elseif ($persen < 80) {
             $status = 'Warning';
         } else {
             $status = 'Alert';

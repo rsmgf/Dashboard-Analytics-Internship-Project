@@ -44,9 +44,17 @@ class Ac extends Model
     }
 
     protected static array $kolomKelengkapan = [
-        'nomor_ac', 'jenis_freon', 'merk_ac', 'tahun_manufaktur', 'type_ac',
-        'pk', 'tanggal_instalasi', 'tanggal_terakhir_pm', 'status_ac',
-        'photo_ac', 'keterangan_gambar_ac'
+        'nomor_ac',
+        'jenis_freon',
+        'merk_ac',
+        'tahun_manufaktur',
+        'type_ac',
+        'pk',
+        'tanggal_instalasi',
+        'tanggal_terakhir_pm',
+        'status_ac',
+        'photo_ac',
+        'keterangan_gambar_ac'
     ];
 
     public function getKelengkapanFormAttribute(): array
@@ -94,7 +102,7 @@ class Ac extends Model
         $nextPm = $this->pm_berikutnya;
         $now = now();
 
-        if ($now->startOfDay()->greaterThan($nextPm->startOfDay())) {
+        if ($now->startOfDay()->greaterThanOrEqualTo($nextPm->startOfDay())) {
             $lewatHari = $nextPm->startOfDay()->diffInDays($now->startOfDay());
             return [
                 'status' => 'Jadwal Preventive Maintenance',
