@@ -1784,6 +1784,23 @@
             item.status = worstIndex?.status_key || 'data_incomplete';
             item.statusLabel = worstIndex?.status_label || 'Data belum lengkap';
         });
+        // Data peta titik POP provinsi jambi (hanya menampilkan POP nyata yang memiliki koordinat)
+        @php
+            $realMapPops = ($mapPops ?? collect())->map(function($p) {
+                return [
+                    'id'       => $p->id,
+                    'pop'      => $p->kode_pop,
+                    'name'     => $p->nama_pop_display,
+                    'lat'      => (float) $p->latitude,
+                    'lng'      => (float) $p->longitude,
+                    'device'   => 'pop',
+                    'status'   => 'good',
+                    'kab'      => $p->kota_kabupaten ?? '-',
+                    'building' => $p->jenis_bangunan ?? '-',
+                ];
+            })->values()->all();
+        @endphp
+        const mapPopData = @json($realMapPops);
 
         function initJambiMap() {
             const mapElement = document.getElementById('jambiMap');
@@ -1830,17 +1847,14 @@
                 }).join('');
 
                 marker.bindPopup(`
-    <div class="map-popup">
-        <strong>${escapeHtml(item.name)}</strong>
-        <span>Kode: ${escapeHtml(item.pop)}</span>
-        <small>Wilayah: ${escapeHtml(item.kab)}</small>
-        <span class="popup-status ${item.status}">${escapeHtml(item.statusLabel)}</span>
-        ${rectifierDetails}
-        ${item.popId
-            ? `<button type="button" onclick="viewPopDetail('${item.popId}')">Lihat Detail</button>`
-            : ''}
-    </div>
-`);
+                    <div class="map-popup">
+                        <strong>${item.name}</strong>
+                        <span>Kode: ${item.pop}</span>
+                        <small>Wilayah: ${item.kab}</small>
+                        <span class="popup-status ${item.status}">Status: ${item.status.toUpperCase()}</span>
+                        <button type="button" onclick="viewPopDetail('${item.id || item.pop}')">Lihat Detail</button>
+                    </div>
+                `);
 
                 marker.device = item.device;
                 marker.status = item.status;

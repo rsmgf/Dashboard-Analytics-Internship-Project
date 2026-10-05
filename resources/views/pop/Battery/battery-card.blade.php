@@ -129,7 +129,7 @@
                             Rectifier : {{ $rectifierLabel }}
                         </div>
                         <div class="backup-time {{ $badgeClass }}">
-                            Performance Backup Time : {{ $backupJam }} ({{ $performaText }})
+                            Performa Waktu Backup : {{ $backupJam }} ({{ $performaText }})
                         </div>
                     </div>
 
@@ -171,7 +171,7 @@
                                 {{-- Card Header --}}
                                 <div class="rectifier-card-header">
                                     <div class="card-icon">
-                                        <i class="bi bi-battery-charging"></i>
+                                        <i class="bi bi-battery-full"></i>
                                     </div>
                                     <div class="card-title-text">
                                         <h3>{{ $battery->nomor_bank }}</h3>
@@ -205,17 +205,23 @@
                                             </span>
                                         </span>
                                     </div>
+                                    @php
+                                        $statusRaw = $battery->status_uji ?? 'BLM UJI BATT';
+                                        $statusKey = strtolower($statusRaw);
+                                        $statusClass = str_contains($statusKey, 'sudah') ? 'status-text-done' : (str_contains($statusKey, 'jadwal') ? 'status-text-due' : ((str_contains($statusKey, 'belum') || str_contains($statusKey, 'blm')) ? 'status-text-warning' : ''));
+                                        $statusLabel = preg_replace(['/\bBlm\b/', '/\bBatt(ery)?\b/'], ['Belum', 'Baterai'], ucwords($statusKey));
+                                    @endphp
                                     <div class="equipment-info">
                                         <strong>Status Uji</strong>
                                         <span class="info-sep">:</span>
-                                        <span class="data-value">{{ $battery->status_uji ?? 'BLM UJI BATT' }}</span>
+                                        <span class="data-value {{ $statusClass }}">{{ $statusLabel }}</span>
                                     </div>
                                 </div>
 
                                 <div class="rectifier-meta">
                                     <div class="meta-item">
-                                        <i class="bi bi-calendar-event-fill"></i>
-                                        <span>{{ $battery->tanggal_uji_terakhir ? $battery->tanggal_uji_terakhir->format('d M Y') : '-' }}</span>
+                                        <i class="bi bi-calendar-fill"></i>
+                                        <span>{{ $battery->tanggal_uji_terakhir ? $battery->tanggal_uji_terakhir->locale('id')->translatedFormat('d M Y') : '-' }}</span>
                                     </div>
                                     <div class="meta-item">
                                         <i class="bi bi-geo-alt-fill"></i>
@@ -225,7 +231,7 @@
 
                                 <div class="rectifier-last-updated">
                                     <i class="bi bi-clock-history"></i>
-                                    <span>{{ $battery->diupdateOleh?->name ?? 'Admin' }} &middot; {{ $battery->updated_at->format('d M Y, H.i') }} WIB</span>
+                                    <span>{{ $battery->diupdateOleh?->name ?? 'Admin' }} &middot; {{ $battery->updated_at->locale('id')->translatedFormat('d M Y, H.i') }} WIB</span>
                                 </div>
 
                                 <div class="rectifier-card-footer">

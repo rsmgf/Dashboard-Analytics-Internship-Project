@@ -1,7 +1,46 @@
+@import './type-scale.css';
+
+/* =========================================================
+   GLOBAL & LAYOUT
+========================================================= */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #f8fafc;
+    color: #1e293b;
+}
+
+.app-container {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    background: #f8fafc;
+}
+
+.main-content {
+    flex: 1;
+    min-width: 0;
+    min-height: 100vh;
+    background: #f8fafc;
+}
+
 .ac-content {
     width: 100%;
+    max-width: 1600px;
+    margin-inline: auto;
     min-height: calc(100vh - 70px);
-    padding: 24px;
+    padding: clamp(14px, 2.5vw, 24px);
+    padding-bottom: max(clamp(20px, 3vw, 32px), env(safe-area-inset-bottom, 0px));
     background: #f8fafc;
 }
 
@@ -17,10 +56,13 @@
     background: transparent;
 }
 
-.ac-page-left {
+.ac-page-left,
+.ac-page-info {
     display: flex;
     align-items: center;
     gap: 14px;
+    min-width: 0;
+    flex: 1 1 280px;
 }
 
 .ac-back-button {
@@ -49,6 +91,8 @@
     display: flex;
     flex-direction: column;
     gap: 3px;
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 .ac-breadcrumb {
@@ -100,6 +144,14 @@
     transition: all 0.25s ease;
 }
 
+.ac-back-button:focus-visible,
+.ac-add-button:focus-visible,
+.ac-delete-button:focus-visible,
+.ac-detail-button:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.4);
+    outline-offset: 2px;
+}
+
 .ac-add-button:hover {
     background: linear-gradient(135deg, #0078E8, #0052C2);
     color: #ffffff;
@@ -110,7 +162,7 @@
 .ac-grid {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 440px), 1fr));
     column-gap: 20px;
     row-gap: 20px;
     padding-top: 6px;
@@ -131,10 +183,12 @@
     transition: all 0.2s ease;
 }
 
-.ac-card:hover {
-    border-color: #b8c9dc;
-    box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
-    transform: translateY(-1px);
+@media (hover: hover) {
+    .ac-card:hover {
+        border-color: #b8c9dc;
+        box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        transform: translateY(-1px);
+    }
 }
 
 .ac-card-header {
@@ -155,17 +209,22 @@
     min-width: 0;
 }
 
+.ac-title-wrapper .card-title-text {
+    min-width: 0;
+}
+
 .ac-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
-    background: #eff6ff;
-    color: #2563eb;
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    /* warna sama dengan .device-icon.ac di dashboard */
+    background: #ecfeff;
+    color: #0891b2;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
-    flex-shrink: 0;
+    font-size: var(--icon-title);
 }
 
 .ac-title-wrapper h3 {
@@ -190,6 +249,8 @@
 }
 
 .ac-badge {
+    flex-shrink: 0;
+    white-space: nowrap;
     font-size: 10px;
     font-weight: 600;
     padding: 2px 8px;
@@ -212,7 +273,7 @@
     font-size: 0.8rem;
     color: #334155;
     display: grid;
-    grid-template-columns: 90px 1fr;
+    grid-template-columns: 90px minmax(0, 1fr);
     align-items: baseline;
     column-gap: 0;
 }
@@ -228,6 +289,8 @@
     display: flex;
     align-items: center;
     gap: 6px;
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 .ac-info-row strong::before {
@@ -238,10 +301,26 @@
     flex-shrink: 0;
 }
 
+/* Warna teks status: merah = masih dijadwalkan, hijau = sudah dikerjakan, orange = belum dikerjakan */
+.status-text-due {
+    color: #dc2626 !important;
+}
+
+.status-text-done {
+    color: #15803d !important;
+}
+
+.status-text-warning {
+    color: #ea580c !important;
+}
+
 .ac-meta {
     display: flex;
-    flex-direction: column;
-    gap: 3px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    overflow-wrap: anywhere;
+    gap: 4px 14px;
     padding: 6px 16px 0;
     font-size: 0.68rem;
     color: #64748b;
@@ -279,6 +358,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 8px;
     border-top: 1px solid #f1f5f9;
     padding: 10px 16px;
     margin-top: auto;
@@ -338,41 +418,73 @@
     transform: translateX(3px);
 }
 
-@media (max-width: 1100px) {
-    .ac-grid {
-        grid-template-columns: 1fr;
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media (max-width: 768px) {
+    .ac-page-header {
+        margin-bottom: 18px;
+        padding-bottom: 14px;
     }
 }
 
 @media (max-width: 600px) {
-    .ac-content {
-        padding: 12px 14px 20px;
-    }
-
     .ac-page-header {
-        align-items: flex-start;
-        gap: 15px;
-    }
-
-    .ac-add-button {
-        padding: 9px 12px;
+        align-items: center;
     }
 
     .ac-grid {
-        grid-template-columns: 1fr;
-        row-gap: 15px;
+        row-gap: 14px;
         padding-top: 10px;
     }
 
+    .ac-back-button {
+        width: 34px;
+        height: 34px;
+        font-size: 12px;
+    }
+
+    .ac-page-left,
+    .ac-page-info {
+        gap: 10px;
+    }
+
+    /* Breadcrumb (komponen <x-breadcrumb>) */
+    .ac-header-text :is(nav, ol, ul, li, a, span, i, strong) {
+        font-size: var(--fs-xs);
+        line-height: 1.4;
+    }
+
+    .ac-header-text :is(nav, ol, ul) {
+        flex-wrap: wrap;
+    }
+
+    .ac-add-button {
+        min-height: var(--control-h);
+        padding: 8px 16px;
+        font-size: var(--fs-sm);
+    }
+
     .ac-card-header {
-        padding: 10px;
+        padding: 10px 12px;
         gap: 8px;
     }
 
     .ac-icon {
-        width: 32px;
-        height: 32px;
-        font-size: 14px;
+        width: 34px;
+        height: 34px;
+    }
+
+    .ac-title-wrapper h3 {
+        font-size: var(--fs-md);
+    }
+
+    .ac-title-wrapper span {
+        font-size: var(--fs-xs);
+    }
+
+    .ac-badge {
+        font-size: var(--fs-2xs);
     }
 
     .ac-information,
@@ -382,9 +494,42 @@
         padding-right: 14px;
     }
 
+    .ac-info-row {
+        grid-template-columns: 84px minmax(0, 1fr);
+        font-size: var(--fs-sm);
+    }
+
+    .ac-meta {
+        font-size: var(--fs-xs);
+    }
+
+    .ac-last-updated {
+        font-size: var(--fs-2xs);
+    }
+
     .ac-card-footer {
-        left: 14px;
-        right: 14px;
-        bottom: 10px;
+        padding: 10px 14px;
+    }
+
+    .ac-delete-button {
+        min-height: 36px;
+        font-size: var(--fs-xs);
+    }
+
+    .ac-detail-button {
+        min-height: 36px;
+        font-size: var(--fs-sm);
+    }
+}
+
+@media (max-width: 480px) {
+    .ac-add-button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 360px) {
+    .ac-info-row {
+        grid-template-columns: 76px minmax(0, 1fr);
     }
 }

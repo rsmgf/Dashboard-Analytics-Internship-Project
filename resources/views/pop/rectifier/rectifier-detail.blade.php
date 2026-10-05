@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Detail Rectifier - {{ $rectifier->merk ?? 'Rectifier' }} - PLN Icon Plus</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -33,7 +33,7 @@
             {{-- HEADER ATAS: Back + Breadcrumb As Title + Badge + Tombol Edit --}}
             <div class="detail-header-bar">
                 <div class="header-left-group">
-                    <a href="{{ route('rectifiers.index', $pop->id) }}" class="detail-back" title="Kembali ke Daftar Rectifier">
+                    <a href="{{ route('rectifiers.index', $pop->id) }}" class="detail-back" title="Kembali ke Daftar Rectifier" aria-label="Kembali ke Daftar Rectifier">
                         <i class="bi bi-arrow-left"></i>
                     </a>
                     <div class="header-title-wrapper">
@@ -165,7 +165,7 @@
                             </div>
                         </div>
                         @if($rectifier->sn_rectifier)
-                            <button type="button" onclick="copySerial()" title="Copy Serial Number">
+                            <button type="button" onclick="copySerial()" title="Copy Serial Number" aria-label="Salin Serial Number">
                                 <i class="bi bi-clipboard"></i>
                             </button>
                         @endif
@@ -198,9 +198,7 @@
                 {{-- Card Photo Rectifier --}}
                 <div class="detail-card photo-card">
                     <div class="photo-header">
-                        <div class="photo-icon">
-                            <i class="bi bi-camera-fill"></i>
-                        </div>
+                        <i class="bi bi-camera-fill"></i>
                         <span class="photo-title">Photo Rectifier</span>
                     </div>
 
@@ -407,7 +405,8 @@ function openRectifierPhoto(src, title) {
         imageAlt: title || 'Photo Rectifier',
         showCloseButton: true,
         showConfirmButton: false,
-        width: 'auto',
+        width: 'min(92vw, 900px)',
+        heightAuto: false,
     });
 }
 </script>

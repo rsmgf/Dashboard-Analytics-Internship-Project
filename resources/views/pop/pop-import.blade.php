@@ -712,6 +712,18 @@
                                     <td data-label="Status"><span class="badge-optional">Opsional</span></td>
                                     <td data-label="Nilai">POP-SB, POP-A, POP-B, POP-D</td>
                                 </tr>
+                                <tr>
+                                    <td data-label="Header"><code>Latitude</code></td>
+                                    <td data-label="Keterangan">Titik koordinat Latitude (derajat desimal)</td>
+                                    <td data-label="Status"><span class="badge-optional">Opsional</span></td>
+                                    <td data-label="Nilai">Angka desimal antara -90 sampai 90 (Contoh: -1.608)</td>
+                                </tr>
+                                <tr>
+                                    <td data-label="Header"><code>Longitude</code></td>
+                                    <td data-label="Keterangan">Titik koordinat Longitude (derajat desimal)</td>
+                                    <td data-label="Status"><span class="badge-optional">Opsional</span></td>
+                                    <td data-label="Nilai">Angka desimal antara -180 sampai 180 (Contoh: 103.614)</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>

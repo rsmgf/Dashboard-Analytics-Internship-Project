@@ -23,7 +23,7 @@ class UpdateKwhRequest extends StoreKwhRequest
     {
         $rules = parent::rules();
         $rules['photos'] = ['nullable', 'array'];
-        $rules['photos.*'] = ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:10240'];
+        $rules['photos.*'] = ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'];
         return $rules;
     }
 }

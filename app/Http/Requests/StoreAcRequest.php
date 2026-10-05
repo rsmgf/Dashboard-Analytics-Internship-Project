@@ -27,8 +27,26 @@ class StoreAcRequest extends FormRequest
             'tanggal_terakhir_pm'   => ['nullable', 'date'],
 
             // Foto
-            'photo_ac'              => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:10240'],
+            'photo_ac'              => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
             'keterangan_gambar_ac'  => ['nullable', 'string', 'max:500'],
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'jenis_freon'          => 'Jenis Freon',
+            'jenis_freon_others'   => 'Jenis Freon (Lainnya)',
+            'merk_ac'              => 'Merk AC',
+            'merk_ac_others'       => 'Merk AC (Lainnya)',
+            'tahun_manufaktur'     => 'Tahun Manufaktur',
+            'type_ac'              => 'Tipe AC',
+            'type_ac_others'       => 'Tipe AC (Lainnya)',
+            'pk'                   => 'Kapasitas PK',
+            'tanggal_instalasi'    => 'Tanggal Instalasi',
+            'tanggal_terakhir_pm'  => 'Tanggal Terakhir PM',
+            'photo_ac'             => 'Foto AC',
+            'keterangan_gambar_ac' => 'Keterangan Foto AC',
         ];
     }
 
@@ -38,12 +56,17 @@ class StoreAcRequest extends FormRequest
             'jenis_freon.required'      => 'Jenis Freon wajib dipilih.',
             'merk_ac.required'          => 'Merk AC wajib dipilih.',
             'tahun_manufaktur.required' => 'Tahun Manufaktur wajib dipilih.',
-            'tahun_manufaktur.integer'  => 'Tahun Manufaktur harus berupa angka.',
-            'type_ac.required'          => 'Type AC wajib dipilih.',
-            'pk.required'               => 'PK wajib dipilih.',
-            'photo_ac.image'            => 'Foto AC harus berupa gambar.',
-            'photo_ac.mimes'            => 'Format foto AC harus JPG, JPEG, atau PNG.',
-            'photo_ac.max'              => 'Ukuran foto AC maksimal 10 MB.',
+            'tahun_manufaktur.integer'  => 'Tahun Manufaktur harus berupa angka bulat (contoh: 2024).',
+            'tahun_manufaktur.min'      => 'Tahun Manufaktur tidak boleh kurang dari :min.',
+            'tahun_manufaktur.max'      => 'Tahun Manufaktur tidak boleh lebih dari :max.',
+            'type_ac.required'          => 'Tipe AC wajib dipilih.',
+            'pk.required'               => 'Kapasitas PK wajib dipilih.',
+            'tanggal_instalasi.date'    => 'Tanggal Instalasi harus berupa tanggal yang valid.',
+            'tanggal_terakhir_pm.date'  => 'Tanggal Terakhir PM harus berupa tanggal yang valid.',
+            'photo_ac.image'            => 'Foto AC harus berupa berkas gambar.',
+            'photo_ac.mimes'            => 'Format Foto AC harus JPG, JPEG, atau PNG.',
+            'photo_ac.max'              => 'Ukuran Foto AC maksimal 2 MB.',
+            'keterangan_gambar_ac.max'  => 'Keterangan Foto AC maksimal :max karakter.',
         ];
     }
 }

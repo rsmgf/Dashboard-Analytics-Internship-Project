@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Tambah Rectifier - {{ $pop->nama_pop_display }} - PLN Icon Plus</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -29,7 +29,7 @@
 
                 {{-- HEADER BAR: Back + Breadcrumb As Title --}}
                 <div class="rform-header-bar">
-                    <a href="{{ route('rectifiers.index', $pop->id) }}" class="rform-back" title="Kembali ke List Rectifier">
+                    <a href="{{ route('rectifiers.index', $pop->id) }}" class="rform-back" title="Kembali ke List Rectifier" aria-label="Kembali ke List Rectifier">
                         <i class="bi bi-arrow-left"></i>
                     </a>
                     <div class="rform-header-text">
@@ -239,30 +239,33 @@
                             <span class="rform-section-sub">Upload foto kondisi rectifier di lokasi</span>
                         </div>
                         <div class="rform-section-body">
-                        <div class="rform-photo-grid">
-                            <div class="rform-drop-zone" id="dropZone" onclick="document.getElementById('fotoInput').click()">
-                                <div class="rform-drop-icon">
-                                    <i class="bi bi-cloud-arrow-up-fill"></i>
+                            <div class="rform-photo-grid">
+                                <div class="rform-photo-col">
+                                    <span class="rform-preview-label">Unggah Foto</span>
+                                    <div class="rform-drop-zone" id="dropZone" onclick="document.getElementById('fotoInput').click()">
+                                        <div class="rform-drop-icon">
+                                            <i class="bi bi-cloud-arrow-up-fill"></i>
+                                        </div>
+                                        <div class="rform-drop-text" id="dropText">Masukkan file disini</div>
+                                        <button type="button" class="rform-browse-btn">Browse</button>
+                                        <div class="rform-drop-hint">Format: JPG, JPEG, PNG &bull; Maks. ukuran: 2 MB</div>
+                                        <input type="file" id="fotoInput" name="foto_rectifier" accept=".jpg,.jpeg,.png"
+                                            style="display:none;" onchange="previewFoto(this)">
+                                    </div>
                                 </div>
-                                <div class="rform-drop-text" id="dropText">Masukkan file disini</div>
-                                <button type="button" class="rform-browse-btn">Browse</button>
-                                <div class="rform-drop-hint">Format: JPG, JPEG, PNG &bull; Maks. ukuran: 10 MB</div>
-                                <input type="file" id="fotoInput" name="foto_rectifier" accept=".jpg,.jpeg,.png"
-                                    style="display:none;" onchange="previewFoto(this)">
-                            </div>
 
-                            <div class="rform-photo-preview">
-                                <span class="rform-preview-label">Preview foto</span>
-                                <div class="rform-preview-box">
-                                    <img id="fotoPreview" src="" alt="" style="display:none;">
-                                    <div class="rform-preview-empty" id="fotoEmpty">
-                                        <i class="bi bi-image"></i>
-                                        <span>Belum ada foto yang dipilih</span>
+                                <div class="rform-photo-col">
+                                    <span class="rform-preview-label">Preview Foto</span>
+                                    <div class="rform-preview-box">
+                                        <img id="fotoPreview" src="" alt="" style="display:none;">
+                                        <div class="rform-preview-empty" id="fotoEmpty">
+                                            <i class="bi bi-image"></i>
+                                            <span>Belum ada foto yang dipilih</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        @error('foto_rectifier')<div style="color:#ef4444;font-size:0.8rem;margin-top:4px;">{{ $message }}</div>@enderror
+                            @error('foto_rectifier')<div style="color:#ef4444;font-size:0.8rem;margin-top:4px;">{{ $message }}</div>@enderror
                         </div>
                     </div>
 
@@ -626,7 +629,7 @@
         }
 
         // Drag & drop support
-        const previewBox = document.getElementById('previewBoxRectifier');
+        const previewBox = document.getElementById('dropZone');
         if (previewBox) {
             ['dragenter', 'dragover'].forEach(name => {
                 previewBox.addEventListener(name, (e) => {

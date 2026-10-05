@@ -17,6 +17,13 @@ class Pop extends Model
         'kota_kabupaten',
         'tipe_pop',
         'jenis_bangunan',
+        'latitude',
+        'longitude',
+    ];
+
+    protected $casts = [
+        'latitude' => 'float',
+        'longitude' => 'float',
     ];
 
     /**

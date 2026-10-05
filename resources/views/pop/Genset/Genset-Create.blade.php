@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Tambah Genset - PLN Icon Plus</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
@@ -21,16 +21,18 @@
             <x-topbar />
 
             <div class="rectifier-content">
-                <div class="rectifier-page-header" style="border-bottom: none; margin-bottom: 20px;">
-                    <div class="rectifier-page-info" style="display: flex; align-items: center; gap: 12px;">
-                        <a href="{{ route('gensets.index', $pop->id) }}" class="back-button" title="Kembali ke List Genset">
+                <div class="rectifier-page-header">
+                    <div class="rectifier-page-info">
+                        <a href="{{ route('gensets.index', $pop->id) }}" class="back-button" title="Kembali ke List Genset" aria-label="Kembali ke List Genset">
                             <i class="bi bi-arrow-left"></i>
                         </a>
+                        <div class="rectifier-header-text">
                         <x-breadcrumb :items="[
                             ['label' => 'POP', 'route' => 'pops.index'],
                             ['label' => $pop->nama_pop_display . ': Genset', 'route' => 'gensets.index', 'params' => ['pop' => $pop->id]],
                             ['label' => 'Tambah Genset'],
                         ]" />
+                        </div>
                     </div>
                 </div>
 
@@ -182,9 +184,9 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="tanggal_pm">Tanggal PM <span class="required">*</span></label>
+                                <label for="tanggal_pm">Tanggal PM</label>
                                 <input type="date" id="tanggal_pm" name="tanggal_pm" class="form-control"
-                                    value="{{ old('tanggal_pm') }}" required>
+                                    value="{{ old('tanggal_pm') }}">
                                 <small class="upload-info">Jadwal Pemeliharaan (PM) rutin disarankan setiap 6 bulan sekali.</small>
                                 @error('tanggal_pm')<div style="color:#ef4444;font-size:0.8rem;margin-top:4px;">{{ $message }}</div>@enderror
                             </div>
@@ -389,7 +391,8 @@
                 const dot  = document.getElementById('statusDot');
                 const text = document.getElementById('statusText');
                 if (!val) {
-                    dot.style.background  = '#94a3b8';
+                    dot.style.background  = '#ea580c';
+                    text.style.color = '#ea580c';
                     text.textContent = 'Belum PM';
                     return;
                 }
@@ -398,10 +401,12 @@
                 const diffMs   = now - pm;
                 const diffMonth = diffMs / (1000 * 60 * 60 * 24 * 30);
                 if (diffMonth >= 6) {
-                    dot.style.background  = '#f59e0b';
+                    dot.style.background  = '#dc2626';
+                    text.style.color = '#dc2626';
                     text.textContent = 'Jadwal PM';
                 } else {
                     dot.style.background  = '#10b981';
+                    text.style.color = '#15803d';
                     text.textContent = 'Sudah PM';
                 }
             }
@@ -481,7 +486,8 @@
                 imageAlt: title || 'Foto',
                 showCloseButton: true,
                 showConfirmButton: false,
-                width: 'auto',
+                width: 'min(92vw, 900px)',
+                heightAuto: false,
                 customClass: {
                     popup: 'swal-popup-custom'
                 }

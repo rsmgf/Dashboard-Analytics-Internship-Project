@@ -1,8 +1,11 @@
+@import './type-scale.css';
+
 @keyframes fadeIn {
     from {
         opacity: 0;
         transform: translateY(8px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -18,6 +21,10 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
 }
 
 html,
@@ -51,8 +58,11 @@ body {
 .rectifier-content,
 .content {
     width: 100%;
+    max-width: 1600px;
+    margin-inline: auto;
     min-height: calc(100vh - 70px);
-    padding: 24px;
+    padding: clamp(14px, 2.5vw, 24px);
+    padding-bottom: max(clamp(20px, 3vw, 32px), env(safe-area-inset-bottom, 0px));
     background: #f8fafc;
     animation: fadeIn 0.4s ease-in-out;
 }
@@ -75,6 +85,8 @@ body {
     display: flex;
     align-items: center;
     gap: 14px;
+    min-width: 0;
+    flex: 1 1 280px;
 }
 
 .back-button {
@@ -102,6 +114,8 @@ body {
     display: flex;
     flex-direction: column;
     gap: 3px;
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 .rectifier-header-text .breadcrumb {
@@ -160,6 +174,15 @@ body {
     box-shadow: 0 4px 12px rgba(0, 91, 212, 0.3);
 }
 
+.back-button:focus-visible,
+.btn-tambah-rectifier:focus-visible,
+.btn-hapus:focus-visible,
+.delete-btn:focus-visible,
+.detail-button:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.4);
+    outline-offset: 2px;
+}
+
 .rectifier-section {
     border: 1px solid #e2e8f0;
     border-radius: 12px;
@@ -171,6 +194,8 @@ body {
 
 .rectifier-header {
     display: flex;
+    flex-wrap: wrap;
+    gap: 6px 12px;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 16px;
@@ -191,17 +216,17 @@ body {
     border-radius: 6px;
 }
 
-.rectifier-grid, 
+.rectifier-grid,
 .battery-grid {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 440px), 1fr));
     column-gap: 20px;
     row-gap: 20px;
     padding-top: 6px;
 }
 
-.rectifier-card, 
+.rectifier-card,
 .battery-card {
     position: relative;
     width: 100%;
@@ -210,8 +235,8 @@ body {
     background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 12px;
-    box-shadow: 
-        0 4px 6px -1px rgba(0, 0, 0, 0.05), 
+    box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.05),
         0 2px 4px -1px rgba(0, 0, 0, 0.03);
     overflow: hidden;
     display: flex;
@@ -219,13 +244,16 @@ body {
     transition: all 0.2s ease;
 }
 
-.rectifier-card:hover, 
-.battery-card:hover {
-    border-color: #b8c9dc;
-    box-shadow: 
-        0 8px 15px -3px rgba(0, 0, 0, 0.08), 
-        0 4px 6px -2px rgba(0, 0, 0, 0.04);
-    transform: translateY(-1px);
+@media (hover: hover) {
+
+    .rectifier-card:hover,
+    .battery-card:hover {
+        border-color: #b8c9dc;
+        box-shadow:
+            0 8px 15px -3px rgba(0, 0, 0, 0.08),
+            0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        transform: translateY(-1px);
+    }
 }
 
 .rectifier-card-header {
@@ -241,14 +269,20 @@ body {
 .card-icon {
     width: 38px;
     height: 38px;
-    border-radius: 8px;
+    border-radius: 10px;
     background: #eff6ff;
-    color: #2563eb;
+    color: #0284c7;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 17px;
+    font-size: var(--icon-title);
     flex-shrink: 0;
+}
+
+/* warna sama dengan .device-icon.battery di dashboard */
+.battery-card .card-icon {
+    background: #fffbeb;
+    color: #d97706;
 }
 
 .card-title-text {
@@ -277,7 +311,7 @@ body {
     text-overflow: ellipsis;
 }
 
-.rectifier-information, 
+.rectifier-information,
 .battery-data {
     display: flex;
     flex-direction: column;
@@ -285,17 +319,17 @@ body {
     padding: 10px 20px 6px;
 }
 
-.equipment-info, 
+.equipment-info,
 .data-row {
     font-size: 0.85rem;
     color: #334155;
     display: grid;
-    grid-template-columns: 130px 14px 1fr;
+    grid-template-columns: 130px 14px minmax(0, 1fr);
     align-items: center;
     line-height: 1.6;
 }
 
-.equipment-info strong, 
+.equipment-info strong,
 .data-label {
     font-weight: 500;
     color: #1e293b;
@@ -314,7 +348,10 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: flex-start;
+    flex-wrap: wrap;
     gap: 6px;
+    min-width: 0;
+    overflow-wrap: anywhere;
     text-align: left;
 }
 
@@ -335,35 +372,54 @@ body {
     color: #15803d;
     border: 1px solid #bbf7d0;
 }
-.dot-excellent { background: #22c55e; }
 
-.status-good-enough, .status-good {
+.dot-excellent {
+    background: #22c55e;
+}
+
+.status-good-enough,
+.status-good {
     background: #fef9c3;
     color: #a16207;
     border: 1px solid #fde047;
 }
-.dot-good-enough, .dot-good { background: #eab308; }
+
+.dot-good-enough,
+.dot-good {
+    background: #eab308;
+}
 
 .status-warning {
     background: #ffedd5;
     color: #c2410c;
     border: 1px solid #fed7aa;
 }
-.dot-warning { background: #f97316; }
 
-.status-alert, .status-danger {
+.dot-warning {
+    background: #f97316;
+}
+
+.status-alert,
+.status-danger {
     background: #fee2e2;
     color: #dc2626;
     border: 1px solid #fecaca;
 }
-.dot-alert, .dot-danger { background: #ef4444; }
+
+.dot-alert,
+.dot-danger {
+    background: #ef4444;
+}
 
 .status-neutral {
     background: #f1f5f9;
     color: #475569;
     border: 1px solid #cbd5e1;
 }
-.dot-neutral { background: #94a3b8; }
+
+.dot-neutral {
+    background: #94a3b8;
+}
 
 .status-dot {
     width: 8px;
@@ -372,11 +428,25 @@ body {
     display: inline-block;
 }
 
+/* Warna teks status: merah = masih dijadwalkan, hijau = sudah dikerjakan, orange = belum dikerjakan */
+.status-text-due {
+    color: #dc2626 !important;
+}
+
+.status-text-done {
+    color: #15803d !important;
+}
+
+.status-text-warning {
+    color: #ea580c !important;
+}
+
 .rectifier-meta {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 16px;
+    gap: 6px 16px;
     padding: 10px 20px 0;
     font-size: 0.75rem;
     color: #64748b;
@@ -409,18 +479,19 @@ body {
     flex-shrink: 0;
 }
 
-.rectifier-card-footer, 
+.rectifier-card-footer,
 .card-footer {
     position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 8px;
     border-top: 1px solid #f1f5f9;
     padding: 10px 20px 14px;
     margin-top: auto;
 }
 
-.btn-hapus, 
+.btn-hapus,
 .delete-btn {
     display: inline-flex;
     align-items: center;
@@ -437,7 +508,7 @@ body {
     transition: all 0.2s ease;
 }
 
-.btn-hapus:hover, 
+.btn-hapus:hover,
 .delete-btn:hover {
     background: #dc2626;
     color: #ffffff;
@@ -509,78 +580,151 @@ body {
     max-width: 480px;
 }
 
-@media (max-width: 1100px) {
-    .rectifier-grid, 
-    .battery-grid {
-        grid-template-columns: 1fr;
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media (max-width: 768px) {
+
+    .rectifier-page-header,
+    .page-header {
+        margin-bottom: 18px;
+        padding-bottom: 14px;
     }
 
-    .rectifier-card, 
-    .battery-card { 
-        height: 300px; 
-        min-height: 300px; 
+    .rectifier-section {
+        padding: 16px;
     }
 }
 
 @media (max-width: 600px) {
-    .rectifier-content,
-    .content { 
-        padding: 12px 14px 20px; 
-    } 
-    
-    .rectifier-grid, 
-    .battery-grid { 
-        grid-template-columns: 1fr; 
-        row-gap: 15px; 
-        padding-top: 10px; 
-    } 
-    
-    .rectifier-card, 
-    .battery-card { 
-        height: auto; 
-        min-height: 280px; 
-        padding-bottom: 50px;
-    } 
-    
-    .rectifier-card-header { 
-        gap: 9px; 
-        padding: 12px; 
-    } 
-    
-    .card-icon { 
-        width: 34px; 
-        height: 34px; 
-        font-size: 15px; 
-    } 
-    
-    .card-title-text h3 { 
-        font-size: 0.9rem; 
-    } 
-    
-    .card-title-text span { 
-        font-size: 0.72rem; 
-    } 
-    
-    .rectifier-information, 
-    .battery-data { 
-        padding: 10px 18px 5px; 
-    } 
-    
-    .equipment-info, 
-    .data-row { 
-        font-size: 0.8rem; 
-        line-height: 1.6; 
-    } 
-    
-    .rectifier-meta { 
-        padding: 8px 18px 0; 
-        gap: 6px; 
-    } 
 
-    .rectifier-card-footer, 
+    .rectifier-grid,
+    .battery-grid {
+        row-gap: 14px;
+        padding-top: 10px;
+    }
+
+    .rectifier-card,
+    .battery-card {
+        min-height: 0;
+    }
+
+    .back-button {
+        width: 34px;
+        height: 34px;
+        font-size: 12px;
+    }
+
+    .rectifier-page-info,
+    .page-info {
+        gap: 10px;
+    }
+
+    /* Breadcrumb (komponen <x-breadcrumb>) */
+    .rectifier-header-text :is(nav, ol, ul, li, a, span, i, strong) {
+        font-size: var(--fs-xs);
+        line-height: 1.4;
+    }
+
+    .rectifier-header-text :is(nav, ol, ul) {
+        flex-wrap: wrap;
+    }
+
+    .btn-tambah-rectifier {
+        min-height: var(--control-h);
+        padding: 8px 16px;
+        font-size: var(--fs-sm);
+    }
+
+    .rectifier-title {
+        font-size: var(--fs-md);
+    }
+
+    .rectifier-card-header {
+        gap: 9px;
+        padding: 12px;
+    }
+
+    .card-icon {
+        width: 34px;
+        height: 34px;
+    }
+
+    .card-title-text h3 {
+        font-size: var(--fs-md);
+    }
+
+    .card-title-text span {
+        font-size: var(--fs-xs);
+    }
+
+    .rectifier-information,
+    .battery-data {
+        padding: 10px 14px 6px;
+    }
+
+    .equipment-info,
+    .data-row {
+        grid-template-columns: 104px 10px minmax(0, 1fr);
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+    }
+
+    .status-badge {
+        font-size: var(--fs-2xs);
+    }
+
+    .rectifier-meta {
+        padding: 8px 14px 0;
+        font-size: var(--fs-xs);
+    }
+
+    .rectifier-last-updated {
+        padding: 6px 14px 0;
+        font-size: var(--fs-2xs);
+    }
+
+    .rectifier-card-footer,
     .card-footer {
-        left: 18px;
-        right: 18px;
-        bottom: 14px;
+        padding: 10px 14px 12px;
+    }
+
+    .btn-hapus,
+    .delete-btn {
+        min-height: 36px;
+        font-size: var(--fs-xs);
+    }
+
+    .detail-button {
+        min-height: 36px;
+        font-size: var(--fs-sm);
+    }
+
+    .empty-battery {
+        min-height: 220px;
+        padding: 32px 16px;
+    }
+
+    .empty-battery h3 {
+        font-size: var(--fs-lg);
+    }
+
+    .empty-battery p {
+        font-size: var(--fs-sm);
+    }
+}
+
+@media (max-width: 480px) {
+    .btn-tambah-rectifier {
+        width: 100%;
+    }
+}
+
+/* Layar sangat sempit: label di atas, nilai di bawah */
+@media (max-width: 360px) {
+
+    .equipment-info,
+    .data-row {
+        grid-template-columns: 96px 8px minmax(0, 1fr);
     }
 }

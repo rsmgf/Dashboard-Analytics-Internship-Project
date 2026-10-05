@@ -3,8 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Card Rectifier - {{ $pop->nama_pop_display }} - PLN Icon Plus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Kartu Rectifier - {{ $pop->nama_pop_display }} - PLN Icon Plus</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
@@ -28,13 +28,15 @@
                 {{-- Header: Back Button + Breadcrumb As Title + Tombol Tambah --}}
                 <div class="rectifier-page-header">
                     <div class="rectifier-page-info">
-                        <a href="{{ route('pops.index') }}" class="back-button" title="Kembali ke List POP">
+                        <a href="{{ route('pops.index') }}" class="back-button" title="Kembali ke List POP" aria-label="Kembali ke List POP">
                             <i class="bi bi-arrow-left"></i>
                         </a>
-                        <x-breadcrumb :items="[
-                            ['label' => 'POP', 'route' => 'pops.index'],
-                            ['label' => $pop->nama_pop_display]
-                        ]" />
+                        <div class="rectifier-header-text">
+                            <x-breadcrumb :items="[
+                                ['label' => 'POP', 'route' => 'pops.index'],
+                                ['label' => $pop->nama_pop_display]
+                            ]" />
+                        </div>
                     </div>
 
                     @can('rectifiers.index.create')
@@ -51,17 +53,13 @@
                             {{-- Header --}}
                             <div class="rectifier-card-header">
                                 <div class="checklist-icon">
-                                    <i class="bi bi-file-earmark-text-fill"></i>
+                                    <i class="bi bi-hdd-stack-fill"></i>
                                 </div>
 
                                 <div class="checklist-title">
                                     <h3>Checklist Rectifier</h3>
-                                    <p>{{ $rectifier->nomor_recti ?? 'Data Rectifier' }}</p>
+                                    <p title="{{ $rectifier->nomor_recti ?? 'Data Rectifier' }}">{{ $rectifier->nomor_recti ?? 'Data Rectifier' }}</p>
                                 </div>
-
-                                <span class="rectifier-number">
-                                    {{ $rectifier->nomor_recti ?? ('RECT-' . str_pad($loop->iteration, 2, '0', STR_PAD_LEFT)) }}
-                                </span>
                             </div>
 
                             @php
@@ -97,7 +95,7 @@
                                     <span class="data-value">{{ $rectifier->merk ?? '-' }}</span>
                                 </div>
                                 <div class="equipment-info">
-                                    <span class="info-label">Type</span>
+                                    <span class="info-label">Tipe</span>
                                     <span class="info-sep">:</span>
                                     <span class="data-value">{{ $rectifier->type ?? '-' }}</span>
                                 </div>
@@ -118,16 +116,16 @@
                                 </div>
                             </div>
 
-                            {{-- Meta: PIC & Tanggal Pemeriksaan --}}
+                            {{-- Meta: Tanggal Pemeriksaan & Lokasi --}}
                             <div class="rectifier-meta">
-                                <div class="meta-item">
-                                    <i class="bi bi-person-fill"></i>
-                                    <span>{{ $rectifier->pic ?? '-' }}</span>
-                                </div>
-
                                 <div class="meta-item">
                                     <i class="bi bi-calendar-fill"></i>
                                     <span>{{ $rectifier->tanggal_pemeriksaan ? \Carbon\Carbon::parse($rectifier->tanggal_pemeriksaan)->locale('id')->translatedFormat('d M Y') : '-' }}</span>
+                                </div>
+
+                                <div class="meta-item">
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                    <span>{{ $pop->kota_kabupaten }}</span>
                                 </div>
                             </div>
 
@@ -136,7 +134,7 @@
                                 <i class="bi bi-clock-history"></i>
                                 <span>
                                     @if($rectifier->diupdateOleh)
-                                        {{ $rectifier->diupdateOleh->name }} &middot; {{ $rectifier->updated_at->locale('id')->translatedFormat('d M Y, H:i') }} WIB
+                                        {{ $rectifier->diupdateOleh->name }} &middot; {{ $rectifier->updated_at->locale('id')->translatedFormat('d M Y, H.i') }} WIB
                                     @else
                                         Belum ada pembaruan
                                     @endif
@@ -147,7 +145,8 @@
                             <div class="rectifier-card-footer">
                                 @can('rectifiers.index.delete')
                                     <button type="button" class="btn-hapus"
-                                        onclick="hapusRectifier('{{ route('rectifiers.destroy', [$pop->id, $rectifier->id]) }}', '{{ addslashes($rectifier->nomor_recti ?? ($rectifier->merk . ' - ' . $rectifier->type)) }}')">
+                                        data-url="{{ route('rectifiers.destroy', [$pop->id, $rectifier->id]) }}"
+                                        data-name="{{ $rectifier->nomor_recti ?? ($rectifier->merk . ' - ' . $rectifier->type) }}">
                                         <i class="bi bi-trash3-fill"></i> Hapus
                                     </button>
                                 @endcan
@@ -158,9 +157,9 @@
                             </div>
                         </div>
                     @empty
-                        <div style="grid-column:1/-1; text-align:center; padding:40px; color:#64748b;">
-                            <i class="bi bi-inbox" style="font-size:2rem; display:block; margin-bottom:12px;"></i>
-                            Belum ada data Rectifier untuk POP ini.
+                        <div class="empty-rectifier">
+                            <i class="bi bi-inbox"></i>
+                            <p>Belum ada data Rectifier untuk POP ini.</p>
                         </div>
                     @endforelse
                 </div>
@@ -171,10 +170,24 @@
     {{-- SweetAlert2 JS --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        // Escape HTML agar nama dengan tanda kutip / karakter khusus aman ditampilkan
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str ?? '';
+            return div.innerHTML;
+        }
+
+        // Event delegation: membaca data dari atribut data-* (aman untuk nama dengan tanda kutip)
+        document.addEventListener('click', function (e) {
+            const btn = e.target.closest('.btn-hapus');
+            if (!btn) return;
+            hapusRectifier(btn.dataset.url, btn.dataset.name);
+        });
+
         function hapusRectifier(deleteUrl, rectifierName) {
             Swal.fire({
                 title: 'Hapus Rectifier?',
-                html: `Apakah Anda yakin ingin menghapus data <strong>"${rectifierName}"</strong>?<br><small style="color: #64748b;">Seluruh data modul dan output MCB di dalamnya akan ikut terhapus secara permanen.</small>`,
+                html: `Apakah Anda yakin ingin menghapus data <strong>"${escapeHtml(rectifierName)}"</strong>?<br><small style="color: #64748b;">Seluruh data modul dan output MCB di dalamnya akan ikut terhapus secara permanen.</small>`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#dc2626',
@@ -182,7 +195,15 @@
                 confirmButtonText: '<i class="bi bi-trash3-fill"></i> Ya, Hapus!',
                 cancelButtonText: 'Batal',
                 reverseButtons: true,
-                focusCancel: true
+                focusCancel: true,
+                heightAuto: false,
+                customClass: {
+                    popup: 'swal-popup-custom',
+                    title: 'swal-title-custom',
+                    htmlContainer: 'swal-html-custom',
+                    confirmButton: 'swal-btn-confirm',
+                    cancelButton: 'swal-btn-cancel',
+                }
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Tampilkan loading saat proses penghapusan
@@ -190,6 +211,11 @@
                         title: 'Menghapus...',
                         text: 'Mohon tunggu sebentar',
                         allowOutsideClick: false,
+                        heightAuto: false,
+                        customClass: {
+                            popup: 'swal-popup-custom',
+                            title: 'swal-title-custom',
+                        },
                         didOpen: () => {
                             Swal.showLoading();
                         }
@@ -220,4 +246,3 @@
     </script>
 </body>
 </html>
-

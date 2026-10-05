@@ -58,9 +58,48 @@ class StoreKwhRequest extends FormRequest
             'ukuran_g' => ['required', 'string', 'max:50'],
 
             'photos' => ['required', 'array', 'min:1'],
-            'photos.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:10240'],
+            'photos.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
             'captions' => ['required', 'array', 'min:1'],
             'captions.*' => ['required', 'string', 'max:150'],
+        ];
+    }
+
+    public function attributes(): array
+    {
+        $attributes = [
+            'id_pelanggan' => 'ID Pelanggan',
+            'daya'         => 'Daya',
+            'mcb_utama'    => 'MCB Utama',
+            'photos'       => 'Foto',
+            'captions'     => 'Keterangan Foto',
+        ];
+
+        if ($this->has('photos') && is_array($this->photos)) {
+            foreach ($this->photos as $key => $val) {
+                $num = (int)$key + 1;
+                $attributes["photos.{$key}"] = "Foto ke-{$num}";
+            }
+        }
+
+        if ($this->has('captions') && is_array($this->captions)) {
+            foreach ($this->captions as $key => $val) {
+                $num = (int)$key + 1;
+                $attributes["captions.{$key}"] = "Keterangan Foto ke-{$num}";
+            }
+        }
+
+        return $attributes;
+    }
+
+    public function messages(): array
+    {
+        return [
+            'photos.required'     => 'Minimal satu foto kWh wajib diunggah.',
+            'photos.min'          => 'Minimal satu foto kWh wajib diunggah.',
+            'photos.*.image'      => 'Berkas pada :attribute harus berupa gambar.',
+            'photos.*.mimes'      => 'Format berkas pada :attribute harus JPG, JPEG, PNG, atau WEBP.',
+            'photos.*.max'        => 'Ukuran berkas pada :attribute maksimal 2 MB.',
+            'captions.*.required' => 'Keterangan pada :attribute wajib diisi.',
         ];
     }
 

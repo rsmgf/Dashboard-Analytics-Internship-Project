@@ -32,11 +32,11 @@ class StoreRectifierRequest extends FormRequest
             'kapasitas_rectifier'     => 'nullable|string|max:255',
             'beban'                   => 'nullable|string|max:255',
             'utilisasi'               => 'nullable|numeric|min:0|max:100',
-            'foto_rectifier'          => 'nullable|image|mimes:jpeg,png,jpg|max:10240',
+            'foto_rectifier'          => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
 
             // Modules
             'modules'                    => 'nullable|array',
-            'modules.*.sn_modul'         => 'nullable|string|unique:rectifier_modules,sn_modul',
+            'modules.*.sn_modul'         => 'nullable|string|distinct|unique:rectifier_modules,sn_modul',
             'modules.*.kapasitas_ampere' => 'nullable|string',
 
             // Outputs MCB
@@ -45,6 +45,55 @@ class StoreRectifierRequest extends FormRequest
             'outputs.*.merk_mcb'         => 'nullable|string',
             'outputs.*.kapasitas_mcb'    => 'nullable|string',
             'outputs.*.peruntukan'       => 'nullable|string',
+        ];
+    }
+
+    public function attributes(): array
+    {
+        $attributes = [
+            'merk'                => 'Merk Rectifier',
+            'type'                => 'Tipe Rectifier',
+            'sn_rectifier'        => 'Serial Number Rectifier',
+            'kapasitas_slot'      => 'Kapasitas Slot Modul',
+            'foto_rectifier'      => 'Foto Rectifier',
+            'pic'                 => 'PIC',
+            'tanggal_pemeriksaan' => 'Tanggal Pemeriksaan',
+            'deskripsi'           => 'Deskripsi',
+        ];
+
+        if ($this->has('modules') && is_array($this->modules)) {
+            foreach ($this->modules as $key => $val) {
+                $num = (int)$key + 1;
+                $attributes["modules.{$key}.sn_modul"] = "Modul {$num} (Serial Number)";
+                $attributes["modules.{$key}.kapasitas_ampere"] = "Modul {$num} (Kapasitas Ampere)";
+            }
+        }
+
+        if ($this->has('outputs') && is_array($this->outputs)) {
+            foreach ($this->outputs as $key => $val) {
+                $num = (int)$key + 1;
+                $attributes["outputs.{$key}.nama_mcb"] = "Output MCB {$num} (Nama)";
+            }
+        }
+
+        return $attributes;
+    }
+
+    public function messages(): array
+    {
+        return [
+            'merk.required'               => 'Merk Rectifier wajib diisi.',
+            'type.required'               => 'Tipe Rectifier wajib diisi.',
+            'sn_rectifier.required'       => 'Serial Number Rectifier wajib diisi.',
+            'sn_rectifier.unique'         => 'Serial Number Rectifier sudah digunakan oleh perangkat lain. Silakan gunakan SN lain.',
+            'kapasitas_slot.required'     => 'Kapasitas Slot Modul wajib diisi.',
+            'kapasitas_slot.min'          => 'Kapasitas Slot Modul minimal 1.',
+            'foto_rectifier.image'        => 'Berkas Foto Rectifier harus berupa gambar.',
+            'foto_rectifier.mimes'        => 'Format Foto Rectifier harus JPG, JPEG, atau PNG.',
+            'foto_rectifier.max'          => 'Ukuran Foto Rectifier maksimal 2 MB.',
+            'modules.*.sn_modul.unique'   => 'Serial Number pada :attribute sudah terdaftar di sistem. Mohon gunakan Serial Number yang berbeda.',
+            'modules.*.sn_modul.distinct' => 'Serial Number pada :attribute sama dengan modul lainnya pada form ini. Mohon gunakan Serial Number yang berbeda.',
+            'outputs.*.nama_mcb.required' => 'Nama MCB pada :attribute wajib diisi.',
         ];
     }
 

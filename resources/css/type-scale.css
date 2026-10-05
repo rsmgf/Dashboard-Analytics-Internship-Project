@@ -1,0 +1,47 @@
+/* =========================================================
+   TYPE SCALE — sumber tunggal ukuran teks & ikon
+   Ubah angka di sini, semua halaman ikut berubah.
+   Dipakai lewat: @import './type-scale.css';
+   ========================================================= */
+
+/* Ukuran ikon di judul card (seragam di semua halaman detail) */
+:root {
+    --icon-title: 1.1rem;
+}
+
+/* ---------------------------------------------------------
+   MOBILE (layar 600px ke bawah)
+   --------------------------------------------------------- */
+@media (max-width: 600px) {
+    :root {
+        --icon-title: 1rem;
+        /* ikon judul card */
+
+        --fs-2xs: 0.64rem;
+        /* badge status, pesan error, hint, label kolom tabel */
+        --fs-xs: 0.74rem;
+        /* breadcrumb, subjudul, meta, tombol kecil (Hapus) */
+        --fs-sm: 0.8rem;
+        /* label form, isi tabel, teks kartu, tombol */
+        --fs-md: 0.88rem;
+        /* judul section / judul kartu */
+        --fs-lg: 1rem;
+        /* judul popup */
+        --fs-input: 0.875rem;
+        /* teks di dalam input & dropdown (14px) */
+        --control-h: 42px;
+        /* tinggi input & tombol utama */
+    }
+}
+
+/* ---------------------------------------------------------
+   iPhone/iPad Safari memperbesar halaman otomatis jika teks
+   input < 16px, jadi khusus iOS teks input dipertahankan 16px.
+   --------------------------------------------------------- */
+@supports (-webkit-touch-callout: none) {
+    @media (max-width: 600px) {
+        :root {
+            --fs-input: 16px;
+        }
+    }
+}
