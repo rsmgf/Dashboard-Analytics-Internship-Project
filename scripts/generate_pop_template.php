@@ -14,8 +14,8 @@ $sheet = $spreadsheet->getActiveSheet();
 $sheet->setTitle('Template Import POP');
 
 // ── Headers ──────────────────────────────────────
-$headers = ['Provinsi', 'Kota/Kabupaten', 'ID POP', 'Nama POP', 'Building', 'Tipe POP'];
-$colWidths = [20, 22, 20, 28, 20, 15];
+$headers = ['Provinsi', 'Kota/Kabupaten', 'ID POP', 'Nama POP', 'Building', 'Tipe POP', 'Latitude', 'Longitude'];
+$colWidths = [20, 22, 20, 28, 20, 15, 16, 16];
 
 foreach ($headers as $i => $header) {
     $col = chr(65 + $i);
@@ -24,7 +24,7 @@ foreach ($headers as $i => $header) {
 }
 
 // ── Header Styling ────────────────────────────────
-$sheet->getStyle('A1:F1')->applyFromArray([
+$sheet->getStyle('A1:H1')->applyFromArray([
     'font' => [
         'bold'  => true,
         'size'  => 11,
@@ -49,37 +49,6 @@ $sheet->getStyle('A1:F1')->applyFromArray([
 
 $sheet->getRowDimension(1)->setRowHeight(24);
 
-// ── Contoh Baris 1 ───────────────────────────────
-$sheet->setCellValue('A2', 'Jambi');
-$sheet->setCellValue('B2', 'Kota Jambi');
-$sheet->setCellValue('C2', 'POP_1MBN10004');
-$sheet->setCellValue('D2', 'POP Jambi Kota');
-$sheet->setCellValue('E2', 'Shelter');
-$sheet->setCellValue('F2', 'POP-SB');
-
-// ── Contoh Baris 2 ───────────────────────────────
-$sheet->setCellValue('A3', 'Jambi');
-$sheet->setCellValue('B3', 'Kabupaten Batanghari');
-$sheet->setCellValue('C3', 'POP_1MBN10005');
-$sheet->setCellValue('D3', 'POP Muara Bulian');
-$sheet->setCellValue('E3', 'ODC');
-$sheet->setCellValue('F3', 'POP-A');
-
-// ── Data Row Styling ─────────────────────────────
-$sheet->getStyle('A2:F3')->applyFromArray([
-    'font' => ['size' => 10, 'name' => 'Calibri'],
-    'borders' => [
-        'allBorders' => [
-            'borderStyle' => Border::BORDER_THIN,
-            'color'       => ['argb' => 'FFE2E8F0'],
-        ],
-    ],
-    'fill' => [
-        'fillType'   => Fill::FILL_SOLID,
-        'startColor' => ['argb' => 'FFF8FAFC'],
-    ],
-]);
-
 // ── Freeze header row ────────────────────────────
 $sheet->freezePane('A2');
 
@@ -101,6 +70,8 @@ $guide = [
     ['Nama POP', 'Nama lengkap POP', 'WAJIB', 'Teks bebas'],
     ['Building', 'Jenis bangunan POP', 'Opsional', 'Shelter | Shelter CKD | Shelter Permanen | Mini Shelter | ODC | Mini POP | Mikro POP | OLT Gantung'],
     ['Tipe POP', 'Tipe klasifikasi POP', 'Opsional', 'POP-SB | POP-A | POP-B | POP-D'],
+    ['Latitude', 'Titik koordinat Latitude (derajat desimal)', 'Opsional', 'Angka desimal antara -90 sampai 90 (Contoh: -1.608)'],
+    ['Longitude', 'Titik koordinat Longitude (derajat desimal)', 'Opsional', 'Angka desimal antara -180 sampai 180 (Contoh: 103.614)'],
 ];
 
 foreach ($guide as $r => $row) {

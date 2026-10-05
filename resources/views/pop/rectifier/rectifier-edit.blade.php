@@ -498,7 +498,7 @@
         function getUtilisasiBadge(nilai) {
             if (nilai <= 50) {
                 return {
-                    label: 'Safe',
+                    label: 'Good',
                     bg: '#dcfce7',
                     color: '#16a34a',
                     border: '#bbf7d0'

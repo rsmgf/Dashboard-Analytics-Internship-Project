@@ -28,7 +28,7 @@
             {{-- TOPBAR --}}
             <x-topbar />
 
-            <div class="dashboard-content notif-page-wrapper">
+            <div class="notif-page-wrapper">
 
                 {{-- HEADER BANNER --}}
                 <div class="notification-header-group">
