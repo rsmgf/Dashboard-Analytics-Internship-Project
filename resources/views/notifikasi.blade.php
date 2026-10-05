@@ -144,22 +144,6 @@
             }
         }
 
-<<<<<<< HEAD
-        const dot = item.querySelector('.has-dot');
-        
-        // AJAX call to mark as read
-        fetch(`/notifications/${notifId}/mark-as-read`, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }
-        }).then(res => res.json()).then(data => {
-            if (data.success) {
-                if (dot) dot.classList.remove('has-dot');
-                item.classList.add('read');
-=======
         function markNotifAsRead(elementId, notifId, category = '', popId = null, deviceType = null, deviceId = null,
             action = null) {
             const item = document.getElementById(elementId);
@@ -201,7 +185,6 @@
             if (!item) {
                 processNavigation();
                 return;
->>>>>>> 6e6b6151af3f569fa58b5318495e023192c64476
             }
 
             const dot = item.querySelector('.unread-dot') || item.querySelector('.has-dot');

@@ -82,10 +82,6 @@ body {
     gap: 6px;
     position: relative;
     bottom: -1.5px;
-<<<<<<< HEAD
-    /* Menutupi garis bawah card */
-=======
->>>>>>> 6e6b6151af3f569fa58b5318495e023192c64476
 }
 
 .tab-btn {
@@ -114,10 +110,6 @@ body {
     font-weight: 700;
     border-color: #7dd3fc;
     border-bottom: 2px solid #ffffff;
-<<<<<<< HEAD
-    /* Buka penutup border dasar */
-=======
->>>>>>> 6e6b6151af3f569fa58b5318495e023192c64476
 }
 
 .notif-tab-pane {
@@ -179,13 +171,9 @@ body {
     font-size: 1.35rem;
 }
 
-<<<<<<< HEAD
 /* Warna Varian Ikon */
 .bg-icon-red,
 .notif-icon-box.notif-red {
-=======
-.bg-icon-red {
->>>>>>> 6e6b6151af3f569fa58b5318495e023192c64476
     background-color: #fee2e2;
     color: #dc2626;
 }
