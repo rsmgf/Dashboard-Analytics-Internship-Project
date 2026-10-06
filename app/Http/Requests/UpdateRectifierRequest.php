@@ -26,7 +26,7 @@ class UpdateRectifierRequest extends FormRequest
             'merk'                    => 'required|string|max:255',
             'type'                    => 'required|string|max:255',
             'sn_rectifier'            => 'required|string|unique:rectifiers,sn_rectifier,' . $rectifierId,
-            'kapasitas_slot'          => 'required|integer|min:1',
+            'kapasitas_slot'          => 'required|integer|min:1|max:100',
 
             // Data teknis tambahan
             'couple'                  => 'nullable|string|max:255',
@@ -37,15 +37,15 @@ class UpdateRectifierRequest extends FormRequest
             'utilisasi'               => 'nullable|numeric|min:0|max:100',
             'foto_rectifier'          => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
 
-            // Modules
-            'modules'                    => 'nullable|array',
+            // Modules (anti-spam: maks 100)
+            'modules'                    => 'nullable|array|max:100',
             'modules.*.id'               => 'nullable|integer',
             'modules.*.kapasitas_ampere' => 'nullable|string',
 
-            // Outputs
-            'outputs'                    => 'nullable|array',
+            // Outputs (anti-spam: maks 50)
+            'outputs'                    => 'nullable|array|max:50',
             'outputs.*.id'               => 'nullable|integer',
-            'outputs.*.nama_mcb'         => 'required|string',
+            'outputs.*.nama_mcb'         => 'nullable|string',
             'outputs.*.merk_mcb'         => 'nullable|string',
             'outputs.*.kapasitas_mcb'    => 'nullable|string',
             'outputs.*.peruntukan'       => 'nullable|string',
@@ -112,7 +112,7 @@ class UpdateRectifierRequest extends FormRequest
             'foto_rectifier.max'          => 'Ukuran Foto Rectifier maksimal 2 MB.',
             'modules.*.sn_modul.unique'   => 'Serial Number pada :attribute sudah terdaftar di sistem. Mohon gunakan Serial Number yang berbeda.',
             'modules.*.sn_modul.distinct' => 'Serial Number pada :attribute sama dengan modul lainnya pada form ini. Mohon gunakan Serial Number yang berbeda.',
-            'outputs.*.nama_mcb.required' => 'Nama MCB pada :attribute wajib diisi.',
+
         ];
     }
 

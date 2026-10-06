@@ -1,3 +1,5 @@
+@import './type-scale.css';
+
 /* =====================================================
    RESET & BASE
 ===================================================== */
@@ -596,7 +598,11 @@ body{
     }
 
     .role-title h1{
-        font-size:21px;
+        font-size:var(--fs-md);
+    }
+
+    .role-alert{
+        font-size:var(--fs-xs);
     }
 
     .search-container{
@@ -610,6 +616,23 @@ body{
     .filter-box select,
     .search-box{
         width:100% !important;
+        font-size:var(--fs-input);
+    }
+
+    .role-table th{
+        font-size:var(--fs-2xs);
+    }
+
+    .role-table td{
+        font-size:var(--fs-xs);
+    }
+
+    .role-tag{
+        font-size:var(--fs-2xs);
+    }
+
+    .btn-action{
+        font-size:var(--fs-xs);
     }
 
     .role-modal{
@@ -622,10 +645,15 @@ body{
         flex-direction:column;
     }
 
+    .modal-title{
+        font-size:var(--fs-lg);
+    }
+
     .modal-body{
         overflow-y:auto;
         padding-left:18px;
         padding-right:18px;
+        font-size:var(--fs-sm);
     }
 
     .modal-header,
@@ -638,5 +666,6 @@ body{
         width:100%;
         text-align:center;
         justify-content:center;
+        font-size:var(--fs-sm);
     }
 }

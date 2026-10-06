@@ -158,6 +158,10 @@
             <td>: {{ $data->type }}</td>
         </tr>
         <tr>
+            <td>Serial Number</td>
+            <td>: {{ $data->serial_number ?? $data->materials->first()?->serial_number ?? '-' }}</td>
+        </tr>
+        <tr>
             <td>Material Number</td>
             <td>: {{ $data->material_number }}</td>
         </tr>

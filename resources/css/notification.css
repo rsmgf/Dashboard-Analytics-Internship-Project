@@ -1,3 +1,5 @@
+@import './type-scale.css';
+
 body {
     font-family: 'Poppins', sans-serif;
     background-color: #f8fafc;
@@ -376,27 +378,67 @@ body {
     }
 }
 
-@media (max-width: 480px) {
+/* =========================================================
+   MOBILE: ukuran teks mengikuti type-scale.css
+   ========================================================= */
+@media (max-width: 600px) {
     .notification-header-group {
         gap: 10px;
     }
 
     .notif-pill-banner {
         padding: 8px 12px;
-        font-size: 0.88rem;
+        font-size: var(--fs-md);
+    }
+
+    .notif-pill-banner i {
+        font-size: var(--icon-title);
     }
 
     .btn-back-circle {
         width: 36px;
         height: 36px;
-        font-size: 1rem;
+        font-size: var(--icon-title);
+    }
+
+    .tab-btn {
+        font-size: var(--fs-sm);
+        padding: 8px 12px;
+    }
+
+    .notif-icon-box {
+        width: 36px;
+        height: 36px;
+        font-size: var(--icon-title);
+        border-radius: 10px;
+    }
+
+    .notif-title {
+        font-size: var(--fs-sm);
+        line-height: 1.35;
+    }
+
+    .notif-subtitle {
+        font-size: var(--fs-xs);
+        line-height: 1.4;
     }
 
     .notif-info-col {
+        padding-left: 48px;
         gap: 8px;
+        margin-top: 6px;
     }
 
-    .notif-time {
-        font-size: 0.78rem;
+    .badge-status {
+        font-size: var(--fs-2xs);
+        padding: 3px 8px;
+    }
+
+    .notif-info-col .notif-time {
+        font-size: var(--fs-2xs);
+    }
+
+    .notif-arrow {
+        font-size: var(--fs-sm);
     }
 }

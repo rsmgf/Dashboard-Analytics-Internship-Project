@@ -1012,3 +1012,125 @@ body {
         font-size: var(--fs-sm);
     }
 }
+
+/* =========================================================
+   POPUP KONFIRMASI (SweetAlert2) — Reset / Hapus
+   Dipakai lewat customClass: swal-popup-custom, swal-title-custom,
+   swal-html-custom, swal-btn-confirm, swal-btn-cancel
+   ========================================================= */
+.swal2-container {
+    padding: max(12px, env(safe-area-inset-top, 0px)) max(12px, env(safe-area-inset-right, 0px)) max(12px, env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px)) !important;
+}
+
+.swal-popup-custom {
+    box-sizing: border-box;
+    width: min(100%, 28rem) !important;
+    max-width: 100% !important;
+    padding: 1.5rem 1.25rem 1.4rem !important;
+    border-radius: 16px !important;
+    font-family: 'Poppins', sans-serif;
+}
+
+.swal-title-custom {
+    padding: 0 !important;
+    font-size: 1.15rem !important;
+    font-weight: 700 !important;
+    line-height: 1.35;
+    color: #111827 !important;
+    overflow-wrap: anywhere;
+}
+
+.swal-html-custom {
+    margin: 0.75rem 0 0 !important;
+    padding: 0 !important;
+    max-height: 45vh;
+    overflow-y: auto;
+    font-size: 0.875rem !important;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+/* Tombol: sama lebar, mengisi baris, mudah disentuh */
+.swal-popup-custom .swal2-actions {
+    width: 100%;
+    margin: 1.25rem 0 0 !important;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.swal-btn-confirm,
+.swal-btn-cancel {
+    flex: 1 1 130px;
+    min-height: 44px;
+    margin: 0 !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 8px !important;
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.swal-popup-custom .swal2-close:focus-visible,
+.swal-btn-confirm:focus-visible,
+.swal-btn-cancel:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.4);
+    outline-offset: 2px;
+    box-shadow: none !important;
+}
+
+/* HP: popup & ikon sedikit lebih kecil, teks mengikuti type-scale */
+@media (max-width: 600px) {
+    .swal-popup-custom {
+        padding: 1.25rem 1rem 1.15rem !important;
+        font-size: 0.9rem;
+    }
+
+    .swal-title-custom {
+        font-size: var(--fs-lg) !important;
+    }
+
+    .swal-html-custom {
+        font-size: var(--fs-sm) !important;
+        margin-top: 0.6rem !important;
+    }
+
+    .swal-popup-custom .swal2-actions {
+        margin-top: 1rem !important;
+        gap: 8px;
+    }
+
+    .swal-btn-confirm,
+    .swal-btn-cancel {
+        min-height: var(--control-h);
+        font-size: var(--fs-sm) !important;
+    }
+}
+
+/* Layar sangat sempit: tombol bertumpuk (Ya di atas, Batal di bawah) */
+@media (max-width: 340px) {
+    .swal-popup-custom .swal2-actions {
+        flex-direction: column-reverse;
+    }
+
+    .swal-btn-confirm,
+    .swal-btn-cancel {
+        flex: 0 0 auto;
+        width: 100%;
+    }
+}
+
+/* HP landscape: tinggi layar sempit, sembunyikan ikon agar tombol tetap terlihat */
+@media (max-height: 480px) {
+    .swal-popup-custom {
+        padding: 0.9rem 1rem !important;
+    }
+
+    .swal-popup-custom .swal2-icon {
+        display: none !important;
+    }
+
+    .swal-html-custom {
+        max-height: 30vh;
+    }
+}

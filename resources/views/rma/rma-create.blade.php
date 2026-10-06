@@ -187,10 +187,10 @@
                                 <div class="form-group">
                                     <label for="judul_rma">Nama / Judul Dokumen <span style="font-weight:400; color:#64748b; font-size:12px;">(opsional)</span></label>
                                     <input type="text" id="judul_rma" name="judul_rma" class="form-control"
-                                        placeholder="Contoh: RMA Router Cisco - POP Jakarta Pusat"
+                                        placeholder="Contoh: RMA PO-12345 - POP Jakarta Pusat"
                                         value="{{ old('judul_rma') }}"
                                         maxlength="150">
-                                    <div class="field-description">Biarkan kosong untuk generate otomatis dari Merk + Lokasi</div>
+                                    <div class="field-description">Biarkan kosong untuk generate otomatis dari No. Dokumen + Lokasi</div>
                                 </div>
 
                                 <div class="form-group">
@@ -249,7 +249,6 @@
                                         class="form-control" placeholder="Contoh: SN-123456789" required>
                                 </div>
 
-                                <!-- Material Number dihapus atribut required-nya agar bebas diisi/tidak -->
                                 <div class="form-group">
                                     <label for="material_number">Material Number</label>
                                     <input type="text" id="material_number" name="material_number"
@@ -314,9 +313,6 @@
                             </div>
                         </div>
 
-                        <!-- ========================================== -->
-                        <!-- STEP 2: UPLOAD FOTO & TANDA TANGAN         -->
-                        <!-- ========================================== -->
                         <div id="step-2" style="display: none;">
 
                             <div class="alert-box info-alert"
@@ -346,7 +342,7 @@
                                     <i class="bi bi-cloud-arrow-up dropzone-icon"></i>
                                     <div class="dropzone-text" id="dropzoneText">Masukkan file disini</div>
                                     <input type="file" id="fileInput" name="foto_material[]"
-                                        accept="image/jpeg,image/png,image/jpg,image/webp" style="display: none;" required>
+                                        accept="image/jpeg,image/png,image/jpg,image/webp" style="display: none;">
                                     <button type="button" class="btn-browse"
                                         onclick="document.getElementById('fileInput').click()">Browse</button>
                                 </div>
@@ -707,18 +703,6 @@
                     }
                 }
 
-                // Cek apakah foto material utama sudah dipilih
-                const primaryFile = document.getElementById('fileInput');
-                if (!primaryFile || primaryFile.files.length === 0) {
-                    document.getElementById('dropzone')?.classList.add('is-invalid');
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Foto Material Belum Dipilih',
-                        text: 'Silakan pilih atau unggah minimal 1 foto material utama.',
-                        confirmButtonColor: '#0066DC'
-                    });
-                    return;
-                }
 
                 // Cek Nama Engineer / Pemohon
                 const namaPemohon = document.getElementById('nama_pemohon');
@@ -784,24 +768,29 @@
                         // Tangani berdasarkan mode (TIDAK ADA POP-UP TAB PDF LAGI)
                         if (currentSubmitMode === 'next') {
                             // Reset field khusus unit
-                            document.getElementById('merk').value = '';
-                            document.getElementById('type').value = '';
-                            document.getElementById('serial_number_primary').value = '';
-                            document.getElementById('material_number').value = '';
-                            document.getElementById('description').value = '';
-                            document.getElementById('alasan').value = '';
+                            ['merk', 'type', 'serial_number_primary', 'material_number', 'description', 'alasan'].forEach(id => {
+                                const el = document.getElementById(id);
+                                if (el) el.value = '';
+                            });
                             
                             // Reset checkboxes kerusakan
-                            damageCheckboxes.forEach(cb => { cb.checked = false; });
-                            isMaterialRusakInput.value = '0';
+                            if (typeof damageCheckboxes !== 'undefined' && damageCheckboxes) {
+                                damageCheckboxes.forEach(cb => { cb.checked = false; });
+                            }
+                            if (isMaterialRusakInput) isMaterialRusakInput.value = '0';
 
-                            // Reset file foto
-                            primaryFile.value = '';
-                            dropzoneText.innerText = 'Masukkan file disini';
-                            dropzoneText.style.color = '#64748b';
+                            // Reset file foto utama
+                            const primaryFileEl = document.getElementById('fileInput');
+                            if (primaryFileEl) primaryFileEl.value = '';
+                            const dropzoneTextEl = document.getElementById('dropzoneText');
+                            if (dropzoneTextEl) {
+                                dropzoneTextEl.innerText = 'Masukkan file disini';
+                                dropzoneTextEl.style.color = '#64748b';
+                            }
 
                             // Bersihkan SFP tambahan
-                            sfpContainer.innerHTML = '';
+                            const sfpContainerEl = document.getElementById('sfp-container');
+                            if (sfpContainerEl) sfpContainerEl.innerHTML = '';
 
                             // Kembali ke Langkah 1 dengan halus
                             step2.style.display = 'none';
@@ -972,7 +961,7 @@
                             <i class="bi bi-cloud-arrow-up dropzone-icon"></i>
                             <div class="dropzone-text">Masukkan file disini</div>
                             
-                            <input type="file" name="foto_material[]" accept="image/jpeg,image/png,image/jpg,image/webp" required style="display: none;" 
+                            <input type="file" name="foto_material[]" accept="image/jpeg,image/png,image/jpg,image/webp" style="display: none;" 
                                 onchange="this.previousElementSibling.innerText = this.files.length ? this.files[0].name : 'Masukkan file disini'; this.previousElementSibling.style.color = this.files.length ? '#10b981' : '#64748b';">
                             
                             <button type="button" class="btn-browse" onclick="this.previousElementSibling.click()">Browse</button>

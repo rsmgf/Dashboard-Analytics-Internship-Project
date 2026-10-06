@@ -180,7 +180,7 @@
                         <div class="dashboard-kpi-card">
                             <div class="kpi-icon kpi-unhealthy"><i class="bi bi-heartbreak-fill"></i></div>
                             <div class="kpi-info">
-                                <span>Total POP UnHealthy</span>
+                                <span>Total POP Unhealthy</span>
                                 <strong class="text-unhealthy">{{ number_format($totalRectifierUnhealthy) }}</strong>
                                 <small>
                                     {{ $totalRectifierWithHealthyIndex
@@ -303,7 +303,7 @@
                                 style="display: flex; justify-content: space-between; align-items: flex-start;">
                                 <div class="analytics-title">
                                     <i class="bi bi-hand-thumbs-down-fill text-danger"></i>
-                                    <h3>TOP 10 - UnHealthy Index POP Provinsi Jambi</h3>
+                                    <h3>TOP 10 - Unhealthy Index POP Provinsi Jambi</h3>
                                 </div>
                                 <div x-data="{ open: false }" class="export-menu-wrapper">
                                     <button @click="open = !open" @click.away="open = false"
@@ -504,8 +504,8 @@
                                         <option value="all">Semua Status</option>
                                         <option value="very_healthy">Very Healthy</option>
                                         <option value="healthy">Healthy</option>
-                                        <option value="unhealthy">UnHealthy</option>
-                                        <option value="very_unhealthy">Very UnHealthy</option>
+                                        <option value="unhealthy">Unhealthy</option>
+                                        <option value="very_unhealthy">Very Unhealthy</option>
                                     </select>
                                 </div>
                                 <div x-data="{ open: false }" class="export-menu-wrapper">
@@ -536,8 +536,8 @@
                             <div class="map-legend">
                                 <span><i class="legend-dot very_healthy"></i> Very Healthy</span>
                                 <span><i class="legend-dot healthy"></i> Healthy</span>
-                                <span><i class="legend-dot unhealthy"></i> UnHealthy</span>
-                                <span><i class="legend-dot very_unhealthy"></i> Very UnHealthy</span>
+                                <span><i class="legend-dot unhealthy"></i> Unhealthy</span>
+                                <span><i class="legend-dot very_unhealthy"></i> Very Unhealthy</span>
                                 <span><i class="legend-dot data-incomplete"></i> Data belum lengkap</span>
                             </div>
                         </div>
@@ -1694,7 +1694,7 @@
             };
 
             dashboardTableData.unhealthy = {
-                title: 'Data Top 10 UnHealthy Index',
+                title: 'Data Top 10 Unhealthy Index',
                 headers: healthyTableHeaders,
                 rows: toHealthyTableRows(topUnhealthyRows),
             };

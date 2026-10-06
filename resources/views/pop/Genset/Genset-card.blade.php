@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 
 <head>
@@ -30,7 +30,7 @@
                         <div class="genset-header-text">
                             <x-breadcrumb :items="[
                                 ['label' => 'POP', 'route' => 'pops.index'],
-                                ['label' => $pop->nama_pop_display . ': Genset'],
+                                ['label' => $pop->kode_pop . ': Genset'],
                             ]" />
                         </div>
                     </div>

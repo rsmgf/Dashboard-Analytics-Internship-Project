@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 
 <head>
@@ -26,35 +26,16 @@
                         <a href="{{ route('acs.index', $pop->id) }}" class="detail-back" title="Kembali ke List AC" aria-label="Kembali ke List AC">
                             <i class="bi bi-arrow-left"></i>
                         </a>
-<<<<<<< HEAD
-                        <x-breadcrumb :items="[
-                            ['label' => 'POP', 'route' => 'pops.index'],
-                            [
-                                'label' => $pop->nama_pop_display . ': AC',
-                                'route' => 'acs.index',
-                                'params' => ['pop' => $pop->id],
-                            ],
-                            ['label' => $ac->nomor_ac],
-                        ]" />
-                    </div>
-                    <div>
-                        @can('acs.index.update')
-                            <a href="{{ route('acs.edit', [$pop->id, $ac->id]) }}" class="btn-edit-form">
-                                <i class="bi bi-pencil-fill"></i> Edit Form
-                            </a>
-                        @endcan
-=======
                         <div class="header-title-wrapper">
                             <div class="title-with-badge">
                                 <x-breadcrumb :items="[
                                     ['label' => 'POP', 'route' => 'pops.index'],
-                                    ['label' => $pop->nama_pop_display . ': AC', 'route' => 'acs.index', 'params' => ['pop' => $pop->id]],
+                                    ['label' => $pop->kode_pop . ': AC', 'route' => 'acs.index', 'params' => ['pop' => $pop->id]],
                                     ['label' => $ac->nomor_ac],
                                 ]" />
                                 <span class="device-badge">{{ $ac->merk_ac }} &bull; {{ $ac->pk }} PK</span>
                             </div>
                         </div>
->>>>>>> ad2eead46a5decc72707534a94720d1ee79d422c
                     </div>
 
                     @can('acs.index.update')
@@ -156,20 +137,12 @@
                                     <div class="checklist-label">Tanggal Terakhir PM</div>
                                     <div class="checklist-field">
                                         @php
-<<<<<<< HEAD
-                                            $status = $ac->status_ac ?? 'Belum PM';
-                                            $badgeClass = match ($status) {
-                                                'Sudah PM' => 'status-excellent',
-                                                'Jadwal PM' => 'status-warning',
-                                                default => 'status-neutral',
-=======
                                             $status     = $ac->status_ac ?? 'Belum PM';
                                             $badgeClass = match($status) {
                                                 'Sudah PM'  => 'status-excellent',
                                                 'Jadwal PM' => 'status-danger',
                                                 'Belum PM'  => 'status-warning',
                                                 default     => 'status-warning',
->>>>>>> ad2eead46a5decc72707534a94720d1ee79d422c
                                             };
                                         @endphp
                                         {{ $ac->tanggal_terakhir_pm ? $ac->tanggal_terakhir_pm->translatedFormat('d F Y') : '-' }}
@@ -190,16 +163,9 @@
                             <div class="detail-card-body">
                             <div class="detail-photo-box">
                                 @if ($ac->photo_ac)
-<<<<<<< HEAD
-                                    <img src="{{ asset('storage/' . $ac->photo_ac) }}" alt="Foto Kondisi AC"
-                                        id="detailPhoto"
-                                        onclick="Swal.fire({ title: '{{ addslashes($ac->keterangan_gambar_ac ?? 'Foto AC') }}', imageUrl: this.src, imageAlt: 'Foto AC', showCloseButton: true, showConfirmButton: false, width: 'auto', customClass: { popup: 'swal-popup-custom' } })"
-                                        title="Klik untuk melihat ukuran penuh">
-=======
                                     <img src="{{ asset('storage/' . $ac->photo_ac) }}" alt="Foto Kondisi AC" id="detailPhoto"
                                          onclick="Swal.fire({ title: '{{ addslashes($ac->keterangan_gambar_ac ?? 'Foto AC') }}', imageUrl: this.src, imageAlt: 'Foto AC', showCloseButton: true, showConfirmButton: false, width: 'min(92vw, 900px)', heightAuto: false, customClass: { popup: 'swal-popup-custom' } })"
                                          title="Klik untuk melihat ukuran penuh">
->>>>>>> ad2eead46a5decc72707534a94720d1ee79d422c
                                 @else
                                     <div id="noDetailPhoto" class="no-preview">
                                         <i class="bi bi-image" style="font-size: 2.5rem; color: #94a3b8;"></i>

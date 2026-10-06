@@ -40,7 +40,7 @@
                         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                             <x-breadcrumb :items="[
                                 ['label' => 'POP', 'route' => 'pops.index'],
-                                ['label' => $pop->nama_pop_display . ': Rectifier', 'route' => 'rectifiers.index', 'params' => ['pop' => $pop->id]],
+                                ['label' => $pop->kode_pop . ': Rectifier', 'route' => 'rectifiers.index', 'params' => ['pop' => $pop->id]],
                                 ['label' => $rectifier->nomor_recti ?? ($rectifier->merk . ' - ' . $rectifier->type)],
                             ]" />
                             @if($rectifier->merk)
@@ -185,7 +185,7 @@
                         @forelse($rectifier->modules as $module)
                             <div class="module-row">
                                 <div><strong>Module {{ $loop->iteration }}</strong></div>
-                                <div><code>{{ $module->sn_modul ?? '-' }}</code></div>
+                                <div>{{ $module->sn_modul ?? '-' }}</div>
                             </div>
                         @empty
                             <div style="text-align:center; color:#64748b; padding:16px; font-size: 0.8rem;">
@@ -222,67 +222,6 @@
                 </div>
             </div>
 
-            {{-- Card Output --}}
-            <div class="detail-card output-card">
-                <div class="section-heading">
-                    <span><i class="bi bi-lightning-charge-fill"></i> Output (MCB)</span>
-                </div>
-
-                @php
-                    $outputs = $rectifier->outputs;
-                    $half    = (int) ceil(max($outputs->count(), 1) / 2);
-                    $left    = $outputs->take($half);
-                    $right   = $outputs->skip($half);
-                @endphp
-
-                <div class="output-grid">
-                    <table class="output-table">
-                        <thead>
-                            <tr>
-                                <th>MCB</th>
-                                <th>Merk</th>
-                                <th>Kapasitas</th>
-                                <th>Peruntukan</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($left as $output)
-                                <tr>
-                                    <td><strong>{{ $output->nama_mcb ?? 'MCB ' . $loop->iteration }}</strong></td>
-                                    <td>{{ $output->merk_mcb ?? '-' }}</td>
-                                    <td>{{ $output->kapasitas_mcb ?? '-' }}</td>
-                                    <td>{{ $output->peruntukan ?? '-' }}</td>
-                                </tr>
-                            @empty
-                                <tr><td colspan="4" style="text-align:center; color:#64748b; padding:12px;">Belum ada data output.</td></tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-
-                    @if($right->isNotEmpty())
-                        <table class="output-table">
-                            <thead>
-                                <tr>
-                                    <th>MCB</th>
-                                    <th>Merk</th>
-                                    <th>Kapasitas</th>
-                                    <th>Peruntukan</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($right as $output)
-                                    <tr>
-                                        <td><strong>{{ $output->nama_mcb ?? 'MCB ' . ($loop->iteration + $half) }}</strong></td>
-                                        <td>{{ $output->merk_mcb ?? '-' }}</td>
-                                        <td>{{ $output->kapasitas_mcb ?? '-' }}</td>
-                                        <td>{{ $output->peruntukan ?? '-' }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    @endif
-                </div>
-            </div>
 
             {{-- Card Checklist Rectifier --}}
             <div class="detail-card checklist-card">
@@ -295,7 +234,7 @@
                         <div class="checklist-label">POP</div>
                         <div class="checklist-value">: {{ $pop->nama_pop_display }}</div>
                         <div class="checklist-label">Tanggal</div>
-                        <div class="checklist-value">: <strong>{{ $rectifier->tanggal_pemeriksaan ? \Carbon\Carbon::parse($rectifier->tanggal_pemeriksaan)->translatedFormat('d F Y') : ($rectifier->updated_at ? $rectifier->updated_at->translatedFormat('d F Y') : '-') }}</strong></div>
+                        <div class="checklist-value">: {{ $rectifier->tanggal_pemeriksaan ? \Carbon\Carbon::parse($rectifier->tanggal_pemeriksaan)->translatedFormat('d F Y') : ($rectifier->updated_at ? $rectifier->updated_at->translatedFormat('d F Y') : '-') }}</div>
                     </div>
 
                     <div class="checklist-row">
@@ -357,7 +296,70 @@
                     </table>
                 </div>
             </div>
+
+            {{-- Card Output (MCB) --}}
+            <div class="detail-card output-card">
+                <div class="section-heading">
+                    <span><i class="bi bi-lightning-charge-fill"></i> Output (MCB)</span>
+                </div>
+
+                @php
+                    $outputs = $rectifier->outputs;
+                    $half    = (int) ceil(max($outputs->count(), 1) / 2);
+                    $left    = $outputs->take($half);
+                    $right   = $outputs->skip($half);
+                @endphp
+
+                <div class="output-grid">
+                    <table class="output-table">
+                        <thead>
+                            <tr>
+                                <th>MCB</th>
+                                <th>Merk</th>
+                                <th>Kapasitas</th>
+                                <th>Peruntukan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($left as $output)
+                                <tr>
+                                    <td><strong>{{ $output->nama_mcb ?? 'MCB ' . $loop->iteration }}</strong></td>
+                                    <td>{{ $output->merk_mcb ?? '-' }}</td>
+                                    <td>{{ $output->kapasitas_mcb ?? '-' }}</td>
+                                    <td>{{ $output->peruntukan ?? '-' }}</td>
+                                </tr>
+                            @empty
+                                <tr><td colspan="4" style="text-align:center; color:#64748b; padding:12px;">Belum ada data output.</td></tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+
+                    @if($right->isNotEmpty())
+                        <table class="output-table">
+                            <thead>
+                                <tr>
+                                    <th>MCB</th>
+                                    <th>Merk</th>
+                                    <th>Kapasitas</th>
+                                    <th>Peruntukan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($right as $output)
+                                    <tr>
+                                        <td><strong>{{ $output->nama_mcb ?? 'MCB ' . ($loop->iteration + $half) }}</strong></td>
+                                        <td>{{ $output->merk_mcb ?? '-' }}</td>
+                                        <td>{{ $output->kapasitas_mcb ?? '-' }}</td>
+                                        <td>{{ $output->peruntukan ?? '-' }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    @endif
+                </div>
+            </div>
         </div>
+
     </main>
 </div>
 

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 
 <head>
@@ -104,9 +104,9 @@
                         <div class="form-group">
                             <label for="judul_rma">Nama / Judul Dokumen <span style="font-weight:400;color:#64748b;font-size:12px;">(opsional)</span></label>
                             <input type="text" id="judul_rma" name="judul_rma" class="form-control"
-                                placeholder="Contoh: RMA Router Cisco - POP Jakarta Pusat"
+                                placeholder="Contoh: RMA PO-12345 - POP Jakarta Pusat"
                                 value="{{ old('judul_rma', $rma->judul_rma) }}" maxlength="150">
-                            <div class="field-description">Biarkan kosong untuk generate otomatis dari Merk + Lokasi</div>
+                            <div class="field-description">Biarkan kosong untuk generate otomatis dari No. Dokumen + Lokasi</div>
                         </div>
                         <div class="form-group">
                             <label for="so_po">No. IO.SP2K/SO/PO/ANDOP <span>*</span></label>
@@ -149,7 +149,7 @@
                             <label for="serial_number_edit">Serial Number (SN) / Batch <span>*</span></label>
                             <input type="text" id="serial_number_edit" name="serial_number" class="form-control" required
                                 placeholder="Contoh: SN-123456789"
-                                value="{{ old('serial_number', $rma->materials->first()?->serial_number ?? '') }}">
+                                value="{{ old('serial_number', $rma->serial_number ?? $rma->materials->first()?->serial_number ?? '') }}">
                         </div>
                         <div class="form-group">
                             <label for="material_number">Material Number</label>
@@ -166,6 +166,8 @@
                     <!-- KERUSAKAN -->
                     <div class="form-card">
                         @php $kerusakanLama = old('kerusakan', $rma->kerusakan ?? []); @endphp
+                        <input type="hidden" name="is_material_rusak" id="is_material_rusak"
+                            value="{{ old('is_material_rusak', $rma->is_material_rusak ? '1' : '0') }}">
                         <div class="alert-box warning-alert" style="margin-bottom:16px;">
                             <i class="bi bi-exclamation-triangle-fill"></i>
                             <span>Beri tanda checklist pada kotak jika material rusak</span>
@@ -341,6 +343,19 @@
             newPhotoInput.dispatchEvent(new Event('change'));
         });
     }
+
+    // Auto-sync is_material_rusak berdasarkan checkbox kerusakan
+    const isMaterialRusakInput = document.getElementById('is_material_rusak');
+    const kerusakanCheckboxes = document.querySelectorAll('input[name="kerusakan[]"]');
+
+    function syncMaterialRusak() {
+        if (!isMaterialRusakInput) return;
+        const anyChecked = Array.from(kerusakanCheckboxes).some(cb => cb.checked);
+        isMaterialRusakInput.value = anyChecked ? '1' : '0';
+    }
+
+    kerusakanCheckboxes.forEach(cb => cb.addEventListener('change', syncMaterialRusak));
+    syncMaterialRusak();
 </script>
 </body>
 </html>

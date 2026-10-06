@@ -54,8 +54,8 @@ class StoreRmaRequest extends FormRequest
             'kerusakan'         => 'nullable|array',
             'alasan'            => 'nullable|string',
             'serial_number'     => 'required|string|max:255',
-            'foto_material'     => 'required|array|min:1',
-            'foto_material.*'   => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'foto_material'     => 'nullable|array',
+            'foto_material.*'   => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ];
     }
 

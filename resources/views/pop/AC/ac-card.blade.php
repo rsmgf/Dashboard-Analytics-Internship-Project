@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 
 <head>
@@ -30,7 +30,7 @@
                         <div class="ac-header-text">
                             <x-breadcrumb :items="[
                                 ['label' => 'POP', 'route' => 'pops.index'],
-                                ['label' => $pop->nama_pop_display . ': AC'],
+                                ['label' => $pop->kode_pop . ': AC'],
                             ]" />
                         </div>
                     </div>

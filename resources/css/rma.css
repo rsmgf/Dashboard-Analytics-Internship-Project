@@ -1,3 +1,5 @@
+@import './type-scale.css';
+
 /*VARIABLES & GLOBALS*/
 :root {
     --primary-blue: #1688e8;
@@ -126,10 +128,21 @@
 }
 
 .field-description {
-    margin-top: -4px;
-    margin-bottom: 8px;
+    margin-top: 8px;
+    margin-bottom: 6px;
     color: var(--text-muted);
-    font-size: 11px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.form-control + .field-description {
+    margin-top: 8px;
+    margin-bottom: 4px;
+}
+
+.form-group label + .field-description {
+    margin-top: -2px;
+    margin-bottom: 8px;
 }
 
 .form-control {
@@ -416,7 +429,7 @@ textarea.form-control {
     }
 
     .form-card h2 {
-        font-size: 17px;
+        font-size: var(--fs-md);
         margin-bottom: 16px;
     }
 
@@ -424,16 +437,50 @@ textarea.form-control {
         margin-bottom: 16px;
     }
 
+    .form-group label {
+        font-size: var(--fs-sm);
+    }
+
+    .form-control {
+        font-size: var(--fs-input);
+    }
+
+    .alert-box {
+        font-size: var(--fs-xs);
+    }
+
     .radio-group {
         gap: 10px 16px;
+        font-size: var(--fs-sm);
     }
 
     .checker-grid {
         grid-template-columns: 1fr;
     }
 
+    .checker-item span {
+        font-size: var(--fs-sm);
+    }
+
     .upload-dropzone {
         padding: 24px 14px;
+    }
+
+    .dropzone-text {
+        font-size: var(--fs-sm);
+    }
+
+    .btn-browse {
+        font-size: var(--fs-xs);
+    }
+
+    .note-card h3 {
+        font-size: var(--fs-sm);
+    }
+
+    .note-card p,
+    .note-card li {
+        font-size: var(--fs-xs);
     }
 
     .form-actions {
@@ -456,6 +503,7 @@ textarea.form-control {
         justify-content: center !important;
         text-align: center;
         padding: 11px 16px;
+        font-size: var(--fs-sm);
     }
 }
 
