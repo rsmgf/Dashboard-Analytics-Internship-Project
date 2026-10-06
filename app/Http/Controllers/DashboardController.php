@@ -69,6 +69,7 @@ class DashboardController extends Controller
             [
                 'totalPendingApproval' => $this->pendingApprovalCount(),
                 'populasiPop'          => $this->popPopulation(),
+                'populasiPopByRegion'  => $this->popPopulationByRegion(),
                 'healthyIndexPops' => $healthyIndexPops,
                 'totalRectifierHealthy' => $totalRectifierHealthy,
                 'totalRectifierUnhealthy' => $totalRectifierUnhealthy,
@@ -484,6 +485,21 @@ class DashboardController extends Controller
 
         return [
             'labels' => $rows->pluck('tipe')->values(),
+            'data'   => $rows->pluck('total')->map(fn($v) => (int) $v)->values(),
+        ];
+    }
+
+    private function popPopulationByRegion(): array
+    {
+        $rows = Pop::query()
+            ->selectRaw("COALESCE(NULLIF(TRIM(kota_kabupaten), ''), 'Belum diisi') as wilayah, COUNT(*) as total")
+            ->groupBy('wilayah')
+            ->orderByDesc('total')
+            ->orderBy('wilayah')
+            ->get();
+
+        return [
+            'labels' => $rows->pluck('wilayah')->values(),
             'data'   => $rows->pluck('total')->map(fn($v) => (int) $v)->values(),
         ];
     }

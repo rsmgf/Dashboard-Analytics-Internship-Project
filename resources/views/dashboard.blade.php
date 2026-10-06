@@ -431,6 +431,58 @@
                                 </div>
                             </div>
                         @endif
+
+                        {{-- Pengganti kartu notifikasi untuk role karyawan dan teknisi --}}
+                        @if (auth()->user()->hasAnyRole('karyawan', 'teknisi'))
+                            <div class="analytics-card population-card">
+                                <div class="analytics-card-header"
+                                    style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                    <div class="analytics-title">
+                                        <i class="bi bi-pie-chart-fill"></i>
+                                        <h3>Populasi POP Menurut Kabupaten/Kota</h3>
+                                    </div>
+                                    <div x-data="{ open: false }" class="export-menu-wrapper">
+                                        <button @click="open = !open" @click.away="open = false"
+                                            class="export-menu-btn" aria-label="Menu chart populasi kabupaten/kota">
+                                            <i class="bi bi-list"></i>
+                                        </button>
+                                        <div x-show="open" style="display:none;" class="export-dropdown">
+                                            <button @click="exportImage('populationRegionBody', 'png', 'Populasi_POP_Kabupaten_Kota'); open = false">
+                                                <i class="bi bi-image" style="margin-right:8px;"></i> Download PNG
+                                            </button>
+                                            <button @click="exportImage('populationRegionBody', 'jpeg', 'Populasi_POP_Kabupaten_Kota'); open = false">
+                                                <i class="bi bi-image-fill" style="margin-right:8px;"></i> Download JPEG
+                                            </button>
+                                            <button @click="exportPDF('populationRegionBody', 'Populasi_POP_Kabupaten_Kota'); open = false">
+                                                <i class="bi bi-file-pdf" style="margin-right:8px;"></i> Download PDF
+                                            </button>
+                                            <button type="button" @click="showDashboardDataTable('populationRegion'); open = false">
+                                                <i class="bi bi-table" style="margin-right:8px;"></i> Lihat Data Tabel
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="populationRegionBody" class="population-body">
+                                    <div class="population-chart">
+                                        <canvas id="populasiWilayahChart"></canvas>
+                                    </div>
+                                    <ul id="populasiWilayahLegend" class="population-legend"></ul>
+                                    <div id="populationRegionDataTablePanel" class="population-data-table-wrap" hidden>
+                                        <table class="population-data-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Kabupaten/Kota</th>
+                                                    <th>Jumlah POP</th>
+                                                    <th>Persentase</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="populasiWilayahTableBody"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     </div>
 
                     {{-- PETA PROVINSI JAMBI --}}
@@ -1024,8 +1076,13 @@
         let dashboardTableData = {};
 
         function showDashboardDataTable(key) {
-            if (key === 'population') {
-                const panel = document.getElementById('populationDataTablePanel');
+            const inlineTablePanels = {
+                population: 'populationDataTablePanel',
+                populationRegion: 'populationRegionDataTablePanel',
+            };
+
+            if (inlineTablePanels[key]) {
+                const panel = document.getElementById(inlineTablePanels[key]);
 
                 if (panel) {
                     panel.hidden = !panel.hidden;
@@ -1445,7 +1502,7 @@
                         color: '#0f172a',
                         font: {
                             family: 'Poppins',
-                            size: 8.5,
+                            size: 10.5,
                             weight: '600',
                         },
                     },
@@ -1839,6 +1896,137 @@
             } else if (legendEl) {
                 document.querySelector('.population-body').innerHTML =
                     '<div class="dashboard-device-empty">Belum ada data tipe POP.</div>';
+            }
+
+            // 4. Populasi POP menurut Kabupaten/Kota (khusus karyawan/teknisi)
+            const regionData = @json($populasiPopByRegion);
+            const regionCanvas = document.getElementById('populasiWilayahChart');
+            const regionLegend = document.getElementById('populasiWilayahLegend');
+            const regionTableBody = document.getElementById('populasiWilayahTableBody');
+
+            if (regionCanvas && regionLegend && regionData.data.length) {
+                const regionColors = [
+                    '#0284c7', '#22c55e', '#eab308', '#8b5cf6', '#f97316',
+                    '#14b8a6', '#ec4899', '#6366f1', '#84cc16', '#f43f5e', '#64748b',
+                ];
+                const colors = regionData.labels.map((_, index) => regionColors[index % regionColors.length]);
+                const visibleRegionTotal = chart => chart.data.datasets[0].data
+                    .reduce((sum, value, index) => sum + (chart.getDataVisibility(index) ? Number(value) : 0), 0);
+                const regionChart = new Chart(regionCanvas.getContext('2d'), {
+                    type: 'pie',
+                    data: {
+                        labels: regionData.labels,
+                        datasets: [{
+                            data: regionData.data,
+                            backgroundColor: colors,
+                            borderColor: '#ffffff',
+                            borderWidth: 2,
+                            hoverOffset: 8,
+                        }],
+                    },
+                    plugins: [ChartDataLabels],
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        layout: { padding: 10 },
+                        animation: { duration: 350 },
+                        onHover: (event, elements) => {
+                            event.native.target.style.cursor = elements.length ? 'pointer' : 'default';
+                            highlightRegionLegend(elements.length ? elements[0].index : null);
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            datalabels: {
+                                color: '#ffffff',
+                                font: { family: 'Poppins', weight: '700', size: 11 },
+                                display: context => {
+                                    const total = visibleRegionTotal(context.chart);
+                                    return total > 0 && Number(context.dataset.data[context.dataIndex]) / total >= 0.04;
+                                },
+                                formatter: (value, context) => {
+                                    const total = visibleRegionTotal(context.chart);
+                                    return total ? `${Math.round(Number(value) / total * 100)}%` : '0%';
+                                },
+                            },
+                            tooltip: {
+                                backgroundColor: '#0f3356',
+                                padding: 8,
+                                displayColors: false,
+                                callbacks: {
+                                    label: context => {
+                                        const total = visibleRegionTotal(context.chart);
+                                        const percentage = total ? Math.round(Number(context.raw) / total * 100) : 0;
+                                        return ` ${context.raw} POP (${percentage}%)`;
+                                    },
+                                },
+                            },
+                        },
+                    },
+                });
+
+                regionLegend.innerHTML = regionData.labels.map((label, index) => `
+                    <li class="pop-legend-item" data-index="${index}" title="${regionData.data[index]} POP">
+                        <span class="pop-legend-swatch" style="background:${colors[index]}"></span>
+                        <span class="pop-legend-label">${escapeHtml(label)}</span>
+                    </li>
+                `).join('');
+
+                const totalRegionPops = regionData.data.reduce((sum, value) => sum + Number(value), 0);
+                if (regionTableBody) {
+                    regionTableBody.innerHTML = regionData.labels.map((label, index) => {
+                        const count = Number(regionData.data[index]);
+                        const percentage = totalRegionPops
+                            ? ((count / totalRegionPops) * 100).toLocaleString('id-ID', { maximumFractionDigits: 1 })
+                            : '0';
+
+                        return `<tr>
+                            <td><span class="population-table-color" style="background:${colors[index]}"></span>${escapeHtml(label)}</td>
+                            <td>${count.toLocaleString('id-ID')}</td>
+                            <td>${percentage}%</td>
+                        </tr>`;
+                    }).join('');
+                }
+
+                const regionLegendItems = regionLegend.querySelectorAll('.pop-legend-item');
+                function highlightRegionLegend(activeIndex) {
+                    regionLegendItems.forEach((element, index) => {
+                        element.classList.toggle('is-active', activeIndex === index);
+                        element.classList.toggle('is-dimmed', activeIndex !== null && activeIndex !== index);
+                    });
+                }
+
+                function highlightRegionSlice(index) {
+                    if (index === null) {
+                        regionChart.setActiveElements([]);
+                        regionChart.tooltip.setActiveElements([], { x: 0, y: 0 });
+                    } else if (regionChart.getDataVisibility(index)) {
+                        const arc = regionChart.getDatasetMeta(0).data[index];
+                        const position = arc.tooltipPosition();
+                        regionChart.setActiveElements([{ datasetIndex: 0, index }]);
+                        regionChart.tooltip.setActiveElements([{ datasetIndex: 0, index }], position);
+                    }
+                    regionChart.update();
+                }
+
+                regionLegendItems.forEach((element, index) => {
+                    element.addEventListener('mouseenter', () => {
+                        highlightRegionLegend(index);
+                        highlightRegionSlice(index);
+                    });
+                    element.addEventListener('mouseleave', () => {
+                        highlightRegionLegend(null);
+                        highlightRegionSlice(null);
+                    });
+                    element.addEventListener('click', () => {
+                        regionChart.toggleDataVisibility(index);
+                        element.classList.toggle('is-hidden', !regionChart.getDataVisibility(index));
+                        regionChart.update();
+                    });
+                });
+                regionCanvas.addEventListener('mouseleave', () => highlightRegionLegend(null));
+            } else if (regionCanvas && regionLegend) {
+                document.getElementById('populationRegionBody').innerHTML =
+                    '<div class="dashboard-device-empty">Belum ada data kabupaten/kota.</div>';
             }
         }
 
