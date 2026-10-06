@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use Illuminate\Http\Exceptions\PostTooLargeException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -27,4 +28,14 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn(Request $request) => $request->is('api/*'),
         );
+
+        // Tangkap PostTooLargeException sebelum sampai ke controller
+        // agar user tidak dilempar ke halaman error Laravel yang menakutkan
+        $exceptions->renderable(function (PostTooLargeException $e, Request $request) {
+            $maxMb = round(ini_get('upload_max_filesize') ?: 2, 1);
+            return redirect()->back()
+                ->withInput($request->except(['foto_rectifier', 'foto_battery', 'foto_kwh', 'foto_genset', 'foto_ac', 'foto', 'foto_rma']))
+                ->with('error_upload', "Ukuran file yang diunggah melebihi batas maksimal ({$maxMb} MB). Silakan kompres foto terlebih dahulu lalu coba lagi.");
+        });
     })->create();
+

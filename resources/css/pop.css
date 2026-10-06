@@ -1,3 +1,5 @@
+@import './type-scale.css';
+
 /* Wrapper Konten */
 .pop-content {
     padding: 24px 30px 30px 30px !important;
@@ -701,4 +703,46 @@
 .pop-healthy-index-badge.data_incomplete {
     background: #e2e8f0;
     color: #475569;
+}
+
+/* =========================================================
+   MOBILE: ukuran teks mengikuti type-scale.css
+   ========================================================= */
+@media (max-width: 600px) {
+    .pop-header h1 {
+        font-size: var(--fs-md);
+    }
+
+    .pop-title-icon {
+        width: 36px;
+        height: 36px;
+        font-size: var(--icon-title);
+    }
+
+    .btn-import-pop,
+    .btn-tambah-pop {
+        font-size: var(--fs-xs);
+        padding: 8px 12px;
+    }
+
+    .search-input,
+    .filter-select {
+        font-size: var(--fs-input);
+    }
+
+    .pop-table th {
+        font-size: var(--fs-2xs);
+    }
+
+    .pop-table td {
+        font-size: var(--fs-xs);
+    }
+
+    .pop-healthy-index-badge {
+        font-size: var(--fs-2xs);
+    }
+
+    .pagination-container > div {
+        font-size: var(--fs-xs);
+    }
 }

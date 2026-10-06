@@ -29,7 +29,7 @@
                         <div class="rectifier-header-text">
                         <x-breadcrumb :items="[
                             ['label' => 'POP', 'route' => 'pops.index'],
-                            ['label' => $pop->nama_pop_display . ': Genset', 'route' => 'gensets.index', 'params' => ['pop' => $pop->id]],
+                            ['label' => $pop->kode_pop . ': Genset', 'route' => 'gensets.index', 'params' => ['pop' => $pop->id]],
                             ['label' => 'Tambah Genset'],
                         ]" />
                         </div>
@@ -71,7 +71,7 @@
                             <div class="form-group">
                                 <label for="pic">PIC <span class="required">*</span></label>
                                 <input type="text" id="pic" name="pic" class="form-control @error('pic') is-invalid @enderror"
-                                    placeholder="Masukkan PIC" value="{{ old('pic') }}" required>
+                                    placeholder="Masukkan PIC" value="{{ old('pic', auth()->user()?->name ?? 'Teknisi') }}" required>
                                 @error('pic')<div class="invalid-feedback" style="color:#ef4444;font-size:0.8rem;">{{ $message }}</div>@enderror
                             </div>
 

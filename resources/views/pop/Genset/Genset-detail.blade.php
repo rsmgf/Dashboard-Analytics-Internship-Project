@@ -29,7 +29,7 @@
                         <div class="rectifier-header-text">
                         <x-breadcrumb :items="[
                             ['label' => 'POP', 'route' => 'pops.index'],
-                            ['label' => $pop->nama_pop_display . ': Genset', 'route' => 'gensets.index', 'params' => ['pop' => $pop->id]],
+                            ['label' => $pop->kode_pop . ': Genset', 'route' => 'gensets.index', 'params' => ['pop' => $pop->id]],
                             ['label' => $genset->nomor_genset],
                         ]" />
                         </div>
@@ -94,7 +94,7 @@
                                 <div class="info-box-icon"><i class="bi bi-person-fill"></i></div>
                                 <div class="info-box-text">
                                     <span class="info-box-label">PIC</span>
-                                    <span class="info-box-value">{{ $genset->pic ?? '-' }}</span>
+                                    <span class="info-box-value">{{ $genset->pic ?? ($genset->diupdateOleh->name ?? '-') }}</span>
                                 </div>
                             </div>
 

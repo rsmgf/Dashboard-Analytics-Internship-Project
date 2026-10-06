@@ -1,3 +1,5 @@
+@import './type-scale.css';
+
 *,
 *::before,
 *::after {
@@ -441,41 +443,109 @@ body {
 .btn-delete-rma:active { transform: translateY(0); }
 
 /* =====================================================
-   PAGINATION
+   PAGINATION (MODERN & UNIFIED WITH PLN ICON PLUS)
 ===================================================== */
 .pagination-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 20px;
+    padding: 16px 20px;
+    border-top: 1px solid #e2e8f0;
+    background-color: #ffffff;
     font-size: 13px;
-    color: #6b7280;
+    color: #64748b;
+    font-weight: 500;
+    gap: 12px;
+    border-radius: 0 0 12px 12px;
 }
 
-.pagination-controls {
+.pagination-footer .pagination-info {
     display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.pagination-footer .pagination-controls nav {
+    display: flex;
+    align-items: center;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.pagination-footer .pagination {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin: 0 !important;
+    gap: 6px;
+    align-items: center;
+}
+
+.pagination-footer .page-item .page-link,
+.pagination-footer .page-item span.page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 34px;
+    height: 34px;
+    padding: 0 12px;
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    color: #0066dc;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.pagination-footer .page-item .page-link:hover {
+    background-color: #f0f7ff;
+    border-color: #93c5fd;
+    color: #0052b3;
+}
+
+.pagination-footer .page-item.active .page-link,
+.pagination-footer .page-item.active span.page-link {
+    background-color: #0066dc;
+    border-color: #0066dc;
+    color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 102, 220, 0.25);
+}
+
+.pagination-footer .page-item.disabled span.page-link {
+    background-color: #f8fafc;
+    border-color: #e2e8f0;
+    color: #cbd5e1;
+    cursor: not-allowed;
+}
+
+.badge-filter-today {
+    background-color: #e0f2fe;
+    color: #0284c7;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 9999px;
+    border: 1px solid #bae6fd;
+    display: inline-flex;
+    align-items: center;
     gap: 4px;
 }
 
-.pagination-controls button {
-    border: 1px solid #d1d5db;
-    background: white;
-    color: #374151;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-weight: 500;
+.btn-pill-item.active-today {
+    background: #e0f2fe;
+    color: #0369a1;
+    border-color: #7dd3fc;
+    font-weight: 700;
 }
 
-.pagination-controls button:hover {
-    background: #f3f4f6;
-}
-
-.pagination-controls button.active {
-    background: #1d4ed8;
-    color: white;
-    border-color: #1d4ed8;
+.btn-pill-item.active-today:hover {
+    background: #bae6fd;
+    color: #0284c7;
 }
 
 /* =====================================================
@@ -797,18 +867,51 @@ body.sidebar-collapsed .sidebar-logo img {
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
     .rma-page {
         padding: 12px 10px 32px;
     }
 
     .page-title h1 {
-        font-size: 19px;
+        font-size: var(--fs-md);
     }
 
     .title-icon {
-        width: 38px;
-        height: 38px;
-        font-size: 18px;
+        width: 36px;
+        height: 36px;
+        font-size: var(--icon-title);
+    }
+
+    .page-header .btn-tambah {
+        font-size: var(--fs-sm);
+    }
+
+    .search-box input,
+    .filter-select {
+        font-size: var(--fs-input);
+    }
+
+    .btn-pill-item {
+        font-size: var(--fs-2xs);
+    }
+
+    .btn-batch-download-modern {
+        font-size: var(--fs-xs);
+    }
+
+    .rma-table th {
+        font-size: var(--fs-2xs);
+    }
+
+    .rma-table td {
+        font-size: var(--fs-xs);
+    }
+
+    .badge-status-modern {
+        font-size: var(--fs-2xs);
+    }
+
+    .pagination-footer {
+        font-size: var(--fs-xs);
     }
 }

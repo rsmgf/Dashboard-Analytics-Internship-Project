@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 
 <head>
@@ -34,7 +34,7 @@
                         <div class="rectifier-header-text">
                             <x-breadcrumb :items="[
                                 ['label' => 'POP', 'route' => 'pops.index'],
-                                ['label' => $pop->nama_pop_display]
+                                ['label' => $pop->kode_pop]
                             ]" />
                         </div>
                     </div>

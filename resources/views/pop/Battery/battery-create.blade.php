@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -29,7 +29,7 @@
                         <div>
                             <x-breadcrumb :items="[
                                 ['label' => 'POP', 'route' => 'pops.index'],
-                                ['label' => $pop->nama_pop_display . ': Battery', 'route' => 'batteries.index', 'params' => ['pop' => $pop->id]],
+                                ['label' => $pop->kode_pop . ': Battery', 'route' => 'batteries.index', 'params' => ['pop' => $pop->id]],
                                 ['label' => 'Tambah Baterai'],
                             ]" />
                         </div>

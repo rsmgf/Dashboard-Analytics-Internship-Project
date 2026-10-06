@@ -21,6 +21,9 @@ class RmaController extends Controller
         $direction = strtolower($request->query('direction')) === 'desc' ? 'desc' : 'asc';
         // Filter khusus Super Admin/Manager: 'semua' (default) atau 'milik_saya'
         $tampil    = $request->query('tampil', 'semua');
+        $filter    = $request->query('filter'); // 'hari_ini'
+        $dateFrom  = $request->query('date_from');
+        $dateTo    = $request->query('date_to');
 
         $query = Rma::with(['materials', 'user'])
             ->when(!$isSuperAdminOrManager, function ($q) use ($user) {
@@ -37,6 +40,13 @@ class RmaController extends Controller
                         ->orWhere('nama_pemohon', $user->name);
                 });
             })
+            ->when($filter === 'hari_ini', function ($q) {
+                $today = now()->format('Y-m-d');
+                $q->where(function ($sub) use ($today) {
+                    $sub->whereDate('created_at', $today)
+                        ->orWhereDate('tanggal', $today);
+                });
+            })
             ->when($search, function ($q, $search) {
                 $q->where(function ($sub) use ($search) {
                     $sub->where('judul_rma', 'like', "%{$search}%")
@@ -44,6 +54,18 @@ class RmaController extends Controller
                         ->orWhere('lokasi_asal', 'like', "%{$search}%")
                         ->orWhere('nama_pemohon', 'like', "%{$search}%")
                         ->orWhere('merk', 'like', "%{$search}%");
+                });
+            })
+            ->when($dateFrom, function ($q) use ($dateFrom) {
+                $q->where(function ($sub) use ($dateFrom) {
+                    $sub->whereDate('created_at', '>=', $dateFrom)
+                        ->orWhereDate('tanggal', '>=', $dateFrom);
+                });
+            })
+            ->when($dateTo, function ($q) use ($dateTo) {
+                $q->where(function ($sub) use ($dateTo) {
+                    $sub->whereDate('created_at', '<=', $dateTo)
+                        ->orWhereDate('tanggal', '<=', $dateTo);
                 });
             });
 
@@ -53,9 +75,10 @@ class RmaController extends Controller
             $query->orderBy('id', $direction);
         }
 
-        $rmas = $query->paginate(8)->withQueryString();
+        $perPage = 8;
+        $rmas = $query->paginate($perPage)->withQueryString();
 
-        return view('rma.rma', compact('rmas', 'sort', 'direction', 'isSuperAdminOrManager', 'tampil'));
+        return view('rma.rma', compact('rmas', 'sort', 'direction', 'isSuperAdminOrManager', 'tampil', 'filter', 'dateFrom', 'dateTo'));
     }
 
     public function create()
@@ -79,9 +102,14 @@ class RmaController extends Controller
             ? $request->file('ttd_pemohon')->store('signatures', 'local')
             : null;
 
+        $noDokumen = trim($validatedData['so_po'] ?? '');
+        $lokasiAsal = trim($validatedData['lokasi_asal'] ?? 'POP');
+        $prefix = stripos($noDokumen, 'RMA') === 0 ? '' : 'RMA ';
+        $defaultJudul = ($prefix . ($noDokumen ?: 'Dokumen')) . ' - ' . ($lokasiAsal ?: 'POP');
+
         $judulRma = !empty($validatedData['judul_rma'])
             ? trim($validatedData['judul_rma'])
-            : ('RMA ' . ($validatedData['merk'] ?? 'Device') . ' - ' . ($validatedData['lokasi_asal'] ?? 'POP'));
+            : $defaultJudul;
 
         // 2. Simpan data utama
         $rma = Rma::create([
@@ -97,20 +125,23 @@ class RmaController extends Controller
             'lokasi_asal'       => $validatedData['lokasi_asal'],
             'merk'              => $validatedData['merk'],
             'type'              => $validatedData['type'],
+            'serial_number'     => $validatedData['serial_number'],
             'material_number'   => $validatedData['material_number'] ?? null,
             'description'       => $validatedData['description'] ?? null,
             'kerusakan'         => $validatedData['kerusakan'] ?? null,
             'alasan'            => $validatedData['alasan'] ?? null,
         ]);
 
-        // 3. Simpan foto material
-        foreach ($request->file('foto_material') as $file) {
-            $path = $file->store('material_images', 'public');
+        // 3. Simpan foto material (jika ada)
+        if ($request->hasFile('foto_material')) {
+            foreach ($request->file('foto_material') as $file) {
+                $path = $file->store('material_images', 'public');
 
-            $rma->materials()->create([
-                'serial_number' => $validatedData['serial_number'],
-                'foto_path'     => $path,
-            ]);
+                $rma->materials()->create([
+                    'serial_number' => $validatedData['serial_number'],
+                    'foto_path'     => $path,
+                ]);
+            }
         }
 
         // Ambil data lengkap & generate PDF
@@ -167,7 +198,7 @@ class RmaController extends Controller
             'judul_rma'         => 'nullable|string|max:255',
             'nama_pemohon'      => 'required|string|max:255',
             'nama_manager'      => 'required|string|max:255',
-            'is_material_rusak' => 'required|boolean',
+            'is_material_rusak' => 'nullable|boolean',
             'so_po'             => 'required|string|max:255',
             'valuation_type'    => 'required|in:ex-project,dismantle,rusak-L,rusak-TL',
             'tanggal'           => 'required|date',
@@ -183,21 +214,27 @@ class RmaController extends Controller
             'hapus_foto'        => 'nullable|array',
         ]);
 
+        $noDokumen = trim($request->so_po ?? '');
+        $lokasiAsal = trim($request->lokasi_asal ?? 'POP');
+        $prefix = stripos($noDokumen, 'RMA') === 0 ? '' : 'RMA ';
+        $defaultJudul = ($prefix . ($noDokumen ?: 'Dokumen')) . ' - ' . ($lokasiAsal ?: 'POP');
+
         $judulRma = !empty($request->judul_rma)
             ? trim($request->judul_rma)
-            : ('RMA ' . ($request->merk ?? 'Device') . ' - ' . ($request->lokasi_asal ?? 'POP'));
+            : $defaultJudul;
 
         $rma->update([
             'judul_rma'         => $judulRma,
             'nama_pemohon'      => $request->nama_pemohon,
             'nama_manager'      => $request->nama_manager,
-            'is_material_rusak' => $request->is_material_rusak,
+            'is_material_rusak' => $request->is_material_rusak ?? $rma->is_material_rusak,
             'so_po'             => $request->so_po,
             'valuation_type'    => $request->valuation_type,
             'tanggal'           => $request->tanggal,
             'lokasi_asal'       => $request->lokasi_asal,
             'merk'              => $request->merk,
             'type'              => $request->type,
+            'serial_number'     => $request->serial_number,
             'material_number'   => $request->material_number,
             'description'       => $request->description,
             'kerusakan'         => $request->kerusakan,
@@ -276,17 +313,45 @@ class RmaController extends Controller
 
     public function downloadBatch(Request $request)
     {
-        $ids = $request->input('ids');
-        if (is_string($ids)) {
-            $ids = explode(',', $ids);
-        }
-        $ids = array_filter(array_map('intval', (array) $ids));
+        $user = auth()->user();
+        $isSuperAdminOrManager = $user && ($user->hasRole(['super_admin', 'manajer']) || $user->role === 'super_admin' || $user->role === 'manajer');
 
-        if (empty($ids)) {
-            return redirect()->route('rma')->with('error', 'Pilih minimal satu data RMA untuk didownload.');
+        if ($request->input('mode') === 'hari_ini') {
+            $today = now()->format('Y-m-d');
+            $tampil = $request->input('tampil', 'semua');
+
+            $rmas = Rma::with(['materials', 'user'])
+                ->when(!$isSuperAdminOrManager, function ($q) use ($user) {
+                    $q->where(function ($sub) use ($user) {
+                        $sub->where('user_id', $user->id)
+                            ->orWhere('nama_pemohon', $user->name);
+                    });
+                })
+                ->when($isSuperAdminOrManager && $tampil === 'milik_saya', function ($q) use ($user) {
+                    $q->where(function ($sub) use ($user) {
+                        $sub->where('user_id', $user->id)
+                            ->orWhere('nama_pemohon', $user->name);
+                    });
+                })
+                ->where(function ($sub) use ($today) {
+                    $sub->whereDate('created_at', $today)
+                        ->orWhereDate('tanggal', $today);
+                })
+                ->get();
+        } else {
+            $ids = $request->input('ids');
+            if (is_string($ids)) {
+                $ids = explode(',', $ids);
+            }
+            $ids = array_filter(array_map('intval', (array) $ids));
+
+            if (empty($ids)) {
+                return redirect()->route('rma')->with('error', 'Pilih minimal satu data RMA untuk didownload.');
+            }
+
+            $rmas = Rma::with('materials')->whereIn('id', $ids)->get();
         }
 
-        $rmas = Rma::with('materials')->whereIn('id', $ids)->get();
         if ($rmas->isEmpty()) {
             return redirect()->route('rma')->with('error', 'Data RMA tidak ditemukan.');
         }

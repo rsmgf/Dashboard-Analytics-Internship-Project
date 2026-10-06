@@ -97,6 +97,56 @@ document.addEventListener('DOMContentLoaded', function() {
     @if(session('warning'))
         showToast('warning', @json(session('warning')));
     @endif
+    @if(session('error_upload'))
+        Swal.fire({
+            icon: 'error',
+            title: 'File Terlalu Besar!',
+            text: @json(session('error_upload')),
+            confirmButtonColor: '#2563eb',
+            confirmButtonText: 'Mengerti',
+        });
+    @endif
+
+    // ---- Universal Client-Side File Size Guard (max 2 MB) ----
+    // Intercept semua input file di halaman manapun sebelum form disubmit
+    const MAX_FILE_BYTES = 2 * 1024 * 1024; // 2 MB
+    document.addEventListener('change', function(e) {
+        const input = e.target;
+        if (input.type !== 'file') return;
+        const file = input.files && input.files[0];
+        if (!file) return;
+
+        // Validasi format
+        const allowed = ['image/jpeg', 'image/jpg', 'image/png'];
+        if (!allowed.includes(file.type)) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Format File Tidak Valid',
+                html: `File <strong>${file.name}</strong> bukan format yang didukung.<br>
+                       Gunakan format: <strong>JPG, JPEG, atau PNG</strong>.`,
+                confirmButtonColor: '#2563eb',
+                confirmButtonText: 'Mengerti',
+            });
+            input.value = '';
+            return;
+        }
+
+        // Validasi ukuran
+        if (file.size > MAX_FILE_BYTES) {
+            const sizeMb = (file.size / 1024 / 1024).toFixed(2);
+            Swal.fire({
+                icon: 'error',
+                title: 'File Terlalu Besar!',
+                html: `Ukuran file <strong>${file.name}</strong> adalah <strong>${sizeMb} MB</strong>.<br>
+                       Maksimal yang diperbolehkan adalah <strong>2 MB</strong>.<br><br>
+                       Silakan kompres foto terlebih dahulu lalu coba lagi.`,
+                confirmButtonColor: '#2563eb',
+                confirmButtonText: 'Mengerti',
+            });
+            input.value = '';
+        }
+    }, true); // capture: true agar intercept sebelum handler lain
+
 
     const sidebarToggle = document.getElementById('sidebarToggle');
     const sidebarIcon   = document.getElementById('sidebarToggleIcon');

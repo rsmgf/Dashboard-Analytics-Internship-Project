@@ -35,7 +35,7 @@
                     <div class="rform-header-text">
                         <x-breadcrumb :items="[
                             ['label' => 'POP', 'route' => 'pops.index'],
-                            ['label' => $pop->nama_pop_display . ': Rectifier', 'route' => 'rectifiers.index', 'params' => ['pop' => $pop->id]],
+                            ['label' => $pop->kode_pop . ': Rectifier', 'route' => 'rectifiers.index', 'params' => ['pop' => $pop->id]],
                             ['label' => 'Tambah Rectifier'],
                         ]" />
                     </div>
@@ -314,84 +314,63 @@
                          SECTION 5 — Output MCB
                     ================================================ --}}
                     <div class="rform-section">
-                        <div class="rform-section-header">
-                            <i class="bi bi-toggles2" style="color:#2563eb; margin-right:8px;"></i>
-                            Output (MCB)
-                            <span class="rform-section-sub">Opsional — dapat diisi secara bertahap</span>
+                        <div class="rform-section-header" style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <i class="bi bi-toggles2" style="color:#2563eb; margin-right:4px;"></i>
+                                Output (MCB)
+                                <span id="mcbStatusBadge" class="rform-section-sub">Opsional — dapat diisi secara bertahap</span>
+                            </div>
                         </div>
                         <div class="rform-section-body">
-                            <div class="rform-output-grid">
-                                {{-- Tabel Kiri (MCB 1 - 6) --}}
-                                <table class="rform-output-table">
-                                    <thead>
-                                        <tr>
-                                            <th>MCB</th>
-                                            <th>Merk</th>
-                                            <th>Kapasitas</th>
-                                            <th>Peruntukan</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @for($idx = 0; $idx < 6; $idx++)
-                                            <tr>
-                                                <td class="mcb-label">MCB {{ $idx + 1 }}</td>
-                                                <td>
-                                                    <input type="hidden" name="outputs[{{ $idx }}][nama_mcb]" value="MCB {{ $idx + 1 }}">
-                                                    <input type="text" name="outputs[{{ $idx }}][merk_mcb]"
-                                                        value="{{ old('outputs.' . $idx . '.merk_mcb') }}" placeholder="Merk">
-                                                </td>
-                                                <td>
-                                                    <input type="text" name="outputs[{{ $idx }}][kapasitas_mcb]"
-                                                        value="{{ old('outputs.' . $idx . '.kapasitas_mcb') }}" placeholder="Kapasitas">
-                                                </td>
-                                                <td>
-                                                    <input type="text" name="outputs[{{ $idx }}][peruntukan]"
-                                                        value="{{ old('outputs.' . $idx . '.peruntukan') }}" placeholder="Peruntukan">
-                                                </td>
-                                            </tr>
-                                        @endfor
-                                    </tbody>
-                                </table>
 
-                                {{-- Tabel Kanan (MCB 7 - 12) --}}
-                                <table class="rform-output-table">
-                                    <thead>
-                                        <tr>
-                                            <th>MCB</th>
-                                            <th>Merk</th>
-                                            <th>Kapasitas</th>
-                                            <th>Peruntukan</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @for($idx = 0; $idx < 6; $idx++)
-                                            @php $i = $idx + 6; @endphp
-                                            <tr>
-                                                <td class="mcb-label">MCB {{ $i + 1 }}</td>
-                                                <td>
-                                                    <input type="hidden" name="outputs[{{ $i }}][nama_mcb]" value="MCB {{ $i + 1 }}">
-                                                    <input type="text" name="outputs[{{ $i }}][merk_mcb]"
-                                                        value="{{ old('outputs.' . $i . '.merk_mcb') }}" placeholder="Merk">
-                                                </td>
-                                                <td>
-                                                    <input type="text" name="outputs[{{ $i }}][kapasitas_mcb]"
-                                                        value="{{ old('outputs.' . $i . '.kapasitas_mcb') }}" placeholder="Kapasitas">
-                                                </td>
-                                                <td>
-                                                    <input type="text" name="outputs[{{ $i }}][peruntukan]"
-                                                        value="{{ old('outputs.' . $i . '.peruntukan') }}" placeholder="Peruntukan">
-                                                </td>
-                                            </tr>
-                                        @endfor
-                                    </tbody>
-                                </table>
+                            {{-- Field jumlah MCB --}}
+                            <div class="rform-group" style="max-width:280px; margin-bottom:16px;">
+                                <label class="rform-label">
+                                    Jumlah Output (MCB)
+                                    <span style="color:#94a3b8; font-weight:400; font-size:0.78rem;">(maks. 50)</span>
+                                </label>
+                                <input type="number" id="jumlah_output_mcb" name="jumlah_output_mcb"
+                                    class="rform-input" min="0" max="50" placeholder="Contoh: 8"
+                                    value="{{ old('jumlah_output_mcb', 0) }}"
+                                    oninput="onJumlahMcbChange(this.value)">
                             </div>
+
+                            {{-- Dual-table grid, identik gaya asli --}}
+                            <div id="mcbGridWrapper" style="display:none;">
+                                <div class="rform-output-grid">
+                                    <table class="rform-output-table">
+                                        <thead>
+                                            <tr>
+                                                <th>MCB</th>
+                                                <th>Merk</th>
+                                                <th>Kapasitas</th>
+                                                <th>Peruntukan</th>
+                                                <th style="width:36px;"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="mcbBodyLeft"></tbody>
+                                    </table>
+                                    <table class="rform-output-table" id="mcbTableRight" style="display:none;">
+                                        <thead>
+                                            <tr>
+                                                <th>MCB</th>
+                                                <th>Merk</th>
+                                                <th>Kapasitas</th>
+                                                <th>Peruntukan</th>
+                                                <th style="width:36px;"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="mcbBodyRight"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
 
                     {{-- ---- Tombol Reset & Simpan ---- --}}
                     <div class="rform-actions">
-                        <button type="button" class="rform-btn-reset" onclick="resetForm()">Reset</button>
+                        <button type="button" class="rform-btn-reset" onclick="konfirmasiReset()">Reset</button>
                         <button type="submit" class="rform-btn-simpan">
                             <i class="bi bi-check-lg"></i> Simpan
                         </button>
@@ -605,7 +584,161 @@
         document.addEventListener('DOMContentLoaded', function () {
             updateSlotStatusBadge();
             updateJumlahModul();
+
+            // Restore old outputs jika ada validasi error
+            @if(old('jumlah_output_mcb') > 0)
+                (function() {
+                    const jumlah = {{ (int) old('jumlah_output_mcb', 0) }};
+                    document.getElementById('jumlah_output_mcb').value = jumlah;
+                    syncMcbRows(jumlah);
+                    // Isi ulang nilai old()
+                    @foreach(old('outputs', []) as $oi => $ov)
+                        (function() {
+                            const tr = document.querySelector('.rform-mcb-row[data-mcb-idx="{{ $oi }}"]');
+                            if (!tr) return;
+                            const m = tr.querySelector('.mcb-merk'); if (m) m.value = '{{ addslashes($ov["merk_mcb"] ?? "") }}';
+                            const k = tr.querySelector('.mcb-kapasitas'); if (k) k.value = '{{ addslashes($ov["kapasitas_mcb"] ?? "") }}';
+                            const p = tr.querySelector('.mcb-peruntukan'); if (p) p.value = '{{ addslashes($ov["peruntukan"] ?? "") }}';
+                        })();
+                    @endforeach
+                })();
+            @endif
         });
+
+        // ---- Dynamic MCB Output System (table-based) ----
+        const MCB_HARD_LIMIT = 50;
+
+        function onJumlahMcbChange(rawVal) {
+            let val = parseInt(rawVal);
+            if (isNaN(val) || val < 0) val = 0;
+            if (val > MCB_HARD_LIMIT) {
+                val = MCB_HARD_LIMIT;
+                document.getElementById('jumlah_output_mcb').value = MCB_HARD_LIMIT;
+                showSwalAlert('warning', 'Batas Maksimal', `Jumlah Output MCB tidak boleh melebihi ${MCB_HARD_LIMIT}.`);
+            }
+            syncMcbRows(val);
+        }
+
+        // Kumpulkan nilai yang sudah diisi agar tidak hilang saat rerender
+        function collectMcbValues() {
+            const vals = {};
+            document.querySelectorAll('.rform-mcb-row').forEach(tr => {
+                const idx = parseInt(tr.dataset.mcbIdx);
+                vals[idx] = {
+                    merk: tr.querySelector('.mcb-merk')?.value || '',
+                    kapasitas: tr.querySelector('.mcb-kapasitas')?.value || '',
+                    peruntukan: tr.querySelector('.mcb-peruntukan')?.value || '',
+                };
+            });
+            return vals;
+        }
+
+        function buildMcbRow(idx, val) {
+            const tr = document.createElement('tr');
+            tr.className = 'rform-mcb-row';
+            tr.dataset.mcbIdx = idx;
+            tr.innerHTML = `
+                <td class="mcb-label">MCB ${idx + 1}</td>
+                <td>
+                    <input type="hidden" name="outputs[${idx}][nama_mcb]" value="MCB ${idx + 1}">
+                    <input type="text" name="outputs[${idx}][merk_mcb]" class="mcb-merk"
+                        placeholder="Merk" value="${escHtml(val.merk)}">
+                </td>
+                <td>
+                    <input type="text" name="outputs[${idx}][kapasitas_mcb]" class="mcb-kapasitas"
+                        placeholder="Kapasitas" value="${escHtml(val.kapasitas)}">
+                </td>
+                <td>
+                    <input type="text" name="outputs[${idx}][peruntukan]" class="mcb-peruntukan"
+                        placeholder="Peruntukan" value="${escHtml(val.peruntukan)}">
+                </td>
+                <td style="text-align:center;">
+                    <button type="button" onclick="deleteMcbRow(${idx})"
+                        style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:1rem;padding:2px 6px;border-radius:4px;line-height:1;"
+                        title="Hapus baris ini">
+                        <i class="bi bi-x-circle-fill"></i>
+                    </button>
+                </td>
+            `;
+            return tr;
+        }
+
+        function escHtml(str) {
+            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
+        // jumlah = total baris yang harus ada setelah sync
+        function syncMcbRows(jumlah) {
+            const vals = collectMcbValues();
+            const leftBody  = document.getElementById('mcbBodyLeft');
+            const rightBody = document.getElementById('mcbBodyRight');
+            const rightTbl  = document.getElementById('mcbTableRight');
+            const wrapper   = document.getElementById('mcbGridWrapper');
+            const badge     = document.getElementById('mcbStatusBadge');
+
+            leftBody.innerHTML  = '';
+            rightBody.innerHTML = '';
+
+            for (let i = 0; i < jumlah; i++) {
+                const val = vals[i] || { merk:'', kapasitas:'', peruntukan:'' };
+                const row = buildMcbRow(i, val);
+                // Pola: kiri cols 0-5, kanan 6-11, kembali kiri 12-17, dst.
+                const blockPos = i % 12;
+                if (blockPos < 6) {
+                    leftBody.appendChild(row);
+                } else {
+                    rightBody.appendChild(row);
+                }
+            }
+
+            // Tampilkan / sembunyikan
+            if (wrapper) wrapper.style.display = jumlah > 0 ? '' : 'none';
+            if (rightTbl) rightTbl.style.display = jumlah > 6 ? '' : 'none';
+
+            if (badge) {
+                if (jumlah === 0) {
+                    badge.innerText = 'Opsional — dapat diisi secara bertahap';
+                    badge.style.color = '#94a3b8';
+                } else {
+                    badge.innerText = `${jumlah} Output MCB`;
+                    badge.style.color = '#16a34a';
+                }
+            }
+        }
+
+        function deleteMcbRow(delIdx) {
+            // Kumpulkan nilai SEBELUM hapus
+            const vals = collectMcbValues();
+            delete vals[delIdx];
+
+            // Reindex: buat array bersih berurutan
+            const newVals = {};
+            let newIdx = 0;
+            Object.keys(vals).sort((a,b) => a - b).forEach(k => {
+                newVals[newIdx++] = vals[k];
+            });
+
+            // Kurangi jumlah di input
+            const inp = document.getElementById('jumlah_output_mcb');
+            const newJumlah = newIdx;
+            if (inp) inp.value = newJumlah;
+
+            syncMcbRows(newJumlah);
+
+            // Isi ulang nilai (karena syncMcbRows pakai vals kosong jika newVals berisi data)
+            document.querySelectorAll('.rform-mcb-row').forEach(tr => {
+                const i = parseInt(tr.dataset.mcbIdx);
+                const v = newVals[i];
+                if (v) {
+                    const m = tr.querySelector('.mcb-merk'); if (m) m.value = v.merk;
+                    const k = tr.querySelector('.mcb-kapasitas'); if (k) k.value = v.kapasitas;
+                    const p = tr.querySelector('.mcb-peruntukan'); if (p) p.value = v.peruntukan;
+                }
+            });
+        }
+
+        function updateMcbStatusBadge() { /* alias for compat */ syncMcbRows(parseInt(document.getElementById('jumlah_output_mcb')?.value || 0)); }
+
 
         // ---- Photo preview ----
         function previewFoto(input) {
@@ -654,10 +787,43 @@
             });
         }
 
+        // ---- Konfirmasi Reset (gaya sama dengan modal Hapus di halaman card) ----
+        function konfirmasiReset() {
+            Swal.fire({
+                title: 'Reset Form?',
+                html: `Apakah Anda yakin ingin mereset form ini?<br><small style="color: #64748b;">Seluruh data yang sudah diisi, termasuk modul dan foto, akan dikosongkan.</small>`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: '<i class="bi bi-arrow-counterclockwise"></i> Ya, Reset!',
+                cancelButtonText: 'Batal',
+                reverseButtons: true,
+                focusCancel: true,
+                heightAuto: false,
+                customClass: {
+                    popup: 'swal-popup-custom',
+                    title: 'swal-title-custom',
+                    htmlContainer: 'swal-html-custom',
+                    confirmButton: 'swal-btn-confirm',
+                    cancelButton: 'swal-btn-cancel',
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    resetForm();
+                }
+            });
+        }
+
         // ---- Reset ----
         function resetForm() {
             document.getElementById('rectifierForm').reset();
             document.getElementById('moduleContainer').innerHTML = '';
+            // Reset MCB tables
+            document.getElementById('mcbBodyLeft').innerHTML = '';
+            document.getElementById('mcbBodyRight').innerHTML = '';
+            document.getElementById('jumlah_output_mcb').value = 0;
+            syncMcbRows(0);
             const img = document.getElementById('fotoPreview');
             const empty = document.getElementById('fotoEmpty');
             const btnText = document.getElementById('btnBrowseText');

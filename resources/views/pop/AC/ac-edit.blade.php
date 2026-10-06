@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -28,7 +28,7 @@
                         </a>
                         <x-breadcrumb :items="[
                             ['label' => 'POP', 'route' => 'pops.index'],
-                            ['label' => $pop->nama_pop_display . ': AC', 'route' => 'acs.index', 'params' => ['pop' => $pop->id]],
+                            ['label' => $pop->kode_pop . ': AC', 'route' => 'acs.index', 'params' => ['pop' => $pop->id]],
                             ['label' => $ac->nomor_ac, 'route' => 'acs.show', 'params' => [$pop->id, $ac->id]],
                             ['label' => 'Edit AC'],
                         ]" />

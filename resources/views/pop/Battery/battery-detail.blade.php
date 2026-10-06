@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -32,7 +32,7 @@
                             <div class="title-with-badge">
                                 <x-breadcrumb :items="[
                                     ['label' => 'POP', 'route' => 'pops.index'],
-                                    ['label' => $pop->nama_pop_display . ': Battery', 'route' => 'batteries.index', 'params' => ['pop' => $pop->id]],
+                                    ['label' => $pop->kode_pop . ': Battery', 'route' => 'batteries.index', 'params' => ['pop' => $pop->id]],
                                     ['label' => $battery->nomor_bank],
                                 ]" />
                                 <span class="device-badge">{{ $battery->merk_battery }} &bull; {{ $battery->kapasitas_battery }} AH</span>

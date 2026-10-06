@@ -101,10 +101,22 @@
                                     <i class="bi bi-check2-square icon-select-all"></i>
                                     <span>Pilih Semua</span>
                                 </button>
-                                <button type="button" id="btnSelectToday" class="btn-pill-item" title="Pilih RMA yang dibuat hari ini">
+                                @php
+                                    $isTodayFilter = ($filter === 'hari_ini');
+                                    $todayUrl = route('rma', array_merge(request()->query(), [
+                                        'filter' => $isTodayFilter ? null : 'hari_ini',
+                                        'page' => null,
+                                    ]));
+                                @endphp
+                                <a href="{{ $todayUrl }}" id="btnFilterToday" class="btn-pill-item {{ $isTodayFilter ? 'active-today' : '' }}"
+                                    title="{{ $isTodayFilter ? 'Klik untuk tampilkan semua tanggal' : 'Filter hanya data RMA Hari Ini' }}"
+                                    style="text-decoration: none;">
                                     <i class="bi bi-calendar2-check-fill icon-select-today"></i>
-                                    <span>Pilih Hari Ini</span>
-                                </button>
+                                    <span>{{ $isTodayFilter ? 'Hari Ini (Aktif)' : 'Hari Ini' }}</span>
+                                    @if ($isTodayFilter)
+                                        <i class="bi bi-x-circle-fill" style="margin-left: 2px; font-size: 11px; color: #ef4444;" title="Hapus filter hari ini"></i>
+                                    @endif
+                                </a>
                                 <button type="button" id="btnDeselectAll" class="btn-pill-item btn-deselect" style="display: none;" title="Batalkan semua pilihan">
                                     <i class="bi bi-x-circle-fill icon-deselect"></i>
                                     <span>Batal</span>
@@ -115,12 +127,19 @@
                                 <i class="bi bi-file-earmark-arrow-down-fill"></i>
                                 <span>Download Terpilih <span class="badge-count"><span id="batchCount">0</span> PDF</span></span>
                             </button>
+
+                            @if ($filter === 'hari_ini' && $rmas->total() > 0)
+                                <button type="button" id="btnDownloadAllToday" class="btn-batch-download-modern" style="background: linear-gradient(135deg, #059669, #10b981);" title="Download seluruh {{ $rmas->total() }} RMA hari ini dalam satu file ZIP">
+                                    <i class="bi bi-file-earmark-zip-fill"></i>
+                                    <span>Download Semua Hari Ini <span class="badge-count" style="background: rgba(255,255,255,0.3); color:#fff;">{{ $rmas->total() }} PDF</span></span>
+                                </button>
+                            @endif
                         </div>
                     </div>
 
                     
                     <!-- SEARCH CONTROL -->
-                    <form method="GET" action="{{ route('rma') }}" class="table-controls">
+                    <form method="GET" action="{{ route('rma') }}" class="table-controls" id="rmaSearchForm">
                         @if(request('sort'))
                             <input type="hidden" name="sort" value="{{ request('sort') }}">
                         @endif
@@ -130,11 +149,48 @@
                         @if(request('tampil'))
                             <input type="hidden" name="tampil" value="{{ request('tampil') }}">
                         @endif
+                        @if(request('filter'))
+                            <input type="hidden" name="filter" value="{{ request('filter') }}">
+                        @endif
                         <div class="search-wrapper">
                             <input type="text" name="search" placeholder="Cari No. RMA, Judul, Perangkat, Lokasi..." value="{{ request('search') }}">
                             <button type="submit" class="search-btn" title="Cari">
                                 <i class="bi bi-search"></i>
                             </button>
+                        </div>
+                        {{-- Date Range Filter --}}
+                        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:8px;">
+                            <label style="font-size:0.8rem; color:#64748b; font-weight:600; white-space:nowrap;">
+                                <i class="bi bi-calendar-range" style="color:#3b82f6;"></i> Rentang Tanggal:
+                            </label>
+                            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                                <input type="date" name="date_from" id="rmaDateFrom"
+                                    value="{{ $dateFrom ?? '' }}"
+                                    style="border:1px solid #e2e8f0; border-radius:8px; padding:6px 10px; font-size:0.82rem; color:#334155; background:#fff; cursor:pointer;"
+                                    onchange="document.getElementById('rmaSearchForm').submit()"
+                                    title="Dari Tanggal">
+                                <span style="color:#94a3b8; font-size:0.8rem;">s/d</span>
+                                <input type="date" name="date_to" id="rmaDateTo"
+                                    value="{{ $dateTo ?? '' }}"
+                                    style="border:1px solid #e2e8f0; border-radius:8px; padding:6px 10px; font-size:0.82rem; color:#334155; background:#fff; cursor:pointer;"
+                                    onchange="document.getElementById('rmaSearchForm').submit()"
+                                    title="Sampai Tanggal">
+                                @if($dateFrom || $dateTo)
+                                    <a href="{{ route('rma', array_merge(array_filter(request()->except(['date_from','date_to','page'])), [])) }}"
+                                        style="display:inline-flex; align-items:center; gap:4px; font-size:0.78rem; color:#ef4444; text-decoration:none; padding:5px 10px; border:1px solid #fca5a5; border-radius:6px; background:#fff5f5; white-space:nowrap;"
+                                        title="Hapus filter tanggal">
+                                        <i class="bi bi-x-circle-fill"></i> Hapus Filter
+                                    </a>
+                                @endif
+                            </div>
+                            @if($dateFrom || $dateTo)
+                                <span style="font-size:0.75rem; color:#3b82f6; background:#eff6ff; padding:3px 10px; border-radius:999px; white-space:nowrap;">
+                                    <i class="bi bi-funnel-fill"></i>
+                                    {{ $dateFrom ? \Carbon\Carbon::parse($dateFrom)->format('d M Y') : '...' }}
+                                    &mdash;
+                                    {{ $dateTo ? \Carbon\Carbon::parse($dateTo)->format('d M Y') : '...' }}
+                                </span>
+                            @endif
                         </div>
                     </form>
 
@@ -193,7 +249,7 @@
                                         <td style="text-align: center;">
                                             <input type="checkbox" class="rma-check" value="{{ $rma->id }}" data-created="{{ $createdDate }}" data-tanggal="{{ $tglDoc }}" style="width: 16px; height: 16px; cursor: pointer;">
                                         </td>
-                                        <td><strong>#{{ $rma->id }}</strong></td>
+                                        <td><strong>#{{ $rmas->firstItem() + $loop->index }}</strong></td>
                                         <td>
                                             <strong style="display: block; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ $judulRma }}">{{ $judulRma }}</strong>
                                             <span class="text-sub">{{ $rma->so_po ?? '-' }}</span>
@@ -276,13 +332,17 @@
 
                     <!-- PAGINATION -->
                     <div class="pagination-footer">
-                        <div>Menampilkan {{ $rmas->firstItem() ?? 0 }} - {{ $rmas->lastItem() ?? 0 }} dari <strong>{{ $rmas->total() }}</strong> data RMA
+                        <div class="pagination-info">
+                            Menampilkan <strong>{{ $rmas->firstItem() ?? 0 }}</strong> - <strong>{{ $rmas->lastItem() ?? 0 }}</strong> dari <strong>{{ $rmas->total() }}</strong> data RMA
+                            @if ($filter === 'hari_ini')
+                                <span class="badge-filter-today"><i class="bi bi-calendar2-check"></i> Hari Ini</span>
+                            @endif
                             @if ($isSuperAdminOrManager)
-                                {{ $tampil === 'milik_saya' ? '(milik Anda)' : '(semua pengguna)' }}
+                                <span style="color: #94a3b8;">{{ $tampil === 'milik_saya' ? '(milik Anda)' : '(semua pengguna)' }}</span>
                             @endif
                         </div>
                         <div class="pagination-controls">
-                            {{ $rmas->links('vendor.pagination.custom') }}
+                            {{ $rmas->links('pagination::bootstrap-4') }}
                         </div>
                     </div>
 
@@ -297,6 +357,8 @@
     <form id="batchDownloadForm" action="{{ route('rma.batch-download') }}" method="POST" style="display: none;">
         @csrf
         <input type="hidden" name="ids" id="batchIdsInput">
+        <input type="hidden" name="mode" id="batchModeInput" value="">
+        <input type="hidden" name="tampil" value="{{ request('tampil', 'semua') }}">
     </form>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -305,12 +367,13 @@
             const checkAllHead = document.getElementById('checkAllHead');
             const rmaChecks = document.querySelectorAll('.rma-check');
             const btnSelectAll = document.getElementById('btnSelectAll');
-            const btnSelectToday = document.getElementById('btnSelectToday');
             const btnDeselectAll = document.getElementById('btnDeselectAll');
             const btnBatchDownload = document.getElementById('btnBatchDownload');
+            const btnDownloadAllToday = document.getElementById('btnDownloadAllToday');
             const batchCount = document.getElementById('batchCount');
             const batchDownloadForm = document.getElementById('batchDownloadForm');
             const batchIdsInput = document.getElementById('batchIdsInput');
+            const batchModeInput = document.getElementById('batchModeInput');
 
             const todayStr = '{{ date("Y-m-d") }}';
 
@@ -359,41 +422,6 @@
                 });
             }
 
-            if (btnSelectToday) {
-                btnSelectToday.addEventListener('click', function() {
-                    let foundCount = 0;
-                    rmaChecks.forEach(c => {
-                        const isToday = (c.dataset.created === todayStr || c.dataset.tanggal === todayStr);
-                        if (isToday) {
-                            c.checked = true;
-                            foundCount++;
-                        } else {
-                            c.checked = false;
-                        }
-                    });
-                    updateBatchState();
-                    if (foundCount === 0) {
-                        Swal.fire({
-                            toast: true,
-                            position: 'top-end',
-                            icon: 'info',
-                            title: 'Tidak ada RMA tanggal hari ini di halaman ini',
-                            showConfirmButton: false,
-                            timer: 2000
-                        });
-                    } else {
-                        Swal.fire({
-                            toast: true,
-                            position: 'top-end',
-                            icon: 'success',
-                            title: `${foundCount} RMA hari ini berhasil dipilih ✨`,
-                            showConfirmButton: false,
-                            timer: 2000
-                        });
-                    }
-                });
-            }
-
             if (btnDeselectAll) {
                 btnDeselectAll.addEventListener('click', function() {
                     rmaChecks.forEach(c => { c.checked = false; });
@@ -405,10 +433,35 @@
                 btnBatchDownload.addEventListener('click', function() {
                     const selectedIds = Array.from(rmaChecks).filter(c => c.checked).map(c => c.value);
                     if (selectedIds.length === 0) return;
+                    if (batchModeInput) batchModeInput.value = '';
                     batchIdsInput.value = selectedIds.join(',');
                     batchDownloadForm.submit();
                 });
             }
+
+            if (btnDownloadAllToday) {
+                btnDownloadAllToday.addEventListener('click', function() {
+                    if (batchModeInput) batchModeInput.value = 'hari_ini';
+                    if (batchIdsInput) batchIdsInput.value = '';
+                    batchDownloadForm.submit();
+                });
+            }
+
+            // Notifikasi konsisten via showToast bawaan topbar
+            @if ($filter === 'hari_ini')
+                if (typeof showToast === 'function') {
+                    @if ($rmas->total() > 0)
+                        showToast('success', 'Menampilkan {{ $rmas->total() }} RMA hari ini ✨');
+                    @else
+                        showToast('info', 'Belum ada data RMA untuk hari ini');
+                    @endif
+                }
+
+                if (rmaChecks.length > 0) {
+                    rmaChecks.forEach(c => { c.checked = true; });
+                    updateBatchState();
+                }
+            @endif
         });
     </script>
 
