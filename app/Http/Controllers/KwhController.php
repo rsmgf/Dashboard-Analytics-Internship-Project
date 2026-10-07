@@ -189,26 +189,58 @@ class KwhController extends Controller
                 'diupdate_oleh' => auth()->id(),
             ]);
 
-            foreach ($request->file('photos', []) as $i => $file) {
-                if ($file) {
-                    $existing = $kwh->photos()->where('urutan', $i)->first();
-                    if ($existing) {
-                        if (\Storage::disk('public')->exists($existing->path)) {
-                            \Storage::disk('public')->delete($existing->path);
-                        }
-                        $existing->update([
-                            'path' => $file->store('kwh', 'public'),
-                            'keterangan' => $validated['captions'][$i] ?? $existing->keterangan,
-                        ]);
-                    } else {
-                        $kwh->photos()->create([
-                            'path' => $file->store('kwh', 'public'),
-                            'keterangan' => $validated['captions'][$i] ?? 'Foto ' . ($i + 1),
+            $existingKeptIds = array_filter($request->input('existing_photo_ids', []));
+
+            // Hapus foto lama yang dibuang oleh user pada form edit
+            foreach ($kwh->photos as $oldPhoto) {
+                if (!in_array($oldPhoto->id, $existingKeptIds)) {
+                    if (\Storage::disk('public')->exists($oldPhoto->path)) {
+                        \Storage::disk('public')->delete($oldPhoto->path);
+                    }
+                    $oldPhoto->delete();
+                }
+            }
+
+            // Update keterangan untuk foto lama yang masih dipertahankan
+            if (!empty($validated['captions'])) {
+                foreach ($validated['captions'] as $i => $caption) {
+                    $photoId = $request->input("existing_photo_ids.{$i}");
+                    if ($photoId) {
+                        $kwh->photos()->where('id', $photoId)->update([
+                            'keterangan' => $caption ?: 'Foto ' . ($i + 1),
                             'urutan' => $i,
                         ]);
                     }
-                } elseif (isset($validated['captions'][$i])) {
-                    $kwh->photos()->where('urutan', $i)->update(['keterangan' => $validated['captions'][$i]]);
+                }
+            }
+
+            // Simpan foto baru atau timpa foto lama jika diunggah berkas baru
+            if ($request->hasFile('photos')) {
+                foreach ($request->file('photos') as $i => $file) {
+                    if ($file) {
+                        $photoId = $request->input("existing_photo_ids.{$i}");
+                        if ($photoId) {
+                            $existing = $kwh->photos()->find($photoId);
+                            if ($existing) {
+                                if (\Storage::disk('public')->exists($existing->path)) {
+                                    \Storage::disk('public')->delete($existing->path);
+                                }
+                                $existing->update([
+                                    'path' => $file->store('kwh', 'public'),
+                                    'keterangan' => $validated['captions'][$i] ?? $existing->keterangan,
+                                    'urutan' => $i,
+                                ]);
+                                continue;
+                            }
+                        }
+
+                        // Buat foto baru
+                        $kwh->photos()->create([
+                            'path' => $file->store('kwh', 'public'),
+                            'keterangan' => !empty($validated['captions'][$i]) ? $validated['captions'][$i] : 'Foto ' . ($i + 1),
+                            'urutan' => $i,
+                        ]);
+                    }
                 }
             }
 

@@ -328,10 +328,19 @@ select.form-control {
     padding: 0 24px;
     background: #64748b;
     color: #ffffff;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-reset:hover {
     background: #475569;
+    color: #ffffff;
+}
+
+.btn-reset:active {
+    background: #334155;
 }
 
 .btn-submit {

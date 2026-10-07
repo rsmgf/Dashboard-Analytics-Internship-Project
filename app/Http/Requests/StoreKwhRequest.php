@@ -57,10 +57,10 @@ class StoreKwhRequest extends FormRequest
             'ukuran_n' => ['required', 'string', 'max:50'],
             'ukuran_g' => ['required', 'string', 'max:50'],
 
-            'photos' => ['required', 'array', 'min:1'],
+            'photos' => ['nullable', 'array', 'max:8'],
             'photos.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
-            'captions' => ['required', 'array', 'min:1'],
-            'captions.*' => ['required', 'string', 'max:150'],
+            'captions' => ['nullable', 'array', 'max:8'],
+            'captions.*' => ['nullable', 'string', 'max:150'],
         ];
     }
 
@@ -94,12 +94,11 @@ class StoreKwhRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'photos.required'     => 'Minimal satu foto kWh wajib diunggah.',
-            'photos.min'          => 'Minimal satu foto kWh wajib diunggah.',
-            'photos.*.image'      => 'Berkas pada :attribute harus berupa gambar.',
-            'photos.*.mimes'      => 'Format berkas pada :attribute harus JPG, JPEG, PNG, atau WEBP.',
-            'photos.*.max'        => 'Ukuran berkas pada :attribute maksimal 2 MB.',
-            'captions.*.required' => 'Keterangan pada :attribute wajib diisi.',
+            'photos.max'     => 'Maksimal 8 foto kWh yang dapat diunggah.',
+            'photos.*.image' => 'Berkas pada :attribute harus berupa gambar.',
+            'photos.*.mimes' => 'Format berkas pada :attribute harus JPG, JPEG, PNG, atau WEBP.',
+            'photos.*.max'   => 'Ukuran berkas pada :attribute maksimal 2 MB.',
+            'captions.max'   => 'Maksimal 8 keterangan foto yang dapat dikirim.',
         ];
     }
 
