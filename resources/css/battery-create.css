@@ -558,6 +558,7 @@ select.form-control {
 }
 
 .btn-reset {
+    min-width: 90px;
     height: 42px;
     padding: 0 24px;
     border: none;
@@ -568,11 +569,20 @@ select.form-control {
     font-size: 0.84rem;
     font-weight: 600;
     cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     transition: all 0.2s ease;
 }
 
 .btn-reset:hover {
     background: #475569;
+    color: #ffffff;
+}
+
+.btn-reset:active {
+    background: #334155;
 }
 
 .btn-submit {

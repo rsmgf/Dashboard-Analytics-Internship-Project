@@ -22,8 +22,12 @@ class UpdateKwhRequest extends StoreKwhRequest
     public function rules(): array
     {
         $rules = parent::rules();
-        $rules['photos'] = ['nullable', 'array'];
+        $rules['photos'] = ['nullable', 'array', 'max:8'];
         $rules['photos.*'] = ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'];
+        $rules['captions'] = ['nullable', 'array', 'max:8'];
+        $rules['captions.*'] = ['nullable', 'string', 'max:150'];
+        $rules['existing_photo_ids'] = ['nullable', 'array'];
+        $rules['existing_photo_ids.*'] = ['nullable', 'integer'];
         return $rules;
     }
 }

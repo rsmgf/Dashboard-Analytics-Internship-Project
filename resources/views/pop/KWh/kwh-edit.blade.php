@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 
 <head>
@@ -361,15 +361,21 @@
 
                     <div class="rform-section">
                         <div class="rform-section-header" style="justify-content: space-between;">
-                            <div><i class="bi bi-camera-fill" style="color:#2563eb; margin-right:8px;"></i> Dokumentasi Foto kWh</div>
+                            <div><i class="bi bi-camera-fill" style="color:#2563eb; margin-right:8px;"></i> Dokumentasi Foto kWh <span style="font-size:0.75rem; font-weight:normal; color:#64748b;">(Opsional)</span></div>
                             <span id="kwhEditPhotoCountBadge" class="photo-count-badge">
-                                <i class="bi bi-images"></i> Total: {{ $kwh->photos->count() }} Foto
+                                <i class="bi bi-images"></i> Total: {{ $kwh->photos->count() }} / 8 Foto
                             </span>
                         </div>
                         <div class="rform-section-body">
                             <div id="kwhEditPhotoCardsGrid" class="kwh-photo-cards-grid">
+                                <div id="kwhEditPhotoEmptyState" style="grid-column: 1 / -1; display: {{ $kwh->photos->isEmpty() ? 'block' : 'none' }}; padding: 24px; text-align: center; background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 10px; margin-bottom: 4px;">
+                                    <i class="bi bi-camera" style="font-size: 2rem; color: #94a3b8; display: block; margin-bottom: 6px;"></i>
+                                    <p style="margin: 0; color: #64748b; font-size: 0.86rem; font-weight: 500;">Belum ada foto dokumentasi untuk kWh ini (Opsional).</p>
+                                    <small style="color: #94a3b8; font-size: 0.78rem;">Klik tombol "Tambah Foto" di bawah jika ingin melampirkan dokumentasi.</small>
+                                </div>
                                 @foreach ($kwh->photos as $i => $photo)
                                     <div class="kwh-photo-card" id="photoCardEdit-{{ $i }}">
+                                        <input type="hidden" name="existing_photo_ids[{{ $i }}]" value="{{ $photo->id }}">
                                         <div class="kwh-photo-card-header">
                                             <span class="kwh-photo-card-title">Foto {{ $i + 1 }}</span>
                                             <button type="button" class="btn-photo-remove"
@@ -399,10 +405,9 @@
                                                     hidden>
                                             </div>
                                             <div class="rform-group" style="margin-top: 6px;">
-                                                <label class="rform-label" style="font-size: 0.76rem;">Keterangan Foto
-                                                    <span class="rform-required">*</span></label>
+                                                <label class="rform-label" style="font-size: 0.76rem;">Keterangan Foto</label>
                                                 <input type="text" name="captions[{{ $i }}]"
-                                                    class="rform-input" value="{{ $photo->keterangan }}" required>
+                                                    class="rform-input" value="{{ $photo->keterangan }}" placeholder="Keterangan foto...">
                                             </div>
                                         </div>
                                     </div>
@@ -410,7 +415,7 @@
                             </div>
 
                             <div style="margin-top: 18px;">
-                                <button type="button" class="rform-btn-add-module" onclick="addPhotoCardEdit()">
+                                <button type="button" class="rform-btn-add-module" id="btnAddPhotoCardEdit" onclick="addPhotoCardEdit()">
                                     <i class="bi bi-plus-lg"></i> Tambah Foto
                                 </button>
                             </div>
@@ -556,18 +561,36 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 const img = document.getElementById('photoPreviewEdit-' + idx);
+                const empty = document.getElementById('photoEmptyEdit-' + idx);
                 if (img) {
                     img.src = e.target.result;
                     img.style.display = 'block';
+                }
+                // sembunyikan placeholder "Belum ada foto" (hanya ada di kartu foto baru)
+                if (empty) {
+                    empty.style.display = 'none';
                 }
             };
             reader.readAsDataURL(file);
         }
 
+        const MAX_KWH_PHOTOS = 8;
+
         function addPhotoCardEdit() {
             const grid = document.getElementById('kwhEditPhotoCardsGrid');
+            const cards = grid.querySelectorAll('.kwh-photo-card');
+            if (cards.length >= MAX_KWH_PHOTOS) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Batas Maksimal Foto',
+                    text: `Dokumentasi kWh maksimal ${MAX_KWH_PHOTOS} foto.`,
+                    confirmButtonColor: '#2563eb'
+                });
+                return;
+            }
+
             const idx = photoEditCounter++;
-            const currentCount = grid.querySelectorAll('.kwh-photo-card').length + 1;
+            const currentCount = cards.length + 1;
 
             const card = document.createElement('div');
             card.className = 'kwh-photo-card';
@@ -594,8 +617,8 @@
                     <input type="file" name="photos[${idx}]" id="photoInputEdit-${idx}" accept="image/jpeg,image/png,image/jpg,image/webp" onchange="previewDynamicPhotoEdit(this, ${idx})" hidden>
                 </div>
                 <div class="rform-group" style="margin-top: 6px;">
-                    <label class="rform-label" style="font-size: 0.76rem;">Keterangan Foto <span class="rform-required">*</span></label>
-                    <input type="text" name="captions[${idx}]" class="rform-input" placeholder="Keterangan foto baru..." required>
+                    <label class="rform-label" style="font-size: 0.76rem;">Keterangan Foto</label>
+                    <input type="text" name="captions[${idx}]" class="rform-input" placeholder="Keterangan foto baru...">
                 </div>
             </div>
         `;
@@ -604,17 +627,6 @@
         }
 
         function removePhotoCardEdit(idx) {
-            const grid = document.getElementById('kwhEditPhotoCardsGrid');
-            const cards = grid.querySelectorAll('.kwh-photo-card');
-            if (cards.length <= 1) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Minimal 1 Foto',
-                    text: 'Dokumentasi kWh wajib memiliki minimal 1 foto.',
-                    confirmButtonColor: '#2563eb'
-                });
-                return;
-            }
             const el = document.getElementById('photoCardEdit-' + idx);
             if (el) {
                 el.remove();
@@ -623,14 +635,37 @@
         }
 
         function reindexPhotoCardsEdit() {
-            const cards = document.querySelectorAll('#kwhEditPhotoCardsGrid .kwh-photo-card');
+            const grid = document.getElementById('kwhEditPhotoCardsGrid');
+            const cards = grid.querySelectorAll('.kwh-photo-card');
             cards.forEach((card, i) => {
                 const title = card.querySelector('.kwh-photo-card-title');
                 if (title) title.innerText = 'Foto ' + (i + 1);
             });
             const badge = document.getElementById('kwhEditPhotoCountBadge');
-            if (badge) badge.innerHTML = `<i class="bi bi-images"></i> Total: ${cards.length} Foto`;
+            if (badge) badge.innerHTML = `<i class="bi bi-images"></i> Total: ${cards.length} / ${MAX_KWH_PHOTOS} Foto`;
+
+            const emptyState = document.getElementById('kwhEditPhotoEmptyState');
+            if (emptyState) {
+                emptyState.style.display = cards.length === 0 ? 'block' : 'none';
+            }
+
+            const addBtn = document.getElementById('btnAddPhotoCardEdit');
+            if (addBtn) {
+                if (cards.length >= MAX_KWH_PHOTOS) {
+                    addBtn.style.opacity = '0.5';
+                    addBtn.style.cursor = 'not-allowed';
+                    addBtn.title = `Maksimal ${MAX_KWH_PHOTOS} foto telah tercapai`;
+                } else {
+                    addBtn.style.opacity = '1';
+                    addBtn.style.cursor = 'pointer';
+                    addBtn.title = 'Tambah Foto';
+                }
+            }
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            reindexPhotoCardsEdit();
+        });
 
         function resetKwhEditForm() {
             Swal.fire({

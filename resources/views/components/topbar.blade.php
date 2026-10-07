@@ -107,16 +107,51 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     @endif
 
-    // ---- Universal Client-Side File Size Guard (max 2 MB) ----
-    // Intercept semua input file di halaman manapun sebelum form disubmit
-    const MAX_FILE_BYTES = 2 * 1024 * 1024; // 2 MB
+        // ---- Universal Client-Side File Guard ----
+    // Gambar: JPG/JPEG/PNG, maks 2 MB. Spreadsheet (import): XLSX/XLS/CSV, maks 5 MB.
+    const MAX_IMAGE_BYTES = 2 * 1024 * 1024;
+    const MAX_SHEET_BYTES = 5 * 1024 * 1024;
+
     document.addEventListener('change', function(e) {
         const input = e.target;
         if (input.type !== 'file') return;
         const file = input.files && input.files[0];
         if (!file) return;
 
-        // Validasi format
+        const accept = (input.getAttribute('accept') || '').toLowerCase();
+        const isSheetInput = /\.(xlsx|xls|csv)/.test(accept);
+
+        if (isSheetInput) {
+            // Validasi berdasarkan ekstensi (MIME .csv/.xls sering tidak konsisten antar browser)
+            const ext = file.name.split('.').pop().toLowerCase();
+            if (!['xlsx', 'xls', 'csv'].includes(ext)) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Format File Tidak Valid',
+                    html: `File <strong>${file.name}</strong> bukan format yang didukung.<br>
+                           Gunakan format: <strong>.xlsx, .xls, atau .csv</strong>.`,
+                    confirmButtonColor: '#2563eb',
+                    confirmButtonText: 'Mengerti',
+                });
+                input.value = '';
+                return;
+            }
+            if (file.size > MAX_SHEET_BYTES) {
+                const sizeMb = (file.size / 1024 / 1024).toFixed(2);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'File Terlalu Besar!',
+                    html: `Ukuran file <strong>${file.name}</strong> adalah <strong>${sizeMb} MB</strong>.<br>
+                           Maksimal yang diperbolehkan adalah <strong>5 MB</strong>.`,
+                    confirmButtonColor: '#2563eb',
+                    confirmButtonText: 'Mengerti',
+                });
+                input.value = '';
+            }
+            return; // jangan lanjut ke validasi gambar
+        }
+
+        // ---- Input gambar (perilaku lama) ----
         const allowed = ['image/jpeg', 'image/jpg', 'image/png'];
         if (!allowed.includes(file.type)) {
             Swal.fire({
@@ -131,8 +166,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Validasi ukuran
-        if (file.size > MAX_FILE_BYTES) {
+        if (file.size > MAX_IMAGE_BYTES) {
             const sizeMb = (file.size / 1024 / 1024).toFixed(2);
             Swal.fire({
                 icon: 'error',
@@ -145,8 +179,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             input.value = '';
         }
-    }, true); // capture: true agar intercept sebelum handler lain
-
+    }, true);
 
     const sidebarToggle = document.getElementById('sidebarToggle');
     const sidebarIcon   = document.getElementById('sidebarToggleIcon');
