@@ -36,7 +36,16 @@ class UserManagementController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        return view('admin.users.index', compact('users', 'search', 'status', 'sort', 'dir'));
+        $inactiveUsersCount = User::where('is_active', false)->count();
+
+        return view('admin.users.index', compact(
+            'users',
+            'search',
+            'status',
+            'sort',
+            'dir',
+            'inactiveUsersCount'
+        ));
     }
 
     public function updateRole(Request $request, User $user)

@@ -1308,18 +1308,18 @@ body.pop-focus .pop-back-bar {
     background: #eff6ff;
     color: #0284c7;
     border-radius: 8px;
-    font-size: 1.1rem;
+    font-size: 0.90rem;
 }
 
 .dashboard-section-title h2 {
-    font-size: 1.05rem;
+    font-size: 0.90rem;
     font-weight: 700;
     margin: 0;
     color: #0284c7;
 }
 
 .dashboard-section-title p {
-    font-size: 0.75rem;
+    font-size: 0.70rem;
     color: #64748b;
     margin: 2px 0 0;
 }

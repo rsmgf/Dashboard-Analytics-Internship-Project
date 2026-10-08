@@ -76,6 +76,18 @@ body{
     font-size:12px;
 }
 
+.role-alert.has-inactive-users{
+    background:#FEF2F2;
+    border-left-color:#DC2626;
+    color:#B91C1C;
+    box-shadow:0 4px 10px rgba(185,28,28,.08);
+}
+
+.role-alert.has-inactive-users::before{
+    content:"!";
+    background:#DC2626;
+}
+
 /* =====================================================
    SEARCH
 ===================================================== */
@@ -169,10 +181,10 @@ body{
 .role-table thead th{
     background:#EAF4FC;
     color:#003B73;
-    font-size:13px;
-    font-weight:600;
+    font-size:12px;
+    font-weight:500;
     padding:16px;
-    text-align:left;
+    text-align:center;
     border-bottom:1px solid #D6E4F0;
 }
 

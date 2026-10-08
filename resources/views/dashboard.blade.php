@@ -49,6 +49,30 @@
         .notification-item:hover {
             background-color: rgba(0, 0, 0, 0.02);
         }
+
+        .notification-list {
+            flex: 1;
+            min-height: 0;
+        }
+
+        .notification-item {
+            flex: 1;
+            min-height: 64px;
+        }
+
+        .notification-empty {
+            flex: 1;
+            display: grid;
+            place-items: center;
+            color: #64748b;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 1024px) {
+            .notification-item {
+                flex: 0 0 auto;
+            }
+        }
     </style>
 </head>
 
@@ -406,7 +430,18 @@
                                             id="notif-{{ $notif->id }}"
                                             onclick="markNotifAsRead('notif-{{ $notif->id }}', {{ $notif->id }}, '{{ $notif->category }}', '{{ $notif->pop_id }}', '{{ $notif->device_type }}', '{{ $notif->device_id }}')">
                                             <div class="notif-icon-wrapper">
-                                                <div class="notif-icon {{ $notif->icon_bg_class }}">
+                                                @php
+                                                    $healthyIndexStatuses = ['very_healthy', 'healthy', 'unhealthy', 'very_unhealthy'];
+                                                    $isHealthyIndexNotification = $notif->device_type === 'rectifier'
+                                                        && in_array($notif->severity, $healthyIndexStatuses, true);
+                                                    $healthyIndexKpiTone = in_array($notif->severity, ['very_healthy', 'healthy'], true)
+                                                        ? 'kpi-healthy'
+                                                        : 'kpi-unhealthy';
+                                                    $notificationDeviceType = in_array($notif->device_type, ['rectifier', 'kwh', 'battery', 'ac', 'genset'], true)
+                                                        ? $notif->device_type
+                                                        : 'rectifier';
+                                                @endphp
+                                                <div class="{{ $isHealthyIndexNotification ? 'kpi-icon ' . $healthyIndexKpiTone : 'device-icon ' . $notificationDeviceType }}">
                                                     <i class="{{ $notif->icon_class }}"></i>
                                                 </div>
                                                 @if (!$notif->is_read)
@@ -423,8 +458,7 @@
                                             </div>
                                         </div>
                                     @empty
-                                        <div
-                                            style="text-align:center; padding: 20px; color: #64748b; font-size: 13px;">
+                                        <div class="notification-empty">
                                             Belum ada notifikasi
                                         </div>
                                     @endforelse
@@ -494,7 +528,7 @@
                                 </div>
                                 <div>
                                     <h2>Peta Persebaran POP di Provinsi Jambi</h2>
-                                    <p>Sebaran lokasi seluruh POP berdasarkan jenis perangkat dan status operasional</p>
+                                    <p>Sebaran lokasi seluruh POP berdasarkan status healthy index</p>
                                 </div>
                             </div>
 

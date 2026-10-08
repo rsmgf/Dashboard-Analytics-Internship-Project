@@ -355,9 +355,76 @@ html, body {
     .hero-wrapper { display: none; }
 }
 
-@media(max-width:576px){
-    .login-card { max-width: 92%; padding: 30px 25px; border-radius: 22px; }
-    .login-header h2 { font-size: 22px; }
-    .login-header p { font-size: 12px; }
-    .btn-login { height: 50px; }
+@media(max-width:768px){
+    html, body {
+        height: auto;
+        min-height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .login-page {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        height: auto;
+        min-height: 100vh;
+        min-height: 100dvh;
+        padding: 12px 0 24px;
+    }
+
+    .logo {
+        position: relative;
+        inset: auto;
+        display: block;
+        width: auto;
+        height: 34px;
+        max-width: 150px;
+        margin: 0 auto 10px;
+        object-fit: contain;
+    }
+
+    .login-page > .main-content {
+        width: 100%;
+        height: auto !important;
+        flex: 1 0 auto;
+    }
+
+    .login-page > .main-content > .row {
+        height: auto !important;
+        min-height: 0;
+        margin: 0;
+    }
+
+    .login-page > .main-content > .row > [class*="col-"] {
+        width: 100%;
+        padding: 0 14px;
+    }
+
+    .login-card {
+        width: 100%;
+        max-width: 420px;
+        padding: 24px 20px;
+        margin: 0 auto;
+        border-radius: 18px;
+    }
+
+    .login-header {
+        margin-bottom: 16px;
+    }
+
+    .login-header h2 {
+        font-size: clamp(18px, 5.2vw, 21px);
+        line-height: 1.3;
+        text-wrap: balance;
+    }
+
+    .login-header p {
+        font-size: 12px;
+    }
+
+    .btn-login {
+        height: 48px;
+    }
 }
