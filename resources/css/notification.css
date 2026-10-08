@@ -7,8 +7,9 @@ body {
 }
 
 .notif-page-wrapper {
-    padding: 24px 28px;
-    max-width: 1100px;
+    width: 100%;
+    padding: 20px clamp(16px, 2vw, 28px);
+    max-width: 1440px;
     margin: 0 auto;
 }
 
@@ -73,32 +74,36 @@ body {
     display: flex;
     justify-content: flex-end;
     align-items: flex-end;
-    background-color: #f0f9ff;
-    border-bottom: 1.5px solid #7dd3fc;
-    padding: 0 16px 0 0;
+    background-color: #ffffff;
+    border-bottom: 1px solid #dbeafe;
+    padding: 0 0 0 16px;
 }
 
 .notif-tab-trapezoid {
     display: flex;
     align-items: flex-end;
-    gap: 6px;
+    gap: 0;
     position: relative;
-    bottom: -1.5px;
+    bottom: -1px;
 }
 
 .tab-btn {
-    border: 1.5px solid transparent;
+    border: 1px solid #bfdbfe;
     border-bottom: none;
-    background: transparent;
+    background: #ffffff;
     font-family: 'Poppins', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 600;
+    font-size: 0.86rem;
+    font-weight: 500;
     color: #64748b;
-    padding: 12px 28px 10px 28px;
+    padding: 9px 22px 8px;
     cursor: pointer;
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
     transition: all 0.2s ease;
+}
+
+.tab-btn + .tab-btn {
+    margin-left: -1px;
 }
 
 .tab-btn:hover:not(.active) {
@@ -107,11 +112,13 @@ body {
 }
 
 .tab-btn.active {
-    background-color: #ffffff;
-    color: #0284c7;
-    font-weight: 700;
-    border-color: #7dd3fc;
-    border-bottom: 2px solid #ffffff;
+    background-color: #eff6ff;
+    color: #075985;
+    font-weight: 600;
+    border-color: #60a5fa;
+    border-bottom: 1px solid #eff6ff;
+    position: relative;
+    z-index: 1;
 }
 
 .notif-tab-pane {
@@ -136,17 +143,23 @@ body {
 }
 
 .notif-panel-body {
-    padding: 12px 20px 20px 20px;
+    padding: 8px 16px 14px;
+}
+
+.notif-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .notif-row {
     display: flex;
-    align-items: flex-start;
-    padding: 14px 12px;
+    align-items: center;
+    padding: 10px 12px;
     border-bottom: 1px solid #f1f5f9;
     border-radius: 10px;
     transition: all 0.2s ease;
-    gap: 14px;
+    gap: 12px;
     position: relative;
 }
 
@@ -164,13 +177,13 @@ body {
 }
 
 .notif-icon-box {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
+    width: 38px;
+    height: 38px;
+    border-radius: 9px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.35rem;
+    font-size: 1rem;
 }
 
 /* Warna Varian Ikon */
@@ -192,10 +205,40 @@ body {
     color: #0284c7;
 }
 
+.bg-icon-green {
+    background-color: #dcfce7;
+    color: #15803d;
+}
+
+.bg-icon-gray {
+    background-color: #f1f5f9;
+    color: #64748b;
+}
+
 .bg-icon-purple,
 .notif-icon-box.notif-purple {
     background-color: #f3e8ff;
     color: #7c3aed;
+}
+
+.notif-icon-box.bg-icon-very-healthy {
+    background-color: #dcfce7;
+    color: #22c55e;
+}
+
+.notif-icon-box.bg-icon-healthy {
+    background-color: #f0fdf4;
+    color: #15803d;
+}
+
+.notif-icon-box.bg-icon-unhealthy {
+    background-color: #fff1f2;
+    color: #ff4444;
+}
+
+.notif-icon-box.bg-icon-very-unhealthy {
+    background-color: #fee2e2;
+    color: #dc2626;
 }
 
 .has-dot::after {
@@ -216,15 +259,15 @@ body {
 }
 
 .notif-title {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: #0284c7;
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: #0369a1;
     margin: 0 0 3px;
     word-break: break-word;
 }
 
 .notif-subtitle {
-    font-size: 0.85rem;
+    font-size: 0.78rem;
     color: #64748b;
     margin: 0;
     line-height: 1.4;
@@ -233,7 +276,7 @@ body {
 
 .notif-subtitle strong {
     color: #1e293b;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .notif-info-col {
@@ -245,11 +288,11 @@ body {
 }
 
 .badge-status {
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    padding: 4px 12px;
-    border-radius: 6px;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    padding: 3px 9px;
+    border-radius: 5px;
     text-align: center;
     display: inline-block;
     white-space: nowrap;
@@ -281,8 +324,8 @@ body {
 
 .notif-info-col .notif-time {
     display: block;
-    font-size: 0.85rem;
-    font-weight: 600;
+    font-size: 0.76rem;
+    font-weight: 500;
     color: #0369a1;
     white-space: nowrap;
 }
@@ -303,26 +346,26 @@ body {
 }
 
 .badge-very-healthy {
-    background-color: #dcfce7;
-    color: #166534;
+    background-color: #f0fdf4;
+    color: #22c55e;
     border: 1px solid #86efac;
 }
 
 .badge-healthy {
-    background-color: #d1fae5;
-    color: #047857;
+    background-color: #ecfdf5;
+    color: #15803d;
     border: 1px solid #6ee7b7;
 }
 
 .badge-unhealthy {
-    background-color: #fef3c7;
-    color: #b45309;
-    border: 1px solid #fcd34d;
+    background-color: #fff1f2;
+    color: #ff4444;
+    border: 1px solid #fda4af;
 }
 
 .badge-very-unhealthy {
-    background-color: #fee2e2;
-    color: #b91c1c;
+    background-color: #fef2f2;
+    color: #dc2626;
     border: 1px solid #fca5a5;
 }
 

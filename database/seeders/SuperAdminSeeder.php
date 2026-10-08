@@ -18,10 +18,10 @@ class SuperAdminSeeder extends Seeder
         ['email' => 'admin@plniconplus.co.id'],
         [
             'name' => 'Manajer Unit ICONPLUS KP Jambi - Sandria Abhiseka',
-            'password' => Hash::make('iconplusjaya'),
+            'password' => Hash::make('iconplusjambi'),
             'is_active' => true,
         ]
     );
-    $admin->assignRole('super_admin');
+    $admin->assignRole('manajer');
     }
 }

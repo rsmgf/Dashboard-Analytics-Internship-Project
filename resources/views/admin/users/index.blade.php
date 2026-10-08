@@ -53,15 +53,15 @@
                     <h1>Manajemen User</h1>
                 </div>
 
-                @if (session('success'))
-                    <div class="role-alert">
-                        <span>{{ session('success') }}</span>
-                    </div>
-                @else
-                    <div class="role-alert">
-                        <span id="roleAlert">Status : Sistem Manajemen User berjalan dengan baik</span>
-                    </div>
-                @endif
+                <div class="role-alert {{ $inactiveUsersCount > 0 ? 'has-inactive-users' : 'all-users-active' }}">
+                    <span id="roleAlert">
+                        @if ($inactiveUsersCount > 0)
+                            Status: {{ number_format($inactiveUsersCount, 0, ',', '.') }} user belum aktif.
+                        @else
+                            Status: Semua user telah aktif.
+                        @endif
+                    </span>
+                </div>
 
                 <form method="GET"
                     action="{{ route('admin.access.index') === request()->url() ? '' : request()->url() }}"

@@ -1,12 +1,13 @@
-<header class="topbar">
+@php
+    $user = Auth::user();
+    $activeRole = session('active_role') ?? ($user?->hasRole('manajer') ? 'manajer' : 'super_admin');
+    $isManajerMode = $activeRole === 'manajer';
+    // Hanya yang punya role manajer yang bisa switch (otomatis dia punya akses admin)
+    $hasBothRoles = $user && $user->hasRole('manajer');
+@endphp
+
+<header class="topbar {{ $isManajerMode ? 'topbar-manajer-mode' : '' }}">
     {{-- Sidebar toggle — disembunyikan saat mode manajer aktif --}}
-    @php
-        $user = Auth::user();
-        $activeRole = session('active_role') ?? ($user?->hasRole('manajer') ? 'manajer' : 'super_admin');
-        $isManajerMode = $activeRole === 'manajer';
-        // Hanya yang punya role manajer yang bisa switch (otomatis dia punya akses admin)
-        $hasBothRoles = $user && $user->hasRole('manajer');
-    @endphp
 
     @if (!$isManajerMode)
         <button type="button" class="sidebar-toggle" id="sidebarToggle" title="Buka / Tutup Sidebar">
@@ -20,7 +21,7 @@
     @endif
 
     {{-- Spacer --}}
-    <div style="flex:1;"></div>
+    <div class="topbar-spacer"></div>
 
     {{-- Switch Role Button — hanya tampil jika user punya kedua role --}}
     @if ($hasBothRoles)
@@ -49,9 +50,14 @@
                 <span>Executive</span>
             </div>
         @endif
-        <span class="user-display-name">
-            {{ Auth::check() ? Auth::user()->name : 'Nama User' }}
-        </span>
+        <div class="user-identity">
+            <span class="user-display-name">
+                {{ Auth::check() ? Auth::user()->name : 'Nama User' }}
+            </span>
+            @if (Auth::check())
+                <span class="user-display-email">{{ Auth::user()->email }}</span>
+            @endif
+        </div>
 
         {{-- Logout hanya di topbar saat mode manajer --}}
         @if ($isManajerMode)

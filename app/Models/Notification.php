@@ -60,12 +60,26 @@ class Notification extends Model
      */
     public function getIconClassAttribute(): string
     {
+        if (
+            $this->device_type === 'rectifier'
+            && in_array($this->severity, ['very_healthy', 'healthy'], true)
+        ) {
+            return 'bi bi-heart-pulse-fill';
+        }
+
+        if (
+            $this->device_type === 'rectifier'
+            && in_array($this->severity, ['unhealthy', 'very_unhealthy'], true)
+        ) {
+            return 'bi bi-heartbreak-fill';
+        }
+
         return match ($this->device_type) {
-            'rectifier' => 'bi bi-lightning-charge-fill',
-            'kwh'       => 'bi bi-plug-fill',
-            'battery'   => 'bi bi-battery-charging',
-            'ac'        => 'bi bi-snow',
-            'genset'    => 'bi bi-gear-fill',
+            'rectifier' => 'bi bi-hdd-stack-fill',
+            'kwh'       => 'bi bi-lightning-charge-fill',
+            'battery'   => 'bi bi-battery-full',
+            'ac'        => 'bi bi-fan',
+            'genset'    => 'bi bi-lightning',
             'pop'       => 'bi bi-building',
             default     => 'bi bi-bell-fill',
         };
@@ -79,8 +93,12 @@ class Notification extends Model
         return match ($this->severity) {
             'alert'      => 'bg-icon-red',
             'warning'    => 'bg-icon-orange',
-            'belum_uji', 'belum_pm'    => 'bg-icon-blue',
-            'jadwal_uji', 'jadwal_pm'  => 'bg-icon-purple',
+            'belum_uji', 'belum_pm' => 'bg-icon-red',
+            'jadwal_uji', 'jadwal_pm' => 'bg-icon-orange',
+            'very_healthy' => 'bg-icon-very-healthy',
+            'healthy' => 'bg-icon-healthy',
+            'unhealthy' => 'bg-icon-unhealthy',
+            'very_unhealthy' => 'bg-icon-very-unhealthy',
             'create'     => 'bg-icon-green',
             'update'     => 'bg-icon-blue',
             'delete'     => 'bg-icon-red',
@@ -96,10 +114,10 @@ class Notification extends Model
         return match ($this->severity) {
             'alert'      => 'badge-alert',
             'warning'    => 'badge-warning',
-            'belum_uji'  => 'badge-belum-uji',
-            'jadwal_uji' => 'badge-jadwal-uji',
-            'belum_pm'   => 'badge-belum-uji',
-            'jadwal_pm'  => 'badge-jadwal-uji',
+            'belum_uji'  => 'badge-alert',
+            'jadwal_uji' => 'badge-warning',
+            'belum_pm'   => 'badge-alert',
+            'jadwal_pm'  => 'badge-warning',
             'very_healthy'  => 'badge-very-healthy',
             'healthy'       => 'badge-healthy',
             'unhealthy'     => 'badge-unhealthy',
