@@ -396,6 +396,7 @@ body {
         opacity: 0;
         transform: translateX(-40px);
     }
+
     to {
         opacity: 1;
         transform: translateX(0);
@@ -407,6 +408,7 @@ body {
         opacity: 0;
         transform: translateX(40px);
     }
+
     to {
         opacity: 1;
         transform: translateX(0);
@@ -417,9 +419,11 @@ body {
     .hero-wrapper {
         padding-left: 40px;
     }
+
     .hero-wrapper h1 {
         font-size: 48px;
     }
+
     .register-card {
         max-width: 500px;
         margin-right: 3vw;
@@ -427,10 +431,12 @@ body {
 }
 
 @media (max-width: 992px) {
+
     html,
     body {
         overflow: auto;
     }
+
     .register-page {
         position: relative;
         width: 100%;
@@ -439,17 +445,20 @@ body {
         background-position: center;
         background-repeat: no-repeat;
     }
+
     .logo {
         top: 20px;
         left: 20px;
         height: 45px;
     }
+
     .register-card {
         width: 100%;
         max-width: 420px;
         margin: auto;
         padding: 35px;
     }
+
     .hero-wrapper {
         display: none;
     }
@@ -459,44 +468,56 @@ body {
     .register-page {
         padding: 75px 15px 25px;
     }
+
     .register-card {
         max-width: 92%;
         padding: 28px 22px 22px;
         border-radius: 22px;
     }
+
     .register-form {
         grid-template-columns: 1fr;
     }
+
     .form-group.full-width {
         grid-column: auto;
     }
+
     .register-header {
         margin-bottom: 18px;
     }
+
     .register-header h2 {
         font-size: 22px;
     }
+
     .register-header p {
         font-size: 12px;
     }
+
     .form-label {
         font-size: 12px;
     }
+
     .custom-input {
         height: 50px;
         border-radius: 14px;
     }
+
     .custom-input .form-control {
         height: 50px;
         font-size: 13px;
     }
+
     .custom-input .form-control::placeholder {
         font-size: 12px;
     }
+
     .btn-register {
         height: 50px;
         font-size: 14px;
     }
+
     .login-link {
         font-size: 12px;
     }
