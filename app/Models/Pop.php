@@ -26,15 +26,9 @@ class Pop extends Model
         'longitude' => 'float',
     ];
 
-    /**
-     * Nama POP tanpa prefix ID POP (untuk tampilan web).
-     * DB menyimpan format "KODE_POP Nama POP" — cukup tampilkan bagian namanya.
-     */
     public function getNamaPopDisplayAttribute(): string
     {
         $nama = $this->nama_pop ?? '';
-        // Jika nama_pop diawali dengan kode_pop (misal "113030 Nama POP" atau "POP_113030_Nama"),
-        // strip prefix tersebut agar yang tampil hanya nama bersihnya.
         if ($this->kode_pop) {
             $patterns = [
                 '/^' . preg_quote($this->kode_pop, '/') . '[_\-\s]+/i',
