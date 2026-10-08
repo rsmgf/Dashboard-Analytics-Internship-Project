@@ -8,23 +8,22 @@
 
 body {
     margin: 0;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    line-height: 1.5;
     background: #f8fafc;
     color: #1e293b;
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
 }
 
-.main-content {
-    min-height: 100vh;
-}
-
-/* =====================================================
-   TOPBAR
 /* =====================================================
    MAIN CONTENT
+   min-width: 0 → mencegah tabel "mendorong" layout keluar layar
 ===================================================== */
 .main-content {
     background-color: #f8fafc;
     min-height: 100vh;
+    min-width: 0;
 }
 
 .user-info {
@@ -62,12 +61,28 @@ body {
 .rma-page {
     padding: 28px 32px 50px;
     width: 100%;
+    max-width: 100%;
     animation: fadeIn 0.4s ease-in-out;
 }
 
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .rma-page,
+    .btn-batch-download-modern {
+        animation: none;
+    }
+}
+
+/* Fokus keyboard yang jelas & konsisten */
+.rma-page a:focus-visible,
+.rma-page button:focus-visible,
+.rma-page input:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
 }
 
 /* =====================================================
@@ -85,6 +100,11 @@ body {
     display: flex;
     align-items: center;
     gap: 14px;
+    min-width: 0;
+}
+
+.page-title > div:last-child {
+    min-width: 0;
 }
 
 .title-icon {
@@ -105,13 +125,15 @@ body {
     margin: 0;
     font-size: 22px;
     font-weight: 600;
+    line-height: 1.25;
     color: #1e293b;
 }
 
 .page-title p {
-    margin: 3px 0 0;
-    font-size: 12px;
-    color: #94a3b8;
+    margin: 4px 0 0;
+    font-size: 12.5px;
+    line-height: 1.4;
+    color: #64748b;
 }
 
 .btn-tambah {
@@ -158,18 +180,47 @@ body {
     border: 1px solid #cdd5fb;
     margin-bottom: 20px;
     font-size: 14px;
+    line-height: 1.5;
 }
 
 .alert-info-custom i {
     color: #5c6bc0;
     font-size: 18px;
     margin-right: 12px;
+    flex-shrink: 0;
+}
+
+.alert-info-custom strong,
+.pagination-info strong {
+    font-weight: 600;
+}
+
+.pagination-info strong {
+    color: #334155;
+}
+
+.alert-info-custom.alert-admin {
+    background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
+    border-color: #60a5fa;
+}
+
+.alert-info-custom.alert-admin i {
+    color: #2563eb;
+}
+
+.alert-info-custom.alert-admin span {
+    color: #1e40af;
 }
 
 /* =====================================================
    TABLE CARD & HEADER RIWAYAT
+   container-type → layout di dalam kartu menyesuaikan
+   LEBAR KARTU (bukan lebar layar), jadi aman walau
+   sidebar terbuka/tertutup.
 ===================================================== */
 .table-card {
+    container-type: inline-size;
+    container-name: rma;
     background: #ffffff;
     border: 1px solid #e0e0e0;
     border-radius: 12px;
@@ -178,9 +229,21 @@ body {
 }
 
 .history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
     margin-bottom: 20px;
     padding-bottom: 16px;
     border-bottom: 1px solid #eef2f7;
+}
+
+.history-title-group {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .history-header h2 {
@@ -190,15 +253,47 @@ body {
     color: #334155;
 }
 
+/* Toggle Semua / Milik Saya */
+.view-toggle {
+    display: inline-flex;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.view-toggle a {
+    padding: 5px 13px;
+    text-decoration: none;
+    background: #f8fafc;
+    color: #64748b;
+    transition: 0.15s;
+}
+
+.view-toggle a + a {
+    border-left: 1px solid #e2e8f0;
+}
+
+.view-toggle a.active {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+/* =====================================================
+   SEARCH & FILTER
+===================================================== */
 .table-controls {
     display: flex;
-    justify-content: flex-start;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 20px;
     margin-bottom: 20px;
-    gap: 15px;
 }
 
 .search-wrapper {
     position: relative;
+    flex: 1 1 280px;
     width: 100%;
     max-width: 400px;
 }
@@ -224,14 +319,15 @@ body {
 
 .search-wrapper .search-btn {
     position: absolute;
-    right: 8px;
+    right: 4px;
     top: 50%;
     transform: translateY(-50%);
     background: none;
     border: none;
     cursor: pointer;
     color: #9ca3af;
-    padding: 6px;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -243,6 +339,313 @@ body {
     color: #2563eb;
 }
 
+/* --- Filter rentang tanggal --- */
+.date-filter-group {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.date-filter-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #64748b;
+    white-space: nowrap;
+}
+
+.date-filter-label i {
+    color: #2563eb;
+}
+
+.date-input-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.date-input-icon {
+    position: absolute;
+    left: 12px;
+    color: #2563eb;
+    font-size: 14px;
+    pointer-events: none;
+}
+
+.date-input {
+    width: 250px;
+    height: 42px;
+    padding: 0 38px 0 36px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-family: 'Poppins', sans-serif;
+    color: #374151;
+    background: #ffffff;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.date-input:focus {
+    border-color: #2581ff;
+    box-shadow: 0 0 0 3px rgba(37, 129, 255, 0.15);
+}
+
+.date-clear-btn {
+    position: absolute;
+    right: 4px;
+    width: 34px;
+    height: 34px;
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    font-size: 15px;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.date-clear-btn:hover {
+    color: #ef4444;
+}
+
+.date-filter-actions {
+    display: inline-flex;
+    gap: 8px;
+}
+
+.btn-apply-date,
+.btn-reset-date {
+    height: 42px;
+    padding: 0 16px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.btn-apply-date {
+    background: #2563eb;
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 1px 2px rgba(37, 99, 235, 0.2);
+}
+
+.btn-apply-date:hover {
+    background: #1d4ed8;
+    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+}
+
+.btn-reset-date {
+    background: #fef2f2;
+    color: #ef4444;
+    border: 1px solid #fecaca;
+}
+
+.btn-reset-date:hover {
+    background: #fee2e2;
+}
+
+/* =====================================================
+   BATCH ACTIONS & SELECTION PILLS
+===================================================== */
+.batch-action-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.batch-pill-group {
+    display: inline-flex;
+    align-items: center;
+    background: #f1f5f9;
+    padding: 3px;
+    border-radius: 9px;
+    border: 1px solid #e2e8f0;
+    gap: 3px;
+}
+
+.btn-pill-item {
+    background: transparent;
+    border: none;
+    color: #475569;
+    padding: 6px 13px;
+    border-radius: 7px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+}
+
+.btn-pill-item:hover {
+    background: #ffffff;
+    color: #0f172a;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.btn-pill-item:active {
+    transform: scale(0.98);
+}
+
+.btn-pill-item .icon-select-all {
+    color: #2563eb;
+    font-size: 14px;
+}
+
+.btn-pill-item .icon-select-today {
+    color: #059669;
+    font-size: 13.5px;
+}
+
+.btn-pill-item .icon-clear-today {
+    margin-left: 2px;
+    font-size: 11px;
+    color: #ef4444;
+}
+
+.btn-pill-item.btn-deselect {
+    color: #dc2626;
+}
+
+.btn-pill-item.btn-deselect:hover {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.btn-pill-item .icon-deselect {
+    color: #ef4444;
+    font-size: 13.5px;
+}
+
+.btn-pill-item.active-today {
+    background: #e0f2fe;
+    color: #0369a1;
+    border-color: #7dd3fc;
+    font-weight: 700;
+}
+
+.btn-pill-item.active-today:hover {
+    background: #bae6fd;
+    color: #0284c7;
+}
+
+.btn-batch-download-modern {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 16px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #0086FF, #005BD4);
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(0, 91, 212, 0.22);
+    transition: all 0.25s ease;
+    white-space: nowrap;
+    animation: popIn 0.25s ease-out;
+}
+
+.btn-batch-download-modern:hover {
+    background: linear-gradient(135deg, #0078E8, #0052C2);
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(0, 91, 212, 0.32);
+}
+
+.btn-batch-download-modern i {
+    font-size: 14px;
+}
+
+.btn-batch-download-modern .badge-count {
+    background: rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    padding: 1px 7px;
+    border-radius: 12px;
+    font-size: 11.5px;
+    font-weight: 700;
+    margin-left: 2px;
+}
+
+.btn-batch-download-modern.btn-batch-today {
+    background: linear-gradient(135deg, #059669, #10b981);
+}
+
+.btn-batch-download-modern.btn-batch-today:hover {
+    background: linear-gradient(135deg, #047857, #059669);
+}
+
+@keyframes popIn {
+    from { opacity: 0; transform: scale(0.92); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+/* =====================================================
+   SORT BAR (hanya tampil di mode kartu / layar sempit)
+   — di mode kartu header tabel disembunyikan, jadi
+   sorting dipindah ke sini.
+===================================================== */
+.mobile-sort {
+    display: none;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.mobile-sort-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.sort-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    min-height: 34px;
+    padding: 0 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 999px;
+    background: #f8fafc;
+    color: #475569;
+    font-size: var(--fs-xs, 12px);
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.sort-chip.active {
+    background: #eff6ff;
+    border-color: #93c5fd;
+    color: #1d4ed8;
+    font-weight: 600;
+}
+
 /* =====================================================
    RMA TABLE
 ===================================================== */
@@ -251,11 +654,12 @@ body {
     overflow-x: auto;
     border: 1px solid #e5e7eb;
     border-radius: 8px;
+    -webkit-overflow-scrolling: touch;
 }
 
 .rma-table {
     width: 100%;
-    min-width: 1150px;
+    min-width: 1100px;
     border-collapse: collapse;
     font-size: 13px;
     background: #ffffff;
@@ -265,22 +669,84 @@ body {
     background-color: #e6f0ff;
     padding: 13px 16px;
     text-align: left;
+    font-size: 12.5px;
     font-weight: 600;
-    color: #111;
+    letter-spacing: 0.01em;
+    color: #1e293b;
     border-bottom: 1px solid #d1d5db;
     white-space: nowrap;
+}
+
+.rma-table th a {
+    text-decoration: none;
+    color: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.rma-table th .sort-idle {
+    font-size: 11px;
+    opacity: 0.5;
+}
+
+.rma-table th.th-check {
+    width: 42px;
+    text-align: center;
+}
+
+.rma-table th.th-aksi {
+    width: 1%;
+    text-align: center;
 }
 
 .rma-table td {
     padding: 13px 16px;
     border-bottom: 1px solid #f1f5f9;
     vertical-align: middle;
-    color: #475569;
+    font-size: 13px;
+    line-height: 1.4;
+    font-weight: 400;
+    color: #334155;
+}
+
+/* ---------------------------------------------------------
+   HIERARKI TEKS DI TABEL
+   - Teks biasa (No., ID POP, Dibuat Oleh) : regular
+   - Teks utama yang punya subjudul       : semibold, gelap
+   - Subjudul (.text-sub)                 : regular, kecil, abu
+--------------------------------------------------------- */
+.cell-primary {
+    display: block;
+    font-weight: 600;
+    color: #1e293b;
+    line-height: 1.35;
+}
+
+.rma-table td.td-no {
+    font-weight: 500;
+    color: #64748b;
+    font-variant-numeric: tabular-nums;
+}
+
+.rma-table .td-tgl {
+    font-variant-numeric: tabular-nums;
 }
 
 .rma-table td.text-center,
 .rma-table th.text-center {
     text-align: center;
+}
+
+.rma-table td.td-check {
+    text-align: center;
+}
+
+.rma-table input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: #2563eb;
 }
 
 .rma-table tbody tr {
@@ -296,25 +762,88 @@ body {
 }
 
 .text-sub {
-    color: #6b7280;
-    font-size: 11px;
     display: block;
     margin-top: 2px;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.35;
+    color: #64748b;
+}
+
+.cell-title {
+    display: block;
+    max-width: 220px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Kolom "Dibuat Oleh" */
+.creator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.creator-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.creator-name {
+    font-size: 13px;
+    color: #334155;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.creator-name.muted {
+    color: #64748b;
+}
+
+/* Empty state */
+.td-empty {
+    text-align: center;
+    padding: 36px 16px !important;
+    color: #94a3b8;
+}
+
+.td-empty i {
+    display: block;
+    font-size: 30px;
+    margin-bottom: 8px;
+    color: #cbd5e1;
+}
+
+.td-empty p {
+    margin: 0;
+    font-size: 13px;
+}
+
+/* Baris terpilih (checkbox dicentang) */
+.rma-table tbody tr:has(.rma-check:checked) {
+    background: #eff6ff;
 }
 
 /* =====================================================
    BUTTONS ACTION PADA TABEL
 ===================================================== */
-/* =====================================================
-   BUTTONS ACTION PADA TABEL
-===================================================== */
 .action-buttons {
-    display: inline-flex !important;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
-    white-space: nowrap !important;
-    flex-wrap: nowrap !important;
+    white-space: nowrap;
+    flex-wrap: nowrap;
 }
 
 .btn-lihat {
@@ -348,7 +877,8 @@ body {
 
 .btn-lihat:active { transform: translateY(0); }
 
-.btn-cetak, .btn-download {
+.btn-cetak,
+.btn-download {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -369,7 +899,8 @@ body {
     flex-shrink: 0;
 }
 
-.btn-cetak:hover, .btn-download:hover {
+.btn-cetak:hover,
+.btn-download:hover {
     background-color: #f8fafc;
     border-color: #94a3b8;
     color: #0f172a;
@@ -377,7 +908,8 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
 }
 
-.btn-cetak:active, .btn-download:active { transform: translateY(0); }
+.btn-cetak:active,
+.btn-download:active { transform: translateY(0); }
 
 /* Button Edit — Kuning solid (Konsisten dengan List POP) */
 .btn-edit,
@@ -443,20 +975,20 @@ body {
 .btn-delete-rma:active { transform: translateY(0); }
 
 /* =====================================================
-   PAGINATION (MODERN & UNIFIED WITH PLN ICON PLUS)
+   PAGINATION
 ===================================================== */
 .pagination-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 20px;
+    padding: 16px 4px 0;
+    margin-top: 16px;
     border-top: 1px solid #e2e8f0;
     background-color: #ffffff;
     font-size: 13px;
     color: #64748b;
     font-weight: 500;
     gap: 12px;
-    border-radius: 0 0 12px 12px;
 }
 
 .pagination-footer .pagination-info {
@@ -499,7 +1031,6 @@ body {
     font-weight: 600;
     text-decoration: none;
     transition: all 0.2s ease;
-    box-sizing: border-box;
 }
 
 .pagination-footer .page-item .page-link:hover {
@@ -536,20 +1067,12 @@ body {
     gap: 4px;
 }
 
-.btn-pill-item.active-today {
-    background: #e0f2fe;
-    color: #0369a1;
-    border-color: #7dd3fc;
-    font-weight: 700;
-}
-
-.btn-pill-item.active-today:hover {
-    background: #bae6fd;
-    color: #0284c7;
+.pagination-info .muted {
+    color: #94a3b8;
 }
 
 /* =====================================================
-   SIDEBAR COLLAPSED (DIPERBAIKI)
+   SIDEBAR COLLAPSED
 ===================================================== */
 body.sidebar-collapsed .sidebar {
     width: 70px;
@@ -559,13 +1082,11 @@ body.sidebar-collapsed .main-content {
     margin-left: 70px;
 }
 
-/* Menghapus .sidebar-logo img dari display none */
 body.sidebar-collapsed .sidebar-section span,
 body.sidebar-collapsed .section-title {
     display: none;
 }
 
-/* Style agar logo mengecil dan berada di tengah saat ditutup */
 body.sidebar-collapsed .sidebar-logo {
     padding: 15px 10px;
     display: flex;
@@ -580,216 +1101,343 @@ body.sidebar-collapsed .sidebar-logo img {
 }
 
 /* =====================================================
-   RESPONSIVE - TABLET
+   RESPONSIVE — LAYOUT DI DALAM KARTU (container query)
+   Mengikuti lebar kartu, bukan lebar layar.
+===================================================== */
+
+/* ---- Menengah: tabel tetap, tombol aksi jadi ikon ---- */
+@container rma (max-width: 1180px) {
+    .rma-table {
+        min-width: 880px;
+    }
+
+    .rma-table th,
+    .rma-table td {
+        padding: 12px 12px;
+    }
+
+    .rma-table .td-pop {
+        white-space: nowrap;
+    }
+
+    .btn-lihat .btn-label,
+    .btn-download .btn-label {
+        display: none;
+    }
+
+    .btn-lihat,
+    .btn-download {
+        width: 32px;
+        padding: 0;
+    }
+
+    .btn-lihat i,
+    .btn-download i {
+        font-size: 14px;
+    }
+}
+
+/* ---- Filter & toolbar menumpuk ---- */
+@container rma (max-width: 720px) {
+    .history-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .batch-action-toolbar {
+        width: 100%;
+    }
+
+    .batch-pill-group {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+    }
+
+    .btn-pill-item {
+        flex: 1 1 auto;
+        justify-content: center;
+        min-height: 38px;
+        padding: 7px 10px;
+        font-size: var(--fs-xs, 12px);
+    }
+
+    .btn-batch-download-modern {
+        width: 100%;
+        justify-content: center;
+        min-height: var(--control-h, 42px);
+        padding: 9px 16px;
+        font-size: var(--fs-xs, 12px);
+    }
+
+    .table-controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .search-wrapper {
+        flex: none;
+        max-width: none;
+    }
+
+    /* --fs-input: 14px, otomatis 16px di iOS (lihat type-scale.css).
+       Fallback 16px dipakai di lebar 601-720px (mis. iPad) agar tidak auto-zoom. */
+    .search-wrapper input,
+    .date-input {
+        height: var(--control-h, 42px);
+        font-size: var(--fs-input, 16px);
+    }
+
+    .btn-apply-date,
+    .btn-reset-date {
+        height: var(--control-h, 42px);
+        font-size: var(--fs-sm, 13.5px);
+    }
+
+    .date-filter-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .date-input-wrap {
+        display: flex;
+        width: 100%;
+    }
+
+    .date-input {
+        width: 100%;
+    }
+
+    .date-filter-actions {
+        display: flex;
+    }
+
+    .date-filter-actions > * {
+        flex: 1;
+    }
+
+    .view-toggle a {
+        padding: 7px 16px;
+    }
+}
+
+/* ---- Sempit: baris tabel berubah menjadi KARTU ---- */
+@container rma (max-width: 919px) {
+    .mobile-sort {
+        display: flex;
+    }
+
+    .table-responsive {
+        border: 0;
+        border-radius: 0;
+        overflow: visible;
+    }
+
+    .rma-table,
+    .rma-table tbody {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        background: transparent;
+    }
+
+    .rma-table thead {
+        display: none;
+    }
+
+    .rma-table tbody tr {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px 16px;
+        position: relative;
+        padding: 14px;
+        margin-bottom: 12px;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+
+    .rma-table tbody tr:last-child {
+        margin-bottom: 0;
+    }
+
+    .rma-table tbody tr:hover {
+        background: #ffffff;
+    }
+
+    .rma-table tbody tr:has(.rma-check:checked) {
+        background: #eff6ff;
+        border-color: #93c5fd;
+    }
+
+    .rma-table td,
+    .rma-table tbody tr:last-child td {
+        display: block;
+        padding: 0;
+        border: 0;
+        min-width: 0;
+        font-size: var(--fs-sm, 13px);
+        overflow-wrap: anywhere;
+    }
+
+    /* Label kecil di atas tiap nilai, dari atribut data-label */
+    .rma-table td[data-label]::before {
+        content: attr(data-label);
+        display: block;
+        margin-bottom: 2px;
+        font-size: var(--fs-2xs, 10.5px);
+        font-weight: 500;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: #64748b;
+    }
+
+    .rma-table .td-judul {
+        grid-column: 1 / -1;
+        order: 1;
+        padding-right: 40px; /* ruang untuk checkbox */
+    }
+
+    .rma-table .td-pop {
+        white-space: normal;
+    }
+
+    .rma-table td.td-no {
+        font-weight: 400;
+        color: #334155;
+    }
+
+    .rma-table .td-no    { order: 2; }
+    .rma-table .td-tgl   { order: 3; }
+    .rma-table .td-pop   { order: 4; }
+    .rma-table .td-merk  { order: 5; }
+
+    .rma-table .td-user {
+        order: 6;
+        grid-column: 1 / -1;
+    }
+
+    .rma-table td.td-aksi {
+        order: 7;
+        grid-column: 1 / -1;
+        padding-top: 12px;
+        border-top: 1px solid #f1f5f9;
+        text-align: left;
+    }
+
+    .rma-table td.td-check {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .rma-table input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+    }
+
+    .cell-title {
+        max-width: none;
+        white-space: normal;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        font-size: var(--fs-md, 14.5px);
+        font-weight: 600;
+        line-height: 1.4;
+        color: #1e293b;
+    }
+
+    .rma-table .td-judul .text-sub {
+        font-size: var(--fs-xs, 12px);
+    }
+
+    /* Tombol aksi: lebar penuh, mudah ditekan jari (>= 40px) */
+    .action-buttons {
+        display: flex;
+        width: 100%;
+        gap: 8px;
+    }
+
+    .btn-lihat,
+    .btn-download {
+        flex: 1;
+        width: auto;
+        height: 40px;
+        padding: 0 12px;
+        font-size: var(--fs-sm, 13px);
+    }
+
+    .btn-lihat .btn-label,
+    .btn-download .btn-label {
+        display: inline;
+    }
+
+    .btn-edit,
+    .btn-hapus {
+        width: 40px;
+        height: 40px;
+        font-size: 15px;
+    }
+
+    /* Empty state */
+    .rma-table tbody tr.row-empty {
+        display: block;
+        padding: 0;
+    }
+
+    .rma-table .td-empty {
+        padding: 32px 16px !important;
+    }
+}
+
+/* ---- Kartu lebar (tablet): info mengalir ke samping, tombol rata kanan ---- */
+@container rma (min-width: 560px) and (max-width: 919px) {
+    .rma-table tbody tr {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    }
+
+    .rma-table .td-user {
+        grid-column: auto;
+    }
+
+    .action-buttons {
+        justify-content: flex-end;
+    }
+
+    .btn-lihat,
+    .btn-download {
+        flex: 0 1 140px;
+    }
+}
+
+/* =====================================================
+   RESPONSIVE — LEVEL HALAMAN (viewport)
 ===================================================== */
 @media (max-width: 1000px) {
     .rma-page {
         padding: 24px;
     }
+
     .table-card {
         padding: 18px;
     }
 }
 
-/* =====================================================
-   RESPONSIVE - MOBILE
-===================================================== */
-@media (max-width: 700px) {
+@media (max-width: 768px) {
     .user-info {
         display: none;
     }
 
-    .rma-page {
-        padding: 20px 16px 40px;
-    }
-
-    .page-header {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 16px;
-    }
-
-    .page-title {
-        width: 100%;
-    }
-
-    .page-title h1 {
-        font-size: 20px;
-    }
-
-    .page-title p {
-        font-size: 11px;
-    }
-
-    .btn-tambah {
-        width: 100%;
-        padding: 11px 16px;
-    }
-
-    .table-controls {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .search-wrapper,
-    .filter-wrapper {
-        width: 100%;
-    }
-
-    .pagination-footer {
-        flex-direction: column;
-        gap: 15px;
-        align-items: flex-start;
-    }
-}
-
-/* =====================================================
-   RESPONSIVE - SMALL MOBILE
-===================================================== */
-@media (max-width: 450px) {
-    .title-icon {
-        width: 40px;
-        height: 40px;
-        font-size: 18px;
-    }
-
-    .page-title h1 {
-        font-size: 18px;
-    }
-
-    .btn-tambah {
-        font-size: 12px;
-    }
-}
-
-/* =====================================================
-   BATCH ACTIONS & SELECTION PILLS
-===================================================== */
-.batch-action-toolbar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.batch-pill-group {
-    display: inline-flex;
-    align-items: center;
-    background: #f1f5f9;
-    padding: 3px;
-    border-radius: 9px;
-    border: 1px solid #e2e8f0;
-    gap: 3px;
-}
-
-.btn-pill-item {
-    background: transparent;
-    border: none;
-    color: #475569;
-    padding: 6px 13px;
-    border-radius: 7px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    white-space: nowrap;
-}
-
-.btn-pill-item:hover {
-    background: #ffffff;
-    color: #0f172a;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-}
-
-.btn-pill-item:active {
-    transform: scale(0.98);
-}
-
-.btn-pill-item .icon-select-all {
-    color: #2563eb;
-    font-size: 14px;
-}
-
-.btn-pill-item .icon-select-today {
-    color: #059669;
-    font-size: 13.5px;
-}
-
-.btn-pill-item.btn-deselect {
-    color: #dc2626;
-}
-
-.btn-pill-item.btn-deselect:hover {
-    background: #fee2e2;
-    color: #b91c1c;
-}
-
-.btn-pill-item .icon-deselect {
-    color: #ef4444;
-    font-size: 13.5px;
-}
-
-.btn-batch-download-modern {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 7px 16px;
-    border: none;
-    border-radius: 8px;
-    background: linear-gradient(135deg, #0086FF, #005BD4);
-    color: #ffffff;
-    font-family: 'Poppins', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 3px 10px rgba(0, 91, 212, 0.22);
-    transition: all 0.25s ease;
-    white-space: nowrap;
-    animation: popIn 0.25s ease-out;
-}
-
-.btn-batch-download-modern:hover {
-    background: linear-gradient(135deg, #0078E8, #0052C2);
-    transform: translateY(-1px);
-    box-shadow: 0 5px 14px rgba(0, 91, 212, 0.32);
-}
-
-.btn-batch-download-modern i {
-    font-size: 14px;
-}
-
-.btn-batch-download-modern .badge-count {
-    background: rgba(255, 255, 255, 0.25);
-    color: #ffffff;
-    padding: 1px 7px;
-    border-radius: 12px;
-    font-size: 11.5px;
-    font-weight: 700;
-    margin-left: 2px;
-}
-
-@keyframes popIn {
-    from { opacity: 0; transform: scale(0.92); }
-    to { opacity: 1; transform: scale(1); }
-}
-
-/* =====================================================
-   RESPONSIVITAS
-===================================================== */
-.table-responsive {
-    -webkit-overflow-scrolling: touch;
-}
-
-.action-buttons {
-    white-space: nowrap;
-    flex-wrap: nowrap;
-}
-
-@media (max-width: 768px) {
     .rma-page {
         padding: 16px 14px 40px;
     }
@@ -798,72 +1446,57 @@ body.sidebar-collapsed .sidebar-logo img {
         flex-direction: column;
         align-items: stretch;
         gap: 14px;
-    }
-
-    .page-title {
-        width: 100%;
+        margin-bottom: 18px;
     }
 
     .page-header .btn-tambah {
         width: 100%;
-        justify-content: center;
+        min-height: 44px;
         padding: 11px 20px;
         font-size: 13.5px;
     }
 
-    .table-controls {
-        flex-direction: column;
-        gap: 10px;
+    .alert-info-custom {
+        align-items: flex-start;
+        padding: 12px 14px;
+        font-size: 12.5px;
+        margin-bottom: 16px;
     }
 
-    .table-controls .search-wrapper,
-    .table-controls .filter-wrapper {
-        width: 100%;
+    .alert-info-custom i {
+        font-size: 16px;
+        margin: 1px 10px 0 0;
+    }
+
+    .table-card {
+        padding: 14px;
     }
 
     .history-header {
-        flex-direction: column !important;
-        align-items: stretch !important;
-        gap: 12px;
-    }
-
-    .batch-action-toolbar {
-        width: 100%;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-
-    .batch-pill-group {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 4px;
-        width: 100%;
-    }
-
-    .btn-pill-item {
-        flex: 1 1 auto;
-        justify-content: center;
-        padding: 7px 10px;
-        font-size: 11.5px;
-    }
-
-    .btn-batch-download-modern {
-        width: 100%;
-        justify-content: center;
-        padding: 9px 16px;
+        margin-bottom: 16px;
+        padding-bottom: 14px;
     }
 
     .pagination-footer {
         flex-direction: column;
-        gap: 10px;
-        text-align: center;
         align-items: center;
+        gap: 12px;
+        padding: 14px 0 0;
+        text-align: center;
     }
 
-    .alert-info-custom {
-        padding: 12px 14px;
-        font-size: 12.5px;
+    .pagination-footer .pagination-info {
+        justify-content: center;
+    }
+
+    .pagination-footer .pagination {
+        justify-content: center;
+    }
+
+    .pagination-footer .page-item .page-link,
+    .pagination-footer .page-item span.page-link {
+        min-width: 40px;
+        height: 40px;
     }
 }
 
@@ -873,45 +1506,35 @@ body.sidebar-collapsed .sidebar-logo img {
     }
 
     .page-title h1 {
-        font-size: var(--fs-md);
+        font-size: var(--fs-md, 18px);
+    }
+
+    .page-title p {
+        font-size: 11px;
     }
 
     .title-icon {
-        width: 36px;
-        height: 36px;
-        font-size: var(--icon-title);
+        width: 38px;
+        height: 38px;
+        font-size: var(--icon-title, 18px);
     }
 
     .page-header .btn-tambah {
-        font-size: var(--fs-sm);
-    }
-
-    .search-box input,
-    .filter-select {
-        font-size: var(--fs-input);
-    }
-
-    .btn-pill-item {
-        font-size: var(--fs-2xs);
-    }
-
-    .btn-batch-download-modern {
-        font-size: var(--fs-xs);
-    }
-
-    .rma-table th {
-        font-size: var(--fs-2xs);
-    }
-
-    .rma-table td {
-        font-size: var(--fs-xs);
-    }
-
-    .badge-status-modern {
-        font-size: var(--fs-2xs);
+        font-size: var(--fs-sm, 13px);
     }
 
     .pagination-footer {
-        font-size: var(--fs-xs);
+        font-size: var(--fs-xs, 12px);
+    }
+}
+
+/* Layar sangat kecil: pagination ringkas (Sebelumnya • halaman aktif • Berikutnya) */
+@media (max-width: 480px) {
+    .pagination-footer .pagination .page-item:not(.active):not(:first-child):not(:last-child) {
+        display: none;
+    }
+
+    .pagination-footer .pagination {
+        gap: 8px;
     }
 }

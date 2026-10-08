@@ -48,14 +48,6 @@
         .flatpickr-day:hover {
             background: #eff6ff !important;
         }
-        #rmaDateRangePicker:focus {
-            border-color: #2581ff !important;
-            box-shadow: 0 0 0 3px rgba(37, 129, 255, 0.15) !important;
-        }
-        #btnApplyDateFilter:hover {
-            background: #1d4ed8 !important;
-            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3) !important;
-        }
     </style>
 </head>
 
@@ -95,9 +87,9 @@
 
                 <!-- ALERT BANNER -->
                 @if ($isSuperAdminOrManager)
-                    <div class="alert-info-custom" style="background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%); border-color: #60a5fa;">
-                        <i class="bi bi-shield-check" style="color: #2563eb;"></i>
-                        <span style="color: #1e40af;">
+                    <div class="alert-info-custom alert-admin">
+                        <i class="bi bi-shield-check"></i>
+                        <span>
                             <strong>Mode Admin:</strong>
                             @if ($tampil === 'milik_saya')
                                 Menampilkan RMA milik Anda sendiri.
@@ -117,22 +109,16 @@
                 <div class="table-card">
 
                     <!-- JUDUL RIWAYAT RMA & BATCH ACTION -->
-                    <div class="history-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
-                        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                            <h2 style="margin: 0;">Riwayat RMA</h2>
+                    <div class="history-header">
+                        <div class="history-title-group">
+                            <h2>Riwayat RMA</h2>
                             @if ($isSuperAdminOrManager)
                                 <!-- Filter Toggle Semua / Milik Saya -->
-                                <div style="display: inline-flex; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; font-size: 12px; font-weight: 600;">
+                                <div class="view-toggle" role="group" aria-label="Tampilkan data">
                                     <a href="{{ route('rma', array_merge(request()->query(), ['tampil' => 'semua'])) }}"
-                                        style="padding: 5px 13px; text-decoration: none; transition: 0.15s;
-                                        {{ $tampil === 'semua' ? 'background: #2563eb; color: white;' : 'background: #f8fafc; color: #64748b;' }}">
-                                        Semua
-                                    </a>
+                                        class="{{ $tampil === 'semua' ? 'active' : '' }}">Semua</a>
                                     <a href="{{ route('rma', array_merge(request()->query(), ['tampil' => 'milik_saya'])) }}"
-                                        style="padding: 5px 13px; text-decoration: none; transition: 0.15s; border-left: 1px solid #e2e8f0;
-                                        {{ $tampil === 'milik_saya' ? 'background: #2563eb; color: white;' : 'background: #f8fafc; color: #64748b;' }}">
-                                        Milik Saya
-                                    </a>
+                                        class="{{ $tampil === 'milik_saya' ? 'active' : '' }}">Milik Saya</a>
                                 </div>
                             @endif
                         </div>
@@ -151,12 +137,11 @@
                                     ]));
                                 @endphp
                                 <a href="{{ $todayUrl }}" id="btnFilterToday" class="btn-pill-item {{ $isTodayFilter ? 'active-today' : '' }}"
-                                    title="{{ $isTodayFilter ? 'Klik untuk tampilkan semua tanggal' : 'Filter hanya data RMA Hari Ini' }}"
-                                    style="text-decoration: none;">
+                                    title="{{ $isTodayFilter ? 'Klik untuk tampilkan semua tanggal' : 'Filter hanya data RMA Hari Ini' }}">
                                     <i class="bi bi-calendar2-check-fill icon-select-today"></i>
                                     <span>{{ $isTodayFilter ? 'Hari Ini (Aktif)' : 'Hari Ini' }}</span>
                                     @if ($isTodayFilter)
-                                        <i class="bi bi-x-circle-fill" style="margin-left: 2px; font-size: 11px; color: #ef4444;" title="Hapus filter hari ini"></i>
+                                        <i class="bi bi-x-circle-fill icon-clear-today" title="Hapus filter hari ini"></i>
                                     @endif
                                 </a>
                                 <button type="button" id="btnDeselectAll" class="btn-pill-item btn-deselect" style="display: none;" title="Batalkan semua pilihan">
@@ -171,15 +156,14 @@
                             </button>
 
                             @if ($filter === 'hari_ini' && $rmas->total() > 0)
-                                <button type="button" id="btnDownloadAllToday" class="btn-batch-download-modern" style="background: linear-gradient(135deg, #059669, #10b981);" title="Download seluruh {{ $rmas->total() }} RMA hari ini dalam satu file ZIP">
+                                <button type="button" id="btnDownloadAllToday" class="btn-batch-download-modern btn-batch-today" title="Download seluruh {{ $rmas->total() }} RMA hari ini dalam satu file ZIP">
                                     <i class="bi bi-file-earmark-zip-fill"></i>
-                                    <span>Download Semua Hari Ini <span class="badge-count" style="background: rgba(255,255,255,0.3); color:#fff;">{{ $rmas->total() }} PDF</span></span>
+                                    <span>Download Semua Hari Ini <span class="badge-count">{{ $rmas->total() }} PDF</span></span>
                                 </button>
                             @endif
                         </div>
                     </div>
 
-                    
                     <!-- SEARCH CONTROL -->
                     <form method="GET" action="{{ route('rma') }}" class="table-controls" id="rmaSearchForm">
                         @if(request('sort'))
@@ -195,73 +179,83 @@
                             <input type="hidden" name="filter" value="{{ request('filter') }}">
                         @endif
                         <div class="search-wrapper">
-                            <input type="text" name="search" placeholder="Cari No. RMA, Judul, Perangkat, Lokasi..." value="{{ request('search') }}">
-                            <button type="submit" class="search-btn" title="Cari">
+                            <input type="search" name="search" placeholder="Cari No. RMA, Judul, Perangkat, Lokasi..." value="{{ request('search') }}" aria-label="Cari RMA">
+                            <button type="submit" class="search-btn" title="Cari" aria-label="Cari">
                                 <i class="bi bi-search"></i>
                             </button>
                         </div>
+
                         {{-- Date Range Filter (Flatpickr) --}}
-                        <div class="date-filter-group" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:8px;">
-                            <label style="font-size:0.8rem; color:#64748b; font-weight:600; white-space:nowrap; display:inline-flex; align-items:center; gap:5px;">
-                                <i class="bi bi-calendar-range" style="color:#2563eb;"></i> Rentang Tanggal:
+                        <div class="date-filter-group">
+                            <label class="date-filter-label" for="rmaDateRangePicker">
+                                <i class="bi bi-calendar-range"></i> Rentang Tanggal:
                             </label>
 
                             <input type="hidden" name="date_from" id="hiddenDateFrom" value="{{ $dateFrom ?? '' }}">
                             <input type="hidden" name="date_to" id="hiddenDateTo" value="{{ $dateTo ?? '' }}">
 
-                            <div style="position:relative; display:inline-flex; align-items:center;">
-                                <i class="bi bi-calendar3" style="position:absolute; left:12px; color:#2563eb; font-size:14px; pointer-events:none;"></i>
-                                <input type="text" id="rmaDateRangePicker" placeholder="Pilih rentang tanggal..." readonly
-                                    style="height:42px; padding:0 34px 0 36px; border:1px solid #d1d5db; border-radius:8px; font-size:13.5px; font-family:'Poppins', sans-serif; color:#374151; background:#ffffff; cursor:pointer; width:250px; outline:none; transition:all 0.2s ease;">
-                                <button type="button" id="btnClearDateRange" title="Hapus rentang tanggal"
-                                    style="position:absolute; right:10px; background:none; border:none; color:#9ca3af; cursor:pointer; font-size:15px; padding:0; display:{{ ($dateFrom || $dateTo) ? 'inline-flex' : 'none' }}; align-items:center;">
+                            <div class="date-input-wrap">
+                                <i class="bi bi-calendar3 date-input-icon"></i>
+                                <input type="text" id="rmaDateRangePicker" class="date-input" placeholder="Pilih rentang tanggal..." readonly>
+                                <button type="button" id="btnClearDateRange" class="date-clear-btn" title="Hapus rentang tanggal" aria-label="Hapus rentang tanggal"
+                                    style="display:{{ ($dateFrom || $dateTo) ? 'inline-flex' : 'none' }};">
                                     <i class="bi bi-x-circle-fill"></i>
                                 </button>
                             </div>
 
-                            <button type="submit" id="btnApplyDateFilter"
-                                style="height:42px; padding:0 16px; background:#2563eb; color:#ffffff; border:none; border-radius:8px; font-size:13.5px; font-family:'Poppins', sans-serif; font-weight:500; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s ease; box-shadow:0 1px 2px rgba(37, 99, 235, 0.2);"
-                                title="Terapkan Filter Tanggal">
-                                <i class="bi bi-funnel-fill"></i>
-                                <span>Terapkan</span>
-                            </button>
+                            <div class="date-filter-actions">
+                                <button type="submit" id="btnApplyDateFilter" class="btn-apply-date" title="Terapkan Filter Tanggal">
+                                    <i class="bi bi-funnel-fill"></i>
+                                    <span>Terapkan</span>
+                                </button>
 
-                            @if($dateFrom || $dateTo)
-                                <a href="{{ route('rma', array_merge(array_filter(request()->except(['date_from','date_to','page'])), [])) }}"
-                                    style="height:42px; padding:0 14px; background:#fef2f2; color:#ef4444; border:1px solid #fecaca; border-radius:8px; font-size:13px; font-family:'Poppins', sans-serif; font-weight:500; text-decoration:none; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s ease;"
-                                    title="Reset filter tanggal">
-                                    <i class="bi bi-arrow-counterclockwise"></i>
-                                    <span>Reset</span>
-                                </a>
-
-                                <span style="height:32px; padding:0 12px; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; border-radius:20px; font-size:12px; font-weight:600; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;">
-                                    <i class="bi bi-calendar-check-fill" style="color:#2563eb;"></i>
-                                    {{ $dateFrom ? \Carbon\Carbon::parse($dateFrom)->format('d M Y') : '' }}
-                                    @if($dateFrom && $dateTo && $dateFrom !== $dateTo)
-                                        &mdash; {{ \Carbon\Carbon::parse($dateTo)->format('d M Y') }}
-                                    @endif
-                                </span>
-                            @endif
+                                @if($dateFrom || $dateTo)
+                                    <a href="{{ route('rma', array_merge(array_filter(request()->except(['date_from','date_to','page'])), [])) }}"
+                                        class="btn-reset-date" title="Reset filter tanggal">
+                                        <i class="bi bi-arrow-counterclockwise"></i>
+                                        <span>Reset</span>
+                                    </a>
+                                @endif
+                            </div>
                         </div>
                     </form>
 
                     <!-- TABLE CONTENT -->
+                    @php
+                        // Arah sort kebalikan untuk toggle (dipakai header tabel & sort bar mobile)
+                        $idNextDirection = $sort === 'id' && $direction === 'asc' ? 'desc' : 'asc';
+                        $nextDirection   = $sort === 'tanggal' && $direction === 'asc' ? 'desc' : 'asc';
+                    @endphp
+
+                    <!-- SORT BAR (tampil hanya di layar sempit, saat header tabel disembunyikan) -->
+                    <div class="mobile-sort">
+                        <span class="mobile-sort-label"><i class="bi bi-arrow-down-up"></i> Urutkan</span>
+                        <a href="{{ route('rma', array_merge(request()->query(), ['sort' => 'id', 'direction' => $idNextDirection])) }}"
+                            class="sort-chip {{ $sort === 'id' ? 'active' : '' }}">
+                            No.
+                            @if ($sort === 'id')
+                                <i class="bi bi-arrow-{{ $direction === 'asc' ? 'up' : 'down' }}"></i>
+                            @endif
+                        </a>
+                        <a href="{{ route('rma', array_merge(request()->query(), ['sort' => 'tanggal', 'direction' => $nextDirection])) }}"
+                            class="sort-chip {{ $sort === 'tanggal' ? 'active' : '' }}">
+                            Tanggal
+                            @if ($sort === 'tanggal')
+                                <i class="bi bi-arrow-{{ $direction === 'asc' ? 'up' : 'down' }}"></i>
+                            @endif
+                        </a>
+                    </div>
+
                     <div class="table-responsive">
                         <table class="rma-table">
-                            @php
-                                // Tentukan arah sort kebalikan untuk toggle tombol
-                                $nextDirection = $sort === 'tanggal' && $direction === 'asc' ? 'desc' : 'asc';
-                            @endphp
-
                             <thead>
                                 <tr>
-                                    <th style="width: 42px; text-align: center;">
-                                        <input type="checkbox" id="checkAllHead" style="width: 16px; height: 16px; cursor: pointer;" title="Pilih Semua di Halaman Ini">
+                                    <th class="th-check">
+                                        <input type="checkbox" id="checkAllHead" title="Pilih Semua di Halaman Ini" aria-label="Pilih semua di halaman ini">
                                     </th>
                                     <th>
-                                        <a href="{{ route('rma', array_merge(request()->query(), ['sort' => 'id', 'direction' => $sort === 'id' && $direction === 'asc' ? 'desc' : 'asc']))}}"
-                                            style="text-decoration: none; color: inherit; display: inline-flex; align-items: center; gap: 4px;">
-                                            No. RMA
+                                        <a href="{{ route('rma', array_merge(request()->query(), ['sort' => 'id', 'direction' => $idNextDirection])) }}">
+                                            No.
                                             @if ($sort === 'id')
                                                 <i class="bi bi-arrow-{{ $direction === 'asc' ? 'up' : 'down' }}"></i>
                                             @endif
@@ -270,14 +264,12 @@
                                     <th>Judul / Nama Dokumen</th>
                                     <th>
                                         <!-- Tombol Toggle ASC / DESC untuk Tanggal Pengisian -->
-                                        <a href="{{ route('rma', array_merge(request()->query(), ['sort' => 'tanggal', 'direction' => $nextDirection]))}}"
-                                            style="text-decoration: none; color: inherit; display: inline-flex; align-items: center; gap: 4px;">
+                                        <a href="{{ route('rma', array_merge(request()->query(), ['sort' => 'tanggal', 'direction' => $nextDirection])) }}">
                                             Tanggal Pengisian
                                             @if ($sort === 'tanggal')
                                                 <i class="bi bi-arrow-{{ $direction === 'asc' ? 'up' : 'down' }}"></i>
                                             @else
-                                                <i class="bi bi-arrow-down-up"
-                                                    style="font-size: 11px; opacity: 0.5;"></i>
+                                                <i class="bi bi-arrow-down-up sort-idle"></i>
                                             @endif
                                         </a>
                                     </th>
@@ -286,7 +278,7 @@
                                     @if ($isSuperAdminOrManager)
                                         <th>Dibuat Oleh</th>
                                     @endif
-                                    <th class="text-center" style="width: 250px; min-width: 250px;">Aksi</th>
+                                    <th class="th-aksi">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -297,50 +289,48 @@
                                         $judulRma = $rma->judul_rma ?? ('RMA #' . $rma->id);
                                     @endphp
                                     <tr>
-                                        <td style="text-align: center;">
-                                            <input type="checkbox" class="rma-check" value="{{ $rma->id }}" data-created="{{ $createdDate }}" data-tanggal="{{ $tglDoc }}" style="width: 16px; height: 16px; cursor: pointer;">
+                                        <td class="td-check">
+                                            <input type="checkbox" class="rma-check" value="{{ $rma->id }}" data-created="{{ $createdDate }}" data-tanggal="{{ $tglDoc }}" aria-label="Pilih {{ $judulRma }}">
                                         </td>
-                                        <td><strong>#{{ $rmas->firstItem() + $loop->index }}</strong></td>
-                                        <td>
-                                            <strong style="display: block; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ $judulRma }}">{{ $judulRma }}</strong>
+                                        <td class="td-no" data-label="No.">{{ $rmas->firstItem() + $loop->index }}</td>
+                                        <td class="td-judul">
+                                            <span class="cell-primary cell-title" title="{{ $judulRma }}">{{ $judulRma }}</span>
                                             <span class="text-sub">{{ $rma->so_po ?? '-' }}</span>
                                         </td>
-                                        <td>
-                                            <strong>{{ $rma->created_at->format('d-M Y') }}</strong>
+                                        <td class="td-tgl" data-label="Tanggal Pengisian">
+                                            <span class="cell-primary">{{ $rma->created_at->format('d-M Y') }}</span>
                                             <span class="text-sub">{{ $rma->created_at->format('H:i') }} WIB</span>
                                         </td>
-                                        <td>
+                                        <td class="td-pop" data-label="ID POP">
                                             {{ $rma->lokasi_asal ?? '-' }}
                                         </td>
-                                        <td>
-                                            <strong>{{ $rma->merk ?? '-' }}</strong>
+                                        <td class="td-merk" data-label="Merk/Type">
+                                            <span class="cell-primary">{{ $rma->merk ?? '-' }}</span>
                                             <span class="text-sub">{{ $rma->type ?? '-' }}</span>
                                         </td>
                                         @if ($isSuperAdminOrManager)
-                                            <td>
+                                            <td class="td-user" data-label="Dibuat Oleh">
                                                 @if ($rma->user)
-                                                    <span style="display: flex; align-items: center; gap: 5px;">
-                                                        <span style="width: 26px; height: 26px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: white; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                                                            {{ strtoupper(substr($rma->user->name, 0, 1)) }}
-                                                        </span>
-                                                        <span style="font-size: 12px;">{{ $rma->user->name }}</span>
+                                                    <span class="creator">
+                                                        <span class="creator-avatar">{{ strtoupper(substr($rma->user->name, 0, 1)) }}</span>
+                                                        <span class="creator-name">{{ $rma->user->name }}</span>
                                                     </span>
                                                 @elseif ($rma->nama_pemohon)
-                                                    <span style="font-size: 12px; color: #64748b;">{{ $rma->nama_pemohon }}</span>
+                                                    <span class="creator-name muted">{{ $rma->nama_pemohon }}</span>
                                                 @else
                                                     <span class="text-sub">—</span>
                                                 @endif
                                             </td>
                                         @endif
-                                        <td class="text-center">
+                                        <td class="td-aksi text-center">
                                             <div class="action-buttons">
                                                 <a href="{{ route('rma.pdf', $rma->id) }}" class="btn-lihat" target="_blank"
                                                     title="Lihat Dokumen RMA" aria-label="Lihat PDF RMA {{ $rma->so_po }}">
-                                                    <i class="bi bi-eye"></i> Lihat
+                                                    <i class="bi bi-eye"></i><span class="btn-label">Lihat</span>
                                                 </a>
                                                 <a href="{{ route('rma.download', $rma->id) }}" class="btn-download"
                                                     title="Download Dokumen RMA" aria-label="Download PDF RMA {{ $rma->so_po }}">
-                                                    <i class="bi bi-download"></i> Download
+                                                    <i class="bi bi-download"></i><span class="btn-label">Download</span>
                                                 </a>
                                                 @can('rma.update')
                                                     @php
@@ -373,8 +363,11 @@
                                         </td>
                                     </tr>
                                 @empty
-                                    <tr>
-                                        <td colspan="{{ $isSuperAdminOrManager ? 8 : 7 }}" class="text-center py-4 text-gray-500">Belum ada data RMA.</td>
+                                    <tr class="row-empty">
+                                        <td colspan="{{ $isSuperAdminOrManager ? 8 : 7 }}" class="td-empty">
+                                            <i class="bi bi-inbox"></i>
+                                            <p>Belum ada data RMA.</p>
+                                        </td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -389,7 +382,7 @@
                                 <span class="badge-filter-today"><i class="bi bi-calendar2-check"></i> Hari Ini</span>
                             @endif
                             @if ($isSuperAdminOrManager)
-                                <span style="color: #94a3b8;">{{ $tampil === 'milik_saya' ? '(milik Anda)' : '(semua pengguna)' }}</span>
+                                <span class="muted">{{ $tampil === 'milik_saya' ? '(milik Anda)' : '(semua pengguna)' }}</span>
                             @endif
                         </div>
                         <div class="pagination-controls">
@@ -555,12 +548,14 @@
             const clearBtn       = document.getElementById('btnClearDateRange');
             const rmaSearchForm  = document.getElementById('rmaSearchForm');
 
+            // Nilai dari server berformat Y-m-d, sedangkan dateFormat picker "d M Y".
+            // Jadi harus di-parse eksplisit (jangan kirim string mentah ke defaultDate).
             const defaultDates = [];
             @if(!empty($dateFrom))
-                defaultDates.push("{{ $dateFrom }}");
+                defaultDates.push(flatpickr.parseDate("{{ $dateFrom }}", "Y-m-d"));
             @endif
             @if(!empty($dateTo) && $dateTo !== $dateFrom)
-                defaultDates.push("{{ $dateTo }}");
+                defaultDates.push(flatpickr.parseDate("{{ $dateTo }}", "Y-m-d"));
             @endif
 
             const fp = flatpickr("#rmaDateRangePicker", {
@@ -570,7 +565,9 @@
                     ? Object.assign({}, flatpickr.l10ns.id, { rangeSeparator: " s/d " })
                     : { rangeSeparator: " s/d " },
                 defaultDate: defaultDates,
-                showMonths: window.innerWidth > 768 ? 2 : 1,
+                showMonths: window.matchMedia('(min-width: 769px)').matches ? 2 : 1,
+                position: window.matchMedia('(max-width: 768px)').matches ? 'auto center' : 'auto left',
+                disableMobile: true,
                 onChange: function(selectedDates, dateStr, instance) {
                     if (selectedDates.length === 2) {
                         hiddenDateFrom.value = instance.formatDate(selectedDates[0], "Y-m-d");
