@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>RMA - {{ $data->serial_number }}</title>
+    <title>RMA - {{ $data->so_po }}</title>
     <style>
         /* Margin halaman diperkecil dari 2cm menjadi 1.2cm */
         @page {
@@ -37,6 +37,28 @@
         .info-table td {
             padding: 4px;
             vertical-align: top;
+        }
+
+        .info-label {
+            width: 34%;
+        }
+
+        .info-colon {
+            width: 14px;
+            text-align: center;
+        }
+
+        .info-value {
+            width: auto;
+        }
+
+        .device-line {
+            line-height: 1.35;
+            white-space: normal;
+        }
+
+        .device-index {
+            margin-right: 5px;
         }
 
         .box {
@@ -98,6 +120,10 @@
             page-break-before: always;
         }
 
+        .damage-signature-block {
+            page-break-inside: avoid;
+        }
+
         /* Area TTD */
         .ttd-area {
             width: 100%;
@@ -132,42 +158,60 @@
         </tr>
     </table>
 
+    @php
+        $types = $data->types->values();
+        $brands = $types->pluck('merk')->unique()->values();
+        $serials = $types->flatMap(fn($type) => $type->serials)->values();
+        $numberedTypes = $types->count() > 1;
+        $typeLines = $types->map(fn($type) => $type->type)->values();
+        $materialLines = $types->map(fn($type) => $type->material_number ?: '-')->values();
+        $serialLines = $serials->map(fn($serial) => $serial->serial_number)->values();
+    @endphp
     <table class="info-table">
         <tr>
-            <td style="width: 25%;">Nomor SO/PO</td>
-            <td>: {{ $data->so_po }}</td>
+            <td class="info-label">Nomor SO/PO</td><td class="info-colon">:</td><td class="info-value">{{ $data->so_po }}</td>
         </tr>
         <tr>
-            <td>Valuation Type</td>
-            <td>: {{ $data->valuation_type }}</td>
+            <td class="info-label">Valuation Type</td><td class="info-colon">:</td><td class="info-value">{{ $data->valuation_type }}</td>
         </tr>
         <tr>
-            <td>Tanggal</td>
-            <td>: {{ $data->tanggal->translatedFormat('d F Y') }}</td>
+            <td class="info-label">Tanggal</td><td class="info-colon">:</td><td class="info-value">{{ $data->tanggal->translatedFormat('d F Y') }}</td>
         </tr>
         <tr>
-            <td>Lokasi Asal</td>
-            <td>: {{ $data->lokasi_asal }}</td>
+            <td class="info-label">Lokasi Asal</td><td class="info-colon">:</td><td class="info-value">{{ $data->lokasi_asal }}</td>
         </tr>
         <tr>
-            <td>Merk</td>
-            <td>: {{ $data->merk }}</td>
+            <td class="info-label">Merk</td><td class="info-colon">:</td><td class="info-value">
+                @foreach ($brands as $index => $brand)
+                    <div class="device-line">@if ($brands->count() > 1)<span class="device-index">{{ $index + 1 }}.</span>@endif{{ $brand }}</div>
+                @endforeach
+            </td>
         </tr>
         <tr>
-            <td>Type</td>
-            <td>: {{ $data->type }}</td>
+            <td class="info-label">Type</td><td class="info-colon">:</td><td class="info-value">
+                @foreach ($typeLines as $index => $typeLine)
+                    <div class="device-line">@if ($numberedTypes)<span class="device-index">{{ $index + 1 }}.</span>@endif{{ $typeLine }}</div>
+                @endforeach
+            </td>
         </tr>
         <tr>
-            <td>Serial Number</td>
-            <td>: {{ $data->serial_number ?? $data->materials->first()?->serial_number ?? '-' }}</td>
+            <td class="info-label">Serial Number</td><td class="info-colon">:</td><td class="info-value">
+                @forelse ($serialLines as $index => $serialLine)
+                    <div class="device-line">@if ($serials->count() > 1)<span class="device-index">{{ $index + 1 }}.</span>@endif{{ $serialLine }}</div>
+                @empty
+                    {{ $data->serial_number ?? '-' }}
+                @endforelse
+            </td>
         </tr>
         <tr>
-            <td>Material Number</td>
-            <td>: {{ $data->material_number }}</td>
+            <td class="info-label">Material Number</td><td class="info-colon">:</td><td class="info-value">
+                @foreach ($materialLines as $index => $materialLine)
+                    <div class="device-line">@if ($numberedTypes)<span class="device-index">{{ $index + 1 }}.</span>@endif{{ $materialLine }}</div>
+                @endforeach
+            </td>
         </tr>
         <tr>
-            <td>Description</td>
-            <td>: {{ $data->description }}</td>
+            <td class="info-label">Description</td><td class="info-colon">:</td><td class="info-value">{{ $data->description }}</td>
         </tr>
     </table>
 
@@ -176,6 +220,7 @@
         $kerusakan = $data->is_material_rusak ? $data->kerusakan ?? [] : [];
     @endphp
 
+    <div class="damage-signature-block">
     <p style="margin-bottom: 10px; font-size: 9.5pt;">
         Beri Tanda Checker Pada Kotak Jika Material Rusak
         <span class="box" style="margin-left: 15px;">{!! $data->is_material_rusak ? $checkImg : '' !!}</span>
@@ -303,20 +348,22 @@
             </td>
         </tr>
     </table>
+    </div>
 
     <!-- HALAMAN 2: FOTO -->
     <div class="page-break"></div>
     <h2 style="margin-bottom: 20px;">Lampiran Dokumentasi Material</h2>
 
     <table style="border: 1px solid #000; width: 100%; border-collapse: collapse;">
-        @foreach ($data->materials->chunk(2) as $chunk)
+        @php $photoMaterials = $types->flatMap(fn($type) => $type->serials->flatMap(fn($serial) => $serial->materials))->values(); @endphp
+        @foreach ($photoMaterials->chunk(2) as $chunk)
             <tr>
                 @foreach ($chunk as $material)
                     <td style="width: 50%; border: 1px solid #000; text-align: center; padding: 10px;">
                         <img src="{{ public_path('storage/' . $material->foto_path) }}"
                             style="max-width: 90%; max-height: 220px; display: block; margin: 0 auto 8px;">
                         <p style="margin: 0; font-weight: bold; font-size: 10pt;">+{{ $material->serial_number }}</p>
-                        <p style="margin: 0; font-size: 9pt;">Material SFP</p>
+                        <p style="margin: 0; font-size: 9pt;">{{ $material->serial?->type?->type ?? '-' }}</p>
                     </td>
                 @endforeach
 

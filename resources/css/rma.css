@@ -557,11 +557,37 @@ textarea.form-control {
     display: flex;
     align-items: center;
     gap: 6px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
     transition: color 0.2s;
 }
 
 .tambah-link:hover {
     color: var(--primary-hover);
+}
+
+.tambah-link:active {
+    transform: scale(0.98);
+}
+
+.btn-hapus {
+    padding: 4px 12px;
+    border: 0;
+    border-radius: 6px;
+    background: #ef4444;
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-hapus:hover {
+    background: #dc2626;
 }
 
 /* Upload Dropzone */

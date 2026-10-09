@@ -122,6 +122,20 @@
             align-items: center;
             justify-content: center;
         }
+
+        .edit-device-card { padding: 22px; border: 1px solid #dbeafe; background: #fbfdff; }
+        .edit-device-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px; }
+        .edit-device-heading strong { color:#1e3a8a; font-size:15px; }
+        .edit-serial-row { padding:14px; margin:12px 0; border:1px solid #e2e8f0; border-radius:10px; background:#fff; }
+        .edit-serial-fields { display:flex; align-items:center; gap:10px; }
+        .edit-serial-fields .form-control { flex:1; min-width:0; }
+        .edit-serial-upload { margin:12px 0 0; padding:16px; cursor:pointer; }
+        .edit-serial-upload .dropzone-icon { font-size:24px; margin-bottom:4px; }
+        .edit-serial-upload .dropzone-text { margin-bottom:8px; font-size:12px; }
+        .edit-serial-upload .btn-browse { padding:6px 16px; font-size:12px; }
+        .edit-serial-fields .btn-hapus { white-space:nowrap; }
+        .edit-serial-label { display:block; margin:0 0 8px; color:#334155; font-size:13px; font-weight:600; }
+        @media (max-width:640px) { .edit-serial-fields { align-items:stretch; } .edit-serial-fields .btn-hapus { flex:0 0 auto; } }
     </style>
 </head>
 
@@ -176,8 +190,7 @@
                                 <input type="text" id="judul_rma" name="judul_rma" class="form-control"
                                     placeholder="Contoh: RMA PO-12345 - POP Jakarta Pusat"
                                     value="{{ old('judul_rma', $rma->judul_rma) }}" maxlength="150">
-                                <div class="field-description">Biarkan kosong untuk generate otomatis dari No. Dokumen +
-                                    Lokasi</div>
+                                <div class="field-description">Biarkan kosong untuk menggunakan No. IO.SP2K/SO/PO/ANDOP sebagai nama dokumen.</div>
                             </div>
                             <div class="form-group">
                                 <label for="so_po">No. IO.SP2K/SO/PO/ANDOP <span>*</span></label>
@@ -209,25 +222,30 @@
                                     placeholder="Masukkan lokasi asal">
                             </div>
                             <div class="form-group">
-                                <label for="merk">Merk <span>*</span></label>
-                                <input type="text" id="merk" name="merk" class="form-control" required
-                                    value="{{ old('merk', $rma->merk) }}" placeholder="Merk perangkat">
-                            </div>
-                            <div class="form-group">
-                                <label for="type">Type <span>*</span></label>
-                                <input type="text" id="type" name="type" class="form-control" required
-                                    value="{{ old('type', $rma->type) }}" placeholder="Tipe perangkat">
-                            </div>
-                            <div class="form-group">
-                                <label for="serial_number_edit">Serial Number (SN) / Batch <span>*</span></label>
-                                <input type="text" id="serial_number_edit" name="serial_number" class="form-control"
-                                    required placeholder="Contoh: SN-123456789"
-                                    value="{{ old('serial_number', $rma->serial_number ?? ($rma->materials->first()?->serial_number ?? '')) }}">
-                            </div>
-                            <div class="form-group">
-                                <label for="material_number">Material Number</label>
-                                <input type="text" id="material_number" name="material_number" class="form-control"
-                                    value="{{ old('material_number', $rma->material_number) }}" placeholder="Opsional">
+                                <label>Perangkat <span>*</span></label>
+                                <div id="edit-type-groups">
+                                    @foreach ($rma->types as $ti => $type)
+                                        <div class="form-card rma-type-group edit-device-card" style="margin-bottom:14px" data-next-serial="{{ $type->serials->count() }}" data-index="{{ $ti }}">
+                                            <div class="edit-device-heading"><strong><i class="bi bi-hdd-stack" style="margin-right:6px"></i>Perangkat {{ $ti + 1 }}</strong>@if($ti > 0)<button type="button" class="btn-hapus remove-type">Hapus perangkat</button>@endif</div>
+                                            <input type="hidden" name="types[{{ $ti }}][id]" value="{{ $type->id }}">
+                                            <div class="form-group"><label>Merk *</label><input class="form-control" name="types[{{ $ti }}][merk]" required value="{{ $type->merk }}"></div>
+                                            <div class="form-group"><label>Tipe *</label><input class="form-control type-name" name="types[{{ $ti }}][type]" required value="{{ $type->type }}"></div>
+                                            <div class="form-group"><label>Material Number *</label><input class="form-control" name="types[{{ $ti }}][material_number]" required value="{{ $type->material_number }}"></div>
+                                            <div class="serial-list">
+                                                <label class="edit-serial-label">Serial Number (SN) <span>*</span></label>
+                                                @foreach ($type->serials as $si => $serial)
+                                                    <div class="serial-row edit-serial-row" data-serial-index="{{ $si }}">
+                                                        <input type="hidden" name="types[{{ $ti }}][serial_numbers][{{ $si }}][id]" value="{{ $serial->id }}">
+                                                        <div class="edit-serial-fields"><input class="form-control" name="types[{{ $ti }}][serial_numbers][{{ $si }}][serial_number]" required value="{{ $serial->serial_number }}" aria-label="Serial Number perangkat {{ $ti + 1 }}"><button type="button" class="btn-hapus remove-serial">Hapus SN</button></div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                            <button type="button" class="tambah-link add-serial">+ Tambah SN</button>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                <div class="field-description">Satu perangkat mewakili satu merk, tipe, dan material number. Tambahkan SN jika unitnya lebih dari satu. Untuk tipe berbeda, tambahkan perangkat baru; merk boleh sama.</div>
+                                <button type="button" class="tambah-link" id="add-edit-type">+ Tambah perangkat</button>
                             </div>
                             <div class="form-group">
                                 <label for="description">Description <span>*</span></label>
@@ -273,45 +291,30 @@
                                     &nbsp;·&nbsp; <span style="color:#dc2626;font-weight:400;">Klik foto untuk tandai
                                         hapus</span>
                                 </div>
-                                <div class="edit-photo-grid">
-                                    @foreach ($rma->materials as $mat)
-                                        <div class="edit-photo-item" id="photo-wrap-{{ $mat->id }}"
-                                            onclick="toggleHapusFoto({{ $mat->id }})">
-                                            <img src="{{ Storage::url($mat->foto_path) }}" alt="Foto Material">
-                                            <div class="edit-photo-overlay">
-                                                <i class="bi bi-trash3-fill overlay-icon"></i>
-                                            </div>
-                                            <span class="delete-tag">HAPUS</span>
-                                            <input type="checkbox" name="hapus_foto[]" value="{{ $mat->id }}"
-                                                id="chk-hapus-{{ $mat->id }}" style="display:none;">
-                                        </div>
-                                    @endforeach
-                                </div>
                             @else
                                 <p style="color:#94a3b8;font-size:13px;margin-bottom:12px;">Belum ada foto material.
                                 </p>
                             @endif
-
-                            <div style="margin-top:18px;border-top:1px dashed #e2e8f0;padding-top:16px;">
-                                <div style="font-size:12px;font-weight:600;color:#475569;margin-bottom:8px;">
-                                    <i class="bi bi-plus-circle-fill" style="color:#22c55e;"></i> Tambah Foto Baru
-                                </div>
-                                <div class="upload-dropzone" id="dropzoneEdit"
-                                    onclick="document.getElementById('newPhotoInput').click()"
-                                    style="cursor:pointer;">
-                                    <i class="bi bi-cloud-arrow-up dropzone-icon"></i>
-                                    <div class="dropzone-text">Klik atau drag foto baru di sini</div>
-                                    <input type="file" id="newPhotoInput" name="foto_material_baru[]"
-                                        accept="image/jpeg,image/png,image/jpg,image/webp" multiple
-                                        style="display:none;">
-                                    <button type="button" class="btn-browse"
-                                        onclick="event.stopPropagation();document.getElementById('newPhotoInput').click()">Browse</button>
-                                </div>
-                                <p style="font-size:0.75rem;color:#94a3b8;margin:6px 0 0;">
-                                    <i class="bi bi-info-circle"></i> Maks. 2MB per foto, format JPG/PNG/WEBP
-                                </p>
-                                <div class="new-photos-preview" id="newPhotosPreview"></div>
+                            <div id="edit-photo-groups">
+                            @foreach ($rma->types as $ti => $type)
+                                @foreach ($type->serials as $si => $serial)
+                                    <div class="form-card edit-photo-group" data-device-index="{{ $ti }}" data-serial-index="{{ $si }}" style="margin:12px 0"><strong>{{ $type->type }} · SN {{ $serial->serial_number }}</strong>
+                                        <div class="edit-photo-grid">
+                                            @foreach ($serial->materials as $mat)
+                                                <div class="edit-photo-item" id="photo-wrap-{{ $mat->id }}" onclick="toggleHapusFoto({{ $mat->id }})">
+                                                    <img src="{{ Storage::url($mat->foto_path) }}" alt="Foto Material">
+                                                    <div class="edit-photo-overlay"><i class="bi bi-trash3-fill overlay-icon"></i></div>
+                                                    <span class="delete-tag">HAPUS</span>
+                                                    <input type="checkbox" name="hapus_foto[]" value="{{ $mat->id }}" id="chk-hapus-{{ $mat->id }}" style="display:none;">
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                        <div class="upload-dropzone edit-serial-upload" style="margin-top:12px;margin-bottom:0" onclick="if(event.target===this||event.target.closest('.dropzone-icon,.dropzone-text'))this.querySelector('input[type=file]').click()"><i class="bi bi-cloud-arrow-up dropzone-icon"></i><div class="dropzone-text">Tambah foto material (opsional)</div><input type="file" name="new_photos[{{ $serial->id }}][]" multiple accept="image/jpeg,image/png,image/jpg,image/webp" style="display:none"><button type="button" class="btn-browse" onclick="event.stopPropagation();this.parentElement.querySelector('input[type=file]').click()">Pilih foto</button></div>
+                                    </div>
+                                @endforeach
+                            @endforeach
                             </div>
+
                         </div>
 
                         <!-- PENGESAHAN -->
@@ -387,6 +390,57 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        const editGroups = document.getElementById('edit-type-groups');
+        let editTypeIndex = editGroups ? Math.max(-1, ...Array.from(editGroups.querySelectorAll('.rma-type-group'), group => Number(group.dataset.index))) + 1 : 0;
+        document.getElementById('add-edit-type')?.addEventListener('click', () => {
+            const ti = editTypeIndex++;
+            const card = document.createElement('div'); card.className = 'form-card rma-type-group edit-device-card'; card.style.marginBottom = '14px';
+            card.dataset.index = ti; card.dataset.nextSerial = '0';
+            card.innerHTML = `<div class="edit-device-heading"><strong><i class="bi bi-hdd-stack" style="margin-right:6px"></i>Perangkat ${ti + 1}</strong><button type="button" class="btn-hapus remove-type">Hapus perangkat</button></div>
+                <div class="form-group"><label>Merk *</label><input class="form-control" name="types[${ti}][merk]" required></div>
+                <div class="form-group"><label>Tipe *</label><input class="form-control type-name" name="types[${ti}][type]" required></div>
+                <div class="form-group"><label>Material Number *</label><input class="form-control" name="types[${ti}][material_number]" required></div>
+                <div class="serial-list"><label class="edit-serial-label">Serial Number (SN) <span>*</span></label></div><button type="button" class="tambah-link add-serial">+ Tambah SN</button>`;
+            editGroups.appendChild(card); addEditSerial(card, ti, 0);
+        });
+        function addEditSerial(card, ti, si) {
+            const row = document.createElement('div'); row.className = 'serial-row edit-serial-row';
+            row.dataset.serialIndex = si;
+            row.innerHTML = `<div class="edit-serial-fields"><input class="form-control serial-value" name="types[${ti}][serial_numbers][${si}][serial_number]" required placeholder="Masukkan Serial Number" aria-label="Serial Number perangkat ${ti + 1}"><button type="button" class="btn-hapus remove-serial">Hapus SN</button></div>`;
+            card.querySelector('.serial-list').appendChild(row);
+            card.dataset.nextSerial = String(Math.max(Number(card.dataset.nextSerial || 0), si + 1));
+            addEditPhotoGroup(card, ti, si, row.querySelector('.serial-value'));
+        }
+        function addEditPhotoGroup(card, ti, si, serialInput) {
+            const group = document.createElement('div');
+            group.className = 'form-card edit-photo-group';
+            group.dataset.deviceIndex = ti;
+            group.dataset.serialIndex = si;
+            group.style.margin = '12px 0';
+            group.innerHTML = `<strong></strong><div class="edit-photo-grid"></div><div class="upload-dropzone edit-serial-upload" style="margin-top:12px;margin-bottom:0" onclick="if(event.target===this||event.target.closest('.dropzone-icon,.dropzone-text'))this.querySelector('input[type=file]').click()"><i class="bi bi-cloud-arrow-up dropzone-icon"></i><div class="dropzone-text">Tambah foto material (opsional)</div><input type="file" name="photos[${ti}][${si}][]" multiple accept="image/jpeg,image/png,image/jpg,image/webp" style="display:none"><button type="button" class="btn-browse" onclick="event.stopPropagation();this.parentElement.querySelector('input[type=file]').click()">Pilih foto</button></div>`;
+            const updateTitle = () => { group.querySelector('strong').textContent = `${card.querySelector('.type-name').value || 'Tipe perangkat'} · SN ${serialInput.value || 'belum diisi'}`; };
+            updateTitle();
+            serialInput.addEventListener('input', updateTitle);
+            card.querySelector('.type-name').addEventListener('input', updateTitle);
+            document.getElementById('edit-photo-groups').appendChild(group);
+        }
+        editGroups?.addEventListener('click', e => {
+            const card = e.target.closest('.rma-type-group');
+            if (e.target.closest('.remove-type')) {
+                document.querySelectorAll(`.edit-photo-group[data-device-index="${card.dataset.index}"]`).forEach(group => group.remove());
+                card.remove(); return;
+            }
+            if (e.target.closest('.add-serial')) {
+                const ti = Number(card.dataset.index);
+                addEditSerial(card, ti, Number(card.dataset.nextSerial || 0));
+            }
+            if (e.target.closest('.remove-serial') && card.querySelectorAll('.serial-row').length > 1) {
+                const row = e.target.closest('.serial-row');
+                document.querySelector(`.edit-photo-group[data-device-index="${card.dataset.index}"][data-serial-index="${row.dataset.serialIndex}"]`)?.remove();
+                row.remove();
+            }
+        });
+
         function toggleHapusFoto(matId) {
             const wrap = document.getElementById('photo-wrap-' + matId);
             const chk = document.getElementById('chk-hapus-' + matId);
@@ -395,45 +449,19 @@
             chk.checked = wrap.classList.contains('marked-delete');
         }
 
-        const newPhotoInput = document.getElementById('newPhotoInput');
-        const newPhotosPreview = document.getElementById('newPhotosPreview');
-
-        if (newPhotoInput) {
-            newPhotoInput.addEventListener('change', function() {
-                Array.from(this.files).forEach(file => {
-                    if (!file.type.match('image.*')) return;
-                    const reader = new FileReader();
-                    reader.onload = e => {
-                        const thumb = document.createElement('div');
-                        thumb.className = 'new-photo-thumb';
-                        thumb.dataset.name = file.name;
-                        thumb.innerHTML =
-                            `<img src="${e.target.result}" alt=""><button type="button" class="remove-new-btn" onclick="this.closest('.new-photo-thumb').remove()"><i class="bi bi-x"></i></button>`;
-                        newPhotosPreview.appendChild(thumb);
-                    };
-                    reader.readAsDataURL(file);
-                });
-            });
-        }
-
-        const dropzoneEdit = document.getElementById('dropzoneEdit');
-        if (dropzoneEdit) {
-            dropzoneEdit.addEventListener('dragover', e => {
-                e.preventDefault();
-                dropzoneEdit.style.borderColor = '#2563eb';
-            });
-            dropzoneEdit.addEventListener('dragleave', () => {
-                dropzoneEdit.style.borderColor = '';
-            });
-            dropzoneEdit.addEventListener('drop', e => {
-                e.preventDefault();
-                dropzoneEdit.style.borderColor = '';
-                const dt = new DataTransfer();
-                Array.from(e.dataTransfer.files).forEach(f => dt.items.add(f));
-                newPhotoInput.files = dt.files;
-                newPhotoInput.dispatchEvent(new Event('change'));
-            });
-        }
+        document.addEventListener('change', event => {
+            const input = event.target.closest('.upload-dropzone input[type="file"]');
+            if (input) {
+                const dropzone = input.closest('.upload-dropzone');
+                const label = dropzone?.querySelector('.dropzone-text');
+                const hasFiles = input.files.length > 0;
+                if (label && hasFiles) label.textContent = input.files.length + ' foto dipilih';
+                if (dropzone) {
+                    dropzone.style.borderColor = hasFiles ? '#16a34a' : '';
+                    dropzone.style.backgroundColor = hasFiles ? '#f0fdf4' : '';
+                }
+            }
+        });
 
         // Auto-sync is_material_rusak berdasarkan checkbox kerusakan
         const isMaterialRusakInput = document.getElementById('is_material_rusak');

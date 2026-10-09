@@ -87,6 +87,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::middleware('permission:rma.delete')->group(function () {
+        Route::delete('/rma/bulk', [RmaController::class, 'bulkDestroy'])->name('rma.bulk-destroy');
         Route::delete('/rma/{id}', [RmaController::class, 'destroy'])->name('rma.destroy');
     });
 

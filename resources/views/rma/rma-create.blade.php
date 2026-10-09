@@ -16,49 +16,10 @@
     @vite(['resources/css/sidebar.css', 'resources/css/rma.css'])
 
     <style>
-        /* Efek Hover untuk Tombol Tambah SFP */
-        .tambah-link {
-            background: none;
-            border: none;
-            color: #3b82f6;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease-in-out;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .tambah-link:hover {
-            color: #1d4ed8;
-            transform: scale(1.02);
-        }
-
-        .tambah-link:active {
-            transform: scale(0.95);
-        }
-
         /* Desain SFP Item yang lebih bersih */
         .sfp-item {
             margin-top: 25px;
             margin-bottom: 15px;
-        }
-
-        /* Tombol hapus disesuaikan agar sejajar dengan judul */
-        .btn-hapus {
-            background: #ef4444;
-            color: white;
-            border: none;
-            padding: 4px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 600;
-            transition: 0.2s;
-        }
-
-        .btn-hapus:hover {
-            background: #dc2626;
         }
 
         /* Tooltip Popover untuk info tombol Gunakan Data Terakhir */
@@ -178,7 +139,7 @@
                                             </button>
                                             <div class="tooltip-content-box">
                                                 <div style="font-weight: 600; color: #38bdf8; margin-bottom: 3px;">Fungsi Tombol:</div>
-                                                Mengisi otomatis No. Dokumen, Valuation Type, Tanggal, Lokasi Asal, Nama Engineer, dan Nama Manager dari data RMA yang terakhir kali Anda simpan.
+                                                Mengisi data umum dari RMA terakhir. Anda juga bisa memilih untuk mengisi merk perangkat; tipe, material number, dan SN tidak disalin.
                                             </div>
                                         </div>
                                     </div>
@@ -190,13 +151,13 @@
                                         placeholder="Contoh: RMA PO-12345 - POP Jakarta Pusat"
                                         value="{{ old('judul_rma') }}"
                                         maxlength="150">
-                                    <div class="field-description">Biarkan kosong untuk generate otomatis dari No. Dokumen + Lokasi</div>
+                                    <div class="field-description">Biarkan kosong untuk menggunakan No. IO.SP2K/SO/PO/ANDOP sebagai nama dokumen.</div>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="so_po">No. IO.SP2K/SO/PO/ANDOP <span>*</span></label>
                                     <input type="text" id="so_po" name="so_po" class="form-control"
-                                        placeholder="Masukkan nomor dokumen" required>
+                                        placeholder="Masukkan nomor projek" required>
                                 </div>
 
                                 <div class="form-group">
@@ -232,27 +193,10 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="merk">Merk <span>*</span></label>
-                                    <input type="text" id="merk" name="merk" class="form-control"
-                                        placeholder="Merk perangkat" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="type">Type <span>*</span></label>
-                                    <input type="text" id="type" name="type" class="form-control"
-                                        placeholder="Tipe perangkat" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="serial_number_primary">Serial Number (SN) / Batch <span>*</span></label>
-                                    <input type="text" id="serial_number_primary" name="serial_number"
-                                        class="form-control" placeholder="Contoh: SN-123456789" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="material_number">Material Number</label>
-                                    <input type="text" id="material_number" name="material_number"
-                                        class="form-control" placeholder="Opsional">
+                                    <label>Perangkat <span>*</span></label>
+                                    <div id="type-groups"></div>
+                                    <div class="field-description">Satu tipe bisa memiliki beberapa SN. Untuk tipe berbeda, tambahkan tipe perangkat baru; merk boleh sama.</div>
+                                    <button type="button" class="tambah-link" id="add-type">+ Tambah perangkat</button>
                                 </div>
 
                                 <div class="form-group">
@@ -328,27 +272,14 @@
                                 <div class="upload-header"
                                     style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 20px;">
                                     <div class="upload-title-area">
-                                        <label class="form-group" style="margin-bottom: 0; font-size: 16px;">Material
-                                            Utama <span>*</span></label>
-                                        <div class="field-description" style="margin-top: 2px;">Sesuai SN yang diinput
-                                            pada langkah sebelumnya</div>
+                                        <label class="form-group" style="margin-bottom: 0; font-size: 16px;">Foto Material
+                                            <span>*</span></label>
+                                        <div class="field-description" style="margin-top: 2px;">Pilih foto pada grup SN yang sesuai</div>
                                     </div>
-                                    <button type="button" id="tambahSfp" class="tambah-link">
-                                        Tambah SFP <i class="bi bi-plus-circle"></i>
-                                    </button>
                                 </div>
-
-                                <div class="upload-dropzone" id="dropzone">
-                                    <i class="bi bi-cloud-arrow-up dropzone-icon"></i>
-                                    <div class="dropzone-text" id="dropzoneText">Masukkan file disini</div>
-                                    <input type="file" id="fileInput" name="foto_material[]"
-                                        accept="image/jpeg,image/png,image/jpg,image/webp" style="display: none;">
-                                    <button type="button" class="btn-browse"
-                                        onclick="document.getElementById('fileInput').click()">Browse</button>
-                                </div>
+                                <div id="photo-groups"></div>
                                 <p style="font-size:0.75rem; color:#94a3b8; margin:6px 0 0;"><i class="bi bi-info-circle"></i> Maks. 2MB per foto, format JPG/PNG/WEBP</p>
 
-                                <div id="sfp-container" style="margin-top: 15px;"></div>
 
                                 <!-- PENGESAHAN: NAMA PEMOHON & SUPERVISOR/MANAGER -->
                                 <div style="margin-top: 25px; border-top: 1px solid #f1f5f9; padding-top: 20px;">
@@ -466,6 +397,44 @@
             const prevButton = document.getElementById('prevButton');
             const btnSubmitFinish = document.getElementById('btnSubmitFinish');
             const btnSubmitNext = document.getElementById('btnSubmitNext');
+            const typeGroups = document.getElementById('type-groups');
+            let typeCount = 0;
+            function addTypeGroup() {
+                const index = typeCount++;
+                const card = document.createElement('div');
+                card.className = 'form-card rma-type-group';
+                card.dataset.typeIndex = index;
+                card.dataset.nextSerial = '0';
+                card.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><strong>Perangkat ${index + 1}</strong>${index ? '<button type="button" class="btn-hapus remove-type">Hapus perangkat</button>' : ''}</div>
+                    <div class="form-group"><label>Merk *</label><input class="form-control type-merk" name="types[${index}][merk]" required placeholder="Merk perangkat"></div>
+                    <div class="form-group"><label>Tipe *</label><input class="form-control type-name" name="types[${index}][type]" required placeholder="Tipe perangkat"></div>
+                    <div class="form-group"><label>Material Number *</label><input class="form-control" name="types[${index}][material_number]" required placeholder="Material number perangkat"></div>
+                    <div class="serial-fields"><label>Serial Number (SN) *</label><div class="serial-list"></div><button type="button" class="tambah-link add-serial">+ Tambah SN</button></div>`;
+                typeGroups.appendChild(card);
+                addSerial(card, index, 0);
+            }
+            function addSerial(card, typeIndex, serialIndex) {
+                const wrap = document.createElement('div');
+                wrap.className = 'serial-row';
+                wrap.dataset.serialIndex = serialIndex;
+                wrap.style.cssText = 'display:flex;gap:8px;margin:8px 0';
+                wrap.innerHTML = `<input class="form-control serial-value" name="types[${typeIndex}][serial_numbers][${serialIndex}]" required placeholder="Contoh: SN-123456789"><button type="button" class="btn-hapus remove-serial">Hapus</button>`;
+                card.querySelector('.serial-list').appendChild(wrap);
+                card.dataset.nextSerial = String(Math.max(Number(card.dataset.nextSerial || 0), serialIndex + 1));
+            }
+            document.getElementById('add-type').addEventListener('click', addTypeGroup);
+            typeGroups.addEventListener('click', e => {
+                if (e.target.closest('.remove-type')) {
+                    e.target.closest('.rma-type-group').remove();
+                    saveHeaderCache();
+                }
+                if (e.target.closest('.add-serial')) {
+                    const card = e.target.closest('.rma-type-group');
+                    addSerial(card, Number(card.dataset.typeIndex), Number(card.dataset.nextSerial || 0));
+                }
+                if (e.target.closest('.remove-serial') && e.target.closest('.rma-type-group').querySelectorAll('.serial-row').length > 1) e.target.closest('.serial-row').remove();
+            });
+            addTypeGroup();
             const btnUseLastData = document.getElementById('btnUseLastData');
 
             // GUNAKAN DATA TERAKHIR
@@ -480,12 +449,14 @@
                 });
                 const valType = document.querySelector('input[name="valuation_type"]:checked');
                 if (valType) data['valuation_type'] = valType.value;
+                data['merk_list'] = Array.from(typeGroups.querySelectorAll('.rma-type-group .type-merk'), input => input.value.trim());
+                while (data['merk_list'].length && !data['merk_list'][data['merk_list'].length - 1]) data['merk_list'].pop();
                 try {
                     localStorage.setItem(CACHE_KEY, JSON.stringify(data));
                 } catch (e) {}
             }
 
-            function applyLastData() {
+            async function applyLastData() {
                 try {
                     const raw = localStorage.getItem(CACHE_KEY);
                     if (!raw) {
@@ -500,6 +471,19 @@
                         return;
                     }
                     const data = JSON.parse(raw);
+                    const choice = await Swal.fire({
+                        title: 'Gunakan Data Terakhir',
+                        html: '<label for="includeLastMerk" style="display:flex;align-items:flex-start;gap:10px;text-align:left;line-height:1.5;cursor:pointer"><input id="includeLastMerk" type="checkbox" style="margin-top:4px"><span>Gunakan juga merk dari perangkat pada RMA terakhir.<br><small style="color:#64748b">Tipe, material number, dan SN tidak akan disalin.</small></span></label>',
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: 'Gunakan Data',
+                        cancelButtonText: 'Batal',
+                        confirmButtonColor: '#1688e8',
+                        cancelButtonColor: '#64748b',
+                        preConfirm: () => ({ includeMerk: document.getElementById('includeLastMerk')?.checked ?? false })
+                    });
+                    if (!choice.isConfirmed) return;
+
                     let filledCount = 0;
                     headerFields.forEach(id => {
                         const el = document.getElementById(id);
@@ -516,6 +500,20 @@
                             document.querySelector('.radio-group')?.classList.remove('is-invalid');
                             filledCount++;
                         }
+                    }
+
+                    if (choice.value?.includeMerk && Array.isArray(data['merk_list'])) {
+                        const brands = data['merk_list'];
+                        let groups = Array.from(typeGroups.querySelectorAll('.rma-type-group'));
+                        while (groups.length < brands.length) {
+                            addTypeGroup();
+                            groups = Array.from(typeGroups.querySelectorAll('.rma-type-group'));
+                        }
+                        brands.forEach((merk, index) => {
+                            if (!merk) return;
+                            const input = groups[index]?.querySelector('.type-merk');
+                            if (input) { input.value = merk; filledCount++; }
+                        });
                     }
 
                     if (filledCount > 0) {
@@ -544,6 +542,9 @@
                     el.addEventListener('input', saveHeaderCache);
                     el.addEventListener('change', saveHeaderCache);
                 }
+            });
+            typeGroups.addEventListener('input', event => {
+                if (event.target.matches('.type-merk')) saveHeaderCache();
             });
             document.querySelectorAll('input[name="valuation_type"]').forEach(radio => {
                 radio.addEventListener('change', saveHeaderCache);
@@ -619,26 +620,10 @@
                     isValid = false;
                 }
 
-                const merk = document.getElementById('merk');
-                if (!merk.value.trim()) {
-                    merk.classList.add('is-invalid');
-                    errors.push('Merk perangkat wajib diisi');
-                    isValid = false;
-                }
-
-                const type = document.getElementById('type');
-                if (!type.value.trim()) {
-                    type.classList.add('is-invalid');
-                    errors.push('Tipe perangkat wajib diisi');
-                    isValid = false;
-                }
-
-                const serialNumber = document.getElementById('serial_number_primary');
-                if (!serialNumber.value.trim()) {
-                    serialNumber.classList.add('is-invalid');
-                    errors.push('Serial Number (SN) wajib diisi');
-                    isValid = false;
-                }
+                typeGroups.querySelectorAll('input[required]').forEach(input => {
+                    if (!input.value.trim()) { input.classList.add('is-invalid'); isValid = false; }
+                });
+                if (typeGroups.querySelectorAll('.rma-type-group').length === 0) { errors.push('Tambahkan minimal satu tipe perangkat'); isValid = false; }
 
                 const description = document.getElementById('description');
                 if (!description.value.trim()) {
@@ -662,6 +647,30 @@
 
                 step1.style.display = 'none';
                 step2.style.display = 'block';
+                const photoGroups = document.getElementById('photo-groups');
+                photoGroups.innerHTML = '';
+                typeGroups.querySelectorAll('.rma-type-group').forEach(card => {
+                    const ti = Number(card.dataset.typeIndex);
+                    const typeName = card.querySelector('.type-name').value;
+                    card.querySelectorAll('.serial-row').forEach(row => {
+                        const si = Number(row.dataset.serialIndex);
+                        const sn = row.querySelector('.serial-value');
+                        const group = document.createElement('div'); group.className = 'form-card';
+                        group.innerHTML = `<strong></strong><div class="upload-dropzone" style="margin-top:10px"><i class="bi bi-cloud-arrow-up dropzone-icon"></i><div class="dropzone-text">Pilih foto (bisa lebih dari satu)</div><input type="file" accept="image/jpeg,image/png,image/jpg,image/webp" multiple style="display:none"><button type="button" class="btn-browse">Browse</button></div>`;
+                        group.querySelector('strong').textContent = `${typeName} · ${sn.value}`;
+                        const dz = group.querySelector('.upload-dropzone'), input = group.querySelector('input[type=file]');
+                        input.name = `photos[${ti}][${si}][]`;
+                        dz.addEventListener('click', e => { if (e.target === dz || e.target.closest('.dropzone-icon,.dropzone-text')) input.click(); });
+                        group.querySelector('.btn-browse').addEventListener('click', e => { e.stopPropagation(); input.click(); });
+                        input.addEventListener('change', () => {
+                            const hasFiles = input.files.length > 0;
+                            group.querySelector('.dropzone-text').textContent = hasFiles ? Array.from(input.files).map(f=>f.name).join(', ') : 'Pilih foto (bisa lebih dari satu)';
+                            dz.style.borderColor = hasFiles ? '#16a34a' : '';
+                            dz.style.backgroundColor = hasFiles ? '#f0fdf4' : '';
+                        });
+                        photoGroups.appendChild(group);
+                    });
+                });
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
 
@@ -768,10 +777,13 @@
                         // Tangani berdasarkan mode (TIDAK ADA POP-UP TAB PDF LAGI)
                         if (currentSubmitMode === 'next') {
                             // Reset field khusus unit
-                            ['merk', 'type', 'serial_number_primary', 'material_number', 'description', 'alasan'].forEach(id => {
+                            ['description', 'alasan'].forEach(id => {
                                 const el = document.getElementById(id);
                                 if (el) el.value = '';
                             });
+                            typeGroups.innerHTML = '';
+                            typeCount = 0;
+                            addTypeGroup();
                             
                             // Reset checkboxes kerusakan
                             if (typeof damageCheckboxes !== 'undefined' && damageCheckboxes) {
@@ -780,17 +792,7 @@
                             if (isMaterialRusakInput) isMaterialRusakInput.value = '0';
 
                             // Reset file foto utama
-                            const primaryFileEl = document.getElementById('fileInput');
-                            if (primaryFileEl) primaryFileEl.value = '';
-                            const dropzoneTextEl = document.getElementById('dropzoneText');
-                            if (dropzoneTextEl) {
-                                dropzoneTextEl.innerText = 'Masukkan file disini';
-                                dropzoneTextEl.style.color = '#64748b';
-                            }
-
-                            // Bersihkan SFP tambahan
-                            const sfpContainerEl = document.getElementById('sfp-container');
-                            if (sfpContainerEl) sfpContainerEl.innerHTML = '';
+                            document.getElementById('photo-groups').innerHTML = '';
 
                             // Kembali ke Langkah 1 dengan halus
                             step2.style.display = 'none';
@@ -805,7 +807,7 @@
                                 confirmButtonColor: '#0284c7',
                                 confirmButtonText: 'Lanjut Isi Unit Berikutnya'
                             }).then(() => {
-                                document.getElementById('serial_number_primary').focus();
+                                typeGroups.querySelector('.serial-value')?.focus();
                             });
                             return;
                         } else {
@@ -825,9 +827,6 @@
                             'tanggal': 'tanggal',
                             'lokasi_asal': 'lokasi_asal',
                             'nama_manager': 'nama_manager',
-                            'merk': 'merk',
-                            'type': 'type',
-                            'serial_number': 'serial_number_primary',
                             'description': 'description',
                             'nama_pemohon': 'nama_pemohon',
                         };
@@ -843,14 +842,14 @@
                             if (k === 'valuation_type') {
                                 document.querySelector('.radio-group')?.classList.add('is-invalid');
                             }
-                            if (k.startsWith('foto_material')) {
-                                document.getElementById('dropzone')?.classList.add('is-invalid');
+                            if (k.startsWith('photos')) {
+                                document.getElementById('photo-groups')?.classList.add('is-invalid');
                                 hasStep2Error = true;
                             }
-                            if (['so_po','valuation_type','tanggal','lokasi_asal','merk','type','serial_number','description'].includes(k)) {
+                            if (['so_po','valuation_type','tanggal','lokasi_asal','description'].includes(k) || k.startsWith('types')) {
                                 hasStep1Error = true;
                             }
-                            if (k.startsWith('foto_material') || k === 'nama_pemohon' || k === 'nama_manager') {
+                            if (k.startsWith('photos') || k === 'nama_pemohon' || k === 'nama_manager') {
                                 hasStep2Error = true;
                             }
                         });
@@ -926,50 +925,6 @@
                     const isDamaged = Array.from(damageCheckboxes).some(c => c.checked);
                     isMaterialRusakInput.value = isDamaged ? '1' : '0';
                 });
-            });
-
-            // 5. LOGIKA DROPZONE MATERIAL UTAMA
-            const fileInput = document.getElementById('fileInput');
-            const dropzoneText = document.getElementById('dropzoneText');
-
-            fileInput.addEventListener('change', function(e) {
-                if (e.target.files.length > 0) {
-                    dropzoneText.innerText = e.target.files[0].name;
-                    dropzoneText.style.color = '#10b981';
-                } else {
-                    dropzoneText.innerText = 'Masukkan file disini';
-                    dropzoneText.style.color = '#64748b';
-                }
-            });
-
-            // 6. TAMBAH SFP
-            const tambahSfpBtn = document.getElementById('tambahSfp');
-            const sfpContainer = document.getElementById('sfp-container');
-
-            tambahSfpBtn.addEventListener('click', function() {
-                const sfpBlock = document.createElement('div');
-                sfpBlock.className = 'sfp-item';
-
-                sfpBlock.innerHTML = `
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                            <label style="margin-bottom: 0; font-size: 16px;">Foto Material Tambahan (SFP) <span>*</span></label>
-                            <button type="button" class="btn-hapus" onclick="this.closest('.sfp-item').remove()">Hapus <i class="bi bi-trash3-fill"></i></button>
-                        </div>
-                        
-                        <div class="upload-dropzone">
-                            <i class="bi bi-cloud-arrow-up dropzone-icon"></i>
-                            <div class="dropzone-text">Masukkan file disini</div>
-                            
-                            <input type="file" name="foto_material[]" accept="image/jpeg,image/png,image/jpg,image/webp" style="display: none;" 
-                                onchange="this.previousElementSibling.innerText = this.files.length ? this.files[0].name : 'Masukkan file disini'; this.previousElementSibling.style.color = this.files.length ? '#10b981' : '#64748b';">
-                            
-                            <button type="button" class="btn-browse" onclick="this.previousElementSibling.click()">Browse</button>
-                        </div>
-                        <p style="font-size:0.75rem; color:#94a3b8; margin:6px 0 0;"><i class="bi bi-info-circle"></i> Maks. 2MB, format JPG/PNG/WEBP</p>
-                    </div>
-                `;
-                sfpContainer.appendChild(sfpBlock);
             });
 
             // 7. ALERT CLOSE
