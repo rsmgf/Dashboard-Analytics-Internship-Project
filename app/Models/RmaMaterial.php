@@ -13,4 +13,9 @@ class RmaMaterial extends Model
     {
         return $this->belongsTo(Rma::class);
     }
+
+    public function serial()
+    {
+        return $this->belongsTo(RmaSerial::class, 'rma_serial_id');
+    }
 }

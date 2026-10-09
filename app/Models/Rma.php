@@ -15,6 +15,11 @@ class Rma extends Model
         return $this->hasMany(RmaMaterial::class);
     }
 
+    public function types()
+    {
+        return $this->hasMany(RmaType::class)->orderBy('sort_order');
+    }
+
     // User pembuat RMA
     public function user()
     {

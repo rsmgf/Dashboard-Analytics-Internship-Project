@@ -155,6 +155,13 @@
                                 <span>Download Terpilih <span class="badge-count"><span id="batchCount">0</span> PDF</span></span>
                             </button>
 
+                            @can('rma.delete')
+                                <button type="button" id="btnBatchDelete" class="btn-batch-delete" style="display:none;">
+                                    <i class="bi bi-trash3-fill"></i>
+                                    <span>Hapus Terpilih <span class="badge-count"><span id="batchDeleteCount">0</span> RMA</span></span>
+                                </button>
+                            @endcan
+
                             @if ($filter === 'hari_ini' && $rmas->total() > 0)
                                 <button type="button" id="btnDownloadAllToday" class="btn-batch-download-modern btn-batch-today" title="Download seluruh {{ $rmas->total() }} RMA hari ini dalam satu file ZIP">
                                     <i class="bi bi-file-earmark-zip-fill"></i>
@@ -286,11 +293,14 @@
                                     @php
                                         $createdDate = $rma->created_at ? $rma->created_at->format('Y-m-d') : '';
                                         $tglDoc = $rma->tanggal ? $rma->tanggal->format('Y-m-d') : '';
-                                        $judulRma = $rma->judul_rma ?? ('RMA #' . $rma->id);
+                                        $judulRma = $rma->judul_rma ?: ($rma->so_po ?: ('RMA #' . $rma->id));
+                                        $canDeleteRma = $isSuperAdminOrManager
+                                            || ($rma->user_id && $rma->user_id === auth()->id())
+                                            || (!$rma->user_id && $rma->nama_pemohon === auth()->user()->name);
                                     @endphp
                                     <tr>
                                         <td class="td-check">
-                                            <input type="checkbox" class="rma-check" value="{{ $rma->id }}" data-created="{{ $createdDate }}" data-tanggal="{{ $tglDoc }}" aria-label="Pilih {{ $judulRma }}">
+                                            <input type="checkbox" class="rma-check" value="{{ $rma->id }}" data-created="{{ $createdDate }}" data-tanggal="{{ $tglDoc }}" data-can-delete="{{ $canDeleteRma ? '1' : '0' }}" aria-label="Pilih {{ $judulRma }}">
                                         </td>
                                         <td class="td-no" data-label="No.">{{ $rmas->firstItem() + $loop->index }}</td>
                                         <td class="td-judul">
@@ -305,8 +315,14 @@
                                             {{ $rma->lokasi_asal ?? '-' }}
                                         </td>
                                         <td class="td-merk" data-label="Merk/Type">
-                                            <span class="cell-primary">{{ $rma->merk ?? '-' }}</span>
-                                            <span class="text-sub">{{ $rma->type ?? '-' }}</span>
+                                            @php
+                                                $rmaTypes = $rma->types;
+                                                $brands = $rmaTypes->pluck('merk')->unique()->values();
+                                                $typePreview = $rmaTypes->first()?->type;
+                                                $remainingTypes = max(0, $rmaTypes->count() - 1);
+                                            @endphp
+                                            <span class="cell-primary">{{ $brands->isNotEmpty() ? $brands->implode(', ') : ($rma->merk ?? '-') }}</span>
+                                            <span class="text-sub">{{ $typePreview ?: ($rma->type ?? '-') }}{{ $remainingTypes ? ' +' . $remainingTypes : '' }}</span>
                                         </td>
                                         @if ($isSuperAdminOrManager)
                                             <td class="td-user" data-label="Dibuat Oleh">
@@ -346,12 +362,7 @@
                                                     @endif
                                                 @endcan
                                                 @can('rma.delete')
-                                                    @php
-                                                        $canDelete = $isSuperAdminOrManager
-                                                            || ($rma->user_id && $rma->user_id === auth()->id())
-                                                            || (!$rma->user_id && $rma->nama_pemohon === auth()->user()->name);
-                                                    @endphp
-                                                    @if ($canDelete)
+                                                    @if ($canDeleteRma)
                                                         <button type="button" class="btn-hapus"
                                                             onclick="confirmDeleteRma('{{ route('rma.destroy', $rma->id) }}', '{{ addslashes($rma->judul_rma ?? 'RMA #' . $rma->id) }}')"
                                                             title="Hapus RMA" aria-label="Hapus RMA {{ $rma->judul_rma }}">
@@ -405,6 +416,14 @@
         <input type="hidden" name="tampil" value="{{ request('tampil', 'semua') }}">
     </form>
 
+    @can('rma.delete')
+        <form id="batchDeleteForm" action="{{ route('rma.bulk-destroy') }}" method="POST" style="display:none;">
+            @csrf
+            @method('DELETE')
+            <div id="batchDeleteIds"></div>
+        </form>
+    @endcan
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -413,6 +432,10 @@
             const btnSelectAll = document.getElementById('btnSelectAll');
             const btnDeselectAll = document.getElementById('btnDeselectAll');
             const btnBatchDownload = document.getElementById('btnBatchDownload');
+            const btnBatchDelete = document.getElementById('btnBatchDelete');
+            const batchDeleteCount = document.getElementById('batchDeleteCount');
+            const batchDeleteForm = document.getElementById('batchDeleteForm');
+            const batchDeleteIds = document.getElementById('batchDeleteIds');
             const btnDownloadAllToday = document.getElementById('btnDownloadAllToday');
             const batchCount = document.getElementById('batchCount');
             const batchDownloadForm = document.getElementById('batchDownloadForm');
@@ -425,6 +448,7 @@
                 const checked = Array.from(rmaChecks).filter(c => c.checked);
                 const count = checked.length;
                 if (batchCount) batchCount.textContent = count;
+                if (batchDeleteCount) batchDeleteCount.textContent = count;
 
                 if (count > 0) {
                     if (btnBatchDownload) btnBatchDownload.style.display = 'inline-flex';
@@ -432,6 +456,13 @@
                 } else {
                     if (btnBatchDownload) btnBatchDownload.style.display = 'none';
                     if (btnDeselectAll) btnDeselectAll.style.display = 'none';
+                }
+
+                if (btnBatchDelete) {
+                    btnBatchDelete.style.display = count > 0 ? 'inline-flex' : 'none';
+                    const canDeleteAll = checked.every(c => c.dataset.canDelete === '1');
+                    btnBatchDelete.disabled = !canDeleteAll;
+                    btnBatchDelete.title = canDeleteAll ? 'Hapus RMA yang dipilih' : 'Pilihan mencakup RMA yang bukan milik Anda';
                 }
 
                 if (checkAllHead) {
@@ -480,6 +511,37 @@
                     if (batchModeInput) batchModeInput.value = '';
                     batchIdsInput.value = selectedIds.join(',');
                     batchDownloadForm.submit();
+                });
+            }
+
+            if (btnBatchDelete) {
+                btnBatchDelete.addEventListener('click', async function() {
+                    const selected = Array.from(rmaChecks).filter(c => c.checked);
+                    if (!selected.length || selected.some(c => c.dataset.canDelete !== '1')) return;
+
+                    const result = await Swal.fire({
+                        title: `Hapus ${selected.length} RMA?`,
+                        html: 'Semua data dan foto material dari RMA yang dipilih akan dihapus permanen.',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#dc2626',
+                        cancelButtonColor: '#64748b',
+                        confirmButtonText: '<i class="bi bi-trash3-fill"></i> Ya, hapus semua',
+                        cancelButtonText: 'Batal',
+                        reverseButtons: true,
+                        focusCancel: true
+                    });
+
+                    if (!result.isConfirmed || !batchDeleteForm || !batchDeleteIds) return;
+                    batchDeleteIds.replaceChildren();
+                    selected.forEach(checkbox => {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'ids[]';
+                        input.value = checkbox.value;
+                        batchDeleteIds.appendChild(input);
+                    });
+                    batchDeleteForm.submit();
                 });
             }
 

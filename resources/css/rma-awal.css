@@ -574,6 +574,51 @@ body {
     box-shadow: 0 5px 14px rgba(0, 91, 212, 0.32);
 }
 
+.btn-batch-delete {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 16px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #ef4444, #b91c1c);
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(185, 28, 28, 0.2);
+    transition: all 0.25s ease;
+    white-space: nowrap;
+    animation: popIn 0.25s ease-out;
+}
+
+.btn-batch-delete:hover:not(:disabled) {
+    background: linear-gradient(135deg, #dc2626, #991b1b);
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(185, 28, 28, 0.28);
+}
+
+.btn-batch-delete:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.btn-batch-delete i {
+    font-size: 14px;
+}
+
+.btn-batch-delete .badge-count {
+    background: rgba(255, 255, 255, 0.22);
+    color: #ffffff;
+    padding: 1px 7px;
+    border-radius: 12px;
+    font-size: 11.5px;
+    font-weight: 700;
+    margin-left: 2px;
+}
+
 .btn-batch-download-modern i {
     font-size: 14px;
 }
@@ -1163,7 +1208,8 @@ body.sidebar-collapsed .sidebar-logo img {
         font-size: var(--fs-xs, 12px);
     }
 
-    .btn-batch-download-modern {
+    .btn-batch-download-modern,
+    .btn-batch-delete {
         width: 100%;
         justify-content: center;
         min-height: var(--control-h, 42px);
