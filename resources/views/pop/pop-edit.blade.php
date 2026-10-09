@@ -68,11 +68,29 @@
 
                         <div class="add-pop-form-grid">
 
+                            @php
+                                $provinceOptions = ['Jambi', 'Sumsel'];
+                                $jambiCities = ['Batanghari', 'Bungo', 'Jambi', 'Kerinci', 'Merangin', 'Muaro Jambi', 'Sarolangun', 'Sungai Penuh', 'Tanjung Jabung Barat', 'Tanjung Jabung Timur', 'Tebo'];
+                                $sumselCities = ['Lubuk Linggau', 'Musi Rawas'];
+                                $oldProvince = old('provinsi', $pop->provinsi);
+                                $provinceIsKnown = in_array($oldProvince, $provinceOptions, true);
+                                $cityOptions = $oldProvince === 'Jambi' ? $jambiCities : ($oldProvince === 'Sumsel' ? $sumselCities : []);
+                                $oldCity = old('kota_kabupaten', $pop->kota_kabupaten);
+                                $cityIsKnown = in_array($oldCity, $cityOptions, true);
+                            @endphp
                             <div class="add-pop-group">
                                 <label for="provinsi">Provinsi <span class="add-pop-required">*</span></label>
-                                <input type="text" id="provinsi" name="provinsi"
-                                    class="add-pop-input {{ $errors->has('provinsi') ? 'is-invalid' : '' }}"
-                                    value="{{ old('provinsi', $pop->provinsi) }}" placeholder="Contoh: Jambi" autocomplete="off" required>
+                                <div class="add-pop-select-wrapper">
+                                    <select id="provinsi" name="provinsi" class="add-pop-select {{ $errors->has('provinsi') ? 'is-invalid' : '' }}" required>
+                                        <option value="" disabled {{ $oldProvince === '' ? 'selected' : '' }}>Pilih provinsi</option>
+                                        @foreach ($provinceOptions as $option)
+                                            <option value="{{ $option }}" {{ $oldProvince === $option ? 'selected' : '' }}>{{ $option }}</option>
+                                        @endforeach
+                                        <option value="__other__" {{ !$provinceIsKnown && $oldProvince !== '' ? 'selected' : '' }}>Lainnya</option>
+                                    </select>
+                                    <i class="bi bi-chevron-down add-pop-select-arrow"></i>
+                                </div>
+                                <input type="text" id="provinsi_lainnya" class="add-pop-input add-pop-other-input" value="{{ !$provinceIsKnown ? $oldProvince : '' }}" placeholder="Masukkan nama provinsi" autocomplete="off" {{ !$provinceIsKnown && $oldProvince !== '' ? 'required' : 'hidden' }}>
                                 @error('provinsi')
                                     <span class="add-pop-error">{{ $message }}</span>
                                 @enderror
@@ -80,10 +98,17 @@
 
                             <div class="add-pop-group">
                                 <label for="kota_kabupaten">Kota/Kabupaten <span class="add-pop-required">*</span></label>
-                                <input type="text" id="kota_kabupaten" name="kota_kabupaten"
-                                    class="add-pop-input {{ $errors->has('kota_kabupaten') ? 'is-invalid' : '' }}"
-                                    value="{{ old('kota_kabupaten', $pop->kota_kabupaten) }}"
-                                    placeholder="Contoh: Kota Jambi" autocomplete="off" required>
+                                <div class="add-pop-select-wrapper">
+                                    <select id="kota_kabupaten" name="kota_kabupaten" class="add-pop-select {{ $errors->has('kota_kabupaten') ? 'is-invalid' : '' }}" data-selected="{{ $oldCity === '' ? '' : ($cityIsKnown ? $oldCity : '__other__') }}" required>
+                                        <option value="" disabled {{ $oldCity === '' ? 'selected' : '' }}>Pilih provinsi terlebih dahulu</option>
+                                        @foreach ($cityOptions as $option)
+                                            <option value="{{ $option }}" {{ $oldCity === $option ? 'selected' : '' }}>{{ $option }}</option>
+                                        @endforeach
+                                        <option value="__other__" {{ !$cityIsKnown && $oldCity !== '' ? 'selected' : '' }}>Lainnya</option>
+                                    </select>
+                                    <i class="bi bi-chevron-down add-pop-select-arrow"></i>
+                                </div>
+                                <input type="text" id="kota_kabupaten_lainnya" class="add-pop-input add-pop-other-input" value="{{ !$cityIsKnown ? $oldCity : '' }}" placeholder="Masukkan nama kota/kabupaten" autocomplete="off" {{ !$cityIsKnown && $oldCity !== '' ? 'required' : 'hidden' }}>
                                 @error('kota_kabupaten')
                                     <span class="add-pop-error">{{ $message }}</span>
                                 @enderror
@@ -187,6 +212,53 @@
     </div>
 
     <script>
+        (() => {
+            const provinces = document.getElementById('provinsi');
+            const provinceOther = document.getElementById('provinsi_lainnya');
+            const cities = document.getElementById('kota_kabupaten');
+            const cityOther = document.getElementById('kota_kabupaten_lainnya');
+            const cityLists = {
+                Jambi: ['Batanghari', 'Bungo', 'Jambi', 'Kerinci', 'Merangin', 'Muaro Jambi', 'Sarolangun', 'Sungai Penuh', 'Tanjung Jabung Barat', 'Tanjung Jabung Timur', 'Tebo'],
+                Sumsel: ['Lubuk Linggau', 'Musi Rawas'],
+            };
+
+            const setOtherField = (select, input) => {
+                const isOther = select.value === '__other__';
+                input.hidden = !isOther;
+                input.required = isOther;
+                if (!isOther) input.value = '';
+            };
+            const populateCities = (selected = '') => {
+                const choices = cityLists[provinces.value] || [];
+                cities.disabled = !provinces.value;
+                cities.replaceChildren(new Option(choices.length ? 'Pilih kota/kabupaten' : 'Pilih provinsi terlebih dahulu', '', true, !selected));
+                cities.options[0].disabled = true;
+                choices.forEach((city) => cities.add(new Option(city, city, false, city === selected)));
+                cities.add(new Option('Lainnya', '__other__', false, selected === '__other__'));
+                cities.value = selected && [...cities.options].some((option) => option.value === selected) ? selected : '';
+                setOtherField(cities, cityOther);
+            };
+
+            provinces.addEventListener('change', () => {
+                setOtherField(provinces, provinceOther);
+                populateCities();
+            });
+            cities.addEventListener('change', () => setOtherField(cities, cityOther));
+            const initialCity = cities.dataset.selected || cities.value;
+            if (provinces.value === '__other__') setOtherField(provinces, provinceOther);
+            populateCities(initialCity);
+
+            document.getElementById('editPopForm').addEventListener('submit', function () {
+                [[provinces, provinceOther], [cities, cityOther]].forEach(([select, input]) => {
+                    if (select.value !== '__other__') return;
+                    const value = input.value.trim();
+                    let option = [...select.options].find((item) => item.value === value);
+                    if (!option) option = select.add(new Option(value, value));
+                    select.value = value;
+                });
+            }, true);
+        })();
+
         // Konfirmasi SweetAlert2 sebelum form disubmit
         document.getElementById('editPopForm').addEventListener('submit', function(e) {
             e.preventDefault();
