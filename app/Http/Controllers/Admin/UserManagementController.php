@@ -71,10 +71,16 @@ class UserManagementController extends Controller
 
         Cache::flush();
 
+        $roleLabel = [
+            'manajer' => 'Eksekutif',
+            'super_admin' => 'Administrator',
+        ][$request->role] ?? ucfirst(str_replace('_', ' ', $request->role));
+
         return response()->json([
             'success'   => true,
-            'message'   => "Role {$user->name} berhasil diubah ke {$request->role}.",
+            'message'   => "Role {$user->name} berhasil diubah ke {$roleLabel}.",
             'role'      => $request->role,
+            'role_label'=> $roleLabel,
             'is_active' => true,
         ]);
     }
@@ -95,12 +101,13 @@ class UserManagementController extends Controller
 
         $roleName = $user->roles->first()?->name;
         $roleLabel = ($user->is_active && $roleName)
-            ? ucfirst(str_replace('_', ' ', $roleName))
+            ? (['manajer' => 'Eksekutif', 'super_admin' => 'Administrator'][$roleName] ?? ucfirst(str_replace('_', ' ', $roleName)))
             : '-';
 
         return response()->json([
             'success'   => true,
             'is_active' => $user->is_active,
+            'role_label' => $roleLabel,
             'message'   => $user->is_active
                 ? "{$user->name} berhasil diaktifkan."
                 : "{$user->name} berhasil dinonaktifkan.",

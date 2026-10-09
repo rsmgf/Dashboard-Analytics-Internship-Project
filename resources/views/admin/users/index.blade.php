@@ -111,7 +111,7 @@
                                 @php
                                     $roleName = $user->roles->first()?->name;
                                     $roleLabel = ($user->is_active && $roleName) ?
-                                        ucfirst(str_replace('_', ' ', $roleName)) :
+                                        (['manajer' => 'Eksekutif', 'super_admin' => 'Administrator'][$roleName] ?? ucfirst(str_replace('_', ' ', $roleName))) :
                                         '-';
                                 @endphp
                                 <tr data-user-id="{{ $user->id }}" data-name="{{ $user->name }}"
@@ -183,8 +183,8 @@
                         <option value="" disabled>Pilih</option>
                         <option value="karyawan">Karyawan</option>
                         <option value="teknisi">Teknisi</option>
-                        <option value="manajer">Manajer</option>
-                        <option value="super_admin">Super Admin</option>
+                        <option value="manajer">Eksekutif</option>
+                        <option value="super_admin">Administrator</option>
                     </select>
                 </div>
             </div>
@@ -198,6 +198,8 @@
         const CSRF_TOKEN = '{{ csrf_token() }}';
         const updateRoleUrlTemplate = "{{ route('admin.users.updateRole', ['user' => '__ID__']) }}";
         const toggleStatusUrlTemplate = "{{ route('admin.users.toggleStatus', ['user' => '__ID__']) }}";
+        const roleDisplayLabels = { manajer: 'Eksekutif', super_admin: 'Administrator' };
+        const displayRoleLabel = role => roleDisplayLabels[role] || role.charAt(0).toUpperCase() + role.slice(1).replace(/_/g, ' ');
 
         // ---- FILTER: search & status → reload via query string (server-side) ----
         function debounce(fn, delay) {
@@ -259,7 +261,7 @@
             Swal.fire({
                 icon: 'question',
                 title: 'Yakin Ingin Mengganti Role?',
-                html: `Role user <strong>${inputName}</strong> akan diubah menjadi <strong>${selectedRole}</strong>.`,
+                html: `Role user <strong>${inputName}</strong> akan diubah menjadi <strong>${displayRoleLabel(selectedRole)}</strong>.`,
                 showCancelButton: true,
                 confirmButtonText: 'Ya, Ganti Role',
                 cancelButtonText: 'Batal',
@@ -287,7 +289,7 @@
                         // update DOM sesuai response, tanpa perlu reload halaman
                         selectedRow.dataset.role = selectedRole;
                         selectedRow.querySelector('.current-role').textContent =
-                            selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1).replace('_', ' ');
+                            displayRoleLabel(selectedRole);
 
                         const statusBtn = selectedRow.querySelector('.status .btn-status');
                         statusBtn.classList.remove('inactive');
