@@ -26,7 +26,9 @@ class KwhController extends Controller
         $pop = Pop::findOrFail($pop_id);
         $count = Kwh::where('pop_id', $pop->id)->count();
         $suggestedNomorKwh = $pop->kode_pop . '_KWH' . str_pad($count + 1, 2, '0', STR_PAD_LEFT);
-        return view('pop.kwh.kwh-create', compact('pop', 'suggestedNomorKwh'));
+        $arresterOptions = Kwh::query()->whereNotNull('merk_type_arrester')->where('merk_type_arrester', '<>', '')
+            ->distinct()->orderBy('merk_type_arrester')->pluck('merk_type_arrester');
+        return view('pop.kwh.kwh-create', compact('pop', 'suggestedNomorKwh', 'arresterOptions'));
     }
 
     // 3. Simpan kWh baru beserta foto-fotonya
@@ -59,6 +61,7 @@ class KwhController extends Controller
                 'pic' => $validated['pic'],
                 'id_customer_pln' => $validated['id_customer_pln'],
                 'tanggal_pemeriksaan' => $validated['tanggal_pemeriksaan'],
+                'tanggal_pemasangan' => $validated['tanggal_pemasangan'] ?? null,
                 'daya_ps_gi' => $dayaPsGi,
                 'mcb_utama' => $validated['mcb_utama'],
                 'jumlah_phasa' => $validated['jumlah_phasa'],
@@ -126,8 +129,10 @@ class KwhController extends Controller
     {
         $pop = Pop::findOrFail($pop_id);
         $kwh = Kwh::where('pop_id', $pop_id)->with('photos')->findOrFail($id);
+        $arresterOptions = Kwh::query()->whereNotNull('merk_type_arrester')->where('merk_type_arrester', '<>', '')
+            ->distinct()->orderBy('merk_type_arrester')->pluck('merk_type_arrester');
 
-        return view('pop.kwh.kwh-edit', compact('pop', 'kwh'));
+        return view('pop.kwh.kwh-edit', compact('pop', 'kwh', 'arresterOptions'));
     }
 
     // 6. Update kWh
@@ -157,6 +162,7 @@ class KwhController extends Controller
                 'pic' => $validated['pic'],
                 'id_customer_pln' => $validated['id_customer_pln'],
                 'tanggal_pemeriksaan' => $validated['tanggal_pemeriksaan'],
+                'tanggal_pemasangan' => $validated['tanggal_pemasangan'] ?? null,
                 'daya_ps_gi' => $dayaPsGi,
                 'mcb_utama' => $validated['mcb_utama'],
                 'jumlah_phasa' => $validated['jumlah_phasa'],

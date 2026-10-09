@@ -10,7 +10,9 @@
     @vite([
         'resources/css/sidebar.css',
         'resources/css/battery-create.css',
-        'resources/css/battery-detail.css'
+        'resources/css/battery-detail.css',
+        'resources/css/device-form-consistency.css',
+        'resources/js/device-datalist.js'
     ])
 </head>
 <body>
@@ -89,6 +91,21 @@
                         
                         <div class="checklist-table-container">
                             <div class="checklist-row">
+                                <div class="checklist-label">Tanggal Pemasangan</div>
+                                <div class="checklist-field">
+                                    <input type="date" name="tanggal_pemasangan" class="table-input" value="{{ old('tanggal_pemasangan', $battery->tanggal_pemasangan?->format('Y-m-d')) }}">
+                                    <small>Opsional. Umur perangkat dihitung otomatis.</small>
+                                    @error('tanggal_pemasangan') <span class="text-danger">{{ $message }}</span> @enderror
+                                </div>
+                            </div>
+                            <div class="checklist-row">
+                                <div class="checklist-label">Tanggal Pemeriksaan</div>
+                                <div class="checklist-field">
+                                    <input type="date" name="tanggal_pemeriksaan" class="table-input" value="{{ old('tanggal_pemeriksaan', $battery->tanggal_pemeriksaan?->format('Y-m-d')) }}">
+                                    @error('tanggal_pemeriksaan') <span class="text-danger">{{ $message }}</span> @enderror
+                                </div>
+                            </div>
+                            <div class="checklist-row">
                                 <div class="checklist-label">Nomor Recti <span class="required">*</span></div>
                                 <div class="checklist-field">
                                     <select id="rectifier_id" name="rectifier_id" class="table-input @error('rectifier_id') is-invalid @enderror" required>
@@ -120,7 +137,7 @@
                                 <div class="checklist-field">
                                     @php
                                         $currentMerk = old('merk_battery', $battery->merk_battery);
-                                        $standardBrands = ['Sacred Sun', 'BSB', 'Fortis Power', 'Monolite', 'Nagoya', 'Narada', 'Nippres', 'Sinergi', 'Vision', 'Shoto', 'Coslight', 'Leoch', 'Huawei', 'ZTE'];
+                                        $standardBrands = collect(['Sacred Sun', 'BSB', 'Fortis Power', 'Monolite', 'Nagoya', 'Narada', 'Nippres', 'Sinergi', 'Vision', 'Shoto', 'Coslight', 'Leoch', 'Huawei', 'ZTE'])->merge($batteryBrands)->unique()->values();
                                         $isCustomBrand = !empty($currentMerk) && !collect($standardBrands)->contains(fn($b) => strcasecmp($b, $currentMerk) === 0);
                                     @endphp
                                     <select id="merk_battery" name="merk_battery" class="table-input @error('merk_battery') is-invalid @enderror" required onchange="handleMerkChange()">
@@ -170,13 +187,8 @@
                                 <div class="checklist-label">Kapasitas Battery (AH) <span class="required">*</span></div>
                                 <div class="checklist-field">
                                     @php $currentKapasitas = (string) old('kapasitas_battery', (int)$battery->kapasitas_battery); @endphp
-                                    <select id="kapasitas_battery" name="kapasitas_battery" class="table-input @error('kapasitas_battery') is-invalid @enderror" required onchange="updateBatteryCalculation()">
-                                        <option value="" disabled>Pilih Kapasitas</option>
-                                        <option value="100" {{ $currentKapasitas == '100' ? 'selected' : '' }}>100 AH</option>
-                                        <option value="200" {{ $currentKapasitas == '200' ? 'selected' : '' }}>200 AH</option>
-                                        <option value="50" {{ $currentKapasitas == '50' ? 'selected' : '' }}>50 AH</option>
-                                        <option value="20" {{ $currentKapasitas == '20' ? 'selected' : '' }}>20 AH</option>
-                                    </select>
+                                    <input type="number" id="kapasitas_battery" name="kapasitas_battery" class="table-input @error('kapasitas_battery') is-invalid @enderror" min="1" step="0.01" list="battery-capacity-options" value="{{ $currentKapasitas }}" placeholder="Pilih atau masukkan kapasitas AH" required onchange="updateBatteryCalculation()">
+                                    <datalist id="battery-capacity-options">@foreach(collect([100, 200, 50, 20])->merge($batteryCapacities)->unique()->sort() as $capacity)<option value="{{ $capacity }}">{{ $capacity }} AH</option>@endforeach</datalist>
                                     @error('kapasitas_battery') <span class="text-danger" style="font-size: 0.75rem; color:#ef4444;">{{ $message }}</span> @enderror
                                 </div>
                             </div>
@@ -266,7 +278,7 @@
                         </p>
 
                         @php
-                            $hasPhoto = !empty($battery->photo_battery) && file_exists(public_path('storage/' . $battery->photo_battery));
+                            $hasPhoto = !empty($battery->photo_battery) && \Illuminate\Support\Facades\Storage::disk('public')->exists($battery->photo_battery);
                         @endphp
 
                         <div class="rform-photo-grid">
@@ -327,6 +339,12 @@
             'Nippres': ['NP12-100', 'NP48-100'],
             'Sinergi': ['SN48-100', 'SN12-100'],
         };
+        const savedTipeMap = @json($batteryTypesByBrand ?? []);
+
+        function getBatteryTypes(brand) {
+            const findTypes = (source) => Object.entries(source).find(([name]) => name.toLowerCase() === brand.toLowerCase())?.[1] || [];
+            return [...new Set([...findTypes(tipeMap), ...findTypes(savedTipeMap)])];
+        }
 
         const currentSavedType = "{{ old('tipe_battery', $battery->tipe_battery) }}";
 
@@ -360,14 +378,7 @@
                 return;
             }
 
-            let availableTypes = tipeMap[selectedBrand];
-            if (!availableTypes) {
-                const foundKey = Object.keys(tipeMap).find(k => k.toLowerCase() === selectedBrand.toLowerCase());
-                if (foundKey) {
-                    availableTypes = tipeMap[foundKey];
-                }
-            }
-            availableTypes = availableTypes || [];
+            const availableTypes = getBatteryTypes(selectedBrand);
 
             let typeFound = false;
             availableTypes.forEach(t => {

@@ -16,6 +16,7 @@ class UpdateAcRequest extends FormRequest
         return [
             // Detail AC
             'jenis_freon'           => ['required', 'string', 'max:255'],
+            'pic'                   => ['required', 'string', 'max:255'],
             'jenis_freon_others'    => ['nullable', 'string', 'max:255'],
             'merk_ac'               => ['required', 'string', 'max:255'],
             'merk_ac_others'        => ['nullable', 'string', 'max:255'],
@@ -25,6 +26,7 @@ class UpdateAcRequest extends FormRequest
             'pk'                    => ['required', 'string', 'max:10'],
             'tanggal_instalasi'     => ['nullable', 'date'],
             'tanggal_terakhir_pm'   => ['nullable', 'date'],
+            'tanggal_pemeriksaan'   => ['nullable', 'date'],
 
             // Foto (nullable saat update — jika tidak diupload, foto lama tetap dipakai)
             'photo_ac'              => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
@@ -36,6 +38,7 @@ class UpdateAcRequest extends FormRequest
     {
         return [
             'jenis_freon'          => 'Jenis Freon',
+            'pic'                  => 'PIC',
             'jenis_freon_others'   => 'Jenis Freon (Lainnya)',
             'merk_ac'              => 'Merk AC',
             'merk_ac_others'       => 'Merk AC (Lainnya)',

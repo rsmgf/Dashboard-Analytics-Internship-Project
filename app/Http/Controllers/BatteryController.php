@@ -96,7 +96,10 @@ class BatteryController extends Controller
             ? reset($rectifierBankCounts)
             : ($pop->kode_pop . '_BANK01');
 
-        return view('pop.Battery.battery-create', compact('pop', 'rectifiers', 'suggestedBank', 'rectifierBankCounts'));
+        $batteryBrands = Battery::query()->whereNotNull('merk_battery')->where('merk_battery', '<>', '')->distinct()->orderBy('merk_battery')->pluck('merk_battery');
+        $batteryCapacities = Battery::query()->whereNotNull('kapasitas_battery')->distinct()->orderBy('kapasitas_battery')->pluck('kapasitas_battery');
+        $batteryTypesByBrand = $this->batteryTypesByBrand();
+        return view('pop.Battery.battery-create', compact('pop', 'rectifiers', 'suggestedBank', 'rectifierBankCounts', 'batteryBrands', 'batteryCapacities', 'batteryTypesByBrand'));
     }
 
     // 3. Menyimpan Data Baterai Baru
@@ -149,8 +152,9 @@ class BatteryController extends Controller
         $statusUji = 'BLM UJI BATT';
         if (!empty($validated['tanggal_uji_terakhir'])) {
             $tglUji    = Carbon::parse($validated['tanggal_uji_terakhir']);
-            $diffDays  = now()->diffInDays($tglUji, false);
-            $statusUji = (abs($diffDays) >= 365) ? 'JADWAL UJI BATT' : 'SUDAH UJI BATT';
+            $statusUji = now()->startOfDay()->greaterThanOrEqualTo($tglUji->copy()->addMonths(6)->startOfDay())
+                ? 'JADWAL UJI BATT'
+                : 'SUDAH UJI BATT';
         }
 
         $photoPath = null;
@@ -176,6 +180,8 @@ class BatteryController extends Controller
             'kapasitas_battery_persen' => $persen,
             'performa_baterai'         => $performa,
             'tanggal_uji_terakhir'     => $validated['tanggal_uji_terakhir'] ?? null,
+            'tanggal_pemasangan'       => $validated['tanggal_pemasangan'] ?? null,
+            'tanggal_pemeriksaan'      => $validated['tanggal_pemeriksaan'] ?? null,
             'tanggal_penggantian'      => $validated['tanggal_penggantian'] ?? null,
             'status_uji'               => $statusUji,
             'photo_battery'            => $photoPath,
@@ -227,7 +233,22 @@ class BatteryController extends Controller
                 return $r;
             });
 
-        return view('pop.Battery.battery-edit', compact('pop', 'battery', 'rectifiers'));
+        $batteryBrands = Battery::query()->whereNotNull('merk_battery')->where('merk_battery', '<>', '')->distinct()->orderBy('merk_battery')->pluck('merk_battery');
+        $batteryCapacities = Battery::query()->whereNotNull('kapasitas_battery')->distinct()->orderBy('kapasitas_battery')->pluck('kapasitas_battery');
+        $batteryTypesByBrand = $this->batteryTypesByBrand();
+        return view('pop.Battery.battery-edit', compact('pop', 'battery', 'rectifiers', 'batteryBrands', 'batteryCapacities', 'batteryTypesByBrand'));
+    }
+
+    /** Return saved battery types grouped by the brand that users selected or entered. */
+    private function batteryTypesByBrand(): array
+    {
+        return Battery::query()
+            ->whereNotNull('merk_battery')->where('merk_battery', '<>', '')
+            ->whereNotNull('tipe_battery')->where('tipe_battery', '<>', '')
+            ->get(['merk_battery', 'tipe_battery'])
+            ->groupBy('merk_battery')
+            ->map(fn ($rows) => $rows->pluck('tipe_battery')->unique()->values()->all())
+            ->all();
     }
 
     // 6. Memperbarui Data Baterai
@@ -276,8 +297,9 @@ class BatteryController extends Controller
         $statusUji = 'BLM UJI BATT';
         if (!empty($validated['tanggal_uji_terakhir'])) {
             $tglUji    = Carbon::parse($validated['tanggal_uji_terakhir']);
-            $diffDays  = now()->diffInDays($tglUji, false);
-            $statusUji = (abs($diffDays) >= 365) ? 'JADWAL UJI BATT' : 'SUDAH UJI BATT';
+            $statusUji = now()->startOfDay()->greaterThanOrEqualTo($tglUji->copy()->addMonths(6)->startOfDay())
+                ? 'JADWAL UJI BATT'
+                : 'SUDAH UJI BATT';
         }
 
         $updateData = [
@@ -297,6 +319,8 @@ class BatteryController extends Controller
             'kapasitas_battery_persen' => $persen,
             'performa_baterai'         => $performa,
             'tanggal_uji_terakhir'     => $validated['tanggal_uji_terakhir'] ?? null,
+            'tanggal_pemasangan'       => $validated['tanggal_pemasangan'] ?? null,
+            'tanggal_pemeriksaan'      => $validated['tanggal_pemeriksaan'] ?? null,
             'tanggal_penggantian'      => $validated['tanggal_penggantian'] ?? null,
             'status_uji'               => $statusUji,
             'keterangan_gambar'        => $validated['keterangan_gambar'] ?? $battery->keterangan_gambar,

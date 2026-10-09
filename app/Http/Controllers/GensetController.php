@@ -28,8 +28,9 @@ class GensetController extends Controller
     public function create($pop_id)
     {
         $pop = Pop::findOrFail($pop_id);
+        $sharedGensetOptions = $this->sharedGensetOptions();
 
-        return view('pop.Genset.Genset-Create', compact('pop'));
+        return view('pop.Genset.Genset-Create', compact('pop', 'sharedGensetOptions'));
     }
 
 
@@ -82,6 +83,7 @@ class GensetController extends Controller
             'sn_engine'                => $validated['sn_engine'],
             'tahun_pasang'             => (int) $validated['tahun_pasang'],
             'tanggal_pm'               => $validated['tanggal_pm'] ?? null,
+            'tanggal_pemeriksaan'      => $validated['tanggal_pemeriksaan'] ?? null,
             'status_genset'            => $statusGenset,
             'photo_genset'             => $photoGensetPath,
             'keterangan_gambar_genset' => $validated['keterangan_gambar_genset'] ?? null,
@@ -110,8 +112,21 @@ class GensetController extends Controller
     {
         $pop    = Pop::findOrFail($pop_id);
         $genset = Genset::where('pop_id', $pop->id)->findOrFail($id);
+        $sharedGensetOptions = $this->sharedGensetOptions();
 
-        return view('pop.Genset.Genset-Edit', compact('pop', 'genset'));
+        return view('pop.Genset.Genset-Edit', compact('pop', 'genset', 'sharedGensetOptions'));
+    }
+
+    private function sharedGensetOptions(): array
+    {
+        $allGensets = Genset::query()->get(['merk_genset', 'model', 'tipe_engine']);
+
+        return [
+            'brands' => $allGensets->pluck('merk_genset')->filter()->unique()->sort()->values()->all(),
+            'engines' => $allGensets->pluck('tipe_engine')->filter()->unique()->sort()->values()->all(),
+            'models' => $allGensets->filter(fn ($row) => $row->merk_genset && $row->model)
+                ->groupBy('merk_genset')->map(fn ($rows) => $rows->pluck('model')->unique()->values()->all())->all(),
+        ];
     }
 
     // ─── 6. Update Data Genset ─────────────────────────────────────────────────
@@ -148,6 +163,7 @@ class GensetController extends Controller
             'sn_engine'                => $validated['sn_engine'],
             'tahun_pasang'             => (int) $validated['tahun_pasang'],
             'tanggal_pm'               => $validated['tanggal_pm'] ?? null,
+            'tanggal_pemeriksaan'      => $validated['tanggal_pemeriksaan'] ?? null,
             'status_genset'            => $statusGenset,
             'keterangan_gambar_genset' => $validated['keterangan_gambar_genset'] ?? $genset->keterangan_gambar_genset,
             'keterangan_gambar_engine' => $validated['keterangan_gambar_engine'] ?? $genset->keterangan_gambar_engine,
@@ -195,8 +211,8 @@ class GensetController extends Controller
             return 'Belum PM';
         }
 
-        $bulanBerlalu = Carbon::parse($tanggalPm)->diffInMonths(now());
+        $jatuhTempo = Carbon::parse($tanggalPm)->addMonths(6)->startOfDay();
 
-        return $bulanBerlalu >= 6 ? 'Jadwal PM' : 'Sudah PM';
+        return now()->startOfDay()->greaterThanOrEqualTo($jatuhTempo) ? 'Jadwal PM' : 'Sudah PM';
     }
 }

@@ -22,6 +22,7 @@ class Genset extends Model
         'sn_engine',
         'tahun_pasang',
         'tanggal_pm',
+        'tanggal_pemeriksaan',
         'status_genset',
         'photo_genset',
         'keterangan_gambar_genset',
@@ -34,6 +35,7 @@ class Genset extends Model
         'kapasitas_kva' => 'float',
         'tahun_pasang'  => 'integer',
         'tanggal_pm'    => 'date',
+        'tanggal_pemeriksaan' => 'date',
     ];
 
     // Relasi ke POP (Parent)
@@ -87,6 +89,17 @@ class Genset extends Model
         return $this->tanggal_pm ? $this->tanggal_pm->copy()->addMonths(6) : null;
     }
 
+    public function getStatusGensetAttribute(): string
+    {
+        if (!$this->tanggal_pm) {
+            return 'Belum PM';
+        }
+
+        return now()->startOfDay()->greaterThanOrEqualTo($this->pm_berikutnya->copy()->startOfDay())
+            ? 'Jadwal PM'
+            : 'Sudah PM';
+    }
+
     public function getStatusPmAttribute(): array
     {
         if (!$this->tanggal_pm) {
@@ -98,18 +111,19 @@ class Genset extends Model
         }
 
         $nextPm = $this->pm_berikutnya;
-        $now = now();
+        $now = now()->startOfDay();
+        $dueDate = $nextPm->copy()->startOfDay();
 
-        if ($now->startOfDay()->greaterThanOrEqualTo($nextPm->startOfDay())) {
-            $lewatHari = $nextPm->startOfDay()->diffInDays($now->startOfDay());
+        if ($now->greaterThanOrEqualTo($dueDate)) {
+            $lewatHari = $dueDate->diffInDays($now);
             return [
                 'status' => 'Jadwal Preventive Maintenance',
                 'class' => 'pm-badge-warning',
-                'text' => '(lewat ' . max(1, $lewatHari) . ' hari)'
+                'text' => $lewatHari === 0 ? '(jatuh tempo hari ini)' : '(lewat ' . $lewatHari . ' hari)'
             ];
         }
 
-        $dalamHari = $now->startOfDay()->diffInDays($nextPm->startOfDay());
+        $dalamHari = $now->diffInDays($dueDate);
         return [
             'status' => 'Sudah Preventive Maintenance',
             'class' => 'pm-badge-success',

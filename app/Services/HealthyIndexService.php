@@ -96,9 +96,9 @@ class HealthyIndexService
                     return 0;
                 }
 
-                $nextPm = $ac->tanggal_terakhir_pm->copy()->addMonths(6);
+                $nextPm = $ac->tanggal_terakhir_pm->copy()->addMonths(3);
 
-                // Tepat 6 bulan atau lebih masuk Jadwal PM.
+                // Pada tanggal jatuh tempo tiga bulan, status masuk Jadwal PM.
                 return now()->startOfDay()->greaterThanOrEqualTo($nextPm->startOfDay())
                     ? 5
                     : 15;

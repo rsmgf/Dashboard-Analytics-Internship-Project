@@ -47,7 +47,7 @@
                 <div class="alert-info-custom">
                     <i class="bi bi-exclamation-circle-fill"></i>
                     <span>
-                        Terakhir diperbarui:
+                        Terakhir diperbarui oleh:
                         <strong>
                             @if($genset->diupdateOleh)
                                 {{ $genset->diupdateOleh->name }} &middot; {{ $genset->updated_at->translatedFormat('d F Y, H:i') }} WIB
@@ -66,6 +66,10 @@
                         </div>
 
                         <div class="info-box-grid">
+                            <div class="info-box">
+                                <div class="info-box-icon"><i class="bi bi-upc-scan"></i></div>
+                                <div class="info-box-text"><span class="info-box-label">Nomor Genset</span><span class="info-box-value">{{ $genset->nomor_genset ?? '-' }}</span></div>
+                            </div>
                             <div class="info-box">
                                 <div class="info-box-icon"><i class="bi bi-hdd-network-fill"></i></div>
                                 <div class="info-box-text">
@@ -89,28 +93,24 @@
                                     <span class="info-box-value">{{ $pop->tipe_pop ?? '-' }}</span>
                                 </div>
                             </div>
+                            <div class="info-box">
+                                <div class="info-box-icon"><i class="bi bi-calendar-event"></i></div>
+                                <div class="info-box-text"><span class="info-box-label">Tahun Pasang</span><span class="info-box-value">{{ $genset->tahun_pasang ?? '-' }}</span></div>
+                            </div>
+                            <div class="info-box">
+                                <div class="info-box-icon"><i class="bi bi-calendar-check-fill"></i></div>
+                                <div class="info-box-text"><span class="info-box-label">Tanggal Pemeriksaan</span><span class="info-box-value">{{ $genset->tanggal_pemeriksaan?->translatedFormat('d F Y') ?? 'Belum diisi' }}</span></div>
+                            </div>
+                            <div class="info-box">
+                                <div class="info-box-icon"><i class="bi bi-building-fill"></i></div>
+                                <div class="info-box-text"><span class="info-box-label">Building / Jenis Bangunan</span><span class="info-box-value">{{ $pop->jenis_bangunan ?? '-' }}</span></div>
+                            </div>
 
                             <div class="info-box">
                                 <div class="info-box-icon"><i class="bi bi-person-fill"></i></div>
                                 <div class="info-box-text">
                                     <span class="info-box-label">PIC</span>
                                     <span class="info-box-value">{{ $genset->pic ?? ($genset->diupdateOleh->name ?? '-') }}</span>
-                                </div>
-                            </div>
-
-                            <div class="info-box">
-                                <div class="info-box-icon"><i class="bi bi-building-fill"></i></div>
-                                <div class="info-box-text">
-                                    <span class="info-box-label">Bentuk Fisik</span>
-                                    <span class="info-box-value">{{ $genset->bentuk_fisik ?? '-' }}</span>
-                                </div>
-                            </div>
-
-                            <div class="info-box">
-                                <div class="info-box-icon"><i class="bi bi-hash"></i></div>
-                                <div class="info-box-text">
-                                    <span class="info-box-label">Nomor Genset</span>
-                                    <span class="info-box-value">{{ $genset->nomor_genset ?? '-' }}</span>
                                 </div>
                             </div>
                         </div>
@@ -185,7 +185,7 @@
                         <div class="form-card photo-card">
                             <h3 class="form-section-title"><i class="bi bi-camera-fill"></i> Photo Genset</h3>
                             <div class="preview-box-large">
-                                @if ($genset->photo_genset)
+                                @if ($genset->photo_genset && \Illuminate\Support\Facades\Storage::disk('public')->exists($genset->photo_genset))
                                     <img src="{{ asset('storage/' . $genset->photo_genset) }}" alt="Foto Genset"
                                          style="width:100%; height:auto; max-height:220px; object-fit:contain; border-radius:8px; cursor:pointer;"
                                          title="Klik untuk melihat ukuran penuh"
@@ -209,7 +209,7 @@
                         <div class="form-card photo-card">
                             <h3 class="form-section-title"><i class="bi bi-camera-fill"></i> Photo Engine</h3>
                             <div class="preview-box-large">
-                                @if ($genset->photo_engine)
+                                @if ($genset->photo_engine && \Illuminate\Support\Facades\Storage::disk('public')->exists($genset->photo_engine))
                                     <img src="{{ asset('storage/' . $genset->photo_engine) }}" alt="Foto Engine"
                                          style="width:100%; height:auto; max-height:220px; object-fit:contain; border-radius:8px; cursor:pointer;"
                                          title="Klik untuk melihat ukuran penuh"

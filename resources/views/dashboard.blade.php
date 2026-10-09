@@ -320,6 +320,33 @@
                             <div class="chart-container-stacked">
                                 <canvas id="healthyIndexChart"></canvas>
                             </div>
+                            <div class="healthy-chart-extra-legend">
+                                <div class="healthy-chart-device-legend" aria-label="Legenda perangkat">
+                                    <span><i style="--device-color:#2563EB"></i>Rectifier</span>
+                                    <span><i style="--device-color:#F59E0B"></i>kWh</span>
+                                    <span><i style="--device-color:#7C3AED"></i>Battery</span>
+                                    <span><i style="--device-color:#14B8A6"></i>AC</span>
+                                    <span class="device-legend-with-info"><i style="--device-color:#16A34A"></i>Genset
+                                        <button type="button" class="healthy-point-info-button"
+                                            aria-label="Informasi nilai maksimum perangkat" aria-expanded="false"
+                                            onclick="toggleHealthyPointInfo(this)"><i
+                                                class="bi bi-question-circle"></i></button>
+                                        <span class="healthy-point-info-popover" hidden>
+                                            <strong>Nilai maksimum tiap perangkat</strong>
+                                            <span>Rectifier <b>25 poin</b></span>
+                                            <span>kWh <b>10 poin</b></span>
+                                            <span>Battery <b>30 poin</b></span>
+                                            <span>AC <b>15 poin</b></span>
+                                            <span>Genset <b>20 poin</b></span>
+                                        </span>
+                                    </span>
+                                </div>
+                                <div class="healthy-status-legend" aria-label="Ambang status Healthy Index">
+                                    <span><i class="status-legend-dot very-healthy"></i>Very Healthy: 90–100
+                                        poin</span>
+                                    <span><i class="status-legend-dot healthy"></i>Healthy: 75–&lt;90 poin</span>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="analytics-card">
@@ -354,6 +381,33 @@
                             </div>
                             <div class="chart-container-stacked">
                                 <canvas id="nonHealthyIndexChart"></canvas>
+                            </div>
+                            <div class="healthy-chart-extra-legend">
+                                <div class="healthy-chart-device-legend" aria-label="Legenda perangkat">
+                                    <span><i style="--device-color:#2563EB"></i>Rectifier</span>
+                                    <span><i style="--device-color:#F59E0B"></i>kWh</span>
+                                    <span><i style="--device-color:#7C3AED"></i>Battery</span>
+                                    <span><i style="--device-color:#14B8A6"></i>AC</span>
+                                    <span class="device-legend-with-info"><i style="--device-color:#16A34A"></i>Genset
+                                        <button type="button" class="healthy-point-info-button"
+                                            aria-label="Informasi nilai maksimum perangkat" aria-expanded="false"
+                                            onclick="toggleHealthyPointInfo(this)"><i
+                                                class="bi bi-question-circle"></i></button>
+                                        <span class="healthy-point-info-popover" hidden>
+                                            <strong>Nilai maksimum tiap perangkat</strong>
+                                            <span>Rectifier <b>25 poin</b></span>
+                                            <span>kWh <b>10 poin</b></span>
+                                            <span>Battery <b>30 poin</b></span>
+                                            <span>AC <b>15 poin</b></span>
+                                            <span>Genset <b>20 poin</b></span>
+                                        </span>
+                                    </span>
+                                </div>
+                                <div class="healthy-status-legend" aria-label="Ambang status Unhealthy Index">
+                                    <span><i class="status-legend-dot unhealthy"></i>Unhealthy: 50–&lt;75 poin</span>
+                                    <span><i class="status-legend-dot very-unhealthy"></i>Very Unhealthy: &lt;50
+                                        poin</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -431,17 +485,32 @@
                                             onclick="markNotifAsRead('notif-{{ $notif->id }}', {{ $notif->id }}, '{{ $notif->category }}', '{{ $notif->pop_id }}', '{{ $notif->device_type }}', '{{ $notif->device_id }}')">
                                             <div class="notif-icon-wrapper">
                                                 @php
-                                                    $healthyIndexStatuses = ['very_healthy', 'healthy', 'unhealthy', 'very_unhealthy'];
-                                                    $isHealthyIndexNotification = $notif->device_type === 'rectifier'
-                                                        && in_array($notif->severity, $healthyIndexStatuses, true);
-                                                    $healthyIndexKpiTone = in_array($notif->severity, ['very_healthy', 'healthy'], true)
+                                                    $healthyIndexStatuses = [
+                                                        'very_healthy',
+                                                        'healthy',
+                                                        'unhealthy',
+                                                        'very_unhealthy',
+                                                    ];
+                                                    $isHealthyIndexNotification =
+                                                        $notif->device_type === 'rectifier' &&
+                                                        in_array($notif->severity, $healthyIndexStatuses, true);
+                                                    $healthyIndexKpiTone = in_array(
+                                                        $notif->severity,
+                                                        ['very_healthy', 'healthy'],
+                                                        true,
+                                                    )
                                                         ? 'kpi-healthy'
                                                         : 'kpi-unhealthy';
-                                                    $notificationDeviceType = in_array($notif->device_type, ['rectifier', 'kwh', 'battery', 'ac', 'genset'], true)
+                                                    $notificationDeviceType = in_array(
+                                                        $notif->device_type,
+                                                        ['rectifier', 'kwh', 'battery', 'ac', 'genset'],
+                                                        true,
+                                                    )
                                                         ? $notif->device_type
                                                         : 'rectifier';
                                                 @endphp
-                                                <div class="{{ $isHealthyIndexNotification ? 'kpi-icon ' . $healthyIndexKpiTone : 'device-icon ' . $notificationDeviceType }}">
+                                                <div
+                                                    class="{{ $isHealthyIndexNotification ? 'kpi-icon ' . $healthyIndexKpiTone : 'device-icon ' . $notificationDeviceType }}">
                                                     <i class="{{ $notif->icon_class }}"></i>
                                                 </div>
                                                 @if (!$notif->is_read)
@@ -481,16 +550,21 @@
                                             <i class="bi bi-list"></i>
                                         </button>
                                         <div x-show="open" style="display:none;" class="export-dropdown">
-                                            <button @click="exportImage('populationRegionBody', 'png', 'Populasi_POP_Kabupaten_Kota'); open = false">
+                                            <button
+                                                @click="exportImage('populationRegionBody', 'png', 'Populasi_POP_Kabupaten_Kota'); open = false">
                                                 <i class="bi bi-image" style="margin-right:8px;"></i> Download PNG
                                             </button>
-                                            <button @click="exportImage('populationRegionBody', 'jpeg', 'Populasi_POP_Kabupaten_Kota'); open = false">
-                                                <i class="bi bi-image-fill" style="margin-right:8px;"></i> Download JPEG
+                                            <button
+                                                @click="exportImage('populationRegionBody', 'jpeg', 'Populasi_POP_Kabupaten_Kota'); open = false">
+                                                <i class="bi bi-image-fill" style="margin-right:8px;"></i> Download
+                                                JPEG
                                             </button>
-                                            <button @click="exportPDF('populationRegionBody', 'Populasi_POP_Kabupaten_Kota'); open = false">
+                                            <button
+                                                @click="exportPDF('populationRegionBody', 'Populasi_POP_Kabupaten_Kota'); open = false">
                                                 <i class="bi bi-file-pdf" style="margin-right:8px;"></i> Download PDF
                                             </button>
-                                            <button type="button" @click="showDashboardDataTable('populationRegion'); open = false">
+                                            <button type="button"
+                                                @click="showDashboardDataTable('populationRegion'); open = false">
                                                 <i class="bi bi-table" style="margin-right:8px;"></i> Lihat Data Tabel
                                             </button>
                                         </div>
@@ -502,7 +576,8 @@
                                         <canvas id="populasiWilayahChart"></canvas>
                                     </div>
                                     <ul id="populasiWilayahLegend" class="population-legend"></ul>
-                                    <div id="populationRegionDataTablePanel" class="population-data-table-wrap" hidden>
+                                    <div id="populationRegionDataTablePanel" class="population-data-table-wrap"
+                                        hidden>
                                         <table class="population-data-table">
                                             <thead>
                                                 <tr>
@@ -609,11 +684,33 @@
 
     <script>
         /* =========================================================
-                                                                                                                                                                                                                                                                                                                                                                                                           0. STATE GLOBAL
-                                                                                                                                                                                                                                                                                                                                                                                                           ========================================================= */
+                                                                                                                                                                                                                                                                                                                                                                                                               0. STATE GLOBAL
+                                                                                                                                                                                                                                                                                                                                                                                                               ========================================================= */
         const carouselState = {};
         let jambiMap = null;
         let markers = [];
+
+        function toggleHealthyPointInfo(button) {
+            const popover = button.parentElement.querySelector('.healthy-point-info-popover');
+            const shouldOpen = popover?.hidden;
+
+            document.querySelectorAll('.healthy-point-info-popover').forEach(item => item.hidden = true);
+            document.querySelectorAll('.healthy-point-info-button').forEach(item => item.setAttribute('aria-expanded',
+                'false'));
+
+            if (popover && shouldOpen) {
+                popover.hidden = false;
+                button.setAttribute('aria-expanded', 'true');
+            }
+        }
+
+        document.addEventListener('click', event => {
+            if (!event.target.closest('.device-legend-with-info')) {
+                document.querySelectorAll('.healthy-point-info-popover').forEach(item => item.hidden = true);
+                document.querySelectorAll('.healthy-point-info-button').forEach(item => item.setAttribute(
+                    'aria-expanded', 'false'));
+            }
+        });
 
         /* MODE FOKUS: sembunyikan KPI s/d peta saat lihat detail POP */
         function enterPopFocus() {
@@ -1216,24 +1313,24 @@
                 </div>
                 <div class="mini-progress-labels">
                     ${statuses.map(s => `
-                                                                                                                                                                                                                                                                                                                                    <span class="lbl-${s.key}" title="${s.label}"><i class="bi bi-circle-fill"></i>${Math.round(pct(s.key))}%</span>
-                                                                                                                                                                                                                                                                                                                                `).join('')}
+                                                                                                                                                                                                                                                                                                                                        <span class="lbl-${s.key}" title="${s.label}"><i class="bi bi-circle-fill"></i>${Math.round(pct(s.key))}%</span>
+                                                                                                                                                                                                                                                                                                                                    `).join('')}
                 </div>
             </div>
 
             <div class="device-status-list">
                 ${statuses.map(s => `
-                                                                                                                                                                                                                                                                                                                                <button type="button" class="status-dropdown-button"
-                                                                                                                                                                                                                                                                                                                                        data-device="${key}" data-status="${s.key}" ${counts[s.key] === 0 ? 'disabled' : ''}>
-                                                                                                                                                                                                                                                                                                                                    <span class="status-left">
-                                                                                                                                                                                                                                                                                                                                        <span class="status-dot ${s.key}"></span>${s.label}
-                                                                                                                                                                                                                                                                                                                                    </span>
-                                                                                                                                                                                                                                                                                                                                    <span class="status-right">
-                                                                                                                                                                                                                                                                                                                                        <span class="status-count">${counts[s.key]}</span>
-                                                                                                                                                                                                                                                                                                                                        <i class="bi bi-chevron-right"></i>
-                                                                                                                                                                                                                                                                                                                                    </span>
-                                                                                                                                                                                                                                                                                                                                </button>
-                                                                                                                                                                                                                                                                                                                            `).join('')}
+                                                                                                                                                                                                                                                                                                                                    <button type="button" class="status-dropdown-button"
+                                                                                                                                                                                                                                                                                                                                            data-device="${key}" data-status="${s.key}" ${counts[s.key] === 0 ? 'disabled' : ''}>
+                                                                                                                                                                                                                                                                                                                                        <span class="status-left">
+                                                                                                                                                                                                                                                                                                                                            <span class="status-dot ${s.key}"></span>${s.label}
+                                                                                                                                                                                                                                                                                                                                        </span>
+                                                                                                                                                                                                                                                                                                                                        <span class="status-right">
+                                                                                                                                                                                                                                                                                                                                            <span class="status-count">${counts[s.key]}</span>
+                                                                                                                                                                                                                                                                                                                                            <i class="bi bi-chevron-right"></i>
+                                                                                                                                                                                                                                                                                                                                        </span>
+                                                                                                                                                                                                                                                                                                                                    </button>
+                                                                                                                                                                                                                                                                                                                                `).join('')}
             </div>
         </div>`;
             }).join('');
@@ -1261,9 +1358,9 @@
                 <div class="pop-status-box-header">
                     <div class="pop-status-identity">
                         ${showDeviceId ? `
-                                                                                                                                        <span class="pop-status-label">${deviceLabel}</span>
-                                                                                                                                        <strong class="pop-status-device-id">${escapeHtml(item.unit || '-')}</strong>
-                                                                                                                                    ` : ''}
+                                                                                                                                            <span class="pop-status-label">${deviceLabel}</span>
+                                                                                                                                            <strong class="pop-status-device-id">${escapeHtml(item.unit || '-')}</strong>
+                                                                                                                                        ` : ''}
                         <span class="pop-status-label">Nama POP</span>
                         <strong class="pop-status-name">${escapeHtml(item.pop_name || item.kode || '-')}</strong>
                     </div>
@@ -1506,14 +1603,7 @@
                 },
                 plugins: {
                     legend: {
-                        position: 'bottom',
-                        labels: {
-                            boxWidth: 12,
-                            font: {
-                                size: 10
-                            },
-                            color: '#334155'
-                        }
+                        display: false,
                     },
                     datalabels: {
                         display: context =>
@@ -1940,8 +2030,8 @@
 
             if (regionCanvas && regionLegend && regionData.data.length) {
                 const regionColors = [
-                    '#0284c7', '#22c55e', '#eab308', '#8b5cf6', '#f97316',
-                    '#14b8a6', '#ec4899', '#6366f1', '#84cc16', '#f43f5e', '#64748b',
+                    '#FF383C', '#FF8D28', '#FFCC00', '#34C759', '#00C8B3',
+                    '#0088FF', '#CB30E0', '#8400FF', '#FF0099', '#00FF37', '#00FFEA', '#9300B0', '#B2FF00'
                 ];
                 const colors = regionData.labels.map((_, index) => regionColors[index % regionColors.length]);
                 const visibleRegionTotal = chart => chart.data.datasets[0].data
@@ -1962,20 +2052,31 @@
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        layout: { padding: 10 },
-                        animation: { duration: 350 },
+                        layout: {
+                            padding: 10
+                        },
+                        animation: {
+                            duration: 350
+                        },
                         onHover: (event, elements) => {
                             event.native.target.style.cursor = elements.length ? 'pointer' : 'default';
                             highlightRegionLegend(elements.length ? elements[0].index : null);
                         },
                         plugins: {
-                            legend: { display: false },
+                            legend: {
+                                display: false
+                            },
                             datalabels: {
                                 color: '#ffffff',
-                                font: { family: 'Poppins', weight: '700', size: 11 },
+                                font: {
+                                    family: 'Poppins',
+                                    weight: '700',
+                                    size: 11
+                                },
                                 display: context => {
                                     const total = visibleRegionTotal(context.chart);
-                                    return total > 0 && Number(context.dataset.data[context.dataIndex]) / total >= 0.04;
+                                    return total > 0 && Number(context.dataset.data[context.dataIndex]) /
+                                        total >= 0.04;
                                 },
                                 formatter: (value, context) => {
                                     const total = visibleRegionTotal(context.chart);
@@ -1989,7 +2090,8 @@
                                 callbacks: {
                                     label: context => {
                                         const total = visibleRegionTotal(context.chart);
-                                        const percentage = total ? Math.round(Number(context.raw) / total * 100) : 0;
+                                        const percentage = total ? Math.round(Number(context.raw) / total *
+                                            100) : 0;
                                         return ` ${context.raw} POP (${percentage}%)`;
                                     },
                                 },
@@ -2009,9 +2111,11 @@
                 if (regionTableBody) {
                     regionTableBody.innerHTML = regionData.labels.map((label, index) => {
                         const count = Number(regionData.data[index]);
-                        const percentage = totalRegionPops
-                            ? ((count / totalRegionPops) * 100).toLocaleString('id-ID', { maximumFractionDigits: 1 })
-                            : '0';
+                        const percentage = totalRegionPops ?
+                            ((count / totalRegionPops) * 100).toLocaleString('id-ID', {
+                                maximumFractionDigits: 1
+                            }) :
+                            '0';
 
                         return `<tr>
                             <td><span class="population-table-color" style="background:${colors[index]}"></span>${escapeHtml(label)}</td>
@@ -2022,6 +2126,7 @@
                 }
 
                 const regionLegendItems = regionLegend.querySelectorAll('.pop-legend-item');
+
                 function highlightRegionLegend(activeIndex) {
                     regionLegendItems.forEach((element, index) => {
                         element.classList.toggle('is-active', activeIndex === index);
@@ -2032,12 +2137,21 @@
                 function highlightRegionSlice(index) {
                     if (index === null) {
                         regionChart.setActiveElements([]);
-                        regionChart.tooltip.setActiveElements([], { x: 0, y: 0 });
+                        regionChart.tooltip.setActiveElements([], {
+                            x: 0,
+                            y: 0
+                        });
                     } else if (regionChart.getDataVisibility(index)) {
                         const arc = regionChart.getDatasetMeta(0).data[index];
                         const position = arc.tooltipPosition();
-                        regionChart.setActiveElements([{ datasetIndex: 0, index }]);
-                        regionChart.tooltip.setActiveElements([{ datasetIndex: 0, index }], position);
+                        regionChart.setActiveElements([{
+                            datasetIndex: 0,
+                            index
+                        }]);
+                        regionChart.tooltip.setActiveElements([{
+                            datasetIndex: 0,
+                            index
+                        }], position);
                     }
                     regionChart.update();
                 }

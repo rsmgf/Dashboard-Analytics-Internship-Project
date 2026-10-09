@@ -5,16 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
+use App\Support\DeviceAge;
 
 class Rectifier extends Model
 {
     use HasFactory;
+    use DeviceAge;
 
     protected $fillable = [
         'pop_id',
         'nomor_recti',
         'deskripsi',
         'tanggal_pemeriksaan',
+        'tanggal_pemasangan',
         'pic',
         'merk',
         'type',
@@ -30,10 +33,14 @@ class Rectifier extends Model
         'diupdate_oleh',
     ];
 
+    protected $casts = [
+        'tanggal_pemeriksaan' => 'date',
+        'tanggal_pemasangan' => 'date',
+    ];
+
     protected static array $kolomKelengkapan = [
         'nomor_recti',
         'deskripsi',
-        'tanggal_pemeriksaan',
         'pic',
         'merk',
         'type',

@@ -49,6 +49,7 @@ class RectifierController extends Controller
                 'nomor_recti'          => $nomorRecti,
                 'deskripsi'            => $validated['deskripsi'] ?? null,
                 'tanggal_pemeriksaan'  => $validated['tanggal_pemeriksaan'] ?? null,
+                'tanggal_pemasangan'   => $validated['tanggal_pemasangan'] ?? null,
                 'pic'                  => $validated['pic'] ?? null,
                 'merk'                 => $validated['merk'],
                 'type'                 => $validated['type'],
@@ -120,7 +121,8 @@ class RectifierController extends Controller
         $pop = Pop::findOrFail($pop_id);
         $count = Rectifier::where('pop_id', $pop->id)->count();
         $suggestedNomorRecti = $pop->kode_pop . '_RECT' . str_pad($count + 1, 2, '0', STR_PAD_LEFT);
-        return view('pop.rectifier.rectifier-create', compact('pop', 'suggestedNomorRecti'));
+        $fieldOptions = $this->sharedFieldOptions();
+        return view('pop.rectifier.rectifier-create', compact('pop', 'suggestedNomorRecti', 'fieldOptions'));
     }
 
     // 3c. Tampilkan form edit Rectifier
@@ -130,7 +132,15 @@ class RectifierController extends Controller
         $rectifier = Rectifier::where('pop_id', $pop_id)
             ->with(['modules', 'outputs'])
             ->findOrFail($id);
-        return view('pop.rectifier.rectifier-edit', compact('pop', 'rectifier'));
+        $fieldOptions = $this->sharedFieldOptions();
+        return view('pop.rectifier.rectifier-edit', compact('pop', 'rectifier', 'fieldOptions'));
+    }
+
+    private function sharedFieldOptions(): array
+    {
+        return collect(['merk', 'type', 'type_modul_controller', 'type_modul_power'])
+            ->mapWithKeys(fn ($field) => [$field => Rectifier::query()->whereNotNull($field)->where($field, '<>', '')->distinct()->orderBy($field)->pluck($field)->all()])
+            ->all();
     }
 
     // 4. Memperbarui Data Rectifier (Update)
@@ -157,6 +167,7 @@ class RectifierController extends Controller
             $rectifier->update([
                 'deskripsi'             => $validated['deskripsi'] ?? null,
                 'tanggal_pemeriksaan'   => $validated['tanggal_pemeriksaan'] ?? null,
+                'tanggal_pemasangan'    => $validated['tanggal_pemasangan'] ?? null,
                 'pic'                   => $validated['pic'] ?? null,
                 'merk'                  => $validated['merk'],
                 'type'                  => $validated['type'],

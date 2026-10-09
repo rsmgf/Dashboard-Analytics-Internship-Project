@@ -55,7 +55,7 @@
                 <div class="alert-info-custom">
                     <i class="bi bi-exclamation-circle-fill"></i>
                     <span>
-                        Terakhir diperbarui:
+                        Terakhir diperbarui oleh:
                         <strong>
                             @if($kwh->diupdateOleh)
                                 {{ $kwh->diupdateOleh->name }} &middot; {{ $kwh->updated_at->translatedFormat('d F Y, H:i') }} WIB
@@ -90,7 +90,14 @@
                             <div class="info-box-icon"><i class="bi bi-calendar-check-fill"></i></div>
                             <div class="info-box-text">
                                 <span class="info-box-label">Tanggal Pemeriksaan</span>
-                                <span class="info-box-value">{{ $kwh->tanggal_pemeriksaan->translatedFormat('d F Y') }}</span>
+                                <span class="info-box-value">{{ $kwh->tanggal_pemeriksaan?->translatedFormat('d F Y') ?? 'Belum diisi' }}</span>
+                            </div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-box-icon"><i class="bi bi-calendar-event"></i></div>
+                            <div class="info-box-text">
+                                <span class="info-box-label">Tanggal Pemasangan</span>
+                                <span class="info-box-value">{{ $kwh->tanggal_pemasangan?->translatedFormat('d F Y') ?? 'Belum diisi' }}{{ $kwh->umur_perangkat ? ' · ' . $kwh->umur_perangkat : '' }}</span>
                             </div>
                         </div>
                         <div class="info-box">

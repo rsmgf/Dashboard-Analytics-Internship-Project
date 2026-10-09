@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
     @vite([
         'resources/css/sidebar.css',
-        'resources/css/ac-create.css'
+        'resources/css/ac-create.css',
+        'resources/css/device-form-consistency.css',
+        'resources/js/device-datalist.js'
     ])
 </head>
 <body>
@@ -64,6 +66,11 @@
                                 <label for="tipe_pop">Tipe POP</label>
                                 <input type="text" id="tipe_pop" class="form-control disabled-input" value="{{ $pop->tipe_pop ?? '-' }}" readonly>
                             </div>
+                            <div class="form-group">
+                                <label for="tanggal_pemeriksaan">Tanggal Pemeriksaan (opsional)</label>
+                                <input type="date" id="tanggal_pemeriksaan" name="tanggal_pemeriksaan" class="form-control" value="{{ old('tanggal_pemeriksaan') }}">
+                                @error('tanggal_pemeriksaan')<div style="color:#ef4444;font-size:0.8rem;margin-top:4px;">{{ $message }}</div>@enderror
+                            </div>
                         </div>
                     </div>
 
@@ -74,12 +81,18 @@
                         </h3>
                         <div class="form-grid-2">
 
+                            <div class="form-group">
+                                <label for="pic">PIC <span class="required">*</span></label>
+                                <input type="text" id="pic" name="pic" class="form-control" value="{{ old('pic', auth()->user()->name ?? '') }}" placeholder="Nama penanggung jawab" required>
+                                @error('pic')<div style="color:#ef4444;font-size:0.8rem;margin-top:4px;">{{ $message }}</div>@enderror
+                            </div>
+
                             <!-- Jenis Freon -->
                             <div class="form-group">
                                 <label for="jenis_freon">Jenis Freon <span class="required">*</span></label>
                                 <select id="jenis_freon" name="jenis_freon" class="form-control" required>
                                     <option value="" disabled {{ old('jenis_freon') ? '' : 'selected' }}>Pilih Jenis Freon</option>
-                                    @foreach (['R134a', 'R22', 'R32', 'R410', 'R410A', 'Others'] as $freon)
+                                    @foreach (collect(['R134a', 'R22', 'R32', 'R410', 'R410A'])->merge($sharedAcOptions['jenis_freon'])->unique()->push('Others') as $freon)
                                         <option value="{{ $freon }}" {{ old('jenis_freon') === $freon ? 'selected' : '' }}>{{ $freon }}</option>
                                     @endforeach
                                 </select>
@@ -95,7 +108,7 @@
                                 <label for="merk_ac">Merk AC <span class="required">*</span></label>
                                 <select id="merk_ac" name="merk_ac" class="form-control" required>
                                     <option value="" disabled {{ old('merk_ac') ? '' : 'selected' }}>Pilih Merk AC</option>
-                                    @foreach (['Aqua', 'Kabinet', 'Daikin', 'DBS', 'Gree', 'Hopep', 'Huarui', 'LG', 'Midea', 'Panasonic', 'Samsung', 'Sharp', 'TCL', 'Others'] as $merk)
+                                    @foreach (collect(['Aqua', 'Kabinet', 'Daikin', 'DBS', 'Gree', 'Hopep', 'Huarui', 'LG', 'Midea', 'Panasonic', 'Samsung', 'Sharp', 'TCL'])->merge($sharedAcOptions['merk_ac'])->unique()->push('Others') as $merk)
                                         <option value="{{ $merk }}" {{ old('merk_ac') === $merk ? 'selected' : '' }}>{{ $merk }}</option>
                                     @endforeach
                                 </select>
@@ -120,7 +133,7 @@
                                 <label for="type_ac">Type AC <span class="required">*</span></label>
                                 <select id="type_ac" name="type_ac" class="form-control" required>
                                     <option value="" disabled {{ old('type_ac') ? '' : 'selected' }}>Pilih Type AC</option>
-                                    @foreach (['Inverter', 'Non Inverter', 'Others'] as $type)
+                                    @foreach (collect(['Inverter', 'Non Inverter'])->merge($sharedAcOptions['type_ac'])->unique()->push('Others') as $type)
                                         <option value="{{ $type }}" {{ old('type_ac') === $type ? 'selected' : '' }}>{{ $type }}</option>
                                     @endforeach
                                 </select>
@@ -156,7 +169,7 @@
                                 <label for="tanggal_terakhir_pm">Tanggal Terakhir PM</label>
                                 <input type="date" id="tanggal_terakhir_pm" name="tanggal_terakhir_pm"
                                     class="form-control" value="{{ old('tanggal_terakhir_pm') }}">
-                                <small class="upload-info">Jadwal PM rutin disarankan setiap 6 bulan sekali.</small>
+                                <small class="upload-info">Jadwal PM rutin setiap 3 bulan sekali.</small>
                                 @error('tanggal_terakhir_pm')<div style="color:#ef4444;font-size:0.8rem;margin-top:4px;">{{ $message }}</div>@enderror
                             </div>
 

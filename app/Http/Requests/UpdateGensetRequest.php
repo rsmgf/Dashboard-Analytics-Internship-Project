@@ -32,6 +32,7 @@ class UpdateGensetRequest extends FormRequest
             // Uji Genset
             'tahun_pasang'              => ['required', 'integer', 'min:2013', 'max:2045'],
             'tanggal_pm'                => ['nullable', 'date'],
+            'tanggal_pemeriksaan'       => ['nullable', 'date'],
 
             // Foto (nullable saat update — jika tidak diupload, foto lama tetap dipakai)
             'photo_genset'              => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
