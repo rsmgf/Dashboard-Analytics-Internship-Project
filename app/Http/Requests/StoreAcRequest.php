@@ -16,6 +16,7 @@ class StoreAcRequest extends FormRequest
         return [
             // Detail AC
             'jenis_freon'           => ['required', 'string', 'max:255'],
+            'pic'                   => ['required', 'string', 'max:255'],
             'jenis_freon_others'    => ['nullable', 'string', 'max:255'],
             'merk_ac'               => ['required', 'string', 'max:255'],
             'merk_ac_others'        => ['nullable', 'string', 'max:255'],
@@ -25,6 +26,7 @@ class StoreAcRequest extends FormRequest
             'pk'                    => ['required', 'string', 'max:10'],
             'tanggal_instalasi'     => ['nullable', 'date'],
             'tanggal_terakhir_pm'   => ['nullable', 'date'],
+            'tanggal_pemeriksaan'   => ['nullable', 'date'],
 
             // Foto
             'photo_ac'              => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],

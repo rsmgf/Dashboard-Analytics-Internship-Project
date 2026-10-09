@@ -18,7 +18,7 @@
     @vite(['resources/css/sidebar.css', 'resources/css/dashboard.css', 'resources/css/notification.css', 'resources/js/app.js'])
 </head>
 
-<body>
+<body class="{{ (session('active_role') ?? (auth()->user()?->hasRole('manajer') ? 'manajer' : 'super_admin')) === 'manajer' ? 'manajer-mode' : '' }}">
     <div class="app-container">
         {{-- SIDEBAR --}}
         <x-sidebar />

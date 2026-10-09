@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    @vite(['resources/css/sidebar.css', 'resources/css/rectifier-form.css'])
+    @vite(['resources/css/sidebar.css', 'resources/css/rectifier-form.css', 'resources/css/device-form-consistency.css', 'resources/js/device-datalist.js'])
 </head>
 
 <body>
@@ -89,9 +89,16 @@
                             </div>
 
                             <div class="rform-group">
-                                <label class="rform-label">Tanggal Pemeriksaan <span class="rform-required">*</span></label>
+                                <label class="rform-label">Tanggal Pemeriksaan <small>(opsional)</small></label>
                                 <input type="date" name="tanggal_pemeriksaan" class="rform-input"
                                        value="{{ old('tanggal_pemeriksaan', $rectifier->tanggal_pemeriksaan ? \Carbon\Carbon::parse($rectifier->tanggal_pemeriksaan)->format('Y-m-d') : '') }}">
+                            </div>
+
+                            <div class="rform-group">
+                                <label class="rform-label">Tanggal Pemasangan <small>(opsional)</small></label>
+                                <input type="date" name="tanggal_pemasangan" class="rform-input"
+                                       value="{{ old('tanggal_pemasangan', $rectifier->tanggal_pemasangan?->format('Y-m-d')) }}">
+                                @error('tanggal_pemasangan') <span class="rform-error">{{ $message }}</span> @enderror
                             </div>
 
                             <div class="rform-group">
@@ -142,7 +149,8 @@
                                         <label class="rform-label">Merk <span class="rform-required">*</span></label>
                                         <input type="text" name="merk"
                                             class="rform-input {{ $errors->has('merk') ? 'is-invalid' : '' }}"
-                                            value="{{ old('merk', $rectifier->merk) }}" placeholder="Contoh: EMERSON">
+                                            value="{{ old('merk', $rectifier->merk) }}" list="shared-merk-options" placeholder="Ketik atau pilih merk rectifier">
+                                        <datalist id="shared-merk-options">@foreach($fieldOptions['merk'] as $option)<option value="{{ $option }}">@endforeach</datalist>
                                         @error('merk')
                                             <span class="rform-error">{{ $message }}</span>
                                         @enderror
@@ -152,8 +160,9 @@
                                         <label class="rform-label">Type <span class="rform-required">*</span></label>
                                         <input type="text" name="type"
                                             class="rform-input {{ $errors->has('type') ? 'is-invalid' : '' }}"
-                                            value="{{ old('type', $rectifier->type) }}"
+                                            value="{{ old('type', $rectifier->type) }}" list="shared-type-options"
                                             placeholder="Contoh: NetSure 531 A91-S1">
+                                        <datalist id="shared-type-options">@foreach($fieldOptions['type'] as $option)<option value="{{ $option }}">@endforeach</datalist>
                                         @error('type')
                                             <span class="rform-error">{{ $message }}</span>
                                         @enderror
@@ -173,16 +182,18 @@
 
                                     <div class="rform-group">
                                         <label class="rform-label">Couple / tidak</label>
-                                        <input type="text" name="couple" class="rform-input"
-                                            value="{{ old('couple', $rectifier->couple) }}"
-                                            placeholder="Contoh: COUPLE">
+                                        <select name="couple" class="rform-input">
+                                            <option value="">Pilih status couple</option>
+                                            @foreach(array_unique(array_filter(['COUPLE', 'TIDAK COUPLE', $rectifier->couple])) as $choice)<option value="{{ $choice }}" @selected(strcasecmp(old('couple', $rectifier->couple ?? ''), $choice) === 0)>{{ $choice }}</option>@endforeach
+                                        </select>
                                     </div>
 
                                     <div class="rform-group">
                                         <label class="rform-label">Type Modul Controller</label>
-                                        <input type="text" name="type_modul_controller" class="rform-input"
+                                        <input type="text" name="type_modul_controller" class="rform-input" list="shared-controller-options"
                                             value="{{ old('type_modul_controller', $rectifier->type_modul_controller) }}"
                                             placeholder="Contoh: MCU M800D">
+                                        <datalist id="shared-controller-options">@foreach($fieldOptions['type_modul_controller'] as $option)<option value="{{ $option }}">@endforeach</datalist>
                                     </div>
 
                                     <div class="rform-group">
@@ -221,9 +232,10 @@
 
                                     <div class="rform-group">
                                         <label class="rform-label">Type Modul Power</label>
-                                        <input type="text" name="type_modul_power" class="rform-input"
+                                        <input type="text" name="type_modul_power" class="rform-input" list="shared-power-options"
                                             value="{{ old('type_modul_power', $rectifier->type_modul_power) }}"
                                             placeholder="Contoh: R48-2000e3">
+                                        <datalist id="shared-power-options">@foreach($fieldOptions['type_modul_power'] as $option)<option value="{{ $option }}">@endforeach</datalist>
                                     </div>
 
                                     <div class="rform-group">
@@ -301,7 +313,7 @@
                                 <div class="rform-photo-col">
                                     <span class="rform-preview-label">{{ $rectifier->foto_rectifier ? 'Foto Saat Ini' : 'Preview Foto' }}</span>
                                     <div class="rform-preview-box">
-                                        @if ($rectifier->foto_rectifier)
+                                        @if ($rectifier->foto_rectifier && \Illuminate\Support\Facades\Storage::disk('public')->exists($rectifier->foto_rectifier))
                                             <img id="fotoPreview"
                                                 src="{{ asset('storage/' . $rectifier->foto_rectifier) }}"
                                                 alt="Foto Rectifier" style="display:block;">

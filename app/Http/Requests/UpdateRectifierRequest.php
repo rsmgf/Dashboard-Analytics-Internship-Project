@@ -20,6 +20,7 @@ class UpdateRectifierRequest extends FormRequest
             // Informasi dasar (nama_alias auto-generate, tidak bisa diubah)
             'deskripsi'               => 'nullable|string',
             'tanggal_pemeriksaan'     => 'nullable|date',
+            'tanggal_pemasangan'      => 'nullable|date',
             'pic'                     => 'nullable|string|max:255',
 
             // Data teknis utama

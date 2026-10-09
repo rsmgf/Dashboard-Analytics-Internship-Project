@@ -78,9 +78,10 @@
 /* Search & Filter Row */
 .filter-section {
     display: flex;
-    gap: 20px;
+    gap: 12px;
     align-items: flex-end;
     margin-bottom: 15px;
+    flex-wrap: wrap;
     /* SEBELUMNYA 24px. Kurangi angka ini jika ingin kolom pencarian lebih dekat ke tabel */
 }
 
@@ -136,7 +137,7 @@
 
 
 .filter-wrapper {
-    width: 240px;
+    width: min(190px, 100%);
     display: flex;
     flex-direction: column;
     gap: 6px;

@@ -52,7 +52,7 @@
                 <div class="alert-info-custom">
                     <i class="bi bi-exclamation-circle-fill"></i>
                     <span>
-                        Terakhir diperbarui:
+                        Terakhir diperbarui oleh:
                         <strong>
                             @if($battery->diupdateOleh)
                                 {{ $battery->diupdateOleh->name }} &middot; {{ $battery->updated_at->translatedFormat('d F Y, H:i') }} WIB
@@ -71,11 +71,23 @@
                         </div>
                         <div class="info-box-grid">
                             <div class="info-box">
+                                <div class="info-box-icon"><i class="bi bi-upc-scan"></i></div>
+                                <div class="info-box-text"><span class="info-box-label">Nomor Bank</span><span class="info-box-value">{{ $battery->nomor_bank }}</span></div>
+                            </div>
+                            <div class="info-box">
                                 <div class="info-box-icon"><i class="bi bi-geo-alt-fill"></i></div>
                                 <div class="info-box-text">
                                     <span class="info-box-label">POP</span>
                                     <span class="info-box-value">{{ $pop->nama_pop_display }}</span>
                                 </div>
+                            </div>
+                            <div class="info-box">
+                                <div class="info-box-icon"><i class="bi bi-calendar-event"></i></div>
+                                <div class="info-box-text"><span class="info-box-label">Tanggal Pemasangan</span><span class="info-box-value">{{ $battery->tanggal_pemasangan?->translatedFormat('d F Y') ?? 'Belum diisi' }}{{ $battery->umur_perangkat ? ' · ' . $battery->umur_perangkat : '' }}</span></div>
+                            </div>
+                            <div class="info-box">
+                                <div class="info-box-icon"><i class="bi bi-calendar-check-fill"></i></div>
+                                <div class="info-box-text"><span class="info-box-label">Tanggal Pemeriksaan</span><span class="info-box-value">{{ $battery->tanggal_pemeriksaan?->translatedFormat('d F Y') ?? 'Belum diisi' }}</span></div>
                             </div>
                             <div class="info-box">
                                 <div class="info-box-icon"><i class="bi bi-building-fill"></i></div>
@@ -300,7 +312,7 @@
                             <div class="detail-card-body">
                             <div class="figma-photo-card">
                                 <div class="figma-photo-img-area">
-                                    @if (!empty($battery->photo_battery) && file_exists(public_path('storage/' . $battery->photo_battery)))
+                                    @if (!empty($battery->photo_battery) && \Illuminate\Support\Facades\Storage::disk('public')->exists($battery->photo_battery))
                                         <img src="{{ asset('storage/' . $battery->photo_battery) }}" 
                                              alt="Foto Baterai" 
                                              id="detailPhoto" tabindex="0"

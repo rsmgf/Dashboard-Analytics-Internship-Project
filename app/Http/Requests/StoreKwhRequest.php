@@ -24,7 +24,8 @@ class StoreKwhRequest extends FormRequest
         return [
             'pic' => ['required', 'string', 'max:100'],
             'id_customer_pln' => ['required', 'string', 'max:50'],
-            'tanggal_pemeriksaan' => ['required', 'date'],
+            'tanggal_pemeriksaan' => ['nullable', 'date'],
+            'tanggal_pemasangan' => ['nullable', 'date'],
 
             // 'daya_ps_gi' => ['required', 'string', 'max:50'],
             'mcb_utama' => ['required', 'numeric'],

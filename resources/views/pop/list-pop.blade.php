@@ -118,6 +118,27 @@
                             <option value="AC" {{ request('filter') == 'AC' ? 'selected' : '' }}>AC</option>
                         </select>
                     </div>
+                    <div class="filter-wrapper">
+                        <label class="filter-label" for="filterTipePop">Tipe POP</label>
+                        <select id="filterTipePop" name="tipe_pop" class="filter-control" onchange="this.form.submit()">
+                            <option value="">Semua tipe</option>
+                            @foreach($filterOptions['tipe_pop'] as $option)<option value="{{ $option }}" @selected(request('tipe_pop') === $option)>{{ $option }}</option>@endforeach
+                        </select>
+                    </div>
+                    <div class="filter-wrapper">
+                        <label class="filter-label" for="filterKabupaten">Kota/Kabupaten</label>
+                        <select id="filterKabupaten" name="kota_kabupaten" class="filter-control" onchange="this.form.submit()">
+                            <option value="">Semua wilayah</option>
+                            @foreach($filterOptions['kota_kabupaten'] as $option)<option value="{{ $option }}" @selected(request('kota_kabupaten') === $option)>{{ $option }}</option>@endforeach
+                        </select>
+                    </div>
+                    <div class="filter-wrapper">
+                        <label class="filter-label" for="filterBuilding">Building/Shelter</label>
+                        <select id="filterBuilding" name="building" class="filter-control" onchange="this.form.submit()">
+                            <option value="">Semua jenis</option>
+                            @foreach($filterOptions['building'] as $option)<option value="{{ $option }}" @selected(request('building') === $option)>{{ $option }}</option>@endforeach
+                        </select>
+                    </div>
                 </form>
 
                 <div class="table-card">

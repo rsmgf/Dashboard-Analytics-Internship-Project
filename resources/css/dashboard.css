@@ -1086,6 +1086,111 @@ body.pop-focus .pop-back-bar {
     width: 100%;
 }
 
+.healthy-chart-extra-legend {
+    display: grid;
+    gap: 7px;
+    padding-top: 8px;
+    color: #334155;
+    font-size: 0.68rem;
+}
+
+.healthy-chart-device-legend,
+.healthy-status-legend {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 7px 14px;
+}
+
+.healthy-chart-device-legend > span,
+.healthy-status-legend > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+.healthy-chart-device-legend > span > i:first-child {
+    width: 12px;
+    height: 12px;
+    border-radius: 1px;
+    background: var(--device-color);
+}
+
+.status-legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.status-legend-dot.very-healthy { background: #22c55e; }
+.status-legend-dot.healthy { background: #15803d; }
+.status-legend-dot.unhealthy { background: #ff5a5f; }
+.status-legend-dot.very-unhealthy { background: #dc2626; }
+
+.device-legend-with-info {
+    position: relative;
+}
+
+.healthy-point-info-button {
+    display: inline-grid;
+    width: 17px;
+    height: 17px;
+    padding: 0;
+    place-items: center;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: #64748b;
+    cursor: pointer;
+    font-size: 0.78rem;
+}
+
+.healthy-point-info-button:hover,
+.healthy-point-info-button:focus-visible {
+    color: #0284c7;
+    outline: 2px solid rgba(2, 132, 199, 0.2);
+}
+
+.healthy-point-info-popover {
+    position: absolute;
+    z-index: 20;
+    right: -12px;
+    bottom: calc(100% + 7px);
+    display: grid;
+    min-width: 205px;
+    gap: 5px;
+    padding: 11px 12px;
+    border: 1px solid #dbe4ef;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.15);
+    color: #334155;
+    white-space: nowrap;
+}
+
+.healthy-point-info-popover[hidden] {
+    display: none !important;
+}
+
+.healthy-point-info-popover strong {
+    margin-bottom: 2px;
+    color: #0f3356;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.healthy-point-info-popover > span {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.healthy-point-info-popover b {
+    font-weight: 600;
+}
+
 /* ---- Populasi POP ---- */
 .population-card {
     align-self: stretch;

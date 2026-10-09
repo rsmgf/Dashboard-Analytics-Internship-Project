@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Support\DeviceAge;
 
 class Kwh extends Model
 {
     use HasFactory;
+    use DeviceAge;
 
     protected $fillable = [
         'pop_id',
@@ -15,6 +17,7 @@ class Kwh extends Model
         'pic',
         'id_customer_pln',
         'tanggal_pemeriksaan',
+        'tanggal_pemasangan',
         'daya_ps_gi',
         'mcb_utama',
         'jumlah_phasa',
@@ -49,6 +52,7 @@ class Kwh extends Model
 
     protected $casts = [
         'tanggal_pemeriksaan' => 'date',
+        'tanggal_pemasangan' => 'date',
     ];
 
     public function pop()
@@ -171,7 +175,6 @@ class Kwh extends Model
         'nomor_kwh',
         'pic',
         'id_customer_pln',
-        'tanggal_pemeriksaan',
         'mcb_utama',
         'jumlah_phasa',
         'keberadaan_arrester',

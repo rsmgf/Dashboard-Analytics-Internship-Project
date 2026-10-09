@@ -899,6 +899,21 @@ body.sidebar-collapsed .sidebar-logout-item span {
         gap: 8px;
     }
 
+    /* Keep the user identity on its own row and align it to the right on phones. */
+    .topbar:not(.topbar-manajer-mode) .user-profile {
+        order: 3;
+        flex: 1 1 100%;
+        width: 100%;
+        max-width: 100%;
+        margin-left: 0;
+        justify-content: flex-end;
+    }
+
+    .topbar:not(.topbar-manajer-mode) .user-identity {
+        max-width: min(72vw, 360px);
+        text-align: right;
+    }
+
     .topbar-manajer-mode .user-profile {
         order: 3;
         flex: 1 1 100%;

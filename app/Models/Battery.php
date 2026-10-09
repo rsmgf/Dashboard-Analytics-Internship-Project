@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Support\DeviceAge;
 
 class Battery extends Model
 {
     use HasFactory;
+    use DeviceAge;
 
     protected $fillable = [
         'pop_id',
@@ -27,6 +29,8 @@ class Battery extends Model
         'kapasitas_battery_persen',
         'performa_baterai',
         'tanggal_uji_terakhir',
+        'tanggal_pemasangan',
+        'tanggal_pemeriksaan',
         'tanggal_penggantian',
         'status_uji',
         'photo_battery',
@@ -44,6 +48,8 @@ class Battery extends Model
         'vrla_4'                   => 'float',
         'kapasitas_battery_persen' => 'float',
         'tanggal_uji_terakhir'     => 'date',
+        'tanggal_pemasangan'       => 'date',
+        'tanggal_pemeriksaan'      => 'date',
         'tanggal_penggantian'      => 'date',
     ];
 
@@ -122,14 +128,20 @@ class Battery extends Model
 
     public function getPmBerikutnyaAttribute(): ?\Carbon\Carbon
     {
-        return $this->tanggal_uji_terakhir ? $this->tanggal_uji_terakhir->copy()->addYear() : null;
+        return $this->tanggal_uji_terakhir ? $this->tanggal_uji_terakhir->copy()->addMonths(6) : null;
+    }
+
+    public function getStatusUjiAttribute(): string
+    {
+        return $this->status_uji_live;
     }
 
     public function getStatusUjiLiveAttribute(): string
     {
         if (!$this->tanggal_uji_terakhir) return 'BLM UJI BATT';
-        $diffDays = now()->diffInDays($this->tanggal_uji_terakhir, false);
-        return abs($diffDays) >= 365 ? 'JADWAL UJI BATT' : 'SUDAH UJI BATT';
+        return now()->startOfDay()->greaterThanOrEqualTo($this->pm_berikutnya->copy()->startOfDay())
+            ? 'JADWAL UJI BATT'
+            : 'SUDAH UJI BATT';
     }
 
     public function getStatusUjiLabelAttribute(): string
@@ -157,19 +169,24 @@ class Battery extends Model
         }
 
         $nextUji = $this->pm_berikutnya;
-        $now = now();
+        $now = now()->startOfDay();
+        $dueDate = $nextUji->copy()->startOfDay();
 
-        if ($now->startOfDay()->greaterThan($nextUji->startOfDay())) {
-            $diffYears = (int) $nextUji->startOfDay()->diffInYears($now->startOfDay());
-            $diffDays = $nextUji->startOfDay()->copy()->addYears($diffYears)->diffInDays($now->startOfDay());
+        if ($now->greaterThanOrEqualTo($dueDate)) {
+            if ($now->equalTo($dueDate)) {
+                return '(jatuh tempo hari ini)';
+            }
+
+            $diffYears = (int) $dueDate->diffInYears($now);
+            $diffDays = $dueDate->copy()->addYears($diffYears)->diffInDays($now);
             
             $text = '(lewat ' . $diffYears . ' tahun dan ' . max(0, $diffDays) . ' hari)';
             
             return $text;
         }
 
-        $diffYears = (int) $now->startOfDay()->diffInYears($nextUji->startOfDay());
-        $diffDays = $now->startOfDay()->copy()->addYears($diffYears)->diffInDays($nextUji->startOfDay());
+        $diffYears = (int) $now->diffInYears($dueDate);
+        $diffDays = $now->copy()->addYears($diffYears)->diffInDays($dueDate);
         
         $text = '(dalam ' . $diffYears . ' tahun dan ' . max(0, $diffDays) . ' hari)';
         

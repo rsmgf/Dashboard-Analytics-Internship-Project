@@ -50,7 +50,7 @@
                 <div class="alert-info-custom">
                     <i class="bi bi-exclamation-circle-fill"></i>
                     <span>
-                        Terakhir diperbarui:
+                        Terakhir diperbarui oleh:
                         <strong>
                             @if ($ac->diupdateOleh)
                                 {{ $ac->diupdateOleh->name }} &middot;
@@ -71,6 +71,10 @@
                         </div>
                         <div class="info-box-grid">
                             <div class="info-box">
+                                <div class="info-box-icon"><i class="bi bi-upc-scan"></i></div>
+                                <div class="info-box-text"><span class="info-box-label">Nomor AC</span><span class="info-box-value">{{ $ac->nomor_ac }}</span></div>
+                            </div>
+                            <div class="info-box">
                                 <div class="info-box-icon"><i class="bi bi-geo-alt-fill"></i></div>
                                 <div class="info-box-text">
                                     <span class="info-box-label">POP</span>
@@ -78,11 +82,8 @@
                                 </div>
                             </div>
                             <div class="info-box">
-                                <div class="info-box-icon"><i class="bi bi-pin-map-fill"></i></div>
-                                <div class="info-box-text">
-                                    <span class="info-box-label">Kota / Kabupaten</span>
-                                    <span class="info-box-value">{{ $pop->kota_kabupaten }}</span>
-                                </div>
+                                <div class="info-box-icon"><i class="bi bi-building-fill"></i></div>
+                                <div class="info-box-text"><span class="info-box-label">Building / Jenis Bangunan</span><span class="info-box-value">{{ $pop->jenis_bangunan ?? '-' }}</span></div>
                             </div>
                             <div class="info-box">
                                 <div class="info-box-icon"><i class="bi bi-tag-fill"></i></div>
@@ -90,6 +91,18 @@
                                     <span class="info-box-label">Tipe POP</span>
                                     <span class="info-box-value">{{ $pop->tipe_pop ?? '-' }}</span>
                                 </div>
+                            </div>
+                            <div class="info-box">
+                                <div class="info-box-icon"><i class="bi bi-calendar-check-fill"></i></div>
+                                <div class="info-box-text"><span class="info-box-label">Tanggal Pemeriksaan</span><span class="info-box-value">{{ $ac->tanggal_pemeriksaan?->translatedFormat('d F Y') ?? 'Belum diisi' }}</span></div>
+                            </div>
+                            <div class="info-box">
+                                <div class="info-box-icon"><i class="bi bi-calendar-event"></i></div>
+                                <div class="info-box-text"><span class="info-box-label">Tahun Manufaktur</span><span class="info-box-value">{{ $ac->tahun_manufaktur ?? '-' }}</span></div>
+                            </div>
+                            <div class="info-box">
+                                <div class="info-box-icon"><i class="bi bi-person-fill"></i></div>
+                                <div class="info-box-text"><span class="info-box-label">PIC</span><span class="info-box-value">{{ $ac->pic ?? '-' }}</span></div>
                             </div>
                         </div>
                     </section>
@@ -103,10 +116,6 @@
                             </div>
                             <div class="detail-card-body">
                             <div class="checklist-table-container">
-                                <div class="checklist-row">
-                                    <div class="checklist-label">Nomor AC</div>
-                                    <div class="checklist-field">{{ $ac->nomor_ac }}</div>
-                                </div>
                                 <div class="checklist-row">
                                     <div class="checklist-label">Merk AC</div>
                                     <div class="checklist-field">{{ $ac->merk_ac }}</div>
@@ -162,7 +171,7 @@
                             </div>
                             <div class="detail-card-body">
                             <div class="detail-photo-box">
-                                @if ($ac->photo_ac)
+                                @if ($ac->photo_ac && \Illuminate\Support\Facades\Storage::disk('public')->exists($ac->photo_ac))
                                     <img src="{{ asset('storage/' . $ac->photo_ac) }}" alt="Foto Kondisi AC" id="detailPhoto"
                                          onclick="Swal.fire({ title: '{{ addslashes($ac->keterangan_gambar_ac ?? 'Foto AC') }}', imageUrl: this.src, imageAlt: 'Foto AC', showCloseButton: true, showConfirmButton: false, width: 'min(92vw, 900px)', heightAuto: false, customClass: { popup: 'swal-popup-custom' } })"
                                          title="Klik untuk melihat ukuran penuh">

@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
     @vite([
         'resources/css/sidebar.css',
-        'resources/css/genset-create.css'
+        'resources/css/genset-create.css',
+        'resources/css/device-form-consistency.css',
+        'resources/js/device-datalist.js'
     ])
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -81,6 +83,11 @@
                                     value="{{ old('bentuk_fisik', $pop->jenis_bangunan ?? '-') }}" readonly
                                     style="background:#f1f5f9; color:#475569; font-weight:500; cursor:not-allowed;">
                             </div>
+                            <div class="form-group">
+                                <label for="tanggal_pemeriksaan">Tanggal Pemeriksaan (opsional)</label>
+                                <input type="date" id="tanggal_pemeriksaan" name="tanggal_pemeriksaan" class="form-control" value="{{ old('tanggal_pemeriksaan') }}">
+                                @error('tanggal_pemeriksaan')<div style="color:#ef4444;font-size:0.8rem;margin-top:4px;">{{ $message }}</div>@enderror
+                            </div>
                         </div>
                     </div>
 
@@ -94,7 +101,7 @@
                                 <div class="checklist-field">
                                     <select id="merk_genset" name="merk_genset" class="table-input" required>
                                         <option value="" disabled {{ old('merk_genset') ? '' : 'selected' }}>Pilih Merk</option>
-                                        @foreach (['Potise', 'Ada', 'Perkins', 'Truepower', 'Stamford', 'Yanmar', 'Himoinsa', 'Cummins', 'Others'] as $merk)
+                                        @foreach (collect(['Potise', 'Ada', 'Perkins', 'Truepower', 'Stamford', 'Yanmar', 'Himoinsa', 'Cummins'])->merge($sharedGensetOptions['brands'])->unique()->push('Others') as $merk)
                                             <option value="{{ $merk }}" {{ old('merk_genset') === $merk ? 'selected' : '' }}>{{ $merk }}</option>
                                         @endforeach
                                     </select>
@@ -147,7 +154,7 @@
                                 <div class="checklist-field">
                                     <select id="tipe_engine" name="tipe_engine" class="table-input" required>
                                         <option value="" disabled {{ old('tipe_engine') ? '' : 'selected' }}>Pilih Tipe Engine</option>
-                                        @foreach (['Perkins', 'Yanmar', 'Stamford', 'Deepsea', 'Others'] as $engine)
+                                        @foreach (collect(['Perkins', 'Yanmar', 'Stamford', 'Deepsea'])->merge($sharedGensetOptions['engines'])->unique()->push('Others') as $engine)
                                             <option value="{{ $engine }}" {{ old('tipe_engine') === $engine ? 'selected' : '' }}>{{ $engine }}</option>
                                         @endforeach
                                     </select>
@@ -282,7 +289,7 @@
         const oldMerk  = @json(old('merk_genset', ''));
         const oldModel = @json(old('model', ''));
 
-        const modelData = {
+        const modelData = Object.assign({
             'Potise':    ['Model Potise A', 'Model Potise B'],
             'Ada':       ['Model Ada X', 'Model Ada Y'],
             'Perkins':   ['Perkins 1104A', 'Perkins 2206S', 'Perkins 4003'],
@@ -291,7 +298,7 @@
             'Yanmar':    ['Yanmar 3TNV', 'Yanmar 4TNV98'],
             'Himoinsa':  ['Himoinsa HFW-50', 'Himoinsa HYW-13'],
             'Cummins':   ['Cummins C33D5', 'Cummins C55D5'],
-        };
+        }, @json($sharedGensetOptions['models']));
 
         document.addEventListener('DOMContentLoaded', function () {
             // Populate Tahun Pasang (2013 - 2045)

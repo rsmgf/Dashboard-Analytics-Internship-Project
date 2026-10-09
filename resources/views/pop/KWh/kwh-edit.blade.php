@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    @vite(['resources/css/sidebar.css', 'resources/css/rectifier-form.css', 'resources/css/kwh-create.css'])
+    @vite(['resources/css/sidebar.css', 'resources/css/rectifier-form.css', 'resources/css/kwh-create.css', 'resources/css/device-form-consistency.css', 'resources/js/device-datalist.js'])
 </head>
 
 <body>
@@ -106,10 +106,18 @@
                                     </div>
 
                                     <div class="rform-group">
-                                        <label class="rform-label">Tanggal Pemeriksaan <span class="rform-required">*</span></label>
+                                        <label class="rform-label">Tanggal Pemeriksaan (opsional)</label>
                                         <input type="date" name="tanggal_pemeriksaan" class="rform-input"
-                                            value="{{ old('tanggal_pemeriksaan', $kwh->tanggal_pemeriksaan->format('Y-m-d')) }}"
-                                            required>
+                                            value="{{ old('tanggal_pemeriksaan', $kwh->tanggal_pemeriksaan?->format('Y-m-d')) }}">
+                                    </div>
+                                </div>
+
+                                <div class="rform-row rform-row-1">
+                                    <div class="rform-group">
+                                        <label class="rform-label">Tanggal Pemasangan (opsional)</label>
+                                        <input type="date" name="tanggal_pemasangan" class="rform-input"
+                                            value="{{ old('tanggal_pemasangan', $kwh->tanggal_pemasangan?->format('Y-m-d')) }}">
+                                        @error('tanggal_pemasangan') <span class="rform-error">{{ $message }}</span> @enderror
                                     </div>
                                 </div>
 
@@ -159,7 +167,8 @@
                                         <label class="rform-label">Merk / Type Arrester</label>
                                         <input type="text" name="merk_type_arrester" class="rform-input"
                                             value="{{ old('merk_type_arrester', $kwh->merk_type_arrester) }}"
-                                            placeholder="Contoh: OBO / OBO Bettermann V20">
+                                            list="arrester-options" placeholder="Ketik atau pilih merk/type arrester">
+                                        <datalist id="arrester-options">@foreach($arresterOptions as $option)<option value="{{ $option }}">@endforeach</datalist>
                                     </div>
                                 </div>
 

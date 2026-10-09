@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
     @vite([
         'resources/css/sidebar.css',
-        'resources/css/genset-create.css'
+        'resources/css/genset-create.css',
+        'resources/css/device-form-consistency.css',
+        'resources/js/device-datalist.js'
     ])
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -83,6 +85,11 @@
                                     value="{{ old('bentuk_fisik', $genset->bentuk_fisik ?? $pop->jenis_bangunan ?? '-') }}" readonly
                                     style="background:#f1f5f9; color:#475569; font-weight:500; cursor:not-allowed;">
                             </div>
+                            <div class="form-group">
+                                <label for="tanggal_pemeriksaan">Tanggal Pemeriksaan (opsional)</label>
+                                <input type="date" id="tanggal_pemeriksaan" name="tanggal_pemeriksaan" class="form-control" value="{{ old('tanggal_pemeriksaan', $genset->tanggal_pemeriksaan?->format('Y-m-d')) }}">
+                                @error('tanggal_pemeriksaan')<div style="color:#ef4444;font-size:0.8rem;margin-top:4px;">{{ $message }}</div>@enderror
+                            </div>
                         </div>
                     </div>
 
@@ -95,7 +102,7 @@
                                 <div class="checklist-label">Merk Genset <span class="required">*</span></div>
                                 <div class="checklist-field">
                                     @php
-                                        $knownMerks = ['Potise', 'Ada', 'Perkins', 'Truepower', 'Stamford', 'Yanmar', 'Himoinsa', 'Cummins'];
+                                        $knownMerks = collect(['Potise', 'Ada', 'Perkins', 'Truepower', 'Stamford', 'Yanmar', 'Himoinsa', 'Cummins'])->merge($sharedGensetOptions['brands'])->unique()->all();
                                         $currentMerk = old('merk_genset', $genset->merk_genset);
                                         $isOtherMerk = !in_array($currentMerk, $knownMerks);
                                         $selectMerkVal = $isOtherMerk ? 'Others' : $currentMerk;
@@ -161,7 +168,7 @@
                                 <div class="checklist-label">Tipe Engine <span class="required">*</span></div>
                                 <div class="checklist-field">
                                     @php
-                                        $knownEngines  = ['Perkins', 'Yanmar', 'Stamford', 'Deepsea'];
+                                        $knownEngines  = collect(['Perkins', 'Yanmar', 'Stamford', 'Deepsea'])->merge($sharedGensetOptions['engines'])->unique()->all();
                                         $currentEngine = old('tipe_engine', $genset->tipe_engine);
                                         $isOtherEngine = !in_array($currentEngine, $knownEngines);
                                         $selectEngineVal = $isOtherEngine ? 'Others' : $currentEngine;
@@ -234,7 +241,7 @@
                             <div class="form-group">
                                 <label style="font-size: 0.84rem; font-weight: 500; color: #334155;">Foto kondisi fisik Genset di lokasi</label>
                                 <div class="photo-compact-preview" id="previewBoxGenset" onclick="document.getElementById('photo_genset').click()">
-                                    @if ($genset->photo_genset)
+                                    @if ($genset->photo_genset && \Illuminate\Support\Facades\Storage::disk('public')->exists($genset->photo_genset))
                                         <div id="noPreviewGenset" class="photo-compact-empty photo-compact-hidden">
                                             <i class="bi bi-image"></i>
                                             <span>Belum ada foto yang dipilih</span>
@@ -274,7 +281,7 @@
                             <div class="form-group">
                                 <label style="font-size: 0.84rem; font-weight: 500; color: #334155;">Foto kondisi Engine di lokasi</label>
                                 <div class="photo-compact-preview" id="previewBoxEngine" onclick="document.getElementById('photo_engine').click()">
-                                    @if ($genset->photo_engine)
+                                    @if ($genset->photo_engine && \Illuminate\Support\Facades\Storage::disk('public')->exists($genset->photo_engine))
                                         <div id="noPreviewEngine" class="photo-compact-empty photo-compact-hidden">
                                             <i class="bi bi-image"></i>
                                             <span>Belum ada foto yang dipilih</span>
@@ -324,7 +331,7 @@
         const selectedModel = @json(old('model', $genset->model));
         const selectedTahun = @json(old('tahun_pasang', $genset->tahun_pasang));
 
-        const modelData = {
+        const modelData = Object.assign({
             'Potise':    ['Model Potise A', 'Model Potise B'],
             'Ada':       ['Model Ada X', 'Model Ada Y'],
             'Perkins':   ['Perkins 1104A', 'Perkins 2206S', 'Perkins 4003'],
@@ -333,7 +340,7 @@
             'Yanmar':    ['Yanmar 3TNV', 'Yanmar 4TNV98'],
             'Himoinsa':  ['Himoinsa HFW-50', 'Himoinsa HYW-13'],
             'Cummins':   ['Cummins C33D5', 'Cummins C55D5'],
-        };
+        }, @json($sharedGensetOptions['models']));
 
         document.addEventListener('DOMContentLoaded', function () {
             // Populate Tahun Pasang

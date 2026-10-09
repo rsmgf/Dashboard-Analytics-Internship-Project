@@ -31,25 +31,19 @@
                 <input type="hidden" name="role" value="super_admin">
                 <button type="submit" class="btn-switch-role" title="Beralih ke mode Adminstrator">
                     <i class="bi bi-shield-lock-fill"></i>
-                    <span>Mode Administrator</span>
+                    <span>Ubah Menjadi Mode Administrator</span>
                 </button>
             @else
                 <input type="hidden" name="role" value="manajer">
                 <button type="submit" class="btn-switch-role manajer" title="Beralih ke mode Executive">
                     <i class="bi bi-person-circle"></i>
-                    <span>Mode Executive</span>
+                    <span>Ubah Menjadi Mode Executive</span>
                 </button>
             @endif
         </form>
     @endif
 
     <div class="user-profile">
-        @if ($isManajerMode)
-            <div class="topbar-role-badge">
-                <i class="bi bi-person-badge-fill"></i>
-                <span>Executive</span>
-            </div>
-        @endif
         <div class="user-identity">
             <span class="user-display-name">
                 {{ Auth::check() ? Auth::user()->name : 'Nama User' }}

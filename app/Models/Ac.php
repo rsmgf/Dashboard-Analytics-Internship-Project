@@ -14,6 +14,7 @@ class Ac extends Model
     protected $fillable = [
         'pop_id',
         'nomor_ac',
+        'pic',
         'jenis_freon',
         'merk_ac',
         'tahun_manufaktur',
@@ -31,6 +32,7 @@ class Ac extends Model
         'tahun_manufaktur'    => 'integer',
         'tanggal_instalasi'   => 'date',
         'tanggal_terakhir_pm' => 'date',
+        'tanggal_pemeriksaan' => 'date',
     ];
 
     public function pop()
@@ -45,6 +47,7 @@ class Ac extends Model
 
     protected static array $kolomKelengkapan = [
         'nomor_ac',
+        'pic',
         'jenis_freon',
         'merk_ac',
         'tahun_manufaktur',
@@ -52,6 +55,7 @@ class Ac extends Model
         'pk',
         'tanggal_instalasi',
         'tanggal_terakhir_pm',
+        'tanggal_pemeriksaan',
         'status_ac',
         'photo_ac',
         'keterangan_gambar_ac'
@@ -86,7 +90,18 @@ class Ac extends Model
 
     public function getPmBerikutnyaAttribute(): ?\Carbon\Carbon
     {
-        return $this->tanggal_terakhir_pm ? $this->tanggal_terakhir_pm->copy()->addMonths(6) : null;
+        return $this->tanggal_terakhir_pm ? $this->tanggal_terakhir_pm->copy()->addMonths(3) : null;
+    }
+
+    public function getStatusAcAttribute(): string
+    {
+        if (!$this->tanggal_terakhir_pm) {
+            return 'Belum PM';
+        }
+
+        return now()->startOfDay()->greaterThanOrEqualTo($this->pm_berikutnya->copy()->startOfDay())
+            ? 'Jadwal PM'
+            : 'Sudah PM';
     }
 
     public function getStatusPmAttribute(): array
@@ -100,18 +115,19 @@ class Ac extends Model
         }
 
         $nextPm = $this->pm_berikutnya;
-        $now = now();
+        $now = now()->startOfDay();
+        $dueDate = $nextPm->copy()->startOfDay();
 
-        if ($now->startOfDay()->greaterThanOrEqualTo($nextPm->startOfDay())) {
-            $lewatHari = $nextPm->startOfDay()->diffInDays($now->startOfDay());
+        if ($now->greaterThanOrEqualTo($dueDate)) {
+            $lewatHari = $dueDate->diffInDays($now);
             return [
                 'status' => 'Jadwal Preventive Maintenance',
                 'class' => 'pm-badge-warning',
-                'text' => '(lewat ' . max(1, $lewatHari) . ' hari)'
+                'text' => $lewatHari === 0 ? '(jatuh tempo hari ini)' : '(lewat ' . $lewatHari . ' hari)'
             ];
         }
 
-        $dalamHari = $now->startOfDay()->diffInDays($nextPm->startOfDay());
+        $dalamHari = $now->diffInDays($dueDate);
         return [
             'status' => 'Sudah Preventive Maintenance',
             'class' => 'pm-badge-success',

@@ -27,8 +27,9 @@ class AcController extends Controller
     public function create($pop_id)
     {
         $pop = Pop::findOrFail($pop_id);
+        $sharedAcOptions = $this->sharedAcOptions();
 
-        return view('pop.AC.ac-create', compact('pop'));
+        return view('pop.AC.ac-create', compact('pop', 'sharedAcOptions'));
     }
 
     // ─── 3. Simpan AC Baru ────────────────────────────────────────────────────
@@ -54,7 +55,7 @@ class AcController extends Controller
         $existingCount = Ac::where('pop_id', $pop->id)->count();
         $nomorAc       = $pop->kode_pop . '_AC' . str_pad($existingCount + 1, 2, '0', STR_PAD_LEFT);
 
-        // Hitung status AC dari tanggal_terakhir_pm (6 bulan)
+        // Hitung status AC dari tanggal_terakhir_pm (3 bulan)
         $statusAc = $this->calcStatusPm($validated['tanggal_terakhir_pm'] ?? null);
 
         // Upload foto
@@ -66,6 +67,7 @@ class AcController extends Controller
         Ac::create([
             'pop_id'               => $pop->id,
             'nomor_ac'             => $nomorAc,
+            'pic'                  => $validated['pic'] ?? null,
             'jenis_freon'          => $jenisFreon,
             'merk_ac'              => $merkAc,
             'tahun_manufaktur'     => (int) $validated['tahun_manufaktur'],
@@ -73,6 +75,7 @@ class AcController extends Controller
             'pk'                   => $validated['pk'],
             'tanggal_instalasi'    => $validated['tanggal_instalasi'] ?? null,
             'tanggal_terakhir_pm'  => $validated['tanggal_terakhir_pm'] ?? null,
+            'tanggal_pemeriksaan'  => $validated['tanggal_pemeriksaan'] ?? null,
             'status_ac'            => $statusAc,
             'photo_ac'             => $photoPath,
             'keterangan_gambar_ac' => $validated['keterangan_gambar_ac'] ?? null,
@@ -99,8 +102,16 @@ class AcController extends Controller
     {
         $pop = Pop::findOrFail($pop_id);
         $ac  = Ac::where('pop_id', $pop->id)->findOrFail($id);
+        $sharedAcOptions = $this->sharedAcOptions();
 
-        return view('pop.AC.ac-edit', compact('pop', 'ac'));
+        return view('pop.AC.ac-edit', compact('pop', 'ac', 'sharedAcOptions'));
+    }
+
+    private function sharedAcOptions(): array
+    {
+        return collect(['jenis_freon', 'merk_ac', 'type_ac'])
+            ->mapWithKeys(fn ($field) => [$field => Ac::query()->whereNotNull($field)->where($field, '<>', '')->distinct()->orderBy($field)->pluck($field)->all()])
+            ->all();
     }
 
     // ─── 6. Update Data AC ────────────────────────────────────────────────────
@@ -127,6 +138,7 @@ class AcController extends Controller
         $statusAc = $this->calcStatusPm($validated['tanggal_terakhir_pm'] ?? null);
 
         $updateData = [
+            'pic'                  => $validated['pic'] ?? null,
             'jenis_freon'          => $jenisFreon,
             'merk_ac'              => $merkAc,
             'tahun_manufaktur'     => (int) $validated['tahun_manufaktur'],
@@ -134,6 +146,7 @@ class AcController extends Controller
             'pk'                   => $validated['pk'],
             'tanggal_instalasi'    => $validated['tanggal_instalasi'] ?? null,
             'tanggal_terakhir_pm'  => $validated['tanggal_terakhir_pm'] ?? null,
+            'tanggal_pemeriksaan'  => $validated['tanggal_pemeriksaan'] ?? null,
             'status_ac'            => $statusAc,
             'keterangan_gambar_ac' => $validated['keterangan_gambar_ac'] ?? $ac->keterangan_gambar_ac,
             'diupdate_oleh'        => Auth::id(),
@@ -176,8 +189,8 @@ class AcController extends Controller
             return 'Belum PM';
         }
 
-        $bulanBerlalu = Carbon::parse($tanggalPm)->diffInMonths(now());
+        $jatuhTempo = Carbon::parse($tanggalPm)->addMonths(3)->startOfDay();
 
-        return $bulanBerlalu >= 6 ? 'Jadwal PM' : 'Sudah PM';
+        return now()->startOfDay()->greaterThanOrEqualTo($jatuhTempo) ? 'Jadwal PM' : 'Sudah PM';
     }
 }

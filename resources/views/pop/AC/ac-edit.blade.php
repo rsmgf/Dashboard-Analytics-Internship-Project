@@ -9,7 +9,9 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @vite([
         'resources/css/sidebar.css',
-        'resources/css/ac-create.css'
+        'resources/css/ac-create.css',
+        'resources/css/device-form-consistency.css',
+        'resources/js/device-datalist.js'
     ])
 </head>
 <body>
@@ -67,6 +69,11 @@
                                 <label for="tipe_pop">Tipe POP</label>
                                 <input type="text" id="tipe_pop" class="form-control disabled-input" value="{{ $pop->tipe_pop ?? '-' }}" readonly>
                             </div>
+                            <div class="form-group">
+                                <label for="tanggal_pemeriksaan">Tanggal Pemeriksaan (opsional)</label>
+                                <input type="date" id="tanggal_pemeriksaan" name="tanggal_pemeriksaan" class="form-control" value="{{ old('tanggal_pemeriksaan', $ac->tanggal_pemeriksaan?->format('Y-m-d')) }}">
+                                @error('tanggal_pemeriksaan')<div style="color:#ef4444;font-size:0.8rem;margin-top:4px;">{{ $message }}</div>@enderror
+                            </div>
                         </div>
                     </div>
 
@@ -83,9 +90,15 @@
                                 <input type="text" id="nomor_ac" class="form-control disabled-input" value="{{ $ac->nomor_ac }}" readonly>
                             </div>
 
+                            <div class="form-group">
+                                <label for="pic">PIC <span class="required">*</span></label>
+                                <input type="text" id="pic" name="pic" class="form-control" value="{{ old('pic', $ac->pic ?? auth()->user()->name) }}" placeholder="Nama penanggung jawab" required>
+                                @error('pic')<div style="color:#ef4444;font-size:0.8rem;margin-top:4px;">{{ $message }}</div>@enderror
+                            </div>
+
                             <!-- Jenis Freon -->
                             @php
-                                $knownFreons  = ['R134a', 'R22', 'R32', 'R410', 'R410A'];
+                                $knownFreons  = collect(['R134a', 'R22', 'R32', 'R410', 'R410A'])->merge($sharedAcOptions['jenis_freon'])->unique()->all();
                                 $curFreon     = old('jenis_freon', $ac->jenis_freon);
                                 $isOtherFreon = !in_array($curFreon, $knownFreons);
                                 $selFreon     = $isOtherFreon ? 'Others' : $curFreon;
@@ -108,7 +121,7 @@
 
                             <!-- Merk AC -->
                             @php
-                                $knownMerks  = ['Aqua', 'Kabinet', 'Daikin', 'DBS', 'Gree', 'Hopep', 'Huarui', 'LG', 'Midea', 'Panasonic', 'Samsung', 'Sharp', 'TCL'];
+                                $knownMerks  = collect(['Aqua', 'Kabinet', 'Daikin', 'DBS', 'Gree', 'Hopep', 'Huarui', 'LG', 'Midea', 'Panasonic', 'Samsung', 'Sharp', 'TCL'])->merge($sharedAcOptions['merk_ac'])->unique()->all();
                                 $curMerk     = old('merk_ac', $ac->merk_ac);
                                 $isOtherMerk = !in_array($curMerk, $knownMerks);
                                 $selMerk     = $isOtherMerk ? 'Others' : $curMerk;
@@ -140,7 +153,7 @@
 
                             <!-- Type AC -->
                             @php
-                                $knownTypes  = ['Inverter', 'Non Inverter'];
+                                $knownTypes  = collect(['Inverter', 'Non Inverter'])->merge($sharedAcOptions['type_ac'])->unique()->all();
                                 $curType     = old('type_ac', $ac->type_ac);
                                 $isOtherType = !in_array($curType, $knownTypes);
                                 $selType     = $isOtherType ? 'Others' : $curType;
@@ -186,7 +199,7 @@
                                 <label for="tanggal_terakhir_pm">Tanggal Terakhir PM</label>
                                 <input type="date" id="tanggal_terakhir_pm" name="tanggal_terakhir_pm"
                                     class="form-control" value="{{ old('tanggal_terakhir_pm', $ac->tanggal_terakhir_pm?->format('Y-m-d')) }}">
-                                <small class="upload-info">Jadwal PM rutin disarankan setiap 6 bulan sekali.</small>
+                                <small class="upload-info">Jadwal PM rutin setiap 3 bulan sekali.</small>
                                 @error('tanggal_terakhir_pm')<div style="color:#ef4444;font-size:0.8rem;margin-top:4px;">{{ $message }}</div>@enderror
                             </div>
 
@@ -213,7 +226,7 @@
                         </p>
 
                         @php
-                            $hasPhoto = !empty($ac->photo_ac) && file_exists(public_path('storage/' . $ac->photo_ac));
+                            $hasPhoto = !empty($ac->photo_ac) && \Illuminate\Support\Facades\Storage::disk('public')->exists($ac->photo_ac);
                         @endphp
 
                         <div class="rform-photo-grid">

@@ -328,7 +328,7 @@ a {
     align-items: center;
     gap: 12px;
     min-width: 0;
-    padding: 12px 14px;
+    padding: 8px 6px;
     background: #f8fafc;
     border: 1px solid #eef2f7;
     border-radius: 10px;
@@ -365,8 +365,8 @@ a {
 
 .info-box-value {
     color: #64748b;
-    font-size: 0.88rem;
-    font-weight: 500;
+    font-size: 0.78rem;
+    font-weight: 400;
     overflow-wrap: anywhere;
 }
 

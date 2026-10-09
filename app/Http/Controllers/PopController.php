@@ -17,12 +17,18 @@ class PopController extends Controller
     {
         $query = Pop::query();
 
-        if ($request->has('search')) {
+        $query->when($request->filled('search'), function ($query) use ($request) {
             $search = $request->input('search');
-            $query->where('nama_pop', 'like', "%{$search}%")
-                ->orWhere('kode_pop', 'like', "%{$search}%")
-                ->orWhere('kota_kabupaten', 'like', "%{$search}%")
-                ->orWhere('jenis_bangunan', 'like', "%{$search}%");
+            $query->where(function ($subQuery) use ($search) {
+                $subQuery->where('nama_pop', 'like', "%{$search}%")
+                    ->orWhere('kode_pop', 'like', "%{$search}%")
+                    ->orWhere('kota_kabupaten', 'like', "%{$search}%")
+                    ->orWhere('jenis_bangunan', 'like', "%{$search}%");
+            });
+        });
+
+        foreach (['tipe_pop' => 'tipe_pop', 'kota_kabupaten' => 'kota_kabupaten', 'building' => 'jenis_bangunan'] as $input => $column) {
+            $query->when($request->filled($input), fn ($q) => $q->where($column, $request->input($input)));
         }
 
         $pops = $query->paginate(10)->appends($request->query());
@@ -43,7 +49,13 @@ class PopController extends Controller
             );
         }
 
-        return view('pop.list-pop', compact('pops'));
+        $filterOptions = [
+            'tipe_pop' => Pop::query()->whereNotNull('tipe_pop')->where('tipe_pop', '<>', '')->distinct()->orderBy('tipe_pop')->pluck('tipe_pop'),
+            'kota_kabupaten' => Pop::query()->whereNotNull('kota_kabupaten')->where('kota_kabupaten', '<>', '')->distinct()->orderBy('kota_kabupaten')->pluck('kota_kabupaten'),
+            'building' => Pop::query()->whereNotNull('jenis_bangunan')->where('jenis_bangunan', '<>', '')->distinct()->orderBy('jenis_bangunan')->pluck('jenis_bangunan'),
+        ];
+
+        return view('pop.list-pop', compact('pops', 'filterOptions'));
     }
 
     // 2. Tampilkan form Tambah POP

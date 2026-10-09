@@ -47,6 +47,8 @@ class UpdateBatteryRequest extends FormRequest
 
             // Uji Baterai
             'tanggal_uji_terakhir'     => ['nullable', 'date'],
+            'tanggal_pemasangan'       => ['nullable', 'date'],
+            'tanggal_pemeriksaan'      => ['nullable', 'date'],
             'tanggal_penggantian'      => ['nullable', 'date'],
             'status_uji'               => ['nullable', 'string', 'max:255'],
         ];
@@ -73,6 +75,8 @@ class UpdateBatteryRequest extends FormRequest
             'photo_battery'            => 'Foto Baterai',
             'keterangan_gambar'        => 'Keterangan Foto Baterai',
             'tanggal_uji_terakhir'     => 'Tanggal Uji Terakhir',
+            'tanggal_pemasangan'       => 'Tanggal Pemasangan',
+            'tanggal_pemeriksaan'      => 'Tanggal Pemeriksaan',
             'tanggal_penggantian'      => 'Tanggal Penggantian',
             'status_uji'               => 'Status Uji',
         ];
