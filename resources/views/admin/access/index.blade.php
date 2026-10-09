@@ -43,7 +43,7 @@
                                 <tr>
                                     <td>{{ $i + 1 }}.</td>
                                     <td style="color: #1E293B; font-weight: 500;">
-                                        {{ ucfirst(str_replace('_', ' ', $role->name)) }}
+                                        {{ ['manajer' => 'Eksekutif', 'super_admin' => 'Administrator'][$role->name] ?? ucfirst(str_replace('_', ' ', $role->name)) }}
                                     </td>
                                     <td>
                                         <span class="permission-count">{{ $role->permissions_count }} permission</span>
