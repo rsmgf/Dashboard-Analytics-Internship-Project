@@ -146,12 +146,11 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="judul_rma">Nama / Judul Dokumen <span style="font-weight:400; color:#64748b; font-size:12px;">(opsional)</span></label>
+                                    <label for="judul_rma">Nama / Judul Dokumen <span>*</span></label>
                                     <input type="text" id="judul_rma" name="judul_rma" class="form-control"
                                         placeholder="Contoh: RMA PO-12345 - POP Jakarta Pusat"
                                         value="{{ old('judul_rma') }}"
-                                        maxlength="150">
-                                    <div class="field-description">Biarkan kosong untuk menggunakan No. IO.SP2K/SO/PO/ANDOP sebagai nama dokumen.</div>
+                                        maxlength="255" required>
                                 </div>
 
                                 <div class="form-group">
@@ -186,17 +185,17 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="customer_name">Customer Name (CPE)</label>
-                                    <div class="field-description">Beri tanda (-) jika tidak ada</div>
-                                    <input type="text" id="customer_name" class="form-control"
-                                        placeholder="Nama Customer">
+                                    <label for="customer_name">Customer Name (CPE) <span>*</span></label>
+                                    <div class="field-description">Isi tanda (-) jika data customer tidak tersedia.</div>
+                                    <input type="text" id="customer_name" name="customer_name" class="form-control" required
+                                        placeholder="Masukkan nama customer atau -">
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Perangkat <span>*</span></label>
+                                    <label>Merk<span>*</span></label>
                                     <div id="type-groups"></div>
-                                    <div class="field-description">Satu tipe bisa memiliki beberapa SN. Untuk tipe berbeda, tambahkan tipe perangkat baru; merk boleh sama.</div>
-                                    <button type="button" class="tambah-link" id="add-type">+ Tambah perangkat</button>
+                                    <div class="field-description">Tambahkan beberapa type dalam satu merk, atau tambahkan merk lain.</div>
+                                    <button type="button" class="tambah-link" id="add-type">+ Tambah Merk</button>
                                 </div>
 
                                 <div class="form-group">
@@ -285,7 +284,21 @@
                                 <div style="margin-top: 25px; border-top: 1px solid #f1f5f9; padding-top: 20px;">
                                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
                                         <div class="form-group" style="margin-bottom: 0;">
-                                            <label for="nama_pemohon">Nama Engineer / Pemohon <span>*</span></label>
+                                            <label for="role_penanda_tangan">Jabatan Penanda Tangan <span>*</span></label>
+                                            <select id="role_penanda_tangan" name="role_penanda_tangan" class="form-control" required>
+                                                <option value="Engineer">Engineer</option>
+                                                <option value="CA Retail">CA Retail</option>
+                                                @foreach ($signatureRoles as $signatureRole)
+                                                    @if (!in_array($signatureRole, ['Engineer', 'CA Retail'], true))
+                                                        <option value="{{ $signatureRole }}">{{ $signatureRole }}</option>
+                                                    @endif
+                                                @endforeach
+                                                <option value="Others">Others</option>
+                                            </select>
+                                            <input type="text" id="role_penanda_tangan_other" name="role_penanda_tangan_other" class="form-control" style="display:none;margin-top:8px" maxlength="100" placeholder="Masukkan nama penanda tangan">
+                                        </div>
+                                        <div class="form-group" style="margin-bottom: 0;">
+                                            <label for="nama_pemohon">Nama Pemohon <span>*</span></label>
                                             <input type="text" id="nama_pemohon" name="nama_pemohon" class="form-control"
                                                 placeholder="Nama Terang Engineer" required>
                                         </div>
@@ -304,7 +317,7 @@
                                     <div>
                                         <div style="font-weight: 600; color: #15803d; font-size: 13.5px;">Tanda Tangan Fisik (Basah)</div>
                                         <div style="font-size: 12px; color: #475569; margin-top: 2px; line-height: 1.5;">
-                                            Dokumen PDF RMA resmi yang digenerate menyertakan kolom bertanda tangan basah untuk Engineer dan Supervisor/Manager setelah dokumen dicetak.
+                                            Dokumen PDF RMA resmi yang digenerate menyertakan kolom tanda tangan basah setelah dokumen dicetak.
                                         </div>
                                     </div>
                                 </div>
@@ -397,49 +410,102 @@
             const prevButton = document.getElementById('prevButton');
             const btnSubmitFinish = document.getElementById('btnSubmitFinish');
             const btnSubmitNext = document.getElementById('btnSubmitNext');
+            const signatureRoleSelect = document.getElementById('role_penanda_tangan');
+            const signatureRoleOther = document.getElementById('role_penanda_tangan_other');
+            const syncSignatureRole = () => {
+                const isOther = signatureRoleSelect.value === 'Others';
+                signatureRoleOther.style.display = isOther ? '' : 'none';
+                signatureRoleOther.required = isOther;
+                if (!isOther) signatureRoleOther.value = '';
+            };
+            signatureRoleSelect.addEventListener('change', syncSignatureRole);
+            syncSignatureRole();
             const typeGroups = document.getElementById('type-groups');
             let typeCount = 0;
-            function addTypeGroup() {
+            let brandCount = 0;
+            function addBrandGroup(brandValue = '') {
+                const index = brandCount++;
+                const group = document.createElement('div');
+                group.className = 'form-card rma-brand-group';
+                group.dataset.brandIndex = index;
+                group.innerHTML = `<div class="edit-device-heading"><strong>Merk ${index + 1}</strong>${index ? '<button type="button" class="btn-hapus remove-brand">Hapus Merk</button>' : ''}</div>
+                    <div class="form-group"><label>Nama Merk <span>*</span></label><input class="form-control brand-name" required placeholder="Masukkan nama merk" value=""></div>
+                    <div class="brand-type-list"></div><button type="button" class="tambah-link add-brand-type">+ Tambah Type</button>`;
+                group.querySelector('.brand-name').value = brandValue;
+                typeGroups.appendChild(group);
+                addBrandType(group);
+                return group;
+            }
+            function addBrandType(brandGroup, values = {}) {
                 const index = typeCount++;
                 const card = document.createElement('div');
-                card.className = 'form-card rma-type-group';
+                card.className = 'rma-type-group';
                 card.dataset.typeIndex = index;
-                card.dataset.nextSerial = '0';
-                card.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><strong>Perangkat ${index + 1}</strong>${index ? '<button type="button" class="btn-hapus remove-type">Hapus perangkat</button>' : ''}</div>
-                    <div class="form-group"><label>Merk *</label><input class="form-control type-merk" name="types[${index}][merk]" required placeholder="Merk perangkat"></div>
-                    <div class="form-group"><label>Tipe *</label><input class="form-control type-name" name="types[${index}][type]" required placeholder="Tipe perangkat"></div>
-                    <div class="form-group"><label>Material Number *</label><input class="form-control" name="types[${index}][material_number]" required placeholder="Material number perangkat"></div>
-                    <div class="serial-fields"><label>Serial Number (SN) *</label><div class="serial-list"></div><button type="button" class="tambah-link add-serial">+ Tambah SN</button></div>`;
-                typeGroups.appendChild(card);
-                addSerial(card, index, 0);
+                card.innerHTML = `<input type="hidden" class="type-merk" name="types[${index}][merk]">
+                    <div class="edit-device-heading"><strong>Type ${brandGroup.querySelectorAll('.rma-type-group').length + 1}</strong>${brandGroup.querySelectorAll('.rma-type-group').length ? '<button type="button" class="btn-hapus remove-brand-type">Hapus Type</button>' : ''}</div>
+                    <div class="form-group"><label>Type <span>*</span></label><input class="form-control type-name" name="types[${index}][type]" required placeholder="Masukkan type"></div>
+                    <div class="form-group"><label>Material Number <span>*</span></label><input class="form-control" name="types[${index}][material_number]" required placeholder="Masukkan material number"></div>
+                    <div class="form-group"><label>Serial Number (SN) <span>*</span></label><input class="form-control serial-value" name="types[${index}][serial_numbers][0]" required placeholder="Masukkan serial number"></div>`;
+                card.querySelector('.type-name').value = values.type || '';
+                card.querySelector('[name$="[material_number]"]').value = values.material_number || '';
+                card.querySelector('.serial-value').value = values.serial_number || '';
+                brandGroup.querySelector('.brand-type-list').appendChild(card);
+                updateBrandLabels();
+                return card;
             }
-            function addSerial(card, typeIndex, serialIndex) {
-                const wrap = document.createElement('div');
-                wrap.className = 'serial-row';
-                wrap.dataset.serialIndex = serialIndex;
-                wrap.style.cssText = 'display:flex;gap:8px;margin:8px 0';
-                wrap.innerHTML = `<input class="form-control serial-value" name="types[${typeIndex}][serial_numbers][${serialIndex}]" required placeholder="Contoh: SN-123456789"><button type="button" class="btn-hapus remove-serial">Hapus</button>`;
-                card.querySelector('.serial-list').appendChild(wrap);
-                card.dataset.nextSerial = String(Math.max(Number(card.dataset.nextSerial || 0), serialIndex + 1));
-            }
-            document.getElementById('add-type').addEventListener('click', addTypeGroup);
+            document.getElementById('add-type').addEventListener('click', () => addBrandGroup());
             typeGroups.addEventListener('click', e => {
-                if (e.target.closest('.remove-type')) {
-                    e.target.closest('.rma-type-group').remove();
-                    saveHeaderCache();
+                if (e.target.closest('.remove-brand')) e.target.closest('.rma-brand-group')?.remove();
+                if (e.target.closest('.add-brand-type')) addBrandType(e.target.closest('.rma-brand-group'));
+                if (e.target.closest('.remove-brand-type')) {
+                    const brand = e.target.closest('.rma-brand-group');
+                    if (brand.querySelectorAll('.rma-type-group').length > 1) e.target.closest('.rma-type-group').remove();
                 }
-                if (e.target.closest('.add-serial')) {
-                    const card = e.target.closest('.rma-type-group');
-                    addSerial(card, Number(card.dataset.typeIndex), Number(card.dataset.nextSerial || 0));
-                }
-                if (e.target.closest('.remove-serial') && e.target.closest('.rma-type-group').querySelectorAll('.serial-row').length > 1) e.target.closest('.serial-row').remove();
+                saveHeaderCache();
+                updateBrandLabels();
             });
-            addTypeGroup();
+            function updateBrandLabels() {
+                typeGroups.querySelectorAll('.rma-brand-group').forEach((group, index) => {
+                    group.querySelector('.edit-device-heading strong').textContent = `Merk ${index + 1}`;
+                    const typeCards = group.querySelectorAll('.rma-type-group');
+                    typeCards.forEach((card, typeIndex) => {
+                        card.querySelector('.edit-device-heading strong').textContent = `Type ${typeIndex + 1}`;
+                        const removeButton = card.querySelector('.remove-brand-type');
+                        if (typeCards.length > 1 && !removeButton) {
+                            const button = document.createElement('button');
+                            button.type = 'button';
+                            button.className = 'btn-hapus remove-brand-type';
+                            button.textContent = 'Hapus Type';
+                            card.querySelector('.edit-device-heading').appendChild(button);
+                        } else if (typeCards.length === 1 && removeButton) {
+                            removeButton.remove();
+                        }
+                    });
+                    group.querySelectorAll('.rma-type-group .type-merk').forEach(input => input.value = group.querySelector('.brand-name').value.trim());
+                });
+            }
+            function normalizeCreateTypeNames() {
+                let index = 0;
+                typeGroups.querySelectorAll('.rma-brand-group .rma-type-group').forEach(card => {
+                    const typeIndex = index++;
+                    card.dataset.typeIndex = String(typeIndex);
+                    card.querySelector('.type-merk').name = `types[${typeIndex}][merk]`;
+                    card.querySelector('.type-name').name = `types[${typeIndex}][type]`;
+                    card.querySelector('[name$="[material_number]"]').name = `types[${typeIndex}][material_number]`;
+                    card.querySelector('.serial-value').name = `types[${typeIndex}][serial_numbers][0]`;
+                });
+                updateBrandLabels();
+            }
+            typeGroups.addEventListener('input', event => {
+                if (event.target.matches('.brand-name')) updateBrandLabels();
+            });
+            addBrandGroup();
+            updateBrandLabels();
             const btnUseLastData = document.getElementById('btnUseLastData');
 
             // GUNAKAN DATA TERAKHIR
             const CACHE_KEY = 'rma_header_cache_v3';
-            const headerFields = ['so_po', 'tanggal', 'lokasi_asal', 'nama_pemohon', 'nama_manager', 'customer_name'];
+            const headerFields = ['judul_rma', 'so_po', 'tanggal', 'lokasi_asal', 'nama_pemohon', 'nama_manager', 'customer_name', 'role_penanda_tangan'];
 
             function saveHeaderCache() {
                 const data = {};
@@ -449,7 +515,12 @@
                 });
                 const valType = document.querySelector('input[name="valuation_type"]:checked');
                 if (valType) data['valuation_type'] = valType.value;
-                data['merk_list'] = Array.from(typeGroups.querySelectorAll('.rma-type-group .type-merk'), input => input.value.trim());
+                if (signatureRoleSelect) {
+                    data['role_penanda_tangan'] = signatureRoleSelect.value === 'Others'
+                        ? signatureRoleOther.value.trim()
+                        : signatureRoleSelect.value;
+                }
+                data['merk_list'] = Array.from(typeGroups.querySelectorAll('.rma-brand-group .brand-name'), input => input.value.trim());
                 while (data['merk_list'].length && !data['merk_list'][data['merk_list'].length - 1]) data['merk_list'].pop();
                 try {
                     localStorage.setItem(CACHE_KEY, JSON.stringify(data));
@@ -473,14 +544,13 @@
                     const data = JSON.parse(raw);
                     const choice = await Swal.fire({
                         title: 'Gunakan Data Terakhir',
-                        html: '<label for="includeLastMerk" style="display:flex;align-items:flex-start;gap:10px;text-align:left;line-height:1.5;cursor:pointer"><input id="includeLastMerk" type="checkbox" style="margin-top:4px"><span>Gunakan juga merk dari perangkat pada RMA terakhir.<br><small style="color:#64748b">Tipe, material number, dan SN tidak akan disalin.</small></span></label>',
+                        html: '<div style="text-align:left;line-height:1.6;color:#475569">Data umum, jabatan penanda tangan, dan semua merk dari RMA terakhir akan dimuat otomatis.<br><small style="color:#64748b">Type, material number, dan SN perlu diisi kembali untuk perangkat baru.</small></div>',
                         icon: 'question',
                         showCancelButton: true,
                         confirmButtonText: 'Gunakan Data',
                         cancelButtonText: 'Batal',
                         confirmButtonColor: '#1688e8',
                         cancelButtonColor: '#64748b',
-                        preConfirm: () => ({ includeMerk: document.getElementById('includeLastMerk')?.checked ?? false })
                     });
                     if (!choice.isConfirmed) return;
 
@@ -502,19 +572,30 @@
                         }
                     }
 
-                    if (choice.value?.includeMerk && Array.isArray(data['merk_list'])) {
-                        const brands = data['merk_list'];
-                        let groups = Array.from(typeGroups.querySelectorAll('.rma-type-group'));
-                        while (groups.length < brands.length) {
-                            addTypeGroup();
-                            groups = Array.from(typeGroups.querySelectorAll('.rma-type-group'));
+                    if (data['role_penanda_tangan']) {
+                        const roleOptionExists = Array.from(signatureRoleSelect.options).some(option => option.value === data['role_penanda_tangan']);
+                        if (roleOptionExists) {
+                            signatureRoleSelect.value = data['role_penanda_tangan'];
+                            signatureRoleOther.value = '';
+                        } else {
+                            signatureRoleSelect.value = 'Others';
+                            signatureRoleOther.value = data['role_penanda_tangan'];
                         }
-                        brands.forEach((merk, index) => {
-                            if (!merk) return;
-                            const input = groups[index]?.querySelector('.type-merk');
-                            if (input) { input.value = merk; filledCount++; }
-                        });
+                        syncSignatureRole();
+                        filledCount++;
                     }
+
+                    if (Array.isArray(data['merk_list'])) {
+                        const brands = data['merk_list'].map(merk => String(merk || '').trim()).filter(Boolean);
+                        if (brands.length) {
+                            typeGroups.innerHTML = '';
+                            brands.forEach(merk => addBrandGroup(merk));
+                            filledCount += brands.length;
+                        }
+                        updateBrandLabels();
+                    }
+
+                    saveHeaderCache();
 
                     if (filledCount > 0) {
                         Swal.fire({
@@ -543,9 +624,9 @@
                     el.addEventListener('change', saveHeaderCache);
                 }
             });
-            typeGroups.addEventListener('input', event => {
-                if (event.target.matches('.type-merk')) saveHeaderCache();
-            });
+            signatureRoleOther?.addEventListener('input', saveHeaderCache);
+            signatureRoleOther?.addEventListener('change', saveHeaderCache);
+            typeGroups.addEventListener('input', event => { if (event.target.matches('.brand-name')) saveHeaderCache(); });
             document.querySelectorAll('input[name="valuation_type"]').forEach(radio => {
                 radio.addEventListener('change', saveHeaderCache);
             });
@@ -591,6 +672,13 @@
                 let isValid = true;
                 const errors = [];
 
+                const judul = document.getElementById('judul_rma');
+                if (!judul.value.trim()) {
+                    judul.classList.add('is-invalid');
+                    errors.push('Judul RMA wajib diisi');
+                    isValid = false;
+                }
+
                 const soPo = document.getElementById('so_po');
                 if (!soPo.value.trim()) {
                     soPo.classList.add('is-invalid');
@@ -620,10 +708,32 @@
                     isValid = false;
                 }
 
-                typeGroups.querySelectorAll('input[required]').forEach(input => {
-                    if (!input.value.trim()) { input.classList.add('is-invalid'); isValid = false; }
+                const customerName = document.getElementById('customer_name');
+                if (!customerName.value.trim()) {
+                    customerName.classList.add('is-invalid');
+                    errors.push('Customer Name (CPE) wajib diisi. Isi tanda (-) jika tidak ada');
+                    isValid = false;
+                }
+
+                typeGroups.querySelectorAll('.rma-brand-group').forEach((brand, brandIndex) => {
+                    const brandInput = brand.querySelector('.brand-name');
+                    if (!brandInput.value.trim()) {
+                        brandInput.classList.add('is-invalid');
+                        errors.push(`Merk ${brandIndex + 1} wajib diisi`);
+                        isValid = false;
+                    }
+                    brand.querySelectorAll('.rma-type-group').forEach((card, typeIndex) => {
+                        [['.type-name', 'Type'], ['[name$="[material_number]"]', 'Material Number'], ['.serial-value', 'Serial Number']].forEach(([selector, label]) => {
+                            const input = card.querySelector(selector);
+                            if (!input.value.trim()) {
+                                input.classList.add('is-invalid');
+                                errors.push(`${label} pada Merk ${brandIndex + 1}, Type ${typeIndex + 1} wajib diisi`);
+                                isValid = false;
+                            }
+                        });
+                    });
                 });
-                if (typeGroups.querySelectorAll('.rma-type-group').length === 0) { errors.push('Tambahkan minimal satu tipe perangkat'); isValid = false; }
+                if (typeGroups.querySelectorAll('.rma-type-group').length === 0) { errors.push('Tambahkan minimal satu type perangkat'); isValid = false; }
 
                 const description = document.getElementById('description');
                 if (!description.value.trim()) {
@@ -645,31 +755,69 @@
                     return;
                 }
 
+                normalizeCreateTypeNames();
                 step1.style.display = 'none';
                 step2.style.display = 'block';
                 const photoGroups = document.getElementById('photo-groups');
                 photoGroups.innerHTML = '';
+                function renumberPhotoRows(group) {
+                    const typeIndex = Number(group.dataset.typeIndex);
+                    group.querySelectorAll('.rma-photo-row').forEach((row, photoIndex) => {
+                        row.querySelector('.rma-photo-input').name = `photos[${typeIndex}][0][${photoIndex}]`;
+                        row.querySelector('.rma-photo-caption').name = `photo_captions[${typeIndex}][0][${photoIndex}]`;
+                    });
+                }
+                function addPhotoRow(group) {
+                    const row = document.createElement('div');
+                    row.className = 'rma-photo-row';
+                    const inputId = `rma-photo-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+                    row.innerHTML = `<div class="rma-photo-file"><div class="upload-dropzone photo-upload-dropzone"><i class="bi bi-cloud-arrow-up dropzone-icon"></i><div class="dropzone-text">Unggah foto dokumentasi</div><label class="btn-browse" for="${inputId}">Pilih Foto</label><input id="${inputId}" class="rma-photo-input" type="file" accept="image/jpeg,image/png,image/jpg,image/webp"><span class="rma-photo-filename">Belum ada foto dipilih</span><img class="rma-photo-preview" alt="Pratinjau foto" hidden></div></div><input class="form-control rma-photo-caption" type="text" maxlength="1000" placeholder="Keterangan foto (opsional)"><button type="button" class="btn-hapus remove-rma-photo">Hapus Foto</button>`;
+                    group.querySelector('.rma-photo-list').appendChild(row);
+                    renumberPhotoRows(group);
+                }
+                if (photoGroups.dataset.eventsBound !== 'true') {
+                    photoGroups.addEventListener('click', event => {
+                        const group = event.target.closest('.rma-photo-group');
+                        if (!group) return;
+                        if (event.target.closest('.add-rma-photo')) addPhotoRow(group);
+                        if (event.target.closest('.remove-rma-photo')) {
+                            const row = event.target.closest('.rma-photo-row');
+                            if (row?.querySelector('.rma-photo-input')?.dataset.previewUrl) URL.revokeObjectURL(row.querySelector('.rma-photo-input').dataset.previewUrl);
+                            row?.remove();
+                            renumberPhotoRows(group);
+                        }
+                    });
+                    photoGroups.addEventListener('change', event => {
+                        if (!event.target.matches('.rma-photo-input')) return;
+                        const file = event.target.files?.[0];
+                        const dropzone = event.target.closest('.photo-upload-dropzone');
+                        const preview = dropzone.querySelector('.rma-photo-preview');
+                        if (event.target.dataset.previewUrl) URL.revokeObjectURL(event.target.dataset.previewUrl);
+                        dropzone.querySelector('.rma-photo-filename').textContent = file?.name || 'Belum ada foto dipilih';
+                        if (file) {
+                            event.target.dataset.previewUrl = URL.createObjectURL(file);
+                            preview.src = event.target.dataset.previewUrl;
+                            preview.hidden = false;
+                            dropzone.classList.add('has-preview');
+                        } else {
+                            delete event.target.dataset.previewUrl;
+                            preview.removeAttribute('src');
+                            preview.hidden = true;
+                            dropzone.classList.remove('has-preview');
+                        }
+                    });
+                    photoGroups.dataset.eventsBound = 'true';
+                }
                 typeGroups.querySelectorAll('.rma-type-group').forEach(card => {
                     const ti = Number(card.dataset.typeIndex);
                     const typeName = card.querySelector('.type-name').value;
-                    card.querySelectorAll('.serial-row').forEach(row => {
-                        const si = Number(row.dataset.serialIndex);
-                        const sn = row.querySelector('.serial-value');
-                        const group = document.createElement('div'); group.className = 'form-card';
-                        group.innerHTML = `<strong></strong><div class="upload-dropzone" style="margin-top:10px"><i class="bi bi-cloud-arrow-up dropzone-icon"></i><div class="dropzone-text">Pilih foto (bisa lebih dari satu)</div><input type="file" accept="image/jpeg,image/png,image/jpg,image/webp" multiple style="display:none"><button type="button" class="btn-browse">Browse</button></div>`;
-                        group.querySelector('strong').textContent = `${typeName} · ${sn.value}`;
-                        const dz = group.querySelector('.upload-dropzone'), input = group.querySelector('input[type=file]');
-                        input.name = `photos[${ti}][${si}][]`;
-                        dz.addEventListener('click', e => { if (e.target === dz || e.target.closest('.dropzone-icon,.dropzone-text')) input.click(); });
-                        group.querySelector('.btn-browse').addEventListener('click', e => { e.stopPropagation(); input.click(); });
-                        input.addEventListener('change', () => {
-                            const hasFiles = input.files.length > 0;
-                            group.querySelector('.dropzone-text').textContent = hasFiles ? Array.from(input.files).map(f=>f.name).join(', ') : 'Pilih foto (bisa lebih dari satu)';
-                            dz.style.borderColor = hasFiles ? '#16a34a' : '';
-                            dz.style.backgroundColor = hasFiles ? '#f0fdf4' : '';
-                        });
-                        photoGroups.appendChild(group);
-                    });
+                    const sn = card.querySelector('.serial-value');
+                    const group = document.createElement('div'); group.className = 'form-card rma-photo-group';
+                    group.dataset.typeIndex = ti;
+                    group.innerHTML = `<strong></strong><div class="rma-photo-list"></div><button type="button" class="tambah-link add-rma-photo">+ Tambah Foto</button>`;
+                    group.querySelector('strong').textContent = `${card.querySelector('.type-merk').value} · ${typeName} · SN ${sn.value}`;
+                    photoGroups.appendChild(group);
+                    addPhotoRow(group);
                 });
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
@@ -710,6 +858,14 @@
                             return;
                         }
                     }
+                }
+
+                const missingPhotoGroups = Array.from(document.querySelectorAll('#photo-groups .rma-photo-group'))
+                    .map((group, index) => Array.from(group.querySelectorAll('.rma-photo-input')).some(input => input.files.length) ? null : index + 1).filter(Boolean);
+                if (missingPhotoGroups.length) {
+                    const missingList = missingPhotoGroups.map(index => `<li>Foto untuk type ke-${index} wajib diunggah</li>`).join('');
+                    Swal.fire({ icon: 'warning', title: 'Foto Material Belum Lengkap', html: `<ul style="text-align:left;line-height:1.7">${missingList}</ul>`, confirmButtonColor: '#0066DC' });
+                    return;
                 }
 
 
@@ -792,7 +948,7 @@
                             if (isMaterialRusakInput) isMaterialRusakInput.value = '0';
 
                             // Reset file foto utama
-                            document.getElementById('photo-groups').innerHTML = '';
+                document.getElementById('photo-groups').innerHTML = '';
 
                             // Kembali ke Langkah 1 dengan halus
                             step2.style.display = 'none';
@@ -823,9 +979,11 @@
                         const messages = Object.values(responseData.errors || {}).flat();
 
                         const fieldMap = {
+                            'judul_rma': 'judul_rma',
                             'so_po': 'so_po',
                             'tanggal': 'tanggal',
                             'lokasi_asal': 'lokasi_asal',
+                            'customer_name': 'customer_name',
                             'nama_manager': 'nama_manager',
                             'description': 'description',
                             'nama_pemohon': 'nama_pemohon',
@@ -846,7 +1004,7 @@
                                 document.getElementById('photo-groups')?.classList.add('is-invalid');
                                 hasStep2Error = true;
                             }
-                            if (['so_po','valuation_type','tanggal','lokasi_asal','description'].includes(k) || k.startsWith('types')) {
+                            if (['judul_rma','so_po','valuation_type','tanggal','lokasi_asal','customer_name','description'].includes(k) || k.startsWith('types')) {
                                 hasStep1Error = true;
                             }
                             if (k.startsWith('photos') || k === 'nama_pemohon' || k === 'nama_manager') {
