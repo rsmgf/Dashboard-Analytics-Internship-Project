@@ -119,7 +119,10 @@ class RmaController extends Controller
         $types = $validatedData['types'];
         $firstType = $types[0];
         $firstSerial = array_values($firstType['serial_numbers'])[0];
-        $judulRma = trim($validatedData['judul_rma'] ?? '') ?: $validatedData['so_po'];
+        $judulRma = trim((string) ($validatedData['judul_rma'] ?? ''));
+        if ($judulRma === '') {
+            $judulRma = $this->generateRmaTitle($validatedData['so_po'], $types);
+        }
         $signatureRole = $validatedData['role_penanda_tangan'] === 'Others'
             ? trim((string) ($validatedData['role_penanda_tangan_other'] ?? ''))
             : $validatedData['role_penanda_tangan'];
@@ -234,7 +237,7 @@ class RmaController extends Controller
         }
 
         $request->validate([
-            'judul_rma'         => 'required|string|max:255',
+            'judul_rma'         => 'nullable|string|max:255',
             'nama_pemohon'      => 'required|string|max:255',
             'role_penanda_tangan' => 'required|string|max:100',
             'role_penanda_tangan_other' => 'required_if:role_penanda_tangan,Others|nullable|string|max:100',
@@ -300,7 +303,10 @@ class RmaController extends Controller
         $firstType = $typesData[0];
         $firstSerialInput = array_values($firstType['serial_numbers'])[0];
         $firstSerial = is_array($firstSerialInput) ? $firstSerialInput['serial_number'] : $firstSerialInput;
-        $judulRma = trim($request->judul_rma ?? '') ?: $request->so_po;
+        $judulRma = trim((string) $request->judul_rma);
+        if ($judulRma === '') {
+            $judulRma = $this->generateRmaTitle($request->so_po, $typesData);
+        }
         $signatureRole = $request->role_penanda_tangan === 'Others'
             ? trim((string) $request->role_penanda_tangan_other)
             : $request->role_penanda_tangan;
@@ -582,5 +588,19 @@ class RmaController extends Controller
         $parts = ['RMA', $soPo ?: 'ID' . $rma->id];
 
         return implode('_', $parts) . '.pdf';
+    }
+
+    private function generateRmaTitle(string $projectNumber, array $types): string
+    {
+        $brands = collect($types)
+            ->pluck('merk')
+            ->filter(fn ($brand) => is_string($brand) && trim($brand) !== '')
+            ->map(fn ($brand) => trim($brand))
+            ->unique()
+            ->implode(', ');
+
+        $title = trim($projectNumber) . ($brands !== '' ? ' - ' . $brands : '');
+
+        return mb_substr($title, 0, 255);
     }
 }
