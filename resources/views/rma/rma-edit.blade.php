@@ -198,10 +198,10 @@
                             </h2>
 
                             <div class="form-group">
-                                <label for="judul_rma">Nama / Judul Dokumen <span>*</span></label>
+                                <label for="judul_rma">Nama / Judul Dokumen <span style="color:#64748b;font-weight:400;">(opsional)</span></label>
                                 <input type="text" id="judul_rma" name="judul_rma" class="form-control"
-                                    placeholder="Contoh: RMA PO-12345 - POP Jakarta Pusat"
-                                    value="{{ old('judul_rma', $rma->judul_rma ?? $rma->so_po) }}" maxlength="255" required>
+                                    placeholder="Kosongkan untuk otomatis: No. Project - Merk"
+                                    value="{{ old('judul_rma', $rma->judul_rma ?? $rma->so_po) }}" maxlength="255">
                             </div>
                             <div class="form-group">
                                 <label for="so_po">No. IO.SP2K/SO/PO/ANDOP <span>*</span></label>
@@ -429,7 +429,7 @@
                             <p>Upload foto tambahan via Browse. Foto lama yang tidak ditandai tetap tersimpan.</p>
                         </div>
                         <div class="note-item"><span>Judul Dokumen</span>
-                            <p>Kosongkan judul untuk auto-generate dari Merk + Lokasi Asal.</p>
+                            <p>Kosongkan judul untuk membuat otomatis dari No. Project + Merk.</p>
                         </div>
                         <div class="note-item"><span>PDF Diperbarui</span>
                             <p>Setelah disimpan, PDF yang didownload akan mencerminkan data terbaru.</p>

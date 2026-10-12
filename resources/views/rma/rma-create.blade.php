@@ -146,11 +146,11 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="judul_rma">Nama / Judul Dokumen <span>*</span></label>
+                                    <label for="judul_rma">Nama / Judul Dokumen <span style="color:#64748b;font-weight:400;">(opsional)</span></label>
                                     <input type="text" id="judul_rma" name="judul_rma" class="form-control"
-                                        placeholder="Contoh: RMA PO-12345 - POP Jakarta Pusat"
+                                        placeholder="Kosongkan untuk otomatis: No. Project - Merk"
                                         value="{{ old('judul_rma') }}"
-                                        maxlength="255" required>
+                                        maxlength="255">
                                 </div>
 
                                 <div class="form-group">
@@ -671,13 +671,6 @@
             nextButton.addEventListener('click', function() {
                 let isValid = true;
                 const errors = [];
-
-                const judul = document.getElementById('judul_rma');
-                if (!judul.value.trim()) {
-                    judul.classList.add('is-invalid');
-                    errors.push('Judul RMA wajib diisi');
-                    isValid = false;
-                }
 
                 const soPo = document.getElementById('so_po');
                 if (!soPo.value.trim()) {
