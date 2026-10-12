@@ -9,6 +9,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class RmaController extends Controller
 {
@@ -92,7 +93,18 @@ class RmaController extends Controller
             ->orderBy('nama_manager')
             ->pluck('nama_manager');
 
-        return view('rma.rma-create', compact('managers'));
+        $signatureRoles = Rma::query()
+            ->whereNotNull('role_penanda_tangan')
+            ->where('role_penanda_tangan', '!=', '')
+            ->distinct()
+            ->orderBy('role_penanda_tangan')
+            ->pluck('role_penanda_tangan')
+            ->map(fn ($role) => preg_replace('/\s+Sign$/i', '', trim($role)))
+            ->filter()
+            ->unique()
+            ->values();
+
+        return view('rma.rma-create', compact('managers', 'signatureRoles'));
     }
 
     public function store(StoreRmaRequest $request)
@@ -108,12 +120,20 @@ class RmaController extends Controller
         $firstType = $types[0];
         $firstSerial = array_values($firstType['serial_numbers'])[0];
         $judulRma = trim($validatedData['judul_rma'] ?? '') ?: $validatedData['so_po'];
+        $signatureRole = $validatedData['role_penanda_tangan'] === 'Others'
+            ? trim((string) ($validatedData['role_penanda_tangan_other'] ?? ''))
+            : $validatedData['role_penanda_tangan'];
+        $signatureRole = preg_replace('/\s+Sign$/i', '', trim($signatureRole));
+        if ($signatureRole === '') {
+            throw ValidationException::withMessages(['role_penanda_tangan_other' => 'Nama penanda tangan wajib diisi jika memilih Others.']);
+        }
 
         // 2. Simpan data utama
         $rma = Rma::create([
             'judul_rma'         => $judulRma,
             'user_id'           => auth()->id(),
             'nama_pemohon'      => $validatedData['nama_pemohon'],
+            'role_penanda_tangan' => $signatureRole,
             'nama_manager'      => $validatedData['nama_manager'],
             'is_material_rusak' => $validatedData['is_material_rusak'],
             'ttd_pemohon'       => $ttdPath,
@@ -121,6 +141,7 @@ class RmaController extends Controller
             'valuation_type'    => $validatedData['valuation_type'],
             'tanggal'           => $validatedData['tanggal'],
             'lokasi_asal'       => $validatedData['lokasi_asal'],
+            'customer_name'     => $validatedData['customer_name'],
             'merk'              => $firstType['merk'],
             'type'              => $firstType['type'],
             'serial_number'     => $firstSerial,
@@ -131,6 +152,7 @@ class RmaController extends Controller
         ]);
 
         DB::transaction(function () use ($rma, $types, $request) {
+            $photoCaptions = $request->input('photo_captions', []);
             foreach ($types as $typeIndex => $typeData) {
                 $type = $rma->types()->create([
                     'merk' => $typeData['merk'], 'type' => $typeData['type'],
@@ -138,11 +160,12 @@ class RmaController extends Controller
                 ]);
                 foreach ($typeData['serial_numbers'] as $serialIndex => $serialNumber) {
                     $serial = $type->serials()->create(['serial_number' => $serialNumber, 'sort_order' => $serialIndex]);
-                    foreach ((array) $request->file("photos.{$typeIndex}.{$serialIndex}", []) as $file) {
+                    foreach ((array) $request->file("photos.{$typeIndex}.{$serialIndex}", []) as $photoIndex => $file) {
                         $serial->materials()->create([
                             'rma_id' => $rma->id,
                             'serial_number' => $serialNumber,
                             'foto_path' => $file->store('material_images', 'public'),
+                            'keterangan' => trim((string) data_get($photoCaptions, "{$typeIndex}.{$serialIndex}.{$photoIndex}", '')) ?: null,
                         ]);
                     }
                 }
@@ -150,7 +173,7 @@ class RmaController extends Controller
         });
 
         // Ambil data lengkap & generate PDF
-        $data = Rma::with(['types.serials.materials', 'materials'])->findOrFail($rma->id);
+        $data = Rma::with(['user', 'types.serials.materials', 'materials'])->findOrFail($rma->id);
 
         // Jika request dari JS fetch (form submit via AJAX), kembalikan URL PDF
         if ($request->expectsJson()) {
@@ -184,7 +207,18 @@ class RmaController extends Controller
             ->orderBy('nama_manager')
             ->pluck('nama_manager');
 
-        return view('rma.rma-edit', compact('rma', 'managers'));
+        $signatureRoles = Rma::query()
+            ->whereNotNull('role_penanda_tangan')
+            ->where('role_penanda_tangan', '!=', '')
+            ->distinct()
+            ->orderBy('role_penanda_tangan')
+            ->pluck('role_penanda_tangan')
+            ->map(fn ($role) => preg_replace('/\s+Sign$/i', '', trim($role)))
+            ->filter()
+            ->unique()
+            ->values();
+
+        return view('rma.rma-edit', compact('rma', 'managers', 'signatureRoles'));
     }
 
     public function update(Request $request, $id)
@@ -200,14 +234,17 @@ class RmaController extends Controller
         }
 
         $request->validate([
-            'judul_rma'         => 'nullable|string|max:255',
+            'judul_rma'         => 'required|string|max:255',
             'nama_pemohon'      => 'required|string|max:255',
+            'role_penanda_tangan' => 'required|string|max:100',
+            'role_penanda_tangan_other' => 'required_if:role_penanda_tangan,Others|nullable|string|max:100',
             'nama_manager'      => 'required|string|max:255',
             'is_material_rusak' => 'nullable|boolean',
             'so_po'             => 'required|string|max:255',
             'valuation_type'    => 'required|in:ex-project,dismantle,rusak-L,rusak-TL',
             'tanggal'           => 'required|date',
             'lokasi_asal'       => 'required|string|max:255',
+            'customer_name'     => 'required|string|max:255',
             'types' => 'required|array|min:1',
             'types.*.id' => 'nullable|integer',
             'types.*.merk' => 'required|string|max:255',
@@ -220,9 +257,18 @@ class RmaController extends Controller
             'photos.*' => 'nullable|array',
             'photos.*.*' => 'nullable|array',
             'photos.*.*.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
+            'photo_captions' => 'nullable|array',
+            'photo_captions.*' => 'nullable|array',
+            'photo_captions.*.*' => 'nullable|array',
+            'photo_captions.*.*.*' => 'nullable|string|max:1000',
+            'existing_photo_captions' => 'nullable|array',
+            'existing_photo_captions.*' => 'nullable|string|max:1000',
             'new_photos' => 'nullable|array',
             'new_photos.*' => 'nullable|array',
             'new_photos.*.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
+            'new_photo_captions' => 'nullable|array',
+            'new_photo_captions.*' => 'nullable|array',
+            'new_photo_captions.*.*' => 'nullable|string|max:1000',
             'description'       => 'required|string',
             'kerusakan'         => 'nullable|array',
             'alasan'            => 'nullable|string',
@@ -230,20 +276,50 @@ class RmaController extends Controller
         ]);
 
         $typesData = $request->input('types');
+        $deletedPhotoIds = array_map('intval', (array) $request->input('hapus_foto', []));
+        $existingSerials = $rma->types->flatMap(fn ($type) => $type->serials)->keyBy('id');
+        foreach ($typesData as $typeIndex => $typeData) {
+            $typeHasPhoto = false;
+            foreach ((array) ($typeData['serial_numbers'] ?? []) as $serialIndex => $serialData) {
+                $serialId = is_array($serialData) ? ($serialData['id'] ?? null) : null;
+                $existingSerial = $serialId ? $existingSerials->get($serialId) : null;
+                if ($existingSerial && $existingSerial->materials->contains(fn ($material) => !in_array($material->id, $deletedPhotoIds, true))) {
+                    $typeHasPhoto = true;
+                }
+                if (($serialId && $request->hasFile("new_photos.{$serialId}")) || $request->hasFile("photos.{$typeIndex}.{$serialIndex}")) {
+                    $typeHasPhoto = true;
+                }
+            }
+            if (!$typeHasPhoto) {
+                throw ValidationException::withMessages([
+                    "photos.{$typeIndex}" => 'Pertahankan atau unggah minimal satu foto untuk setiap type perangkat.',
+                ]);
+            }
+        }
+
         $firstType = $typesData[0];
         $firstSerialInput = array_values($firstType['serial_numbers'])[0];
         $firstSerial = is_array($firstSerialInput) ? $firstSerialInput['serial_number'] : $firstSerialInput;
         $judulRma = trim($request->judul_rma ?? '') ?: $request->so_po;
+        $signatureRole = $request->role_penanda_tangan === 'Others'
+            ? trim((string) $request->role_penanda_tangan_other)
+            : $request->role_penanda_tangan;
+        $signatureRole = preg_replace('/\s+Sign$/i', '', trim($signatureRole));
+        if ($signatureRole === '') {
+            throw ValidationException::withMessages(['role_penanda_tangan_other' => 'Nama penanda tangan wajib diisi jika memilih Others.']);
+        }
 
         $rma->update([
             'judul_rma'         => $judulRma,
             'nama_pemohon'      => $request->nama_pemohon,
+            'role_penanda_tangan' => $signatureRole,
             'nama_manager'      => $request->nama_manager,
             'is_material_rusak' => $request->is_material_rusak ?? $rma->is_material_rusak,
             'so_po'             => $request->so_po,
             'valuation_type'    => $request->valuation_type,
             'tanggal'           => $request->tanggal,
             'lokasi_asal'       => $request->lokasi_asal,
+            'customer_name'     => $request->customer_name,
             'merk'              => $firstType['merk'],
             'type'              => $firstType['type'],
             'serial_number'     => $firstSerial,
@@ -264,7 +340,14 @@ class RmaController extends Controller
             }
         }
 
+        foreach ((array) $request->input('existing_photo_captions', []) as $materialId => $caption) {
+            $rma->materials()->whereKey($materialId)->update([
+                'keterangan' => trim((string) $caption) ?: null,
+            ]);
+        }
+
         DB::transaction(function () use ($rma, $typesData, $request) {
+            $newPhotoCaptions = $request->input('new_photo_captions', []);
             $existingTypes = $rma->types()->with('serials.materials')->get()->keyBy('id');
             $keepSerialIds = [];
             $keepTypeIds = [];
@@ -281,11 +364,21 @@ class RmaController extends Controller
                     if (!$serial) $serial = $type->serials()->make();
                     $serial->fill(['serial_number' => $serialNumber, 'sort_order' => $serialIndex])->save();
                     $keepSerialIds[] = $serial->id;
-                    foreach ((array) $request->file("photos.{$typeIndex}.{$serialIndex}", []) as $file) {
-                        $serial->materials()->create(['rma_id' => $rma->id, 'serial_number' => $serialNumber, 'foto_path' => $file->store('material_images', 'public')]);
+                    foreach ((array) $request->file("photos.{$typeIndex}.{$serialIndex}", []) as $photoIndex => $file) {
+                        $serial->materials()->create([
+                            'rma_id' => $rma->id,
+                            'serial_number' => $serialNumber,
+                            'foto_path' => $file->store('material_images', 'public'),
+                            'keterangan' => trim((string) $request->input("photo_captions.{$typeIndex}.{$serialIndex}.{$photoIndex}", '')) ?: null,
+                        ]);
                     }
-                    foreach ((array) $request->file("new_photos.{$serial->id}", []) as $file) {
-                        $serial->materials()->create(['rma_id' => $rma->id, 'serial_number' => $serialNumber, 'foto_path' => $file->store('material_images', 'public')]);
+                    foreach ((array) $request->file("new_photos.{$serial->id}", []) as $photoIndex => $file) {
+                        $serial->materials()->create([
+                            'rma_id' => $rma->id,
+                            'serial_number' => $serialNumber,
+                            'foto_path' => $file->store('material_images', 'public'),
+                            'keterangan' => trim((string) data_get($newPhotoCaptions, "{$serial->id}.{$photoIndex}", '')) ?: null,
+                        ]);
                     }
                     $serial->materials()->update(['serial_number' => $serialNumber]);
                 }
@@ -376,14 +469,14 @@ class RmaController extends Controller
 
     public function generatePdf($id)
     {
-        $data = Rma::with(['types.serials.materials', 'materials'])->findOrFail($id);
+        $data = Rma::with(['user', 'types.serials.materials', 'materials'])->findOrFail($id);
         $pdf = Pdf::loadView('pdf.rma', compact('data'));
         return $pdf->stream($this->formatRmaPdfFilename($data));
     }
 
     public function downloadPdf($id)
     {
-        $data = Rma::with(['types.serials.materials', 'materials'])->findOrFail($id);
+        $data = Rma::with(['user', 'types.serials.materials', 'materials'])->findOrFail($id);
         $pdf = Pdf::loadView('pdf.rma', compact('data'));
         return $pdf->download($this->formatRmaPdfFilename($data));
     }
@@ -426,7 +519,7 @@ class RmaController extends Controller
                 return redirect()->route('rma')->with('error', 'Pilih minimal satu data RMA untuk didownload.');
             }
 
-            $rmas = Rma::with(['materials', 'types.serials.materials'])->whereIn('id', $ids)->get();
+            $rmas = Rma::with(['user', 'materials', 'types.serials.materials'])->whereIn('id', $ids)->get();
         }
 
         if ($rmas->isEmpty()) {

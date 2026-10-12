@@ -39,8 +39,10 @@ class StoreRmaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'judul_rma'         => 'nullable|string|max:255',
+            'judul_rma'         => 'required|string|max:255',
             'nama_pemohon'      => 'required|string|max:255',
+            'role_penanda_tangan' => 'required|string|max:100',
+            'role_penanda_tangan_other' => 'required_if:role_penanda_tangan,Others|nullable|string|max:100',
             'nama_manager'      => 'required|string|max:255',
             'is_material_rusak' => 'required|boolean',
             'ttd_pemohon'       => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
@@ -48,6 +50,7 @@ class StoreRmaRequest extends FormRequest
             'valuation_type'    => 'required|in:ex-project,dismantle,rusak-L,rusak-TL',
             'tanggal'           => 'required|date',
             'lokasi_asal'       => 'required|string|max:255',
+            'customer_name'     => 'required|string|max:255',
             'types' => 'required|array|min:1',
             'types.*.merk' => 'required|string|max:255',
             'types.*.type' => 'required|string|max:255',
@@ -61,18 +64,27 @@ class StoreRmaRequest extends FormRequest
             'photos.*' => 'nullable|array',
             'photos.*.*' => 'nullable|array',
             'photos.*.*.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
+            'photo_captions' => 'nullable|array',
+            'photo_captions.*' => 'nullable|array',
+            'photo_captions.*.*' => 'nullable|array',
+            'photo_captions.*.*.*' => 'nullable|string|max:1000',
         ];
     }
 
     public function withValidator(LaravelValidator $validator): void
     {
         $validator->after(function (LaravelValidator $validator) {
-            $hasPhoto = false;
             $photoFiles = $this->allFiles()['photos'] ?? [];
-            array_walk_recursive($photoFiles, function ($file) use (&$hasPhoto) {
-                if ($file) $hasPhoto = true;
-            });
-            if (!$hasPhoto) $validator->errors()->add('photos', 'Unggah minimal satu foto material pada grup SN yang sesuai.');
+            foreach ((array) $this->input('types', []) as $typeIndex => $type) {
+                $files = (array) ($photoFiles[$typeIndex][0] ?? []);
+                $hasPhoto = collect($files)->contains(fn ($file) => $file !== null);
+                if (!$hasPhoto) {
+                    $validator->errors()->add(
+                        "photos.{$typeIndex}.0",
+                        'Unggah minimal satu foto untuk setiap type perangkat.'
+                    );
+                }
+            }
         });
     }
 
@@ -83,9 +95,11 @@ class StoreRmaRequest extends FormRequest
     {
         return [
             'so_po'           => 'No. Dokumen (SO/PO/IO)',
+            'judul_rma'       => 'Judul RMA',
             'valuation_type'  => 'Valuation Type',
             'tanggal'         => 'Tanggal',
             'lokasi_asal'     => 'Lokasi Asal',
+            'customer_name'   => 'Customer Name (CPE)',
             'nama_manager'    => 'Nama Supervisor / Manager',
             'types.*.merk' => 'Merk Perangkat',
             'types.*.type' => 'Tipe Perangkat',
@@ -118,6 +132,8 @@ class StoreRmaRequest extends FormRequest
             'ttd_pemohon.image'      => 'Tanda tangan harus berupa file gambar (JPG/PNG/WEBP).',
             'ttd_pemohon.max'        => 'Ukuran foto tanda tangan maksimal 2MB.',
             'valuation_type.required'=> 'Silakan pilih salah satu Valuation Type.',
+            'judul_rma.required' => 'Judul RMA wajib diisi.',
+            'customer_name.required' => 'Customer Name (CPE) wajib diisi. Isi tanda "-" jika tidak ada.',
             'valuation_type.in'      => 'Pilihan Valuation Type tidak valid.',
         ];
     }
