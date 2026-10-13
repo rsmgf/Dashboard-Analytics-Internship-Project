@@ -66,7 +66,10 @@ class AccessManagementController extends Controller
 
         Cache::flush();
 
+        $roleLabel = ['manajer' => 'Eksekutif', 'super_admin' => 'Administrator'][$role->name]
+            ?? ucfirst(str_replace('_', ' ', $role->name));
+
         return redirect()->route('admin.access.index', $role)
-            ->with('success', "Akses untuk role {$role->name} berhasil diperbarui");
+            ->with('success', "Akses untuk role {$roleLabel} berhasil diperbarui");
     }
 }

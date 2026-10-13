@@ -267,7 +267,7 @@
                                             @endif
                                         </a>
                                     </th>
-                                    <th>Judul / Nama Dokumen</th>
+                                    <th>No. IO.SP2K/SO/PO/ANDOP</th>
                                     <th>
                                         <!-- Tombol Toggle ASC / DESC untuk Tanggal Pengisian -->
                                         <a href="{{ route('rma', array_merge(request()->query(), ['sort' => 'tanggal', 'direction' => $nextDirection])) }}">
@@ -279,8 +279,8 @@
                                             @endif
                                         </a>
                                     </th>
-                                    <th>ID POP</th>
-                                    <th>Merk/Type</th>
+                                    <th>Lokasi</th>
+                                    <th>Merk &amp; Type</th>
                                     @if ($isSuperAdminOrManager)
                                         <th>Dibuat Oleh</th>
                                     @endif

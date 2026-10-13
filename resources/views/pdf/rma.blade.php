@@ -53,12 +53,61 @@
         }
 
         .device-line {
+            display: table;
+            width: 100%;
             line-height: 1.35;
             white-space: normal;
         }
 
         .device-index {
-            margin-right: 5px;
+            display: table-cell;
+            width: 22px;
+            padding-right: 5px;
+            vertical-align: top;
+        }
+
+        .device-line-text {
+            display: table-cell;
+            vertical-align: top;
+        }
+
+        .valuation-option {
+            display: inline-table;
+            vertical-align: middle;
+            white-space: nowrap;
+            margin-right: 12px;
+        }
+
+        .valuation-value {
+            white-space: nowrap;
+            font-size: 10pt;
+        }
+
+        .valuation-check {
+            display: table-cell;
+            width: 17px;
+            font-family: "DejaVu Sans", sans-serif;
+            font-size: 12pt;
+            line-height: 1;
+            vertical-align: middle;
+        }
+
+        .valuation-label {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .photo-row {
+            page-break-inside: avoid;
+        }
+
+        .checker-symbol {
+            display: inline-block;
+            margin-left: 15px;
+            font-family: "DejaVu Sans", sans-serif;
+            font-size: 14pt;
+            line-height: 1;
+            vertical-align: middle;
         }
 
         .box {
@@ -161,52 +210,63 @@
     @php
         $types = $data->types->values();
         $brands = $types->pluck('merk')->unique()->values();
-        $serials = $types->flatMap(fn($type) => $type->serials)->values();
-        $numberedTypes = $types->count() > 1;
-        $typeLines = $types->map(fn($type) => $type->type)->values();
+        $multiBrand = $brands->count() > 1;
+        $typeLines = $types->map(fn($type) => $multiBrand
+            ? trim($type->merk . ' - ' . $type->type, ' -')
+            : $type->type)->values();
         $materialLines = $types->map(fn($type) => $type->material_number ?: '-')->values();
-        $serialLines = $serials->map(fn($serial) => $serial->serial_number)->values();
+        $serialLines = $types->map(fn($type) => $type->serials->pluck('serial_number')->filter()->implode(', ') ?: '-')->values();
+        $signatoryRole = trim($data->role_penanda_tangan ?: 'Engineer');
+        $engineerSignLabel = preg_match('/\s+Sign$/i', $signatoryRole) ? $signatoryRole : $signatoryRole . ' Sign';
+        $valuationOptions = [
+            'ex-project' => 'Ex-Project',
+            'dismantle' => 'Dismantle',
+            'rusak-L' => 'Rusak-L',
+            'rusak-TL' => 'Rusak-TL',
+        ];
     @endphp
     <table class="info-table">
         <tr>
-            <td class="info-label">Nomor SO/PO</td><td class="info-colon">:</td><td class="info-value">{{ $data->so_po }}</td>
+            <td class="info-label">No. IO/SP2K/SO/PO/ANDOP</td><td class="info-colon">:</td><td class="info-value">{{ $data->so_po }}</td>
         </tr>
         <tr>
-            <td class="info-label">Valuation Type</td><td class="info-colon">:</td><td class="info-value">{{ $data->valuation_type }}</td>
+            <td class="info-label">Valuation Type</td><td class="info-colon">:</td><td class="info-value valuation-value">@foreach ($valuationOptions as $value => $label)<span class="valuation-option"><span class="valuation-check">{!! $data->valuation_type === $value ? '&#9745;' : '&#9744;' !!}</span><span class="valuation-label">{{ $label }}</span></span>@endforeach
+            </td>
         </tr>
         <tr>
             <td class="info-label">Tanggal</td><td class="info-colon">:</td><td class="info-value">{{ $data->tanggal->translatedFormat('d F Y') }}</td>
         </tr>
         <tr>
-            <td class="info-label">Lokasi Asal</td><td class="info-colon">:</td><td class="info-value">{{ $data->lokasi_asal }}</td>
+            <td class="info-label">Lokasi</td><td class="info-colon">:</td><td class="info-value">{{ $data->lokasi_asal }}</td>
+        </tr>
+        <tr>
+            <td class="info-label">Customer Name (CPE)</td><td class="info-colon">:</td><td class="info-value">{{ $data->customer_name ?? '-' }}</td>
         </tr>
         <tr>
             <td class="info-label">Merk</td><td class="info-colon">:</td><td class="info-value">
                 @foreach ($brands as $index => $brand)
-                    <div class="device-line">@if ($brands->count() > 1)<span class="device-index">{{ $index + 1 }}.</span>@endif{{ $brand }}</div>
+                    <div class="device-line">@if ($multiBrand)<span class="device-index">{{ $index + 1 }}.</span>@endif<span class="device-line-text">{{ $brand }}</span></div>
                 @endforeach
             </td>
         </tr>
         <tr>
             <td class="info-label">Type</td><td class="info-colon">:</td><td class="info-value">
                 @foreach ($typeLines as $index => $typeLine)
-                    <div class="device-line">@if ($numberedTypes)<span class="device-index">{{ $index + 1 }}.</span>@endif{{ $typeLine }}</div>
+                    <div class="device-line">@if ($multiBrand)<span class="device-index">{{ $index + 1 }}.</span>@endif<span class="device-line-text">{{ $typeLine }}</span></div>
                 @endforeach
             </td>
         </tr>
         <tr>
-            <td class="info-label">Serial Number</td><td class="info-colon">:</td><td class="info-value">
-                @forelse ($serialLines as $index => $serialLine)
-                    <div class="device-line">@if ($serials->count() > 1)<span class="device-index">{{ $index + 1 }}.</span>@endif{{ $serialLine }}</div>
-                @empty
-                    {{ $data->serial_number ?? '-' }}
-                @endforelse
+            <td class="info-label">Serial Number (SN)</td><td class="info-colon">:</td><td class="info-value">
+                @foreach ($serialLines as $index => $serialLine)
+                    <div class="device-line">@if ($multiBrand)<span class="device-index">{{ $index + 1 }}.</span>@endif<span class="device-line-text">{{ $serialLine }}</span></div>
+                @endforeach
             </td>
         </tr>
         <tr>
             <td class="info-label">Material Number</td><td class="info-colon">:</td><td class="info-value">
                 @foreach ($materialLines as $index => $materialLine)
-                    <div class="device-line">@if ($numberedTypes)<span class="device-index">{{ $index + 1 }}.</span>@endif{{ $materialLine }}</div>
+                    <div class="device-line">@if ($multiBrand)<span class="device-index">{{ $index + 1 }}.</span>@endif<span class="device-line-text">{{ $materialLine }}</span></div>
                 @endforeach
             </td>
         </tr>
@@ -223,7 +283,7 @@
     <div class="damage-signature-block">
     <p style="margin-bottom: 10px; font-size: 9.5pt;">
         Beri Tanda Checker Pada Kotak Jika Material Rusak
-        <span class="box" style="margin-left: 15px;">{!! $data->is_material_rusak ? $checkImg : '' !!}</span>
+        <span class="checker-symbol">&#9745;</span>
     </p>
 
     <table class="wrapper-table">
@@ -319,7 +379,7 @@
         <!-- BARIS 1: JUDUL JABATAN -->
         <tr>
             <td style="width: 50%; vertical-align: top;">
-                <p style="margin: 0;">Engineer Sign,</p>
+                <p style="margin: 0;">{{ $engineerSignLabel }},</p>
             </td>
             <td style="width: 50%; vertical-align: top;">
                 <p style="margin: 0;">Manager on Duty / Local Manager / Supervisor Sign,</p>
@@ -354,16 +414,25 @@
     <div class="page-break"></div>
     <h2 style="margin-bottom: 20px;">Lampiran Dokumentasi Material</h2>
 
-    <table style="border: 1px solid #000; width: 100%; border-collapse: collapse;">
-        @php $photoMaterials = $types->flatMap(fn($type) => $type->serials->flatMap(fn($serial) => $serial->materials))->values(); @endphp
+    @php
+        $photoMaterials = $types->flatMap(fn($type) => $type->serials->flatMap(fn($serial) => $serial->materials->map(fn($material) => ['material' => $material, 'type' => $type, 'serial' => $serial])))->values();
+    @endphp
+    @if ($photoMaterials->isEmpty())
+        <p style="text-align:center; padding:24px; border:1px solid #000;">Belum ada foto dokumentasi material.</p>
+    @else
+        <table style="border: 1px solid #000; width: 100%; border-collapse: collapse;">
         @foreach ($photoMaterials->chunk(2) as $chunk)
-            <tr>
-                @foreach ($chunk as $material)
+            <tr class="photo-row">
+                @foreach ($chunk as $photoRow)
+                    @php $material = $photoRow['material']; @endphp
                     <td style="width: 50%; border: 1px solid #000; text-align: center; padding: 10px;">
-                        <img src="{{ public_path('storage/' . $material->foto_path) }}"
+                        <img src="{{ Storage::disk('public')->path($material->foto_path) }}"
                             style="max-width: 90%; max-height: 220px; display: block; margin: 0 auto 8px;">
-                        <p style="margin: 0; font-weight: bold; font-size: 10pt;">+{{ $material->serial_number }}</p>
-                        <p style="margin: 0; font-size: 9pt;">{{ $material->serial?->type?->type ?? '-' }}</p>
+                        <p style="margin: 0; font-weight: bold; font-size: 10pt;">{{ $photoRow['serial']->serial_number }}</p>
+                        <p style="margin: 0; font-size: 9pt;">{{ $photoRow['type']->merk }} - {{ $photoRow['type']->type }}</p>
+                        @if (filled($material->keterangan))
+                            <p style="margin: 4px 0 0; font-size: 9pt;">{{ $material->keterangan }}</p>
+                        @endif
                     </td>
                 @endforeach
 
@@ -372,7 +441,8 @@
                 @endif
             </tr>
         @endforeach
-    </table>
+        </table>
+    @endif
 
 </body>
 

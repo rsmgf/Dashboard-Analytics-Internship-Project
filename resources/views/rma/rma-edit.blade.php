@@ -11,10 +11,15 @@
     <style>
         .edit-photo-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 10px;
             margin-top: 12px;
         }
+
+        .edit-photo-entry { min-width:0; display:grid; gap:8px; align-content:start; }
+        .edit-photo-caption { min-height:38px; resize:vertical; font-size:12px; }
+        .edit-new-photo-row input[type=file] { min-width:0; font-size:12px; }
+        .edit-photo-add { margin-top:10px; }
 
         .edit-photo-item {
             position: relative;
@@ -125,6 +130,10 @@
 
         .edit-device-card { padding: 22px; border: 1px solid #dbeafe; background: #fbfdff; }
         .edit-device-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px; }
+        .rma-brand-group > .edit-device-heading,
+        .rma-brand-group .rma-type-group > .edit-device-heading { justify-content:flex-start; gap:0; }
+        .rma-brand-group > .edit-device-heading > .btn-hapus,
+        .rma-brand-group .rma-type-group > .edit-device-heading > .btn-hapus { margin-left:12px; }
         .edit-device-heading strong { color:#1e3a8a; font-size:15px; }
         .edit-serial-row { padding:14px; margin:12px 0; border:1px solid #e2e8f0; border-radius:10px; background:#fff; }
         .edit-serial-fields { display:flex; align-items:center; gap:10px; }
@@ -135,7 +144,11 @@
         .edit-serial-upload .btn-browse { padding:6px 16px; font-size:12px; }
         .edit-serial-fields .btn-hapus { white-space:nowrap; }
         .edit-serial-label { display:block; margin:0 0 8px; color:#334155; font-size:13px; font-weight:600; }
-        @media (max-width:640px) { .edit-serial-fields { align-items:stretch; } .edit-serial-fields .btn-hapus { flex:0 0 auto; } }
+        @media (max-width:640px) {
+            .edit-serial-fields { align-items:stretch; }
+            .edit-serial-fields .btn-hapus { flex:0 0 auto; }
+            .edit-photo-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+        }
     </style>
 </head>
 
@@ -185,12 +198,10 @@
                             </h2>
 
                             <div class="form-group">
-                                <label for="judul_rma">Nama / Judul Dokumen <span
-                                        style="font-weight:400;color:#64748b;font-size:12px;">(opsional)</span></label>
+                                <label for="judul_rma">Nama / Judul Dokumen <span style="color:#64748b;font-weight:400;">(opsional)</span></label>
                                 <input type="text" id="judul_rma" name="judul_rma" class="form-control"
-                                    placeholder="Contoh: RMA PO-12345 - POP Jakarta Pusat"
-                                    value="{{ old('judul_rma', $rma->judul_rma) }}" maxlength="150">
-                                <div class="field-description">Biarkan kosong untuk menggunakan No. IO.SP2K/SO/PO/ANDOP sebagai nama dokumen.</div>
+                                    placeholder="Kosongkan untuk otomatis: No. Project - Merk"
+                                    value="{{ old('judul_rma', $rma->judul_rma ?? $rma->so_po) }}" maxlength="255">
                             </div>
                             <div class="form-group">
                                 <label for="so_po">No. IO.SP2K/SO/PO/ANDOP <span>*</span></label>
@@ -222,30 +233,49 @@
                                     placeholder="Masukkan lokasi asal">
                             </div>
                             <div class="form-group">
+                                <label for="customer_name">Customer Name (CPE) <span>*</span></label>
+                                <div class="field-description">Isi tanda (-) jika data customer tidak tersedia.</div>
+                                <input type="text" id="customer_name" name="customer_name" class="form-control" required
+                                    value="{{ old('customer_name', $rma->customer_name ?? '-') }}" placeholder="Nama customer atau -">
+                            </div>
+                            <div class="form-group">
                                 <label>Perangkat <span>*</span></label>
+                                @php
+                                    $flatTypes = $rma->types->values();
+                                    $typeIndexById = $flatTypes->pluck('id')->flip();
+                                    $brandGroups = $flatTypes->groupBy('merk');
+                                @endphp
                                 <div id="edit-type-groups">
-                                    @foreach ($rma->types as $ti => $type)
-                                        <div class="form-card rma-type-group edit-device-card" style="margin-bottom:14px" data-next-serial="{{ $type->serials->count() }}" data-index="{{ $ti }}">
-                                            <div class="edit-device-heading"><strong><i class="bi bi-hdd-stack" style="margin-right:6px"></i>Perangkat {{ $ti + 1 }}</strong>@if($ti > 0)<button type="button" class="btn-hapus remove-type">Hapus perangkat</button>@endif</div>
-                                            <input type="hidden" name="types[{{ $ti }}][id]" value="{{ $type->id }}">
-                                            <div class="form-group"><label>Merk *</label><input class="form-control" name="types[{{ $ti }}][merk]" required value="{{ $type->merk }}"></div>
-                                            <div class="form-group"><label>Tipe *</label><input class="form-control type-name" name="types[{{ $ti }}][type]" required value="{{ $type->type }}"></div>
-                                            <div class="form-group"><label>Material Number *</label><input class="form-control" name="types[{{ $ti }}][material_number]" required value="{{ $type->material_number }}"></div>
-                                            <div class="serial-list">
-                                                <label class="edit-serial-label">Serial Number (SN) <span>*</span></label>
-                                                @foreach ($type->serials as $si => $serial)
-                                                    <div class="serial-row edit-serial-row" data-serial-index="{{ $si }}">
-                                                        <input type="hidden" name="types[{{ $ti }}][serial_numbers][{{ $si }}][id]" value="{{ $serial->id }}">
-                                                        <div class="edit-serial-fields"><input class="form-control" name="types[{{ $ti }}][serial_numbers][{{ $si }}][serial_number]" required value="{{ $serial->serial_number }}" aria-label="Serial Number perangkat {{ $ti + 1 }}"><button type="button" class="btn-hapus remove-serial">Hapus SN</button></div>
+                                    @foreach ($brandGroups as $brandIndex => $brandTypes)
+                                        <div class="form-card rma-brand-group edit-device-card" data-brand-index="{{ $loop->index }}" style="margin-bottom:14px">
+                                            <div class="edit-device-heading"><strong>Merk {{ $loop->iteration }}</strong>@if(!$loop->first)<button type="button" class="btn-hapus remove-brand">Hapus Merk</button>@endif</div>
+                                            <div class="form-group"><label>Nama Merk *</label><input class="form-control brand-name" required value="{{ $brandIndex }}" placeholder="Masukkan nama merk"></div>
+                                            <div class="brand-type-list">
+                                                @foreach ($brandTypes as $type)
+                                                    @php $ti = $typeIndexById->get($type->id); @endphp
+                                                    <div class="rma-type-group edit-type-item" style="border-top:1px solid #e2e8f0;padding-top:14px;margin-top:14px" data-index="{{ $ti }}" data-next-serial="{{ $type->serials->count() }}">
+                                                        <div class="edit-device-heading"><strong>Type {{ $loop->iteration }}</strong>@if($brandTypes->count() > 1)<button type="button" class="btn-hapus remove-brand-type">Hapus Type</button>@endif</div>
+                                                        <input type="hidden" class="type-merk" name="types[{{ $ti }}][merk]" value="{{ $type->merk }}">
+                                                        <input type="hidden" name="types[{{ $ti }}][id]" value="{{ $type->id }}">
+                                                        <div class="form-group"><label>Type *</label><input class="form-control type-name" name="types[{{ $ti }}][type]" required value="{{ $type->type }}"></div>
+                                                        <div class="form-group"><label>Material Number *</label><input class="form-control" name="types[{{ $ti }}][material_number]" required value="{{ $type->material_number }}"></div>
+                                                        <div class="serial-list"><label class="edit-serial-label">Serial Number (SN) *</label>
+                                                            @foreach ($type->serials as $si => $serial)
+                                                                <div class="serial-row edit-serial-row" data-serial-index="{{ $si }}">
+                                                                    <input type="hidden" name="types[{{ $ti }}][serial_numbers][{{ $si }}][id]" value="{{ $serial->id }}">
+                                                                    <div class="edit-serial-fields"><input class="form-control serial-value" name="types[{{ $ti }}][serial_numbers][{{ $si }}][serial_number]" required value="{{ $serial->serial_number }}" aria-label="SN {{ $type->type }}"></div>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
                                                     </div>
                                                 @endforeach
                                             </div>
-                                            <button type="button" class="tambah-link add-serial">+ Tambah SN</button>
+                                            <button type="button" class="tambah-link add-edit-type">+ Tambah Type</button>
                                         </div>
                                     @endforeach
                                 </div>
-                                <div class="field-description">Satu perangkat mewakili satu merk, tipe, dan material number. Tambahkan SN jika unitnya lebih dari satu. Untuk tipe berbeda, tambahkan perangkat baru; merk boleh sama.</div>
-                                <button type="button" class="tambah-link" id="add-edit-type">+ Tambah perangkat</button>
+                                <div class="field-description">Setiap type memiliki material number dan serial number sendiri. Gunakan Hapus Type untuk menghapus type beserta SN, MN, dan foto terkait.</div>
+                                <button type="button" class="tambah-link" id="add-edit-brand">+ Tambah Merk</button>
                             </div>
                             <div class="form-group">
                                 <label for="description">Description <span>*</span></label>
@@ -282,14 +312,12 @@
                         <!-- FOTO MATERIAL -->
                         <div class="form-card" style="padding-bottom:24px;">
                             <h3 style="font-size:1rem;margin:0 0 4px;color:#1e293b;">Foto Material</h3>
-                            <div class="field-description" style="margin-bottom:14px;">Klik foto untuk menandai hapus.
-                                Foto ditandai akan dihapus saat disimpan.</div>
+                            <div class="field-description" style="margin-bottom:14px;">Isi keterangan bila diperlukan. Gunakan tombol Hapus Foto untuk menandai foto yang akan dihapus saat disimpan.</div>
 
                             @if ($rma->materials->count() > 0)
                                 <div style="font-size:12px;font-weight:600;color:#475569;margin-bottom:8px;">
                                     <i class="bi bi-images"></i> Foto Saat Ini ({{ $rma->materials->count() }} foto)
-                                    &nbsp;·&nbsp; <span style="color:#dc2626;font-weight:400;">Klik foto untuk tandai
-                                        hapus</span>
+                                    &nbsp;·&nbsp; <span style="color:#dc2626;font-weight:400;">Gunakan tombol Hapus Foto untuk menandai foto</span>
                                 </div>
                             @else
                                 <p style="color:#94a3b8;font-size:13px;margin-bottom:12px;">Belum ada foto material.
@@ -298,18 +326,23 @@
                             <div id="edit-photo-groups">
                             @foreach ($rma->types as $ti => $type)
                                 @foreach ($type->serials as $si => $serial)
-                                    <div class="form-card edit-photo-group" data-device-index="{{ $ti }}" data-serial-index="{{ $si }}" style="margin:12px 0"><strong>{{ $type->type }} · SN {{ $serial->serial_number }}</strong>
+                                    <div class="form-card edit-photo-group" data-device-index="{{ $ti }}" data-serial-index="{{ $si }}" data-serial-id="{{ $serial->id }}" style="margin:12px 0"><strong>{{ $type->type }} · SN {{ $serial->serial_number }}</strong>
                                         <div class="edit-photo-grid">
                                             @foreach ($serial->materials as $mat)
-                                                <div class="edit-photo-item" id="photo-wrap-{{ $mat->id }}" onclick="toggleHapusFoto({{ $mat->id }})">
-                                                    <img src="{{ Storage::url($mat->foto_path) }}" alt="Foto Material">
-                                                    <div class="edit-photo-overlay"><i class="bi bi-trash3-fill overlay-icon"></i></div>
-                                                    <span class="delete-tag">HAPUS</span>
-                                                    <input type="checkbox" name="hapus_foto[]" value="{{ $mat->id }}" id="chk-hapus-{{ $mat->id }}" style="display:none;">
+                                                <div class="edit-photo-entry">
+                                                    <div class="edit-photo-item" id="photo-wrap-{{ $mat->id }}" onclick="toggleHapusFoto({{ $mat->id }})">
+                                                        <img src="{{ Storage::url($mat->foto_path) }}" alt="Foto Material">
+                                                        <div class="edit-photo-overlay"><i class="bi bi-trash3-fill overlay-icon"></i></div>
+                                                        <span class="delete-tag">HAPUS</span>
+                                                        <input type="checkbox" name="hapus_foto[]" value="{{ $mat->id }}" id="chk-hapus-{{ $mat->id }}" style="display:none;">
+                                                    </div>
+                                                    <input type="text" class="form-control edit-photo-caption" name="existing_photo_captions[{{ $mat->id }}]" value="{{ old('existing_photo_captions.' . $mat->id, $mat->keterangan) }}" maxlength="1000" placeholder="Keterangan foto (opsional)">
+                                                    <button type="button" class="btn-hapus" onclick="event.stopPropagation();toggleHapusFoto({{ $mat->id }})">Hapus Foto</button>
                                                 </div>
                                             @endforeach
                                         </div>
-                                        <div class="upload-dropzone edit-serial-upload" style="margin-top:12px;margin-bottom:0" onclick="if(event.target===this||event.target.closest('.dropzone-icon,.dropzone-text'))this.querySelector('input[type=file]').click()"><i class="bi bi-cloud-arrow-up dropzone-icon"></i><div class="dropzone-text">Tambah foto material (opsional)</div><input type="file" name="new_photos[{{ $serial->id }}][]" multiple accept="image/jpeg,image/png,image/jpg,image/webp" style="display:none"><button type="button" class="btn-browse" onclick="event.stopPropagation();this.parentElement.querySelector('input[type=file]').click()">Pilih foto</button></div>
+                                        <div class="edit-new-photo-list"></div>
+                                        <button type="button" class="tambah-link edit-photo-add">+ Tambah Foto</button>
                                     </div>
                                 @endforeach
                             @endforeach
@@ -323,7 +356,27 @@
                             <div
                                 style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;">
                                 <div class="form-group" style="margin-bottom:0;">
-                                    <label for="nama_pemohon">Nama Engineer / Pemohon <span>*</span></label>
+                                    <label for="role_penanda_tangan">Jabatan Penanda Tangan <span>*</span></label>
+                                    @php
+                                        $signatureOptions = ['Engineer', 'CA Retail'];
+                                        $currentSignature = preg_replace('/\s+Sign$/i', '', old('role_penanda_tangan', $rma->role_penanda_tangan ?: 'Engineer'));
+                                        $isCustomSignature = !in_array($currentSignature, $signatureOptions, true);
+                                    @endphp
+                                    <select id="role_penanda_tangan" name="role_penanda_tangan" class="form-control" required>
+                                        @foreach ($signatureOptions as $signatureOption)
+                                            <option value="{{ $signatureOption }}" @selected(!$isCustomSignature && $currentSignature === $signatureOption)>{{ $signatureOption }}</option>
+                                        @endforeach
+                                        @foreach ($signatureRoles as $signatureRole)
+                                            @if (!in_array($signatureRole, $signatureOptions, true))
+                                                <option value="{{ $signatureRole }}" @selected(!$isCustomSignature && $currentSignature === $signatureRole)>{{ $signatureRole }}</option>
+                                            @endif
+                                        @endforeach
+                                        <option value="Others" @selected($isCustomSignature)>Others</option>
+                                    </select>
+                                    <input type="text" id="role_penanda_tangan_other" name="role_penanda_tangan_other" class="form-control" style="{{ $isCustomSignature ? '' : 'display:none;' }}margin-top:8px" maxlength="100" value="{{ old('role_penanda_tangan_other', $isCustomSignature ? $currentSignature : '') }}" placeholder="Masukkan nama penanda tangan">
+                                </div>
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label for="nama_pemohon">Nama Pemohon <span>*</span></label>
                                     <input type="text" id="nama_pemohon" name="nama_pemohon" class="form-control"
                                         required value="{{ old('nama_pemohon', $rma->nama_pemohon) }}"
                                         placeholder="Nama Terang Engineer">
@@ -343,8 +396,7 @@
                                     <div style="font-weight:600;color:#15803d;font-size:13.5px;">Tanda Tangan Fisik
                                         (Basah)</div>
                                     <div style="font-size:12px;color:#475569;margin-top:2px;line-height:1.5;">
-                                        Dokumen PDF yang digenerate setelah edit akan tetap menyertakan kolom tanda
-                                        tangan basah.
+                                        Dokumen PDF yang digenerate setelah edit akan menyertakan kolom tanda tangan basah.
                                     </div>
                                 </div>
                             </div>
@@ -377,7 +429,7 @@
                             <p>Upload foto tambahan via Browse. Foto lama yang tidak ditandai tetap tersimpan.</p>
                         </div>
                         <div class="note-item"><span>Judul Dokumen</span>
-                            <p>Kosongkan judul untuk auto-generate dari Merk + Lokasi Asal.</p>
+                            <p>Kosongkan judul untuk membuat otomatis dari No. Project + Merk.</p>
                         </div>
                         <div class="note-item"><span>PDF Diperbarui</span>
                             <p>Setelah disimpan, PDF yang didownload akan mencerminkan data terbaru.</p>
@@ -391,55 +443,180 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         const editGroups = document.getElementById('edit-type-groups');
+        const editPhotoGroups = document.getElementById('edit-photo-groups');
+        const signatureRoleSelect = document.getElementById('role_penanda_tangan');
+        const signatureRoleOther = document.getElementById('role_penanda_tangan_other');
+        function syncSignatureRole() {
+            const isOther = signatureRoleSelect.value === 'Others';
+            signatureRoleOther.style.display = isOther ? '' : 'none';
+            signatureRoleOther.required = isOther;
+            if (!isOther) signatureRoleOther.value = '';
+        }
+        signatureRoleSelect.addEventListener('change', syncSignatureRole);
+        syncSignatureRole();
         let editTypeIndex = editGroups ? Math.max(-1, ...Array.from(editGroups.querySelectorAll('.rma-type-group'), group => Number(group.dataset.index))) + 1 : 0;
-        document.getElementById('add-edit-type')?.addEventListener('click', () => {
+        function addEditBrand() {
+            const index = editGroups.querySelectorAll('.rma-brand-group').length;
+            const brand = document.createElement('div');
+            brand.className = 'form-card rma-brand-group edit-device-card';
+            brand.style.marginBottom = '14px';
+            brand.innerHTML = `<div class="edit-device-heading"><strong>Merk ${index + 1}</strong><button type="button" class="btn-hapus remove-brand">Hapus Merk</button></div>
+                <div class="form-group"><label>Nama Merk *</label><input class="form-control brand-name" required placeholder="Masukkan nama merk"></div>
+                <div class="brand-type-list"></div><button type="button" class="tambah-link add-edit-type">+ Tambah Type</button>`;
+            editGroups.appendChild(brand);
+            addEditType(brand);
+        }
+        function addEditType(brand) {
             const ti = editTypeIndex++;
-            const card = document.createElement('div'); card.className = 'form-card rma-type-group edit-device-card'; card.style.marginBottom = '14px';
-            card.dataset.index = ti; card.dataset.nextSerial = '0';
-            card.innerHTML = `<div class="edit-device-heading"><strong><i class="bi bi-hdd-stack" style="margin-right:6px"></i>Perangkat ${ti + 1}</strong><button type="button" class="btn-hapus remove-type">Hapus perangkat</button></div>
-                <div class="form-group"><label>Merk *</label><input class="form-control" name="types[${ti}][merk]" required></div>
-                <div class="form-group"><label>Tipe *</label><input class="form-control type-name" name="types[${ti}][type]" required></div>
-                <div class="form-group"><label>Material Number *</label><input class="form-control" name="types[${ti}][material_number]" required></div>
-                <div class="serial-list"><label class="edit-serial-label">Serial Number (SN) <span>*</span></label></div><button type="button" class="tambah-link add-serial">+ Tambah SN</button>`;
-            editGroups.appendChild(card); addEditSerial(card, ti, 0);
-        });
+            const card = document.createElement('div');
+            card.className = 'rma-type-group edit-type-item';
+            card.style.cssText = 'border-top:1px solid #e2e8f0;padding-top:14px;margin-top:14px';
+            card.dataset.index = ti;
+            card.dataset.nextSerial = '0';
+            card.innerHTML = `<div class="edit-device-heading"><strong>Type ${brand.querySelectorAll('.rma-type-group').length + 1}</strong>${brand.querySelectorAll('.rma-type-group').length ? '<button type="button" class="btn-hapus remove-brand-type">Hapus Type</button>' : ''}</div>
+                <input type="hidden" class="type-merk" name="types[${ti}][merk]">
+                <div class="form-group"><label>Type *</label><input class="form-control type-name" name="types[${ti}][type]" required placeholder="Masukkan type"></div>
+                <div class="form-group"><label>Material Number *</label><input class="form-control" name="types[${ti}][material_number]" required placeholder="Masukkan material number"></div>
+                <div class="serial-list"><label class="edit-serial-label">Serial Number (SN) *</label></div>`;
+            brand.querySelector('.brand-type-list').appendChild(card);
+            addEditSerial(card, ti, 0);
+        }
+        document.getElementById('add-edit-brand')?.addEventListener('click', addEditBrand);
         function addEditSerial(card, ti, si) {
             const row = document.createElement('div'); row.className = 'serial-row edit-serial-row';
             row.dataset.serialIndex = si;
-            row.innerHTML = `<div class="edit-serial-fields"><input class="form-control serial-value" name="types[${ti}][serial_numbers][${si}][serial_number]" required placeholder="Masukkan Serial Number" aria-label="Serial Number perangkat ${ti + 1}"><button type="button" class="btn-hapus remove-serial">Hapus SN</button></div>`;
+            row.innerHTML = `<div class="edit-serial-fields"><input class="form-control serial-value" name="types[${ti}][serial_numbers][${si}][serial_number]" required placeholder="Masukkan Serial Number" aria-label="Serial Number perangkat ${ti + 1}"></div>`;
             card.querySelector('.serial-list').appendChild(row);
             card.dataset.nextSerial = String(Math.max(Number(card.dataset.nextSerial || 0), si + 1));
             addEditPhotoGroup(card, ti, si, row.querySelector('.serial-value'));
         }
+
+        function renumberEditPhotoRows(group) {
+            const serialId = group.dataset.serialId;
+            const uploadRoot = serialId ? `new_photos[${serialId}]` : `photos[${group.dataset.deviceIndex}][${group.dataset.serialIndex}]`;
+            const captionRoot = serialId ? `new_photo_captions[${serialId}]` : `photo_captions[${group.dataset.deviceIndex}][${group.dataset.serialIndex}]`;
+            group.querySelectorAll('.edit-new-photo-row').forEach((row, index) => {
+                row.dataset.photoIndex = index;
+                row.querySelector('.edit-new-photo-input').name = `${uploadRoot}[${index}]`;
+                row.querySelector('.edit-new-photo-caption').name = `${captionRoot}[${index}]`;
+            });
+        }
+
+        function addEditPhotoRow(group) {
+            const row = document.createElement('div');
+            row.className = 'edit-new-photo-row';
+            const inputId = `edit-rma-photo-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+            row.innerHTML = `<div class="rma-photo-file"><div class="upload-dropzone photo-upload-dropzone"><i class="bi bi-cloud-arrow-up dropzone-icon"></i><div class="dropzone-text">Unggah foto dokumentasi</div><label class="btn-browse" for="${inputId}">Pilih Foto</label><input id="${inputId}" class="edit-new-photo-input" type="file" accept="image/jpeg,image/png,image/jpg,image/webp"><span class="rma-photo-filename">Belum ada foto dipilih</span><img class="rma-photo-preview" alt="Pratinjau foto" hidden></div></div><input class="form-control edit-new-photo-caption" type="text" maxlength="1000" placeholder="Keterangan foto (opsional)"><button type="button" class="btn-hapus remove-edit-photo">Hapus Foto</button>`;
+            group.querySelector('.edit-new-photo-list').appendChild(row);
+            renumberEditPhotoRows(group);
+        }
+
         function addEditPhotoGroup(card, ti, si, serialInput) {
             const group = document.createElement('div');
             group.className = 'form-card edit-photo-group';
             group.dataset.deviceIndex = ti;
             group.dataset.serialIndex = si;
             group.style.margin = '12px 0';
-            group.innerHTML = `<strong></strong><div class="edit-photo-grid"></div><div class="upload-dropzone edit-serial-upload" style="margin-top:12px;margin-bottom:0" onclick="if(event.target===this||event.target.closest('.dropzone-icon,.dropzone-text'))this.querySelector('input[type=file]').click()"><i class="bi bi-cloud-arrow-up dropzone-icon"></i><div class="dropzone-text">Tambah foto material (opsional)</div><input type="file" name="photos[${ti}][${si}][]" multiple accept="image/jpeg,image/png,image/jpg,image/webp" style="display:none"><button type="button" class="btn-browse" onclick="event.stopPropagation();this.parentElement.querySelector('input[type=file]').click()">Pilih foto</button></div>`;
+            group.innerHTML = `<strong></strong><div class="edit-photo-grid"></div><div class="edit-new-photo-list"></div><button type="button" class="tambah-link edit-photo-add">+ Tambah Foto</button>`;
             const updateTitle = () => { group.querySelector('strong').textContent = `${card.querySelector('.type-name').value || 'Tipe perangkat'} · SN ${serialInput.value || 'belum diisi'}`; };
             updateTitle();
             serialInput.addEventListener('input', updateTitle);
             card.querySelector('.type-name').addEventListener('input', updateTitle);
-            document.getElementById('edit-photo-groups').appendChild(group);
+            editPhotoGroups.appendChild(group);
+            addEditPhotoRow(group);
         }
-        editGroups?.addEventListener('click', e => {
-            const card = e.target.closest('.rma-type-group');
-            if (e.target.closest('.remove-type')) {
-                document.querySelectorAll(`.edit-photo-group[data-device-index="${card.dataset.index}"]`).forEach(group => group.remove());
-                card.remove(); return;
-            }
-            if (e.target.closest('.add-serial')) {
-                const ti = Number(card.dataset.index);
-                addEditSerial(card, ti, Number(card.dataset.nextSerial || 0));
-            }
-            if (e.target.closest('.remove-serial') && card.querySelectorAll('.serial-row').length > 1) {
-                const row = e.target.closest('.serial-row');
-                document.querySelector(`.edit-photo-group[data-device-index="${card.dataset.index}"][data-serial-index="${row.dataset.serialIndex}"]`)?.remove();
-                row.remove();
+
+        editPhotoGroups?.addEventListener('click', event => {
+            const group = event.target.closest('.edit-photo-group');
+            if (!group) return;
+            if (event.target.closest('.edit-photo-add')) addEditPhotoRow(group);
+            if (event.target.closest('.remove-edit-photo')) {
+                const row = event.target.closest('.edit-new-photo-row');
+                if (row?.querySelector('.edit-new-photo-input')?.dataset.previewUrl) URL.revokeObjectURL(row.querySelector('.edit-new-photo-input').dataset.previewUrl);
+                row?.remove();
+                renumberEditPhotoRows(group);
             }
         });
+        editPhotoGroups?.addEventListener('change', event => {
+            if (!event.target.matches('.edit-new-photo-input')) return;
+            const row = event.target.closest('.edit-new-photo-row');
+            const dropzone = event.target.closest('.photo-upload-dropzone');
+            const preview = dropzone.querySelector('.rma-photo-preview');
+            const file = event.target.files?.[0];
+            if (event.target.dataset.previewUrl) URL.revokeObjectURL(event.target.dataset.previewUrl);
+            row.querySelector('.rma-photo-filename').textContent = file?.name || 'Belum ada foto dipilih';
+            if (file) {
+                event.target.dataset.previewUrl = URL.createObjectURL(file);
+                preview.src = event.target.dataset.previewUrl;
+                preview.hidden = false;
+                dropzone.classList.add('has-preview');
+            } else {
+                delete event.target.dataset.previewUrl;
+                preview.removeAttribute('src');
+                preview.hidden = true;
+                dropzone.classList.remove('has-preview');
+            }
+        });
+        editGroups?.addEventListener('click', e => {
+            const card = e.target.closest('.rma-type-group');
+            const brand = e.target.closest('.rma-brand-group');
+            if (e.target.closest('.remove-brand')) {
+                brand.querySelectorAll('.rma-type-group').forEach(type => document.querySelectorAll(`.edit-photo-group[data-device-index="${type.dataset.index}"]`).forEach(group => group.remove()));
+                brand.remove(); refreshEditBrandLabels(); return;
+            }
+            if (e.target.closest('.add-edit-type')) { addEditType(brand); refreshEditBrandLabels(); return; }
+            if (e.target.closest('.remove-brand-type')) {
+                if (brand.querySelectorAll('.rma-type-group').length > 1) {
+                    document.querySelectorAll(`.edit-photo-group[data-device-index="${card.dataset.index}"]`).forEach(group => group.remove());
+                    card.remove(); refreshEditBrandLabels();
+                }
+                return;
+            }
+        });
+
+        function refreshEditBrandLabels() {
+            editGroups.querySelectorAll('.rma-brand-group').forEach((brand, index) => {
+                brand.querySelector('.edit-device-heading strong').textContent = `Merk ${index + 1}`;
+                brand.querySelectorAll('.rma-type-group').forEach((type, typeIndex) => {
+                    type.querySelector('.edit-device-heading strong').textContent = `Type ${typeIndex + 1}`;
+                    const removeButton = type.querySelector('.remove-brand-type');
+                    if (brand.querySelectorAll('.rma-type-group').length > 1 && !removeButton) {
+                        const button = document.createElement('button');
+                        button.type = 'button';
+                        button.className = 'btn-hapus remove-brand-type';
+                        button.textContent = 'Hapus Type';
+                        type.querySelector('.edit-device-heading').appendChild(button);
+                    } else if (brand.querySelectorAll('.rma-type-group').length === 1 && removeButton) {
+                        removeButton.remove();
+                    }
+                });
+                brand.querySelectorAll('.type-merk').forEach(input => input.value = brand.querySelector('.brand-name').value.trim());
+            });
+        }
+        editGroups?.addEventListener('input', event => { if (event.target.matches('.brand-name')) refreshEditBrandLabels(); });
+        function normalizeEditTypeNames() {
+            refreshEditBrandLabels();
+            let typeIndex = 0;
+            editGroups.querySelectorAll('.rma-brand-group .rma-type-group').forEach(card => {
+                const oldIndex = Number(card.dataset.index);
+                const newIndex = typeIndex++;
+                card.dataset.index = String(newIndex);
+                card.querySelector('.type-merk').name = `types[${newIndex}][merk]`;
+                card.querySelector('[name$="[id]"]')?.setAttribute('name', `types[${newIndex}][id]`);
+                card.querySelector('.type-name').name = `types[${newIndex}][type]`;
+                card.querySelector('[name$="[material_number]"]').name = `types[${newIndex}][material_number]`;
+                card.querySelectorAll('.serial-row').forEach((row, serialIndex) => {
+                    row.dataset.serialIndex = String(serialIndex);
+                    row.querySelector('input[name$="[id]"]')?.setAttribute('name', `types[${newIndex}][serial_numbers][${serialIndex}][id]`);
+                    row.querySelector('.serial-value').name = `types[${newIndex}][serial_numbers][${serialIndex}][serial_number]`;
+                });
+                document.querySelectorAll(`.edit-photo-group[data-device-index="${oldIndex}"]`).forEach(group => {
+                    group.dataset.deviceIndex = String(newIndex);
+                    if (!group.dataset.serialId) renumberEditPhotoRows(group);
+                });
+            });
+        }
+        editGroups?.closest('form')?.addEventListener('submit', normalizeEditTypeNames);
 
         function toggleHapusFoto(matId) {
             const wrap = document.getElementById('photo-wrap-' + matId);

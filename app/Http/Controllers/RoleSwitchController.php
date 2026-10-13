@@ -25,6 +25,13 @@ class RoleSwitchController extends Controller
         session(['active_role' => $role]);
 
         $label = $role === 'super_admin' ? 'Admin' : 'Manajer';
+
+        // Saat kembali ke mode Manajer, selalu mulai dari dashboard agar halaman
+        // khusus Administrator tidak terbuka tanpa sidebar.
+        if ($role === 'manajer') {
+            return redirect()->route('dashboard')->with('info', "Tampilan beralih ke mode {$label}.");
+        }
+
         return redirect()->back()->with('info', "Tampilan beralih ke mode {$label}.");
     }
 }

@@ -21,13 +21,12 @@ class DashboardController extends Controller
         $kpi = $this->kpiSummary();
         $healthyIndexService = app(HealthyIndexService::class);
 
-        $healthyIndexPops = Pop::whereRaw('LOWER(provinsi) LIKE ?', ['%jambi%'])
-            ->with([
-                'rectifiers.batteries',
-                'kwhs',
-                'acs',
-                'gensets',
-            ])
+        $healthyIndexPops = Pop::with([
+            'rectifiers.batteries',
+            'kwhs',
+            'acs',
+            'gensets',
+        ])
             ->get()
             ->map(fn(Pop $pop) => $healthyIndexService->calculateForPop($pop))
             ->values();

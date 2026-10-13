@@ -242,6 +242,10 @@ body {
     width: 100%;
 }
 
+.add-pop-other-input {
+    margin-top: 8px;
+}
+
 .add-pop-select {
     padding-right: 40px;
     appearance: none;

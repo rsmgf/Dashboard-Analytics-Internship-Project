@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atur Akses {{ $role->name }} - PLN Icon Plus</title>
+    <title>Atur Akses {{ ['manajer' => 'Eksekutif', 'super_admin' => 'Administrator'][$role->name] ?? ucfirst(str_replace('_', ' ', $role->name)) }} - PLN Icon Plus</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     @vite(['resources/css/sidebar.css'])
@@ -27,7 +27,7 @@
                     <div>
                         <x-breadcrumb :items="[
                             ['label' => 'Manajemen Akses Role', 'route' => 'admin.access.index'],
-                            ['label' => 'Atur Akses: ' . ucfirst(str_replace('_', ' ', $role->name))],
+                            ['label' => 'Atur Akses: ' . (['manajer' => 'Eksekutif', 'super_admin' => 'Administrator'][$role->name] ?? ucfirst(str_replace('_', ' ', $role->name)))],
                         ]" />
                         <p style="margin:2px 0 0; font-size:0.8rem; color:#64748b;">Centang toggle untuk memberi izin create/read/update/delete pada tiap menu</p>
                     </div>
@@ -43,7 +43,7 @@
                             <select id="copyFromRole" class="access-select">
                                 <option value="">Pilih role...</option>
                                 @foreach ($roles as $r)
-                                    <option value="{{ $r->id }}">{{ ucfirst(str_replace('_', ' ', $r->name)) }}
+                                    <option value="{{ $r->id }}">{{ ['manajer' => 'Eksekutif', 'super_admin' => 'Administrator'][$r->name] ?? ucfirst(str_replace('_', ' ', $r->name)) }}
                                     </option>
                                 @endforeach
                             </select>
