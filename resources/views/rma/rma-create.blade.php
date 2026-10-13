@@ -100,7 +100,6 @@
             <!-- TOPBAR COMPONENT -->
             <x-topbar />
 
-            <!-- CONTENT LAYOUT -->
             <div class="rma-layout">
 
                 <div class="rma-form-area">

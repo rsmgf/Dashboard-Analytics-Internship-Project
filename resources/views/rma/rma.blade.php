@@ -60,7 +60,6 @@
 
         <main class="main-content">
 
-            <!-- TOPBAR COMPONENT -->
             <x-topbar />
 
             <!-- CONTENT -->
