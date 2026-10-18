@@ -2,11 +2,12 @@
     $user = Auth::user();
     $activeRole = session('active_role') ?? ($user?->hasRole('manajer') ? 'manajer' : 'super_admin');
     $isManajerMode = $activeRole === 'manajer';
+    $isStandardRole = $user && !$user->hasAnyRole(['manajer', 'super_admin']);
     // Hanya yang punya role manajer yang bisa switch (otomatis dia punya akses admin)
     $hasBothRoles = $user && $user->hasRole('manajer');
 @endphp
 
-<header class="topbar {{ $isManajerMode ? 'topbar-manajer-mode' : '' }}">
+<header class="topbar {{ $isManajerMode ? 'topbar-manajer-mode' : '' }} {{ $isStandardRole ? 'topbar-standard-role' : '' }}">
     {{-- Sidebar toggle — disembunyikan saat mode manajer aktif --}}
 
     @if (!$isManajerMode)
