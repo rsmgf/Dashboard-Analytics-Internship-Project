@@ -17,7 +17,7 @@ class KwhController extends Controller
         $pop = Pop::findOrFail($pop_id);
         $kwhs = Kwh::where('pop_id', $pop_id)->with(['photos', 'diupdateOleh'])->get();
 
-        return view('pop.kwh.kwh-card', compact('pop', 'kwhs'));
+        return view('pop.KWh.kwh-card', compact('pop', 'kwhs'));
     }
 
     // 2. Form tambah kWh
@@ -28,7 +28,7 @@ class KwhController extends Controller
         $suggestedNomorKwh = $pop->kode_pop . '_KWH' . str_pad($count + 1, 2, '0', STR_PAD_LEFT);
         $arresterOptions = Kwh::query()->whereNotNull('merk_type_arrester')->where('merk_type_arrester', '<>', '')
             ->distinct()->orderBy('merk_type_arrester')->pluck('merk_type_arrester');
-        return view('pop.kwh.kwh-create', compact('pop', 'suggestedNomorKwh', 'arresterOptions'));
+        return view('pop.KWh.kwh-create', compact('pop', 'suggestedNomorKwh', 'arresterOptions'));
     }
 
     // 3. Simpan kWh baru beserta foto-fotonya
@@ -121,7 +121,7 @@ class KwhController extends Controller
         $pop = Pop::findOrFail($pop_id);
         $kwh = Kwh::where('pop_id', $pop_id)->with(['photos', 'diupdateOleh'])->findOrFail($id);
 
-        return view('pop.kwh.kwh-detail', compact('pop', 'kwh'));
+        return view('pop.KWh.kwh-detail', compact('pop', 'kwh'));
     }
 
     // 5. Form edit kWh
@@ -132,7 +132,7 @@ class KwhController extends Controller
         $arresterOptions = Kwh::query()->whereNotNull('merk_type_arrester')->where('merk_type_arrester', '<>', '')
             ->distinct()->orderBy('merk_type_arrester')->pluck('merk_type_arrester');
 
-        return view('pop.kwh.kwh-edit', compact('pop', 'kwh', 'arresterOptions'));
+        return view('pop.KWh.kwh-edit', compact('pop', 'kwh', 'arresterOptions'));
     }
 
     // 6. Update kWh
