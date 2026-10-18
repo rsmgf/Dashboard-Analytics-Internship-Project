@@ -40,9 +40,6 @@ body {
 
 button.sidebar-menu {
     font-family: inherit;
-    font-size: inherit;
-    font-weight: inherit;
-    line-height: inherit;
 }
 
 .sidebar {
@@ -572,14 +569,11 @@ body.sidebar-collapsed .dropdown-arrow {
     gap: 12px;
     margin: 4px 10px;
     padding: 10px 14px;
-    color: rgba(255, 255, 255, 0.65);
+    color: var(--sidebar-text);
     background: transparent;
     border: none;
     border-radius: 8px;
     border-left: 3px solid transparent;
-    font-family: 'Poppins', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
     cursor: pointer;
     text-align: left;
     white-space: nowrap;
@@ -759,6 +753,10 @@ body.sidebar-collapsed .sidebar-logout-item span {
     .sidebar {
         transform: translateX(-100%);
         width: var(--sidebar-width) !important;
+        /* Keep the drawer above Leaflet panes and controls on small screens. */
+        z-index: 3000;
+        height: 100vh;
+        height: 100dvh;
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         box-shadow: none;
     }
@@ -770,6 +768,10 @@ body.sidebar-collapsed .sidebar-logout-item span {
 
     body.sidebar-open .sidebar-overlay {
         display: block;
+    }
+
+    .sidebar-overlay {
+        z-index: 2999;
     }
 
     .main-content {
@@ -849,7 +851,14 @@ body.sidebar-collapsed .sidebar-logout-item span {
     }
 
     .sidebar-footer {
-        padding: 8px 0;
+        flex: 0 0 auto;
+        position: relative;
+        z-index: 1;
+        padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
+    }
+
+    .sidebar-footer form {
+        margin: 0;
     }
 
     /* Topbar lebih ramping */
@@ -899,17 +908,21 @@ body.sidebar-collapsed .sidebar-logout-item span {
         gap: 8px;
     }
 
-    /* Keep the user identity on its own row and align it to the right on phones. */
-    .topbar:not(.topbar-manajer-mode) .user-profile {
-        order: 3;
-        flex: 1 1 100%;
-        width: 100%;
-        max-width: 100%;
-        margin-left: 0;
+    /* Standard roles have no role-switch action, so keep the identity beside the menu button. */
+    .topbar-standard-role .topbar-spacer {
+        display: none;
+    }
+
+    .topbar-standard-role .user-profile {
+        order: 0;
+        flex: 0 1 auto;
+        width: auto;
+        max-width: calc(100% - 54px);
+        margin-left: auto;
         justify-content: flex-end;
     }
 
-    .topbar:not(.topbar-manajer-mode) .user-identity {
+    .topbar-standard-role .user-identity {
         max-width: min(72vw, 360px);
         text-align: right;
     }

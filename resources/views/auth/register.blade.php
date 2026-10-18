@@ -109,6 +109,7 @@
                                         <input type="text" name="no_hp" class="form-control" maxlength="13"
                                             placeholder="Masukkan nomor handphone" value="{{ old('no_hp') }}">
                                     </div>
+                                    <small class="form-hint">Format: 08XXXXXXXXXX</small>
                                     @error('no_hp')
                                         <div class="error-message">
                                             <i class="bi bi-exclamation-circle"></i>
@@ -128,6 +129,7 @@
                                             <i class="bi bi-eye"></i>
                                         </button>
                                     </div>
+                                    <small class="form-hint">Kata sandi minimal berjumlah 8 karakter</small>
                                     @error('password')
                                         <div class="error-message">
                                             <i class="bi bi-exclamation-circle"></i>
