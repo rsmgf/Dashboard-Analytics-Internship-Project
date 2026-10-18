@@ -1,88 +1,93 @@
-@php 
+@php
     $activeRole = session('active_role') ?? (auth()->user()?->hasRole('manajer') ? 'manajer' : 'super_admin');
-    $isManajerMode = $activeRole === 'manajer'; 
+    $isManajerMode = $activeRole === 'manajer';
 @endphp
-@if(!$isManajerMode)
-<aside class="sidebar" id="sidebar">
+@if (!$isManajerMode)
+    <aside class="sidebar" id="sidebar">
 
-    {{-- HEADER SIDEBAR (dengan tombol tutup mobile) --}}
-    <button type="button" class="sidebar-close-btn" id="sidebarCloseBtn" title="Tutup Sidebar">
-        <i class="bi bi-x"></i>
-    </button>
+        {{-- HEADER SIDEBAR (dengan tombol tutup mobile) --}}
+        <button type="button" class="sidebar-close-btn" id="sidebarCloseBtn" title="Tutup Sidebar">
+            <i class="bi bi-x"></i>
+        </button>
 
-    <div class="sidebar-logo">
-        <img src="{{ asset('images/logo-iconplus.png') }}" alt="PLN Icon Plus">
-    </div>
-
-    <div class="sidebar-wrapper">
-        {{-- MENU UTAMA --}}
-        <div class="sidebar-section">
-            <p class="section-title">Menu</p>
-
-            @foreach ($menus ?? [] as $menu)
-                @if ($menu->children->isNotEmpty())
-                    @php
-                        $isChildActive = $menu->children->contains(
-                            fn($c) => $c->route && request()->routeIs($c->route),
-                        );
-                    @endphp
-
-                    {{-- PARENT DENGAN CHILD → toggle dropdown, bukan link --}}
-                    <div class="sidebar-menu sidebar-dropdown {{ $isChildActive ? 'active' : '' }}"
-                        data-dropdown-toggle="menu-{{ $menu->id }}">
-                        <i class="{{ $menu->icon }}"></i>
-                        <span>{{ $menu->name }}</span>
-                        <i class="bi bi-chevron-down dropdown-arrow"></i>
-                    </div>
-
-                    <div class="sidebar-submenu {{ $isChildActive ? 'show' : '' }}" id="menu-{{ $menu->id }}">
-                        @foreach ($menu->children as $child)
-                            <a href="{{ route($child->route) }}"
-                                class="sidebar-submenu-item {{ request()->routeIs($child->route) ? 'active' : '' }}">
-                                <i class="{{ $child->icon ?? 'bi bi-dot' }}"></i>
-                                <span>{{ $child->name }}</span>
-                            </a>
-                        @endforeach
-                    </div>
-                @else
-                    {{-- MENU BIASA (TANPA CHILD) --}}
-                    <a href="{{ $menu->route ? route($menu->route) : '#' }}"
-                        class="sidebar-menu {{ $menu->route && request()->routeIs($menu->route) ? 'active' : '' }}">
-                        <i class="{{ $menu->icon }}"></i>
-                        <span>{{ $menu->name }}</span>
-                    </a>
-                @endif
-            @endforeach
+        <div class="sidebar-logo">
+            <img src="{{ asset('images/logo-iconplus.png') }}" alt="PLN Icon Plus">
         </div>
-    </div>
 
-    {{-- AKUN / LOGOUT --}}
-    @auth
-        <div class="sidebar-footer">
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="sidebar-menu sidebar-logout-item">
-                    <i class="bi bi-box-arrow-right"></i>
-                    <span>Keluar</span>
-                </button>
-            </form>
+        <div class="sidebar-wrapper">
+            {{-- MENU UTAMA --}}
+            <div class="sidebar-section">
+                <p class="section-title">Menu</p>
+
+                @foreach ($menus ?? [] as $menu)
+                    @if ($menu->children->isNotEmpty())
+                        @php
+                            $isChildActive = $menu->children->contains(
+                                fn($c) => $c->route && request()->routeIs($c->route),
+                            );
+                        @endphp
+
+                        {{-- PARENT DENGAN CHILD → toggle dropdown, bukan link --}}
+                        <div class="sidebar-menu sidebar-dropdown {{ $isChildActive ? 'active' : '' }}"
+                            data-dropdown-toggle="menu-{{ $menu->id }}">
+                            <i class="{{ $menu->icon }}"></i>
+                            <span>{{ $menu->name }}</span>
+                            <i class="bi bi-chevron-down dropdown-arrow"></i>
+                        </div>
+
+                        <div class="sidebar-submenu {{ $isChildActive ? 'show' : '' }}" id="menu-{{ $menu->id }}">
+                            @foreach ($menu->children as $child)
+                                <a href="{{ route($child->route) }}"
+                                    class="sidebar-submenu-item {{ request()->routeIs($child->route) ? 'active' : '' }}">
+                                    <i class="{{ $child->icon ?? 'bi bi-dot' }}"></i>
+                                    <span>{{ $child->name }}</span>
+                                </a>
+                            @endforeach
+                        </div>
+                    @else
+                        {{-- MENU BIASA (TANPA CHILD) --}}
+                        <a href="{{ $menu->route ? route($menu->route) : '#' }}"
+                            class="sidebar-menu {{ $menu->route && request()->routeIs($menu->route) ? 'active' : '' }}">
+                            <i class="{{ $menu->icon }}"></i>
+                            <span>{{ $menu->name }}</span>
+                        </a>
+                    @endif
+                @endforeach
+            </div>
         </div>
-    @endauth
 
-    {{-- Script toggle dropdown sidebar --}}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.sidebar-dropdown').forEach(function(toggle) {
-                toggle.addEventListener('click', function() {
-                    const targetId = this.dataset.dropdownToggle;
-                    const submenu = document.getElementById(targetId);
+        {{-- AKUN / LOGOUT --}}
+        @auth
+            <div class="sidebar-footer">
+                <a href="{{ route('profile.edit') }}"
+                    class="sidebar-menu {{ request()->routeIs('profile.edit') ? 'active' : '' }}">
+                    <i class="bi bi-person-fill"></i>
+                    <span>Pengaturan Akun</span>
+                </a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="sidebar-menu sidebar-logout-item">
+                        <i class="bi bi-door-open-fill"></i>
+                        <span>Keluar</span>
+                    </button>
+                </form>
+            </div>
+        @endauth
 
-                    const isOpen = submenu.classList.toggle('show');
-                    this.classList.toggle('active', isOpen);
+        {{-- Script toggle dropdown sidebar --}}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('.sidebar-dropdown').forEach(function(toggle) {
+                    toggle.addEventListener('click', function() {
+                        const targetId = this.dataset.dropdownToggle;
+                        const submenu = document.getElementById(targetId);
+
+                        const isOpen = submenu.classList.toggle('show');
+                        this.classList.toggle('active', isOpen);
+                    });
                 });
             });
-        });
-    </script>
+        </script>
 
-</aside>
+    </aside>
 @endif
