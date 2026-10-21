@@ -56,6 +56,16 @@ class Notification extends Model
     }
 
     /**
+     * Escape notification content while retaining only the intended strong tags.
+     */
+    public function getSafeMessageHtmlAttribute(): string
+    {
+        $escaped = e($this->message ?? '');
+
+        return preg_replace('/&lt;(\/?)strong&gt;/i', '<$1strong>', $escaped) ?? $escaped;
+    }
+
+    /**
      * Bootstrap-icon class sesuai device_type
      */
     public function getIconClassAttribute(): string

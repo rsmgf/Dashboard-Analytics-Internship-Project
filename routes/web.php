@@ -218,5 +218,6 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::get('/notifications', [\App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
+    Route::get('/notifications/activities', [\App\Http\Controllers\NotificationController::class, 'activities'])->name('notifications.activities');
     Route::post('/notifications/{notification}/mark-as-read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
 });

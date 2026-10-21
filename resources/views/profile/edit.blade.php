@@ -94,6 +94,7 @@
         }
     </style>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const passwordForm = document.getElementById('passwordUpdateForm');
@@ -120,6 +121,53 @@
                 [nameField, emailField].forEach(field => field.addEventListener('input', updateProfileButton));
                 updateProfileButton();
             }
+
+            const confirmationConfigs = {
+                profileUpdateForm: {
+                    title: 'Simpan perubahan akun?',
+                    text: 'Nama dan email akun akan diperbarui.',
+                    confirmButtonText: 'Ya, simpan perubahan',
+                },
+                passwordUpdateForm: {
+                    title: 'Ganti password sekarang?',
+                    text: 'Password akun akan diganti setelah password saat ini berhasil diverifikasi.',
+                    confirmButtonText: 'Ya, ganti password',
+                },
+            };
+
+            Object.entries(confirmationConfigs).forEach(([formId, config]) => {
+                const form = document.getElementById(formId);
+                if (!form) return;
+
+                form.addEventListener('submit', async function (event) {
+                    if (form.dataset.confirmed === 'true') {
+                        delete form.dataset.confirmed;
+                        return;
+                    }
+
+                    event.preventDefault();
+
+                    const result = typeof Swal !== 'undefined'
+                        ? await Swal.fire({
+                            icon: 'question',
+                            title: config.title,
+                            text: config.text,
+                            showCancelButton: true,
+                            confirmButtonText: config.confirmButtonText,
+                            cancelButtonText: 'Periksa kembali',
+                            confirmButtonColor: '#087bd1',
+                            cancelButtonColor: '#64748b',
+                            reverseButtons: true,
+                            focusCancel: true,
+                        })
+                        : { isConfirmed: window.confirm(`${config.title}\n${config.text}`) };
+
+                    if (result.isConfirmed) {
+                        form.dataset.confirmed = 'true';
+                        form.submit();
+                    }
+                });
+            });
         });
 
         document.addEventListener('click', function (event) {

@@ -96,32 +96,17 @@
 
                         {{-- TAB 2: AKTIVITAS --}}
                         <div id="tabAktivitas" class="notif-tab-pane">
-                            <div class="notif-list">
-                                @forelse($notificationsAktivitas as $notif)
-                                    <div class="notif-row {{ $notif->is_read ? 'read' : '' }}"
-                                        id="notif-aktivitas-{{ $notif->id }}"
-                                        onclick="markNotifAsRead('notif-aktivitas-{{ $notif->id }}', {{ $notif->id }}, '{{ $notif->category }}', '{{ $notif->pop_id }}', '{{ $notif->device_type }}', '{{ $notif->device_id }}', '{{ $notif->action }}')">
-                                        <div class="notif-icon-col">
-                                            <div
-                                                class="notif-icon-box {{ $notif->icon_bg_class }} {{ !$notif->is_read ? 'has-dot' : '' }}">
-                                                <i class="{{ $notif->icon_class }}"></i>
-                                            </div>
-                                        </div>
-                                        <div class="notif-text-col">
-                                            <h4 class="notif-title">{{ $notif->title }}</h4>
-                                            <p class="notif-subtitle">{!! $notif->message !!}</p>
-                                        </div>
-                                        <div class="notif-info-col">
-                                            <span
-                                                class="notif-time">{{ $notif->created_at->format('d M Y H:i') }}</span>
-                                            <i class="bi bi-chevron-right notif-arrow"></i>
-                                        </div>
-                                    </div>
-                                @empty
-                                    <div style="text-align:center; padding: 30px; color: #64748b;">
-                                        Belum ada aktivitas
-                                    </div>
-                                @endforelse
+                            <div id="activityViewport" class="activity-viewport" aria-label="Daftar aktivitas notifikasi">
+                                <div id="activityVirtualList" class="activity-virtual-list"
+                                    data-has-more="{{ $activityHasMore ? 'true' : 'false' }}"
+                                    data-next-page="2">
+                                    <div id="activityTopSpacer" aria-hidden="true"></div>
+                                    <div id="activityRows"></div>
+                                    <div id="activityBottomSpacer" aria-hidden="true"></div>
+                                </div>
+                                <div id="activityEmpty" class="activity-state" @if (count($activityItems)) hidden @endif>Belum ada aktivitas</div>
+                                <div id="activityLoading" class="activity-state" hidden>Memuat aktivitas…</div>
+                                <button id="activityRetry" class="activity-retry" type="button" hidden>Coba muat lagi</button>
                             </div>
                         </div>
 
@@ -141,8 +126,153 @@
             const target = document.getElementById(targetId);
             if (target) {
                 target.classList.add('active');
+                if (targetId === 'tabAktivitas') {
+                    initializeActivityList();
+                }
             }
         }
+
+        const activityList = document.getElementById('activityVirtualList');
+        const activityViewport = document.getElementById('activityViewport');
+        const activityRows = document.getElementById('activityRows');
+        const activityTopSpacer = document.getElementById('activityTopSpacer');
+        const activityBottomSpacer = document.getElementById('activityBottomSpacer');
+        const activityLoading = document.getElementById('activityLoading');
+        const activityRetry = document.getElementById('activityRetry');
+        const activityData = @json($activityItems);
+        let activityHasMore = activityList?.dataset.hasMore === 'true';
+        let activityNextPage = Number(activityList?.dataset.nextPage || 2);
+        let activityLoadingMore = false;
+        let activityInitialized = false;
+        let activityRenderFrame = null;
+
+        function activityStride() {
+            const value = getComputedStyle(activityViewport).getPropertyValue('--activity-row-stride').trim();
+            return Number.parseFloat(value) || 84;
+        }
+
+        function createActivityRow(item) {
+            const row = document.createElement('div');
+            row.className = `notif-row activity-virtual-row${item.is_read ? ' read' : ''}`;
+            row.id = `notif-aktivitas-${item.id}`;
+            row.dataset.notificationRow = 'true';
+            row.dataset.id = item.id;
+            row.dataset.category = item.category || '';
+            row.dataset.popId = item.pop_id || '';
+            row.dataset.deviceType = item.device_type || '';
+            row.dataset.deviceId = item.device_id || '';
+            row.dataset.action = item.action || '';
+
+            const iconColumn = document.createElement('div');
+            iconColumn.className = 'notif-icon-col';
+            const iconBox = document.createElement('div');
+            iconBox.className = `notif-icon-box ${item.icon_bg_class || ''}${item.is_read ? '' : ' has-dot'}`;
+            const icon = document.createElement('i');
+            icon.className = item.icon_class || 'bi bi-bell-fill';
+            iconBox.append(icon);
+            iconColumn.append(iconBox);
+
+            const textColumn = document.createElement('div');
+            textColumn.className = 'notif-text-col';
+            const title = document.createElement('h4');
+            title.className = 'notif-title';
+            title.textContent = item.title || '';
+            const message = document.createElement('p');
+            message.className = 'notif-subtitle';
+            // Backend escapes message content and restores only plain <strong> tags.
+            message.innerHTML = item.message_html || '';
+            textColumn.append(title, message);
+
+            const infoColumn = document.createElement('div');
+            infoColumn.className = 'notif-info-col';
+            const time = document.createElement('span');
+            time.className = 'notif-time';
+            time.textContent = item.created_at || '';
+            const arrow = document.createElement('i');
+            arrow.className = 'bi bi-chevron-right notif-arrow';
+            infoColumn.append(time, arrow);
+
+            row.append(iconColumn, textColumn, infoColumn);
+            return row;
+        }
+
+        function renderActivityWindow() {
+            if (!activityViewport || !activityList) return;
+            const stride = activityStride();
+            const overscan = 5;
+            const firstVisible = Math.floor(activityViewport.scrollTop / stride);
+            const visibleCount = Math.ceil(activityViewport.clientHeight / stride);
+            const start = Math.max(0, firstVisible - overscan);
+            const end = Math.min(activityData.length, firstVisible + visibleCount + overscan);
+
+            activityTopSpacer.style.height = `${start * stride}px`;
+            activityBottomSpacer.style.height = `${Math.max(0, activityData.length - end) * stride}px`;
+
+            const fragment = document.createDocumentFragment();
+            for (let index = start; index < end; index++) {
+                fragment.append(createActivityRow(activityData[index]));
+            }
+            activityRows.replaceChildren(fragment);
+
+            const remainingVisibleRows = activityData.length - (firstVisible + visibleCount);
+            const prefetchThreshold = Math.max(4, Math.ceil(visibleCount * 0.75));
+            if (activityHasMore && !activityLoadingMore && remainingVisibleRows <= prefetchThreshold) {
+                loadMoreActivities();
+            }
+        }
+
+        function scheduleActivityRender() {
+            if (activityRenderFrame !== null) return;
+            activityRenderFrame = requestAnimationFrame(() => {
+                activityRenderFrame = null;
+                renderActivityWindow();
+            });
+        }
+
+        async function loadMoreActivities() {
+            if (!activityHasMore || activityLoadingMore) return;
+            activityLoadingMore = true;
+            activityLoading.hidden = false;
+            activityRetry.hidden = true;
+
+            try {
+                const url = new URL(`{{ route('notifications.activities') }}`, window.location.origin);
+                url.searchParams.set('page', activityNextPage);
+                const response = await fetch(url, {
+                    headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                if (!response.ok) throw new Error(`Request gagal (${response.status})`);
+                const result = await response.json();
+                activityData.push(...(result.items || []));
+                activityHasMore = Boolean(result.has_more);
+                activityNextPage = result.next_page || activityNextPage + 1;
+                activityList.dataset.hasMore = activityHasMore ? 'true' : 'false';
+                scheduleActivityRender();
+            } catch (error) {
+                console.error('Gagal memuat aktivitas:', error);
+                activityRetry.hidden = false;
+            } finally {
+                activityLoadingMore = false;
+                activityLoading.hidden = true;
+            }
+        }
+
+        function initializeActivityList() {
+            if (activityInitialized) return;
+            activityInitialized = true;
+            renderActivityWindow();
+        }
+
+        activityViewport?.addEventListener('scroll', scheduleActivityRender, { passive: true });
+        activityRetry?.addEventListener('click', loadMoreActivities);
+        activityRows?.addEventListener('click', event => {
+            const row = event.target.closest('[data-notification-row]');
+            if (!row) return;
+            markNotifAsRead(row.id, row.dataset.id, row.dataset.category, row.dataset.popId || null,
+                row.dataset.deviceType || null, row.dataset.deviceId || null, row.dataset.action || null);
+        });
+        window.addEventListener('resize', scheduleActivityRender);
+        if (document.getElementById('tabAktivitas')?.classList.contains('active')) initializeActivityList();
 
         function markNotifAsRead(elementId, notifId, category = '', popId = null, deviceType = null, deviceId = null,
             action = null) {

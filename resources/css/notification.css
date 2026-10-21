@@ -152,6 +152,67 @@ body {
     gap: 4px;
 }
 
+/* Aktivitas memakai infinite scroll dengan jendela DOM yang tervirtualisasi. */
+.activity-viewport {
+    --activity-row-stride: 84px;
+    max-height: min(68vh, 820px);
+    min-height: 280px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+}
+
+.activity-virtual-list {
+    display: block;
+}
+
+.activity-virtual-row {
+    box-sizing: border-box;
+    height: calc(var(--activity-row-stride) - 4px);
+    margin-bottom: 4px;
+    overflow: hidden;
+}
+
+.activity-virtual-row .notif-title,
+.activity-virtual-row .notif-subtitle {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+}
+
+.activity-virtual-row .notif-title {
+    -webkit-line-clamp: 1;
+}
+
+.activity-virtual-row .notif-subtitle {
+    -webkit-line-clamp: 1;
+}
+
+.activity-state {
+    padding: 14px 10px;
+    color: #64748b;
+    text-align: center;
+    font-size: 0.82rem;
+}
+
+.activity-retry {
+    display: block;
+    margin: 0 auto 12px;
+    padding: 7px 14px;
+    border: 1px solid #93c5fd;
+    border-radius: 8px;
+    background: #eff6ff;
+    color: #075985;
+    font: inherit;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+.activity-retry[hidden],
+.activity-state[hidden] {
+    display: none;
+}
+
 .notif-row {
     display: flex;
     align-items: center;
@@ -418,6 +479,16 @@ body {
         position: absolute;
         right: 12px;
         top: 14px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .activity-viewport {
+        --activity-row-stride: 116px;
+    }
+
+    .activity-virtual-row .notif-subtitle {
+        -webkit-line-clamp: 2;
     }
 }
 
